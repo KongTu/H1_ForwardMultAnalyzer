@@ -130,7 +130,7 @@ struct MyEvent {
    enum {
       nRECtrack_MAX=200
    };
-   // it there is no scattered electron, no tracks are saved either
+   // if there is no scattered electron, no tracks are saved either
    //  (nRECtrack=0)
    Int_t nRECtrackAll;
    Int_t nRECtrack;
@@ -139,6 +139,7 @@ struct MyEvent {
    Float_t pxREC[nRECtrack_MAX];
    Float_t pyREC[nRECtrack_MAX];
    Float_t pzREC[nRECtrack_MAX];
+   Float_t etaREC[nRECtrack_MAX];
 #endif
    Float_t ptStarREC[nRECtrack_MAX];
    Float_t etaStarREC[nRECtrack_MAX];
@@ -221,6 +222,7 @@ int main(int argc, char* argv[]) {
    output->Branch("pxREC",myEvent.pxREC,"pxREC[nRECtrack]/F");
    output->Branch("pyREC",myEvent.pyREC,"pyREC[nRECtrack]/F");
    output->Branch("pzREC",myEvent.pzREC,"pzREC[nRECtrack]/F");
+   output->Branch("etaREC",myEvent.etaREC,"etaREC[nRECtrack]/F");
 #endif
    output->Branch("ptStarREC",myEvent.ptStarREC,"ptStarREC[nRECtrack]/F");
    output->Branch("etaStarREC",myEvent.etaStarREC,"etaStarREC[nRECtrack]/F");
@@ -392,7 +394,8 @@ int main(int argc, char* argv[]) {
                }
             } // end loop over stable particles
          }
-      }
+      }//end of looping MC particles
+
       // define initial state particle four-vectors
       double ee=*eBeamE;
       double pe= sqrt((ee+ME)*(ee-ME));
@@ -602,6 +605,7 @@ int main(int argc, char* argv[]) {
                   myEvent.pxREC[k]=h.X();
                   myEvent.pyREC[k]=h.Y();
                   myEvent.pzREC[k]=h.Z();
+                  myEvent.etaREC[k]=h.Eta();
 #endif
                   myEvent.ptStarREC[k]=hStar.Pt();
                   myEvent.etaStarREC[k]=hStar.Eta();
