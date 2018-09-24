@@ -21,7 +21,7 @@ SLIB =
 LIB = 
 #
 # The binaries you would like to make, you have to provide the final linking
-BIN = ForwardMultAnalyzer, chargedForwardKongTest
+BIN = ForwardMultAnalyzer chargedForwardKongTest
 
 #ifeq ($(STANDALONE),yes)
   # no rerun_rec
