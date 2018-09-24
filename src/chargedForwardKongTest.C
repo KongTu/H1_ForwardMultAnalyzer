@@ -257,8 +257,8 @@ int main(int argc, char* argv[]) {
 
    H1PartMCArrayPtr mcpart;
 
-   H1FSTTrackArrayPtr fstTrack;
-   H1FSTFittedTrackArrayPtr fstFittedTrack;
+   //H1FSTTrackArrayPtr fstTrack;
+   //H1FSTFittedTrackArrayPtr fstFittedTrack;
 
    Int_t eventCounter = 0;
 
@@ -624,8 +624,8 @@ int main(int argc, char* argv[]) {
          escatPhot_REC_lab.Print();
       }
 
-      myEvent.nRECfstFitted=fstFittedTrack.GetEntries();
-      myEvent.nRECfst=fstTrack.GetEntries();
+      //myEvent.nRECfstFitted=fstFittedTrack.GetEntries();
+      //myEvent.nRECfst=fstTrack.GetEntries();
 
       if(print) {
          cout<<"FST: "<<myEvent.nRECfstFitted<<" "<<myEvent.nRECfst<<"\n";
