@@ -257,8 +257,8 @@ int main(int argc, char* argv[]) {
 
    H1PartMCArrayPtr mcpart;
 
-   // H1FSTTrackArrayPtr fstTrack;
-   // H1FSTFittedTrackArrayPtr fstFittedTrack;
+   //H1FSTTrackArrayPtr fstTrack;
+   //H1FSTFittedTrackArrayPtr fstFittedTrack;
 
    Int_t eventCounter = 0;
 
@@ -628,7 +628,7 @@ int main(int argc, char* argv[]) {
       // myEvent.nRECfst=fstTrack.GetEntries();
 
       if(print) {
-         //cout<<"FST: "<<myEvent.nRECfstFitted<<" "<<myEvent.nRECfst<<"\n";
+         cout<<"FST: "<<myEvent.nRECfstFitted<<" "<<myEvent.nRECfst<<"\n";
       }
 
       if(print) {
