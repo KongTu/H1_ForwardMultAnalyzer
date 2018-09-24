@@ -21,7 +21,7 @@ SLIB =
 LIB = 
 #
 # The binaries you would like to make, you have to provide the final linking
-BIN = chargedForwardKongTest
+BIN = ForwardMultAnalyzer
 
 #ifeq ($(STANDALONE),yes)
   # no rerun_rec
@@ -66,11 +66,11 @@ endif
 # the executables
 
 
-chargedForwardKongTest: outputdirs $(BUILDDIR)/chargedForwardKongTest.o
+ForwardMultAnalyzer: outputdirs $(BUILDDIR)/ForwardMultAnalyzer.o
 	@echo ""
 	@echo Linking test program for mods access: $@ ...
 	$(LOADER) \
-	$(BUILDDIR)/chargedForwardKongTest.o \
+	$(BUILDDIR)/ForwardMultAnalyzer.o \
 	$(OO_LIBS) \
 	-lH1Tools -lH1Arrays -lH1Hat -lH1Mods -lH1Geom -lH1Skeleton \
 	-lH1HadronicCalibration \
@@ -79,15 +79,15 @@ chargedForwardKongTest: outputdirs $(BUILDDIR)/chargedForwardKongTest.o
 	\
 	$(ROOTLIBS) -lEG -l${FORTRANLIB} \
 	\
-	-o $(BINDIR)/chargedForwardKongTest
+	-o $(BINDIR)/ForwardMultAnalyzer
 	@echo $@ created ...
 	@echo ""
 
-chargedForwardODS: outputdirs $(BUILDDIR)/chargedForwardKongTest.o
+chargedForwardODS: outputdirs $(BUILDDIR)/ForwardMultAnalyzer.o
 	@echo ""
 	@echo Linking test program for ods access: $@ ...
 	$(LOADER) \
-	$(BUILDDIR)/chargedForwardKongTest.o \
+	$(BUILDDIR)/ForwardMultAnalyzer.o \
 	$(OO_LIBS) \
 	-lH1Tools -lH1Arrays -lH1Hat -lH1Mods -lH1Ods -lH1Geom -lH1Skeleton \
 	-lH1HadronicCalibration \
