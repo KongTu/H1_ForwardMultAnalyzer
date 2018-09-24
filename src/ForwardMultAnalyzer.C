@@ -117,6 +117,7 @@ struct MyEvent {
    Float_t pxMC[nMCtrack_MAX];
    Float_t pyMC[nMCtrack_MAX];
    Float_t pzMC[nMCtrack_MAX];
+   Float_t etaMC[nMCtrack_MAX];
 
    Float_t ptStarMC[nMCtrack_MAX];
    Float_t etaStarMC[nMCtrack_MAX];
@@ -196,6 +197,7 @@ int main(int argc, char* argv[]) {
    output->Branch("pxMC",myEvent.pxMC,"pxMC[nMCtrack]/F");
    output->Branch("pyMC",myEvent.pyMC,"pyMC[nMCtrack]/F");
    output->Branch("pzMC",myEvent.pzMC,"pzMC[nMCtrack]/F");
+   output->Branch("etaMC",myEvent.etaMC,"etaMC[nMCtrack]/F");
 
    output->Branch("ptStarMC",myEvent.ptStarMC,"ptStarMC[nMCtrack]/F");
    output->Branch("etaStarMC",myEvent.etaStarMC,"etaStarMC[nMCtrack]/F");
@@ -383,6 +385,7 @@ int main(int argc, char* argv[]) {
                      myEvent.pxMC[k]=h.X();
                      myEvent.pyMC[k]=h.Y();
                      myEvent.pzMC[k]=h.Z();
+                     myEvent.etaMC[k]=h.Eta();
 
                      myEvent.ptStarMC[k]=hStar.Pt();
                      myEvent.etaStarMC[k]=hStar.Eta();
@@ -604,7 +607,7 @@ int main(int argc, char* argv[]) {
                   myEvent.pyREC[k]=h.Y();
                   myEvent.pzREC[k]=h.Z();
                   myEvent.etaREC[k]=h.Eta();
-                  
+      
                   myEvent.ptStarREC[k]=hStar.Pt();
                   myEvent.etaStarREC[k]=hStar.Eta();
                   myEvent.phiStarREC[k]=hStar.Phi();
