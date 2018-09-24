@@ -1,0 +1,4 @@
+H1SteerTree() {
+  fHatFiles  = "/pnfs/desy.de/dphep/online/h1/mc/oo-4.0/djangoh14/8926/hat.4.0.25.DJANGOH14.DIS.NC.JOINT.LOWQ2.POSITRON.RAD.W50.Q2GT2.CTEQ6L.2006p.4.8926.S39600.R97905.ftt.DST.0000-0000.root";
+  fModsFiles  = "/pnfs/desy.de/dphep/online/h1/mc/oo-4.0/djangoh14/8926/mods.4.0.25.DJANGOH14.DIS.NC.JOINT.LOWQ2.POSITRON.RAD.W50.Q2GT2.CTEQ6L.2006p.4.8926.S39600.R97905.ftt.DST.0000-0000.root"; 
+}
