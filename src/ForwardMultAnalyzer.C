@@ -113,11 +113,11 @@ struct MyEvent {
    Int_t nMCtrackAll;
    Int_t nMCtrack;
    Int_t idMC[nMCtrack_MAX];
-#ifdef SAVE_LAB_MOMENTA
+
    Float_t pxMC[nMCtrack_MAX];
    Float_t pyMC[nMCtrack_MAX];
    Float_t pzMC[nMCtrack_MAX];
-#endif
+
    Float_t ptStarMC[nMCtrack_MAX];
    Float_t etaStarMC[nMCtrack_MAX];
    Float_t phiStarMC[nMCtrack_MAX];
@@ -135,12 +135,12 @@ struct MyEvent {
    Int_t nRECtrackAll;
    Int_t nRECtrack;
    Int_t typeREC[nRECtrack_MAX];
-#ifdef SAVE_LAB_MOMENTA
+
    Float_t pxREC[nRECtrack_MAX];
    Float_t pyREC[nRECtrack_MAX];
    Float_t pzREC[nRECtrack_MAX];
    Float_t etaREC[nRECtrack_MAX];
-#endif
+
    Float_t ptStarREC[nRECtrack_MAX];
    Float_t etaStarREC[nRECtrack_MAX];
    Float_t phiStarREC[nRECtrack_MAX];
@@ -192,11 +192,11 @@ int main(int argc, char* argv[]) {
    output->Branch("nMCtrackAll",&myEvent.nMCtrackAll,"nMCtrackAll/I");
    output->Branch("nMCtrack",&myEvent.nMCtrack,"nMCtrack/I");
    output->Branch("idMC",myEvent.idMC,"idMC[nMCtrack]/I");
-#ifdef SAVE_LAB_MOMENTA
+
    output->Branch("pxMC",myEvent.pxMC,"pxMC[nMCtrack]/F");
    output->Branch("pyMC",myEvent.pyMC,"pyMC[nMCtrack]/F");
    output->Branch("pzMC",myEvent.pzMC,"pzMC[nMCtrack]/F");
-#endif
+
    output->Branch("ptStarMC",myEvent.ptStarMC,"ptStarMC[nMCtrack]/F");
    output->Branch("etaStarMC",myEvent.etaStarMC,"etaStarMC[nMCtrack]/F");
    output->Branch("phiStarMC",myEvent.phiStarMC,"phiStarMC[nMCtrack]/F");
@@ -218,12 +218,12 @@ int main(int argc, char* argv[]) {
    output->Branch("nRECtrackAll",&myEvent.nRECtrackAll,"nRECtrackAll/I");
    output->Branch("nRECtrack",&myEvent.nRECtrack,"nRECtrack/I");
    output->Branch("typeREC",myEvent.typeREC,"typeREC[nRECtrack]/I");
-#ifdef SAVE_LAB_MOMENTA
+   
    output->Branch("pxREC",myEvent.pxREC,"pxREC[nRECtrack]/F");
    output->Branch("pyREC",myEvent.pyREC,"pyREC[nRECtrack]/F");
    output->Branch("pzREC",myEvent.pzREC,"pzREC[nRECtrack]/F");
    output->Branch("etaREC",myEvent.etaREC,"etaREC[nRECtrack]/F");
-#endif
+
    output->Branch("ptStarREC",myEvent.ptStarREC,"ptStarREC[nRECtrack]/F");
    output->Branch("etaStarREC",myEvent.etaStarREC,"etaStarREC[nRECtrack]/F");
    output->Branch("phiStarREC",myEvent.phiStarREC,"phiStarREC[nRECtrack]/F");
@@ -380,11 +380,10 @@ int main(int argc, char* argv[]) {
                   if(myEvent.nMCtrack<MyEvent::nMCtrack_MAX) {
                      int k=myEvent.nMCtrack;
                      myEvent.idMC[k]=part->GetPDG();
-#ifdef SAVE_LAB_MOMENTA
                      myEvent.pxMC[k]=h.X();
                      myEvent.pyMC[k]=h.Y();
                      myEvent.pzMC[k]=h.Z();
-#endif
+
                      myEvent.ptStarMC[k]=hStar.Pt();
                      myEvent.etaStarMC[k]=hStar.Eta();
                      myEvent.phiStarMC[k]=hStar.Phi();
@@ -601,12 +600,11 @@ int main(int argc, char* argv[]) {
                if(myEvent.nRECtrack<MyEvent::nRECtrack_MAX) {
                   int k=myEvent.nRECtrack;
                   myEvent.typeREC[k]=type;
-#ifdef SAVE_LAB_MOMENTA
                   myEvent.pxREC[k]=h.X();
                   myEvent.pyREC[k]=h.Y();
                   myEvent.pzREC[k]=h.Z();
                   myEvent.etaREC[k]=h.Eta();
-#endif
+                  
                   myEvent.ptStarREC[k]=hStar.Pt();
                   myEvent.etaStarREC[k]=hStar.Eta();
                   myEvent.phiStarREC[k]=hStar.Phi();
