@@ -23,6 +23,9 @@
 #include <TApplication.h>
 #include <TStyle.h>
 
+// for testing
+#include "H1Skeleton/H1EventFiller.h"
+
 // H1 OO includes
 #include "H1Skeleton/H1Tree.h"
 #include "H1Steering/H1StdCmdLine.h"
@@ -40,15 +43,18 @@
 #include "H1Mods/H1PartCand.h"
 #include "H1Mods/H1PartEm.h"
 #include "H1Mods/H1PartSelTrack.h"
+#include "H1PhysUtils/H1NuclIACor.h"
+
+#include "H1Geom/H1DetectorStatus.h"
+#include "H1Geom/H1DBManager.h"
+
+#include "H1Tracks/H1FSTFittedTrack.h"
+#include "H1Tracks/H1FSTFittedTrackArrayPtr.h"
+
 //#include "H1Mods/H1GkiInfoArrayPtr.h"
 //#include "H1Mods/H1GkiInfo.h"
 #include <TLorentzRotation.h>
 #include "H1HadronicCalibration/H1HadronicCalibration.h"
-
-#include "H1Tracks/H1FSTTrackArrayPtr.h"
-#include "H1Tracks/H1FSTFittedTrack.h"
-#include "H1Tracks/H1FSTFittedTrackArrayPtr.h"
-#include "H1Tracks/H1FSTTrack.h"
 
 using namespace std;
 
@@ -695,12 +701,13 @@ int main(int argc, char* argv[]) {
                double phiStar=hStar.Phi();
                int type=0;
                int charge=0;
-               if(track->IsCentralTrk()) type =1;
-               else if(track->IsCombinedTrk()) type=2;
-               else if(track->IsForwardTrk()) type =3;
-               else if(track->IsBSTTrk()) type =4;
-               else if(track->IsFSTTrk()) type =5;
-               charge=track->GetCharge();
+               if(track){
+                  if(track->IsCentralTrk()) type =1;
+                  else if(track->IsCombinedTrk()) type=2;
+                  else if(track->IsForwardTrk()) type =3;
+                  else if(track->IsBSTTrk()) type =4;
+                  else if(track->IsFSTTrk()) type =5;
+                  charge=track->GetCharge();
                else if(fstTrack) {
                   // do some track selection here
                   // (1) tracks shall be a primary track
