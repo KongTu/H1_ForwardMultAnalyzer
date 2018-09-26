@@ -22,6 +22,9 @@
 #include <TMath.h>
 #include <TApplication.h>
 #include <TStyle.h>
+#include <TMatrixD.h>
+#include <TMatrixDSym.h>
+#include <TMatrixDSymEigen.h>
 
 // for testing
 #include "H1Skeleton/H1EventFiller.h"
