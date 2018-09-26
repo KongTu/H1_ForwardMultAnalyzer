@@ -848,7 +848,7 @@ int main(int argc, char* argv[]) {
       //     and remove duplicates
       for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
          int iMC=myEvent.imatchREC[iREC];
-         if(iMC<0) continue; // no match for this particle
+         if(iREC<0) continue; // no match for this particle
          int jREC=myEvent.imatchMC[iMC];
          if(jREC>=0) {
             // duplicate match for this particle
@@ -865,7 +865,8 @@ int main(int argc, char* argv[]) {
                // save new pointer MC->REC
                myEvent.imatchMC[iMC]=iREC;
             }
-         } else {
+         } 
+         else {
             // save this match
             myEvent.imatchMC[iMC]=iREC;
          }
