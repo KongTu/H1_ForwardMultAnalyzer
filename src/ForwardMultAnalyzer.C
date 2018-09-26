@@ -322,7 +322,6 @@ int main(int argc, char* argv[]) {
 
    H1PartMCArrayPtr mcpart;
 
-   H1FSTTrackArrayPtr fstTrack;
    H1FSTFittedTrackArrayPtr fstFittedTrack;
 
    Int_t eventCounter = 0;
@@ -708,6 +707,7 @@ int main(int argc, char* argv[]) {
                   else if(track->IsBSTTrk()) type =4;
                   else if(track->IsFSTTrk()) type =5;
                   charge=track->GetCharge();
+               }
                else if(fstTrack) {
                   // do some track selection here
                   // (1) tracks shall be a primary track
