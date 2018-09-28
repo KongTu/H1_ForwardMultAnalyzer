@@ -415,7 +415,7 @@ int main(int argc, char* argv[]) {
 
             H1PartMC *part=mcpart[i];
             if(print) {
-               part->Print();
+               //part->Print();
             }
             int status=part->GetStatus();
             if(status==0) {
@@ -694,7 +694,8 @@ int main(int argc, char* argv[]) {
          if(cand) track=cand->GetIDTrack();
          if(track || fstTrack) {
             if(haveScatteredElectron) {
-               TLorentzVector h=track->GetFourVector();
+               TLorentzVector h=p;
+               if(track) h=track->GetFourVector();
                double log10z=TMath::Log10((h*pbeam_REC_lab)/(q_REC_lab*pbeam_REC_lab));
                // boost to hadronic-centre-of-mass frame
                TLorentzVector hStar = boost_REC_HCM*h;
@@ -707,8 +708,8 @@ int main(int argc, char* argv[]) {
                   if(track->IsCentralTrk()) type =1;
                   else if(track->IsCombinedTrk()) type=2;
                   else if(track->IsForwardTrk()) type =3;
-                  else if(track->IsBSTTrk()) type =4;
-                  else if(track->IsFSTTrk()) type =5;
+                  else if(track->IsFSTTrk()) type=4;
+                  else if(track->IsBSTTrk()) type =5;
                   charge=track->GetCharge();
                }
                else if(fstTrack) {
@@ -759,14 +760,16 @@ int main(int argc, char* argv[]) {
                trackType[type]++;
                if(type && (myEvent.nRECtrack<MyEvent::nRECtrack_MAX)) {
                   if(print) {
-                  cout<<"Track "<<type
-                      <<" etaLab="<<h.Eta()
-                      <<" ptLab="<<h.Pt()
-                      <<" ptStar="<<ptStar
-                      <<" etaStar="<<etaStar
-                      <<" phiStar="<<phiStar
-                      <<" log10(z)="<<log10z
-                      <<"\n";
+                  cout<<i<<" Track "<<myEvent.nRECtrackAll
+                         <<" "<<charge*type
+                         <<" etaLab="<<h.Eta()
+                         <<" ptLab="<<h.Pt()
+                         <<" phiLab="<<h.Phi()
+                         <<" ptStar="<<ptStar
+                         <<" etaStar="<<etaStar
+                         <<" phiStar="<<phiStar
+                         <<" log10(z)="<<log10z
+                         <<"\n";
                   }
                   myEvent.nRECtrackAll++;
                   int k=myEvent.nRECtrack;
