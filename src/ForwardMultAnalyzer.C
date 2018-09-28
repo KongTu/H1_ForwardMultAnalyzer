@@ -452,7 +452,7 @@ int main(int argc, char* argv[]) {
                      myEvent.pyMC[k]=h.Y();
                      myEvent.pzMC[k]=h.Z();
                      myEvent.etaMC[k]=h.Eta();
-                     myEvent.chargeMC[k]=h.GetCharge();
+                     myEvent.chargeMC[k]=part->GetCharge();
 
                      myEvent.ptStarMC[k]=hStar.Pt();
                      myEvent.etaStarMC[k]=hStar.Eta();
