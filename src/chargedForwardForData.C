@@ -231,6 +231,7 @@ int main(int argc, char* argv[]) {
    output->Branch("pxREC",myEvent.pxREC,"pxREC[nRECtrack]/F");
    output->Branch("pyREC",myEvent.pyREC,"pyREC[nRECtrack]/F");
    output->Branch("pzREC",myEvent.pzREC,"pzREC[nRECtrack]/F");
+   output->Branch("etaREC",myEvent.etaREC,"etaREC[nRECtrack]/F");
    output->Branch("ptStarREC",myEvent.ptStarREC,"ptStarREC[nRECtrack]/F");
    output->Branch("etaStarREC",myEvent.etaStarREC,"etaStarREC[nRECtrack]/F");
    output->Branch("phiStarREC",myEvent.phiStarREC,"phiStarREC[nRECtrack]/F");
