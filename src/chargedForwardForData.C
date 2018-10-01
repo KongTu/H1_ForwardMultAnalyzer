@@ -43,15 +43,18 @@
 #include "H1Mods/H1PartCand.h"
 #include "H1Mods/H1PartEm.h"
 #include "H1Mods/H1PartSelTrack.h"
+#include "H1PhysUtils/H1NuclIACor.h"
+
+#include "H1Geom/H1DetectorStatus.h"
+#include "H1Geom/H1DBManager.h"
+
+#include "H1Tracks/H1FSTFittedTrack.h"
+#include "H1Tracks/H1FSTFittedTrackArrayPtr.h"
+
 //#include "H1Mods/H1GkiInfoArrayPtr.h"
 //#include "H1Mods/H1GkiInfo.h"
 #include <TLorentzRotation.h>
 #include "H1HadronicCalibration/H1HadronicCalibration.h"
-
-#include "H1Tracks/H1FSTTrackArrayPtr.h"
-#include "H1Tracks/H1FSTFittedTrack.h"
-#include "H1Tracks/H1FSTFittedTrackArrayPtr.h"
-#include "H1Tracks/H1FSTTrack.h"
 
 using namespace std;
 
