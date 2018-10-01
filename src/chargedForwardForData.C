@@ -143,7 +143,7 @@ struct MyEvent {
 
    // FST tracks
    Int_t nRECfstFitted;
-   Int_t nRECfst;
+   Int_t nRECfstSelected;
 };
 
 int main(int argc, char* argv[]) {
@@ -220,8 +220,8 @@ int main(int argc, char* argv[]) {
    output->Branch("log10zREC",myEvent.log10zREC,"log10zREC[nRECtrack]/F");
 
    output->Branch("nRECfstFitted",&myEvent.nRECfstFitted,"nRECfstFitted/I");
-   output->Branch("nRECfst",&myEvent.nRECfst,"nRECfst/I");
-
+   output->Branch("nRECfstSelected",&myEvent.nRECfstSelected,"nRECfstSelected/I");
+   
    H1ShortPtr runtype("RunType"); // 0=data, 1=MC, 2=CERN test, 3=CERN MC test
    H1FloatPtr beamx0("BeamX0");          // x position of beam spot (at z=0)
    H1FloatPtr beamy0("BeamY0");          // y position of beam spot (at z=0)
@@ -249,8 +249,7 @@ int main(int argc, char* argv[]) {
 
    H1PartMCArrayPtr mcpart;
 
-   //H1FSTTrackArrayPtr fstTrack;
-   //H1FSTFittedTrackArrayPtr fstFittedTrack;
+   H1FSTFittedTrackArrayPtr fstFittedTrack;
 
    Int_t eventCounter = 0;
 
@@ -420,23 +419,44 @@ int main(int argc, char* argv[]) {
       TLorentzVector hfs;
       myEvent.nRECtrackAll=0;
       myEvent.nRECtrack=0;
-      for(int i=0;i<partCand.GetEntries();i++) {
-         H1PartCand *cand=partCand[i];
-         // ignore particles counted with scattered electron
-         if(isElectron.find(i)!=isElectron.end()) continue;
 
-         TLorentzVector p=cand->GetFourVector();
+      myEvent.nRECfstFitted=fstFittedTrack.GetEntries();
+      myEvent.nRECfstSelected=0;
+
+      vector<int> trackType(10);
+      int nPart=partCand.GetEntries();
+
+      nPart += fstFittedTrack.GetEntries();
+
+      for(int i=0;i<nPart;i++) {
+         H1PartCand *cand=0;
+         H1FSTFittedTrack *fstTrack=0;
+         TLorentzVector p;
+         if(i<partCand.GetEntries()) {
+            cand=partCand[i];
+            p=cand->GetFourVector();
+         } else {
+            fstTrack=fstFittedTrack[i-partCand.GetEntries()];
+            p=fstTrack->GetFourVector(M_CHARGED_PION);
+         }
+         // ignore particles counted with scattered electron
+         if(cand && isElectron.find(i)!=isElectron.end()) continue;
+
          // exclude particles close to electron
          if(haveScatteredElectron &&
             (p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE)) continue;
 
-         hfs += p;
+         if(cand) {
+            // only particle candidates belong to the calibrated HFS
+            hfs += p;
+         }
 
-         H1PartSelTrack const *track=cand->GetIDTrack();
-         if(track && track->IsFromPrimary()) {
-            myEvent.nRECtrackAll++;
+         H1PartSelTrack const *track=0;
+         if(cand) track=cand->GetIDTrack();
+         if(track || fstTrack) {
             if(haveScatteredElectron) {
-               TLorentzVector h=track->GetFourVector();
+               TLorentzVector h=p;
+               if(track) h=track->GetFourVector();
                double log10z=TMath::Log10((h*pbeam_REC_lab)/(q_REC_lab*pbeam_REC_lab));
                // boost to hadronic-centre-of-mass frame
                TLorentzVector hStar = boost_REC_HCM*h;
@@ -444,27 +464,81 @@ int main(int argc, char* argv[]) {
                double ptStar=hStar.Pt();
                double phiStar=hStar.Phi();
                int type=0;
-               if(track->IsCentralTrk()) type =1;
-               else if(track->IsCombinedTrk()) type=2;
-               else if(track->IsForwardTrk()) type =3;
-               else if(track->IsBSTTrk()) type =4;
-               else if(track->IsFSTTrk()) type =5;
-               if(print) {
-                  cout<<"Track "<<type
-                      <<" etaLab="<<h.Eta()
-                      <<" ptLab="<<h.Pt()
-                      <<" ptStar="<<ptStar
-                      <<" etaStar="<<etaStar
-                      <<" phiStar="<<phiStar
-                      <<" log10(z)="<<log10z
-                      <<"\n";
+               int charge=0;
+               if(track){
+                  if(track->IsCentralTrk()) type =1;
+                  else if(track->IsCombinedTrk()) type=2;
+                  else if(track->IsForwardTrk()) type =3;
+                  else if(track->IsFSTTrk()) type=4;
+                  else if(track->IsBSTTrk()) type =5;
+                  charge=track->GetCharge();
                }
-               if(myEvent.nRECtrack<MyEvent::nRECtrack_MAX) {
+               else if(fstTrack) {
+                  // do some track selection here
+                  // (1) tracks shall be a primary track
+                  H1Vertex const *v=fstTrack->GetVertex();
+                  if(floatEqual(v->X(),myEvent.vertex[0])&&
+                     floatEqual(v->Y(),myEvent.vertex[1])&&
+                     floatEqual(v->Z(),myEvent.vertex[2])) {
+                     type=4;
+                  }
+                  // (2) minimum transverse momentum of 0.1 GeV
+                  if(fstTrack->GetPt()<0.1) {
+                     type=0;
+                  }
+                  // (3) momentum vector shall be incompatible with 
+                  //  any other central, combined or forward track
+                  if(type) {
+                     charge=fstTrack->GetCharge();
+                     TVector3 p1=fstTrack->GetMomentum();
+                     TMatrix V1=fstTrack->GetMomentumCovar();
+                     for(int j=0;j<partCand.GetEntries();j++) {
+                         H1PartCand *candJ=partCand[j];
+                         H1PartSelTrack const *selTrackJ=candJ->GetIDTrack();
+                         H1PartCand const *partCandJ=
+                            selTrackJ ? (selTrackJ->GetParticle()) : 0;
+                         H1Track const *trackJ=partCandJ ? partCandJ->GetTrack() : 0;
+                         if(trackJ) {
+                            TVector3 p2=trackJ->GetMomentum();
+                            TMatrix V2=trackJ->GetMomentumCovar();
+                            TMatrixD sum(V1+V2);
+                            TMatrixD Vinv(TMatrixD::kInverted,V1+V2);
+                            TVector3 d(p1-p2);
+                            double chi2=d.Dot(Vinv*d);
+                            //if(print) cout<<i<<" "<<j<<" "<<chi2;
+                            if(chi2<30.) {
+                               //if(print) cout<<" [reject]";
+                               type=0;
+                            }
+                            //if(print) cout<<"\n";
+                         }
+                     }
+                  }
+                  if(type) {
+                     myEvent.nRECfstSelected++;
+                  }
+               }
+               trackType[type]++;
+               if(type && (myEvent.nRECtrack<MyEvent::nRECtrack_MAX)) {
+                  if(print) {
+                  cout<<i<<" Track "<<myEvent.nRECtrackAll
+                         <<" "<<charge*type
+                         <<" etaLab="<<h.Eta()
+                         <<" ptLab="<<h.Pt()
+                         <<" phiLab="<<h.Phi()
+                         <<" ptStar="<<ptStar
+                         <<" etaStar="<<etaStar
+                         <<" phiStar="<<phiStar
+                         <<" log10(z)="<<log10z
+                         <<"\n";
+                  }
+                  myEvent.nRECtrackAll++;
                   int k=myEvent.nRECtrack;
-                  myEvent.typeREC[k]=type;
+                  myEvent.typeChgREC[k]=charge*type;
                   myEvent.pxREC[k]=h.X();
                   myEvent.pyREC[k]=h.Y();
                   myEvent.pzREC[k]=h.Z();
+                  myEvent.etaREC[k]=h.Eta();
                   myEvent.ptStarREC[k]=hStar.Pt();
                   myEvent.etaStarREC[k]=hStar.Eta();
                   myEvent.phiStarREC[k]=hStar.Phi();
@@ -486,9 +560,6 @@ int main(int argc, char* argv[]) {
          escatPhot_REC_lab.Print();
       }
 
-      //myEvent.nRECfstFitted=fstFittedTrack.GetEntries();
-      //myEvent.nRECfst=fstTrack.GetEntries();
-
       if(print) {
          cout<<"FST: "<<myEvent.nRECfstFitted<<" "<<myEvent.nRECfst<<"\n";
       }
@@ -500,18 +571,16 @@ int main(int argc, char* argv[]) {
       output->Fill();
    }
 
+   // Summary
+   cout << "\nProcessed " << eventCounter
+     << " events\n\n";
 
 
-    // Summary
-    cout << "\nProcessed " << eventCounter
-        << " events\n\n";
+   // Write histogram to file
+   output->Write();
+   file.Close();
 
+   cout << "Histograms written to " << opts.GetOutput() << endl;
 
-    // Write histogram to file
-    output->Write();
-    file.Close();
-
-    cout << "Histograms written to " << opts.GetOutput() << endl;
-
-    return 0;
+   return 0;
 }
