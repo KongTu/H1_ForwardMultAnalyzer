@@ -191,11 +191,9 @@ int main(int argc, char* argv[]) {
    output->Branch("nMCtrackAll",&myEvent.nMCtrackAll,"nMCtrackAll/I");
    output->Branch("nMCtrack",&myEvent.nMCtrack,"nMCtrack/I");
    output->Branch("idMC",myEvent.idMC,"idMC[nMCtrack]/I");
-#ifdef SAVE_LAB_MOMENTA
    output->Branch("pxMC",myEvent.pxMC,"pxMC[nMCtrack]/F");
    output->Branch("pyMC",myEvent.pyMC,"pyMC[nMCtrack]/F");
    output->Branch("pzMC",myEvent.pzMC,"pzMC[nMCtrack]/F");
-#endif
    output->Branch("ptStarMC",myEvent.ptStarMC,"ptStarMC[nMCtrack]/F");
    output->Branch("etaStarMC",myEvent.etaStarMC,"etaStarMC[nMCtrack]/F");
    output->Branch("phiStarMC",myEvent.phiStarMC,"phiStarMC[nMCtrack]/F");
@@ -217,11 +215,9 @@ int main(int argc, char* argv[]) {
    output->Branch("nRECtrackAll",&myEvent.nRECtrackAll,"nRECtrackAll/I");
    output->Branch("nRECtrack",&myEvent.nRECtrack,"nRECtrack/I");
    output->Branch("typeREC",myEvent.typeREC,"typeREC[nRECtrack]/I");
-#ifdef SAVE_LAB_MOMENTA
    output->Branch("pxREC",myEvent.pxREC,"pxREC[nRECtrack]/F");
    output->Branch("pyREC",myEvent.pyREC,"pyREC[nRECtrack]/F");
    output->Branch("pzREC",myEvent.pzREC,"pzREC[nRECtrack]/F");
-#endif
    output->Branch("ptStarREC",myEvent.ptStarREC,"ptStarREC[nRECtrack]/F");
    output->Branch("etaStarREC",myEvent.etaStarREC,"etaStarREC[nRECtrack]/F");
    output->Branch("phiStarREC",myEvent.phiStarREC,"phiStarREC[nRECtrack]/F");
@@ -280,119 +276,6 @@ int main(int argc, char* argv[]) {
       myEvent.evno=*evno;
       myEvent.w=w;
 
-      if(*runtype==1) {
-         // handle MC information
-         if(print) {
-            // kinematic variables from GKI bank
-            cout<<" xGKI="<<*xGki<<" Q2GKI="<<*Q2Gki
-                <<" y="<<*yGki
-                <<" w="<<w<<"\n";
-         }
-         myEvent.xGKI = *xGki;
-         myEvent.yGKI = *yGki;
-         myEvent.Q2GKI = *Q2Gki;
-
-         H1GetPartMCId mcPartId(&*mcpart);
-         mcPartId.Fill();
-
-         TLorentzVector ebeam_MC_lab
-            (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
-         TLorentzVector pbeam_MC_lab
-            (mcpart[mcPartId.GetIdxBeamProton()]->GetFourVector());
-
-         myEvent.eProtonBeamMC=pbeam_MC_lab.E();
-         myEvent.eElectronBeamMC=ebeam_MC_lab.E();
-
-         TLorentzVector escat0_MC_lab
-            (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
-         // add radiative photon(s) in a cone
-         TLorentzVector escatPhot_MC_lab(escat0_MC_lab);
-         set<int> isElectron;
-         isElectron.insert(mcPartId.GetIdxScatElectron());
-         for(int i=0;i<mcpart.GetEntries();i++) {
-            H1PartMC *part=mcpart[i];
-            int status=part->GetStatus();
-            if((status==0 )&&(part->GetPDG()==22)) {
-               TLorentzVector p(part->GetFourVector());
-               if(p.DeltaR(escat0_MC_lab)<ELEC_ISOLATION_CONE) {
-                  // this photon counts with the electron
-                  isElectron.insert(i);
-                  escatPhot_MC_lab += p;
-               }
-            }
-         }
-         myEvent.elecEradMC=escatPhot_MC_lab.E()-escat0_MC_lab.E();
-         myEvent.elecPxMC=escatPhot_MC_lab.X();
-         myEvent.elecPyMC=escatPhot_MC_lab.Y();
-         myEvent.elecPzMC=escatPhot_MC_lab.Z();
-         myEvent.elecEMC=escatPhot_MC_lab.E();
-
-         if(print) {
-            cout<<"MC scattered electron is made of "<<isElectron.size()<<" particle(s)\n";
-         }
-
-         GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
-                       &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
-
-         TLorentzRotation boost_MC_HCM
-            (BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab));
-         TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
-
-         // final state particles
-         bool haveElectron=false;
-         myEvent.nMCtrackAll=0;
-         myEvent.nMCtrack=0;
-         for(int i=0;i<mcpart.GetEntries();i++) {
-            // skip particles counted as electron
-            if(isElectron.find(i)!=isElectron.end()) continue;
-
-            H1PartMC *part=mcpart[i];
-            if(print) {
-               //part->Print();
-            }
-            int status=part->GetStatus();
-            if(status==0) {
-               // generator "stable" particles
-               if((!haveElectron)&&
-                  ((part->GetPDG()==11)||(part->GetPDG()== -11))) {
-                  haveElectron=true;               
-               } else if(part->GetCharge()!=0.) {
-                  // other charged particles
-                  TLorentzVector h=part->GetFourVector();
-                  double log10z=TMath::Log10((h*pbeam_MC_lab)/(q_MC_lab*pbeam_MC_lab));
-                  // boost to hadronic-centre-of-mass frame
-                  TLorentzVector hStar = boost_MC_HCM*h;
-                  double etaStar=hStar.Eta();
-                  double ptStar=hStar.Pt();
-                  double phiStar=hStar.Phi();
-                  if(print) {
-                     cout<<"MCpart "<<part->GetPDG()
-                         <<" etaLab="<<h.Eta()
-                         <<" ptLab="<<h.Pt()
-                         <<" ptStar="<<ptStar
-                         <<" etaStar="<<etaStar
-                         <<" phiStar="<<phiStar
-                         <<" log10(z)="<<log10z<<"\n";
-                  }
-                  myEvent.nMCtrackAll++;
-                  if(myEvent.nMCtrack<MyEvent::nMCtrack_MAX) {
-                     int k=myEvent.nMCtrack;
-                     myEvent.idMC[k]=part->GetPDG();
-#ifdef SAVE_LAB_MOMENTA
-                     myEvent.pxMC[k]=h.X();
-                     myEvent.pyMC[k]=h.Y();
-                     myEvent.pzMC[k]=h.Z();
-#endif
-                     myEvent.ptStarMC[k]=hStar.Pt();
-                     myEvent.etaStarMC[k]=hStar.Eta();
-                     myEvent.phiStarMC[k]=hStar.Phi();
-                     myEvent.log10zMC[k]=log10z;
-                     myEvent.nMCtrack=k+1;
-                  }
-               }
-            } // end loop over stable particles
-         }
-      }
       // define initial state particle four-vectors
       double ee=*eBeamE;
       double pe= sqrt((ee+ME)*(ee-ME));
@@ -464,15 +347,6 @@ int main(int argc, char* argv[]) {
          myEvent.vertex[1]=-999.;
          myEvent.vertex[2]=-999.;
       }
-      if(haveSimulatedVertex) {
-         myEvent.simvertex[0]=simulatedVertex.X();
-         myEvent.simvertex[1]=simulatedVertex.Y();
-         myEvent.simvertex[2]=simulatedVertex.Z();
-      } else {
-         myEvent.simvertex[0]=-999.;
-         myEvent.simvertex[1]=-999.;
-         myEvent.simvertex[2]=-999.;
-      }
       myEvent.beamSpot[0]=beamSpot.X();
       myEvent.beamSpot[1]=beamSpot.Y();
       myEvent.beamTilt[0]=*beamtiltx0;
@@ -485,12 +359,6 @@ int main(int argc, char* argv[]) {
                 <<" "<<primaryVertex.X()
                 <<" "<<primaryVertex.Y()
                 <<" "<<primaryVertex.Z();
-         }
-         if(haveSimulatedVertex) {
-             cout<<" simulated vertex:"
-                 <<" "<<simulatedVertex.X()
-                 <<" "<<simulatedVertex.Y()
-                 <<" "<<simulatedVertex.Z();
          }
          cout<<"\n";
          cout<<"number of part cand: "<<partCand.GetEntries()<<"\n";
@@ -598,11 +466,9 @@ int main(int argc, char* argv[]) {
                if(myEvent.nRECtrack<MyEvent::nRECtrack_MAX) {
                   int k=myEvent.nRECtrack;
                   myEvent.typeREC[k]=type;
-#ifdef SAVE_LAB_MOMENTA
                   myEvent.pxREC[k]=h.X();
                   myEvent.pyREC[k]=h.Y();
                   myEvent.pzREC[k]=h.Z();
-#endif
                   myEvent.ptStarREC[k]=hStar.Pt();
                   myEvent.etaStarREC[k]=hStar.Eta();
                   myEvent.phiStarREC[k]=hStar.Phi();
