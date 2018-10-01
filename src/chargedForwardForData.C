@@ -22,6 +22,9 @@
 #include <TMath.h>
 #include <TApplication.h>
 #include <TStyle.h>
+#include <TMatrixD.h>
+#include <TMatrixDSym.h>
+#include <TMatrixDSymEigen.h>
 
 // H1 OO includes
 #include "H1Skeleton/H1Tree.h"
@@ -53,8 +56,15 @@
 using namespace std;
 
 static double const ME=0.0005109989461;
+static double const M_CHARGED_PION=0.13957061;
 
 static double const ELEC_ISOLATION_CONE=0.1;
+
+bool floatEqual(double a,double b) {
+   double d1=fabs(a-b);
+   double d2=fabs(a+b);
+   return (d1<=1.E-5*d2);
+}
 
 TLorentzRotation BoostToHCM(TLorentzVector const &eBeam_lab,
                             TLorentzVector const &pBeam_lab,
@@ -136,14 +146,21 @@ struct MyEvent {
    Float_t pxREC[nRECtrack_MAX];
    Float_t pyREC[nRECtrack_MAX];
    Float_t pzREC[nRECtrack_MAX];
+   Float_t etaREC[nRECtrack_MAX];
    Float_t ptStarREC[nRECtrack_MAX];
    Float_t etaStarREC[nRECtrack_MAX];
    Float_t phiStarREC[nRECtrack_MAX];
    Float_t log10zREC[nRECtrack_MAX];
+   Int_t typeChgREC[nRECtrack_MAX];
 
    // FST tracks
    Int_t nRECfstFitted;
    Int_t nRECfstSelected;
+};
+
+class DummyFiller : public H1EventFiller {
+public:
+   virtual void   Fill(H1Event* event) { }
 };
 
 int main(int argc, char* argv[]) {
@@ -558,10 +575,6 @@ int main(int argc, char* argv[]) {
          escat0_REC_lab.Print();
          cout<<"reconstructed electron with photons in lab: ";
          escatPhot_REC_lab.Print();
-      }
-
-      if(print) {
-         cout<<"FST: "<<myEvent.nRECfstFitted<<" "<<myEvent.nRECfst<<"\n";
       }
 
       if(print) {
