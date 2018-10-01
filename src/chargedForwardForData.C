@@ -552,7 +552,6 @@ int main(int argc, char* argv[]) {
                   myEvent.nRECtrackAll++;
                   int k=myEvent.nRECtrack;
                   myEvent.typeChgREC[k]=charge*type;
-                  cout << "test: " <<myEvent.pxREC[k] << endl;
                   myEvent.pxREC[k]=h.X();
                   myEvent.pyREC[k]=h.Y();
                   myEvent.pzREC[k]=h.Z();
