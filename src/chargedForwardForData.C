@@ -113,11 +113,9 @@ struct MyEvent {
    Int_t nMCtrackAll;
    Int_t nMCtrack;
    Int_t idMC[nMCtrack_MAX];
-#ifdef SAVE_LAB_MOMENTA
    Float_t pxMC[nMCtrack_MAX];
    Float_t pyMC[nMCtrack_MAX];
    Float_t pzMC[nMCtrack_MAX];
-#endif
    Float_t ptStarMC[nMCtrack_MAX];
    Float_t etaStarMC[nMCtrack_MAX];
    Float_t phiStarMC[nMCtrack_MAX];
@@ -135,11 +133,9 @@ struct MyEvent {
    Int_t nRECtrackAll;
    Int_t nRECtrack;
    Int_t typeREC[nRECtrack_MAX];
-#ifdef SAVE_LAB_MOMENTA
    Float_t pxREC[nRECtrack_MAX];
    Float_t pyREC[nRECtrack_MAX];
    Float_t pzREC[nRECtrack_MAX];
-#endif
    Float_t ptStarREC[nRECtrack_MAX];
    Float_t etaStarREC[nRECtrack_MAX];
    Float_t phiStarREC[nRECtrack_MAX];
