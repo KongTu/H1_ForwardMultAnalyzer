@@ -720,7 +720,7 @@ int main(int argc, char* argv[]) {
                }
                else if(fstTrack) {
 
-                  cout << "test " << fstGoodTrack->IsSelected(fstTrack) << endl;
+                  //cout << "test " << fstGoodTrack->IsSelected(fstTrack) << endl;
                   //if( fstGoodTrack->IsSelected(fstTrack) ) {type=4;} //good forward track selection
                   // do some track selection here
                   // (1) tracks shall be a primary track
