@@ -674,7 +674,7 @@ int main(int argc, char* argv[]) {
       for(int i=0;i<nPart;i++) {
          H1PartCand *cand=0;
          H1FSTFittedTrack *fstTrack=0;
-         //H1FSTTrackSelector *fstGoodTrack=0;
+         H1FSTTrackSelector *fstGoodTrack;
          TLorentzVector p;
          if(i<partCand.GetEntries()) {
             cand=partCand[i];
@@ -719,6 +719,7 @@ int main(int argc, char* argv[]) {
                }
                else if(fstTrack) {
 
+                  cout << "test " << fstGoodTrack->IsSelected(fstTrack) << endl;
                   //if( fstGoodTrack->IsSelected(fstTrack) ) {type=4;} //good forward track selection
                   // do some track selection here
                   // (1) tracks shall be a primary track
