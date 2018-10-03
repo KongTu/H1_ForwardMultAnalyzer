@@ -817,9 +817,6 @@ int main(int argc, char* argv[]) {
                   if(fstTrack) {
                      myEvent.covREC[k]=fstTrack->GetMomentumCovar();
                      myEvent.imatchREC[k]=-1;
-                     
-                     cout << "event: #" << eventCounter << endl;
-                     cout << "track: #" << i << endl;
 
                      H1FSTTrack* fstGeneralTrack = (H1FSTTrack*) fstTrack->GetFSTTrack();
                      const float *fst_para;
@@ -830,22 +827,11 @@ int main(int argc, char* argv[]) {
                      myEvent.dcaFstSelected[k] = fst_para[3];
                      myEvent.z0FstSelected[k] = fst_para[4];
                      myEvent.startRadiusFstSelected[k] = fstGeneralTrack->GetStartRadius();
-                     myEvent.ptResFstSelected[k] = (fstGeneralTrack->GetdPt())/(fstGeneralTrack->GetPt());
-                     myEvent.chi2SZnFstSelected[k] = (fstGeneralTrack->GetChi2SZ())/(fstGeneralTrack->GetNdfSZ());
-                     myEvent.chi2XYnFstSelected[k] = (fstGeneralTrack->GetChi2XY())/(fstGeneralTrack->GetNdfXY());
+                     myEvent.ptResFstSelected[k] = (fstTrack->GetdPt())/(fstTrack->GetPt());
+                     myEvent.chi2SZnFstSelected[k] = (fstTrack->GetFitChi2SZ())/(fstTrack->GetFitNdf());
+                     myEvent.chi2XYnFstSelected[k] = (fstTrack->GetFitChi2XY())/(fstTrack->GetFitNdf());
 
-                     cout << "chi2n for fitted value: " << fstTrack->GetFitChi2SZ() << endl;
-                     cout << "chi2n for nonfitted value: " << fstGeneralTrack->GetChi2SZ() << endl;
-                    
-                     cout << "chi2n xy for fitted value: " << fstTrack->GetFitChi2XY() << endl;
-                     cout << "chi2n xy for fitted value: " << fstGeneralTrack->GetChi2XY() << endl;
-
-                     cout << "pt fst fitted track: " << fstTrack->GetPt() << endl;
-                     cout << "pt fst general track: " << fstGeneralTrack->GetPt() << endl;
-
-                     cout << "------------" << endl;
-
-
+                     //need to ask about chi2 with nonfitted tracks
                   } else {
                      H1PartCand const *partCandI=track->GetParticle();
                      H1Track const *trackI=partCandI ? partCandI->GetTrack():0;
