@@ -818,6 +818,9 @@ int main(int argc, char* argv[]) {
                      myEvent.covREC[k]=fstTrack->GetMomentumCovar();
                      myEvent.imatchREC[k]=-1;
                      
+                     cout << "event: #" << eventCounter << endl;
+                     cout << "track: #" << i << endl;
+
                      H1FSTTrack* fstGeneralTrack = (H1FSTTrack*) fstTrack->GetFSTTrack();
                      const float *fst_para;
                      fst_para = fstGeneralTrack->GetParameter();
@@ -839,6 +842,8 @@ int main(int argc, char* argv[]) {
 
                      cout << "pt fst fitted track: " << fstTrack->GetPt() << endl;
                      cout << "pt fst general track: " << fstGeneralTrack->GetPt() << endl;
+
+                     cout << "------------" << endl;
 
 
                   } else {
