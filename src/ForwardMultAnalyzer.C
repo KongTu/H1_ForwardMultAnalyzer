@@ -53,7 +53,7 @@
 
 #include "H1Tracks/H1FSTFittedTrack.h"
 #include "H1Tracks/H1FSTFittedTrackArrayPtr.h"
-#include "H1TRKFINDER/H1FSTTrackSelector.h"
+#include "H1TrkFinder/H1FSTTrackSelector.h"
 
 //#include "H1Mods/H1GkiInfoArrayPtr.h"
 //#include "H1Mods/H1GkiInfo.h"
