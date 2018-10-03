@@ -720,7 +720,8 @@ int main(int argc, char* argv[]) {
                }
                else if(fstTrack) {
 
-                  bool isGoodTrack = fstTrackSelector->IsSelected(fstTrack);
+                  TObject* object = (H1FSTFittedTrack*) fstTrack;
+                  bool isGoodTrack = fstTrackSelector->IsSelected(object);
                   //if( fstGoodTrack->IsSelected(fstTrack) ) {type=4;} //good forward track selection
                   // do some track selection here
                   // (1) tracks shall be a primary track
