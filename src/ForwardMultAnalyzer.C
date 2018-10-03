@@ -744,9 +744,7 @@ int main(int argc, char* argv[]) {
                   if(fstTrack->GetPt()<0.1) {
                      type=0;
                   }
-                  if( fst_theta > fCutThetaMax || fst_theta < fCutThetaMin ) {type = 0;}
-                  if( fst_radius > 70 ) {type = 0;}
-                  if( fst_dca > 2.0 ) {type = 0;}
+         
                   // (3) momentum vector shall be incompatible with 
                   //  any other central, combined or forward track
                   if(type) {
