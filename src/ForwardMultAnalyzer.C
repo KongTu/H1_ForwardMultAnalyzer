@@ -753,7 +753,7 @@ int main(int argc, char* argv[]) {
          
                   // (3) momentum vector shall be incompatible with 
                   //  any other central, combined or forward track
-                  if(type) {
+                  /*if(type) {
                      charge=fstTrack->GetCharge();
                      TVector3 p1=fstTrack->GetMomentum();
                      TMatrix V1=fstTrack->GetMomentumCovar();
@@ -778,7 +778,7 @@ int main(int argc, char* argv[]) {
                             //if(print) cout<<"\n";
                          }
                      }
-                  }
+                  }*/
                   if(type) {
                      myEvent.nRECfstSelected++;
                   }
@@ -858,7 +858,7 @@ int main(int argc, char* argv[]) {
       if(*runtype==1){
          //only MC does matching:
          for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
-            // skip tracke where momentum covariance is not known
+            // skip track where momentum covariance is not known
             //  -> these will never be matched
             if(myEvent.imatchREC[iREC]!=-1) continue;
             TMatrixDSym Vsym(3);
