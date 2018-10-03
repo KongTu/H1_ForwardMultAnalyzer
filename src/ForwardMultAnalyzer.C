@@ -734,7 +734,7 @@ int main(int argc, char* argv[]) {
                   }
                   // (3) momentum vector shall be incompatible with 
                   //  any other central, combined or forward track
-                  /*if(type) {
+                  if(type) {
                      charge=fstTrack->GetCharge();
                      TVector3 p1=fstTrack->GetMomentum();
                      TMatrix V1=fstTrack->GetMomentumCovar();
@@ -759,7 +759,7 @@ int main(int argc, char* argv[]) {
                             //if(print) cout<<"\n";
                          }
                      }
-                  }*/
+                  }
                   if(type) {
                      myEvent.nRECfstSelected++;
                   }
