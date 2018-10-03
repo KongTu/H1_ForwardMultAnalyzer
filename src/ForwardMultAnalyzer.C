@@ -723,7 +723,7 @@ int main(int argc, char* argv[]) {
                   
                   const float *fst_para;
                   fst_para = fstTrack->GetParameter();
-                  //fst_para = (H1Track*)fstNonFittedTrack->GetParameter();
+                  cout << "theta: " << fst_para[2] << endl;
                   double fst_theta = fst_para[2];
                   double fst_dca = fst_para[3];
                   double fst_radius = fstNonFittedTrack->GetStartRadius();
