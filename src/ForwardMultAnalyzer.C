@@ -719,7 +719,7 @@ int main(int argc, char* argv[]) {
                }
                else if(fstTrack) {
 
-                  if( fstGoodTrack->isSelected() ) {type=4;} //good forward track selection
+                  if( fstGoodTrack->IsSelected() ) {type=4;} //good forward track selection
                   // do some track selection here
                   // (1) tracks shall be a primary track
                   H1Vertex const *v=fstTrack->GetVertex();
