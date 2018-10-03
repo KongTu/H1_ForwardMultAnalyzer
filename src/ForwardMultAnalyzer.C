@@ -53,6 +53,7 @@
 
 #include "H1Tracks/H1FSTFittedTrack.h"
 #include "H1Tracks/H1FSTFittedTrackArrayPtr.h"
+#include "H1Tracks/H1FSTTrackSelector.h"
 
 //#include "H1Mods/H1GkiInfoArrayPtr.h"
 //#include "H1Mods/H1GkiInfo.h"
@@ -673,6 +674,7 @@ int main(int argc, char* argv[]) {
       for(int i=0;i<nPart;i++) {
          H1PartCand *cand=0;
          H1FSTFittedTrack *fstTrack=0;
+         H1FSTTrackSelector *fstGoodTrack=0;
          TLorentzVector p;
          if(i<partCand.GetEntries()) {
             cand=partCand[i];
@@ -716,6 +718,8 @@ int main(int argc, char* argv[]) {
                   charge=track->GetCharge();
                }
                else if(fstTrack) {
+
+                  if( fstGoodTrack->isSelected() ) {type=4;} //good forward track selection
                   // do some track selection here
                   // (1) tracks shall be a primary track
                   H1Vertex const *v=fstTrack->GetVertex();
@@ -730,7 +734,7 @@ int main(int argc, char* argv[]) {
                   }
                   // (3) momentum vector shall be incompatible with 
                   //  any other central, combined or forward track
-                  if(type) {
+                  /*if(type) {
                      charge=fstTrack->GetCharge();
                      TVector3 p1=fstTrack->GetMomentum();
                      TMatrix V1=fstTrack->GetMomentumCovar();
@@ -755,7 +759,7 @@ int main(int argc, char* argv[]) {
                             //if(print) cout<<"\n";
                          }
                      }
-                  }
+                  }*/
                   if(type) {
                      myEvent.nRECfstSelected++;
                   }
