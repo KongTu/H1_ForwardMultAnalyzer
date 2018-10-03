@@ -720,7 +720,12 @@ int main(int argc, char* argv[]) {
                else if(fstTrack) {
 
                   H1NonVertexFittedTrack* fstNonFittedTrack = (H1NonVertexFittedTrack*) fstTrack->GetNonVertexFittedTrack();
-                  cout << "start radius: " << fstNonFittedTrack->GetStartRadius() << endl;
+                  
+                  double fst_theta = fstNonFittedTrack->GetParameter(2);
+                  double fst_dca = fstNonFittedTrack->GetParameter(3);
+                  double fst_radius = fstNonFittedTrack->GetStartRadius();
+                  double fCutThetaMin = 1. * TMath::Pi()/180.;
+                  double fCutThetaMax = 179. * TMath::Pi()/180.;
 
                   // do some track selection here
                   // (1) tracks shall be a primary track
@@ -734,6 +739,9 @@ int main(int argc, char* argv[]) {
                   if(fstTrack->GetPt()<0.1) {
                      type=0;
                   }
+                  if( fst_theta > fCutThetaMax || fst_theta < fCutThetaMin ) {type = 0;}
+                  if( fst_radius > 70 ) {type = 0;}
+                  if( fst_dca > 2.0 ) {type = 0;}
                   // (3) momentum vector shall be incompatible with 
                   //  any other central, combined or forward track
                   if(type) {
