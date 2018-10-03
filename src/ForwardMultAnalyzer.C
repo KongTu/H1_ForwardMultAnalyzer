@@ -722,7 +722,7 @@ int main(int argc, char* argv[]) {
                   H1NonVertexFittedTrack* fstNonFittedTrack = (H1NonVertexFittedTrack*) fstTrack->GetNonVertexFittedTrack();
                   
                   
-                  float fst_para[5] = fstNonFittedTrack->GetParameter();
+                  float fst_para[5] = (H1FSTTrack*)fstNonFittedTrack->GetParameter();
                   //fst_para = (H1Track*)fstNonFittedTrack->GetParameter();
                   double fst_theta = fst_para[2];
                   double fst_dca = fst_para[3];
