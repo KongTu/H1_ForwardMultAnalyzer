@@ -718,6 +718,10 @@ int main(int argc, char* argv[]) {
                   charge=track->GetCharge();
                }
                else if(fstTrack) {
+
+                  H1NonVertexFittedTrack* fstNonFittedTrack = fstTrack->GetNonVertexFittedTrack();
+                  cout << "start radius: " << fstNonFittedTrack->GetStartRadius() << endl;
+
                   // do some track selection here
                   // (1) tracks shall be a primary track
                   H1Vertex const *v=fstTrack->GetVertex();
