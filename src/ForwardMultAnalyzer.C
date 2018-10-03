@@ -827,11 +827,10 @@ int main(int argc, char* argv[]) {
                      myEvent.dcaFstSelected[k] = fst_para[3];
                      myEvent.z0FstSelected[k] = fst_para[4];
                      myEvent.startRadiusFstSelected[k] = fstGeneralTrack->GetStartRadius();
-                     myEvent.ptResFstSelected[k] = (fstTrack->GetdPt())/(fstTrack->GetPt());
-                     myEvent.chi2SZnFstSelected[k] = (fstTrack->GetFitChi2SZ())/(fstTrack->GetFitNdf());
-                     myEvent.chi2XYnFstSelected[k] = (fstTrack->GetFitChi2XY())/(fstTrack->GetFitNdf());
+                     myEvent.ptResFstSelected[k] = (fstGeneralTrack->GetdPt())/(fstGeneralTrack->GetPt());
+                     myEvent.chi2SZnFstSelected[k] = (fstGeneralTrack->GetChi2SZ())/(fstGeneralTrack->GetNdfSZ());
+                     myEvent.chi2XYnFstSelected[k] = (fstGeneralTrack->GetChi2XY())/(fstGeneralTrack->GetNdfXY());
 
-                     cout << "myEvent.chi2SZnFstSelected[k] " << myEvent.chi2SZnFstSelected[k] << endl;
                      //need to ask about chi2 with nonfitted tracks
                   } else {
                      H1PartCand const *partCandI=track->GetParticle();
