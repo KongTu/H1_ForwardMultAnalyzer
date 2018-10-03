@@ -818,18 +818,18 @@ int main(int argc, char* argv[]) {
                      myEvent.covREC[k]=fstTrack->GetMomentumCovar();
                      myEvent.imatchREC[k]=-1;
                      
-                     H1NonVertexFittedTrack* fstNonFittedTrack = (H1NonVertexFittedTrack*) fstTrack->GetNonVertexFittedTrack();
+                     H1FSTTrack* fstGeneralTrack = (H1FSTTrack*) fstTrack->GetFSTTrack();
                      const float *fst_para;
-                     fst_para = fstNonFittedTrack->GetParameter();
+                     fst_para = fstGeneralTrack->GetParameter();
                      myEvent.kappaFstSelected[k] = fst_para[0];
                      myEvent.phiFstSelected[k] = fst_para[1];
                      myEvent.thetaFstSelected[k] = fst_para[2];
                      myEvent.dcaFstSelected[k] = fst_para[3];
                      myEvent.z0FstSelected[k] = fst_para[4];
-                     myEvent.startRadiusFstSelected[k] = fstNonFittedTrack->GetStartRadius();
-                     // myEvent.ptResFstSelected[k] = (fstNonFittedTrack->GetdPt())/(fstNonFittedTrack->GetPt());
-                     // myEvent.chi2SZnFstSelected[k] = (fstNonFittedTrack->GetChi2SZ())/(fstNonFittedTrack->GetNdfSZ());
-                     // myEvent.chi2XYnFstSelected[k] = (fstNonFittedTrack->GetChi2XY())/(fstNonFittedTrack->GetNdfXY());
+                     myEvent.startRadiusFstSelected[k] = fstGeneralTrack->GetStartRadius();
+                     myEvent.ptResFstSelected[k] = (fstGeneralTrack->GetdPt())/(fstGeneralTrack->GetPt());
+                     myEvent.chi2SZnFstSelected[k] = (fstGeneralTrack->GetChi2SZ())/(fstGeneralTrack->GetNdfSZ());
+                     myEvent.chi2XYnFstSelected[k] = (fstGeneralTrack->GetChi2XY())/(fstGeneralTrack->GetNdfXY());
 
                   } else {
                      H1PartCand const *partCandI=track->GetParticle();
