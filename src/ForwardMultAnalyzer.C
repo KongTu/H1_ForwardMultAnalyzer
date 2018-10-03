@@ -674,7 +674,6 @@ int main(int argc, char* argv[]) {
       for(int i=0;i<nPart;i++) {
          H1PartCand *cand=0;
          H1FSTFittedTrack *fstTrack=0;
-         H1FSTTrackSelector *fstGoodTrack;
          TLorentzVector p;
          if(i<partCand.GetEntries()) {
             cand=partCand[i];
@@ -696,6 +695,8 @@ int main(int argc, char* argv[]) {
          }
 
          H1PartSelTrack const *track=0;
+         H1FSTTrackSelector const *fstGoodTrack=0;
+
          if(cand) track=cand->GetIDTrack();
          if(track || fstTrack) {
             if(haveScatteredElectron) {
