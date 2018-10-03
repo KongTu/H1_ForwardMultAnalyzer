@@ -832,6 +832,10 @@ int main(int argc, char* argv[]) {
                      myEvent.chi2XYnFstSelected[k] = (fstGeneralTrack->GetChi2XY())/(fstGeneralTrack->GetNdfXY());
 
                      cout << "chi2n for fitted value: " << fstTrack->GetFitChi2SZ() << endl;
+                     cout << "chi2n for nonfitted value: " << fstGeneralTrack->GetChi2SZ() << endl;
+                    
+                     cout << "chi2n xy for fitted value: " << fstTrack->GetFitChi2XY() << endl;
+                     cout << "chi2n xy for fitted value: " << fstTrack->GetChi2XY() << endl;
 
                   } else {
                      H1PartCand const *partCandI=track->GetParticle();
