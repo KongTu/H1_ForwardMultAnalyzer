@@ -183,6 +183,13 @@ struct MyEvent {
    // FST tracks
    Int_t nRECfstFitted;
    Int_t nRECfstSelected;
+   Float_t kappaFstSelected[nRECtrack_MAX];
+   Float_t phiFstSelected[nRECtrack_MAX];
+   Float_t thetaFstSelected[nRECtrack_MAX];
+   Float_t dcaFstSelected[nRECtrack_MAX];
+   Float_t z0FstSelected[nRECtrack_MAX];
+   Float_t startRadiusFstSelected[nRECtrack_MAX];
+
 
    // auxillary information, not to be saved
    H1PartMC const *partMC[nMCtrack_MAX];
@@ -286,13 +293,19 @@ int main(int argc, char* argv[]) {
    output->Branch("etaStarREC",myEvent.etaStarREC,"etaStarREC[nRECtrack]/F");
    output->Branch("phiStarREC",myEvent.phiStarREC,"phiStarREC[nRECtrack]/F");
    output->Branch("log10zREC",myEvent.log10zREC,"log10zREC[nRECtrack]/F");
-   output->Branch("nucliaREC",myEvent.nucliaREC,"nucliazREC[nRECtrack]/F");
-   output->Branch("dmatchREC",myEvent.dmatchREC,"dmatchzREC[nRECtrack]/F");
-   output->Branch("imatchREC",myEvent.imatchREC,"imatchzREC[nRECtrack]/I");
+   output->Branch("nucliaREC",myEvent.nucliaREC,"nucliaREC[nRECtrack]/F");
+   output->Branch("dmatchREC",myEvent.dmatchREC,"dmatchREC[nRECtrack]/F");
+   output->Branch("imatchREC",myEvent.imatchREC,"imatchREC[nRECtrack]/I");
 
    output->Branch("nRECfstFitted",&myEvent.nRECfstFitted,"nRECfstFitted/I");
    output->Branch("nRECfstSelected",&myEvent.nRECfstSelected,"nRECfstSelected/I");
-   
+   output->Branch("kappaFstSelected",myEvent.kappaFstSelected,"kappaFstSelected[nRECtrack]/F");
+   output->Branch("phiFstSelected",myEvent.phiFstSelected,"phiFstSelected[nRECtrack]/F");
+   output->Branch("thetaFstSelected",myEvent.thetaFstSelected,"thetaFstSelected[nRECtrack]/F");
+   output->Branch("dcaFstSelected",myEvent.dcaFstSelected,"dcaFstSelected[nRECtrack]/F");
+   output->Branch("z0FstSelected",myEvent.z0FstSelected,"z0FstSelected[nRECtrack]/F");
+   output->Branch("startRadiusFstSelected",myEvent.startRadiusFstSelected,"startRadiusFstSelected[nRECtrack]/F");
+
    H1ShortPtr runtype("RunType"); // 0=data, 1=MC, 2=CERN test, 3=CERN MC test
    H1FloatPtr beamx0("BeamX0");          // x position of beam spot (at z=0)
    H1FloatPtr beamy0("BeamY0");          // y position of beam spot (at z=0)
@@ -718,18 +731,7 @@ int main(int argc, char* argv[]) {
                   charge=track->GetCharge();
                }
                else if(fstTrack) {
-
-                  H1NonVertexFittedTrack* fstNonFittedTrack = (H1FSTTrack*) fstTrack->GetNonVertexFittedTrack();
-                  
-                  const float *fst_para;
-                  fst_para = fstTrack->GetParameter();
-                  cout << "theta: " << fst_para[3] << endl;
-                  double fst_theta = fst_para[2];
-                  double fst_dca = fst_para[3];
-                  double fst_radius = fstNonFittedTrack->GetStartRadius();
-                  double fCutThetaMin = 1. * TMath::Pi()/180.;
-                  double fCutThetaMax = 179. * TMath::Pi()/180.;
-
+                 
                   // do some track selection here
                   // (1) tracks shall be a primary track
                   H1Vertex const *v=fstTrack->GetVertex();
@@ -811,6 +813,17 @@ int main(int argc, char* argv[]) {
                   if(fstTrack) {
                      myEvent.covREC[k]=fstTrack->GetMomentumCovar();
                      myEvent.imatchREC[k]=-1;
+                     
+                     H1NonVertexFittedTrack* fstNonFittedTrack = (H1FSTTrack*) fstTrack->GetNonVertexFittedTrack();
+                     const float *fst_para;
+                     fst_para = fstTrack->GetParameter();
+                     myEvent.kappaFstSelected[k] = fst_para[0];
+                     myEvent.phiFstSelected[k] = fst_para[1];
+                     myEvent.thetaFstSelected[k] = fst_para[2];
+                     myEvent.dcaFstSelected[k] = fst_para[3];
+                     myEvent.z0FstSelected[k] = fst_para[4];
+                     myEvent.startRadiusFstSelected[k] = fstNonFittedTrack->GetStartRadius();
+
                   } else {
                      H1PartCand const *partCandI=track->GetParticle();
                      H1Track const *trackI=partCandI ? partCandI->GetTrack():0;
