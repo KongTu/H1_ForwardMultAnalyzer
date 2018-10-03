@@ -721,8 +721,11 @@ int main(int argc, char* argv[]) {
 
                   H1NonVertexFittedTrack* fstNonFittedTrack = (H1NonVertexFittedTrack*) fstTrack->GetNonVertexFittedTrack();
                   
-                  double fst_theta = fstNonFittedTrack->GetParameter(2);
-                  double fst_dca = fstNonFittedTrack->GetParameter(3);
+                  
+                  float fst_para[5];
+                  fst_para = fstNonFittedTrack->GetParameter();
+                  double fst_theta = fst_para[2];
+                  double fst_dca = fst_para[3];
                   double fst_radius = fstNonFittedTrack->GetStartRadius();
                   double fCutThetaMin = 1. * TMath::Pi()/180.;
                   double fCutThetaMax = 179. * TMath::Pi()/180.;
