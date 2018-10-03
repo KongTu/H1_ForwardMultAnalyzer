@@ -183,6 +183,9 @@ struct MyEvent {
    // FST tracks
    Int_t nRECfstFitted;
    Int_t nRECfstSelected;
+   Float_t ptResFstSelected[nRECtrack_MAX];
+   Float_t chi2SZnFstSelected[nRECtrack_MAX];
+   Float_t chi2XYnFstSelected[nRECtrack_MAX];
    Float_t kappaFstSelected[nRECtrack_MAX];
    Float_t phiFstSelected[nRECtrack_MAX];
    Float_t thetaFstSelected[nRECtrack_MAX];
@@ -305,6 +308,9 @@ int main(int argc, char* argv[]) {
    output->Branch("dcaFstSelected",myEvent.dcaFstSelected,"dcaFstSelected[nRECtrack]/F");
    output->Branch("z0FstSelected",myEvent.z0FstSelected,"z0FstSelected[nRECtrack]/F");
    output->Branch("startRadiusFstSelected",myEvent.startRadiusFstSelected,"startRadiusFstSelected[nRECtrack]/F");
+   output->Branch("ptResFstSelected",myEvent.ptResFstSelected,"ptResFstSelected[nRECtrack]/F");
+   output->Branch("chi2SZnFstSelected",myEvent.chi2SZnFstSelected,"chi2SZnFstSelected[nRECtrack]/F");
+   output->Branch("chi2XYnFstSelected",myEvent.chi2XYnFstSelected,"chi2XYnFstSelected[nRECtrack]/F");
 
    H1ShortPtr runtype("RunType"); // 0=data, 1=MC, 2=CERN test, 3=CERN MC test
    H1FloatPtr beamx0("BeamX0");          // x position of beam spot (at z=0)
@@ -821,6 +827,9 @@ int main(int argc, char* argv[]) {
                      myEvent.dcaFstSelected[k] = fst_para[3];
                      myEvent.z0FstSelected[k] = fst_para[4];
                      myEvent.startRadiusFstSelected[k] = fstNonFittedTrack->GetStartRadius();
+                     myEvent.ptResFstSelected[k] = (fstNonFittedTrack->GetdPt())/(fstNonFittedTrack->GetPt());
+                     myEvent.chi2SZnFstSelected[k] = (fstNonFittedTrack->GetChi2SZ())/(fstNonFittedTrack->GetNdfSZ());
+                     myEvent.chi2XYnFstSelected[k] = (fstNonFittedTrack->GetChi2XY())/(fstNonFittedTrack->GetNdfXY());
 
                   } else {
                      H1PartCand const *partCandI=track->GetParticle();
