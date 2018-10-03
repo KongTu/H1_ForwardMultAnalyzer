@@ -695,7 +695,7 @@ int main(int argc, char* argv[]) {
          }
 
          H1PartSelTrack const *track=0;
-         H1FSTTrackSelector const *fstGoodTrack=0;
+         H1FSTTrackSelector const *fstTrackSelector=0;
 
          if(cand) track=cand->GetIDTrack();
          if(track || fstTrack) {
@@ -720,7 +720,7 @@ int main(int argc, char* argv[]) {
                }
                else if(fstTrack) {
 
-                  //cout << "test " << fstGoodTrack->IsSelected(fstTrack) << endl;
+                  bool isGoodTrack = fstTrackSelector->IsSelected(fstTrack);
                   //if( fstGoodTrack->IsSelected(fstTrack) ) {type=4;} //good forward track selection
                   // do some track selection here
                   // (1) tracks shall be a primary track
