@@ -719,7 +719,7 @@ int main(int argc, char* argv[]) {
                }
                else if(fstTrack) {
 
-                  H1NonVertexFittedTrack* fstNonFittedTrack = fstTrack->GetNonVertexFittedTrack();
+                  H1NonVertexFittedTrack* fstNonFittedTrack = (H1NonVertexFittedTrack*) fstTrack->GetNonVertexFittedTrack();
                   cout << "start radius: " << fstNonFittedTrack->GetStartRadius() << endl;
 
                   // do some track selection here
