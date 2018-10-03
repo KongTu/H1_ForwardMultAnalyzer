@@ -837,6 +837,10 @@ int main(int argc, char* argv[]) {
                      cout << "chi2n xy for fitted value: " << fstTrack->GetFitChi2XY() << endl;
                      cout << "chi2n xy for fitted value: " << fstGeneralTrack->GetChi2XY() << endl;
 
+                     cout << "pt fst fitted track: " << fstTrack->GetPt() << endl;
+                     cout << "pt fst general track: " << fstGeneralTrack->GetPt() << endl;
+
+
                   } else {
                      H1PartCand const *partCandI=track->GetParticle();
                      H1Track const *trackI=partCandI ? partCandI->GetTrack():0;
