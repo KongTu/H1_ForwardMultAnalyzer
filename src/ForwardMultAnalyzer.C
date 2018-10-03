@@ -54,6 +54,7 @@
 #include "H1Tracks/H1FSTFittedTrack.h"
 #include "H1Tracks/H1FSTFittedTrackArrayPtr.h"
 #include "H1TrkFinder/H1FSTTrackSelector.h"
+#include "H1TrkFinder/H1CentralTrackSelector.h"
 
 //#include "H1Mods/H1GkiInfoArrayPtr.h"
 //#include "H1Mods/H1GkiInfo.h"
@@ -695,7 +696,7 @@ int main(int argc, char* argv[]) {
          }
 
          H1PartSelTrack const *track=0;
-         H1FSTTrackSelector const *fstTrackSelector=0;
+         H1CentralTrackSelector const *centralTrackSelector=0;
 
          if(cand) track=cand->GetIDTrack();
          if(track || fstTrack) {
@@ -718,10 +719,12 @@ int main(int argc, char* argv[]) {
                   else if(track->IsBSTTrk()) type =5;
                   charge=track->GetCharge();
                }
+
+               cout << centralTrackSelector->IsSelected(track) << endl;
                else if(fstTrack) {
 
-                  TObject* object = (H1FSTFittedTrack*) fstTrack;
-                  bool isGoodTrack = fstTrackSelector->IsSelected(object);
+                  // TObject* object = (H1FSTFittedTrack*) fstTrack;
+                  // bool isGoodTrack = fstTrackSelector->IsSelected(object);
                   //if( fstGoodTrack->IsSelected(fstTrack) ) {type=4;} //good forward track selection
                   // do some track selection here
                   // (1) tracks shall be a primary track
