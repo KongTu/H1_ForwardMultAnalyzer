@@ -719,7 +719,7 @@ int main(int argc, char* argv[]) {
                }
                else if(fstTrack) {
 
-                  H1NonVertexFittedTrack* fstNonFittedTrack = (H1NonVertexFittedTrack*) fstTrack->GetNonVertexFittedTrack();
+                  H1NonVertexFittedTrack* fstNonFittedTrack = (H1FSTTrack*) fstTrack->GetNonVertexFittedTrack();
                   
                   
                   float fst_para[5] = (H1FSTTrack*)fstNonFittedTrack->GetParameter();
