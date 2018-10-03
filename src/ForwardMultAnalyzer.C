@@ -718,9 +718,9 @@ int main(int argc, char* argv[]) {
                   else if(track->IsFSTTrk()) type=4;
                   else if(track->IsBSTTrk()) type =5;
                   charge=track->GetCharge();
+                  cout << centralTrackSelector->IsSelected(track) << endl;
                }
 
-               cout << centralTrackSelector->IsSelected(track) << endl;
                else if(fstTrack) {
 
                   // TObject* object = (H1FSTFittedTrack*) fstTrack;
