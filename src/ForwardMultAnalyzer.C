@@ -818,7 +818,7 @@ int main(int argc, char* argv[]) {
                      myEvent.covREC[k]=fstTrack->GetMomentumCovar();
                      myEvent.imatchREC[k]=-1;
                      
-                     H1NonVertexFittedTrack* fstNonFittedTrack = (H1FSTTrack*) fstTrack->GetNonVertexFittedTrack();
+                     H1NonVertexFittedTrack* fstNonFittedTrack = (H1NonVertexFittedTrack*) fstTrack->GetNonVertexFittedTrack();
                      const float *fst_para;
                      fst_para = fstNonFittedTrack->GetParameter();
                      myEvent.kappaFstSelected[k] = fst_para[0];
