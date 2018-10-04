@@ -732,13 +732,12 @@ int main(int argc, char* argv[]) {
                   if(track->IsCentralTrk()) type =1;
                   else if(track->IsCombinedTrk()) type=2;
                   else if(track->IsForwardTrk()) type =3;
-                  else if(track->IsFSTTrk()) {type=4; cout << "does it ever get here?! " << endl;}
+                  else if(track->IsFSTTrk()) type=4;
                   else if(track->IsBSTTrk()) type =5;
                   charge=track->GetCharge();
                }
                else if(fstTrack) {
                   
-                  cout << "type [1] " << type << endl;
                   // do some track selection here
                   // (1) tracks shall be a primary track
                   H1Vertex const *v=fstTrack->GetVertex();
@@ -747,16 +746,10 @@ int main(int argc, char* argv[]) {
                      floatEqual(v->Z(),myEvent.vertex[2])) {
                      type=4;
                   }
-
-                  cout << "type [2] " << type << endl;
-
                   // (2) minimum transverse momentum of 0.1 GeV
                   if(fstTrack->GetPt()<0.1) {
                      type=0;
                   }
-                  
-                  cout << "type [3] " << type << endl;
-
                   // (3) momentum vector shall be incompatible with 
                   //  any other central, combined or forward track
                   if(type) {
@@ -779,19 +772,17 @@ int main(int argc, char* argv[]) {
                             //if(print) cout<<i<<" "<<j<<" "<<chi2;
                             if(chi2<30.) {
                                //if(print) cout<<" [reject]";
-                               type=0;
+                               
+                               //type=0; comment out the cut
                             }
                             //if(print) cout<<"\n";
                          }
                      }
                   }
-                  cout << "type [4] " << type << endl;
                   if(type) {
                      myEvent.nRECfstSelected++;
                   }
                }
-
-               cout << "type [5] " << type << endl;
                trackType[type]++;
                if(type && (myEvent.nRECtrack<MyEvent::nRECtrack_MAX)) {
                   if(print) {
