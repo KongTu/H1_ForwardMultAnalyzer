@@ -740,16 +740,17 @@ int main(int argc, char* argv[]) {
                   
                   // do some track selection here
                   // (1) tracks shall be a primary track
-                  H1Vertex const *v=fstTrack->GetVertex();
-                  if(floatEqual(v->X(),myEvent.vertex[0])&&
-                     floatEqual(v->Y(),myEvent.vertex[1])&&
-                     floatEqual(v->Z(),myEvent.vertex[2])) {
-                     type=4;
-                  }
+                  // H1Vertex const *v=fstTrack->GetVertex();
+                  // if(floatEqual(v->X(),myEvent.vertex[0])&&
+                  //    floatEqual(v->Y(),myEvent.vertex[1])&&
+                  //    floatEqual(v->Z(),myEvent.vertex[2])) {
+                  //    type=4;
+                  // }
                   // (2) minimum transverse momentum of 0.1 GeV
                   if(fstTrack->GetPt()<0.1) {
                      type=0;
                   }
+                  else{ type = 4;}
                   // (3) momentum vector shall be incompatible with 
                   //  any other central, combined or forward track
                   if(type) {
