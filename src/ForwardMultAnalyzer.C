@@ -691,8 +691,6 @@ int main(int argc, char* argv[]) {
 
       nPart += fstFittedTrack.GetEntries();
 
-      cout << "debug: nPart = " << nPart << "   and   fstFittedTrack = " << fstFittedTrack.GetEntries() << endl;
-
       for(int i=0;i<nPart;i++) {
          H1PartCand *cand=0;
          H1FSTFittedTrack *fstTrack=0;
@@ -700,14 +698,9 @@ int main(int argc, char* argv[]) {
          if(i<partCand.GetEntries()) {
             cand=partCand[i];
             p=cand->GetFourVector();
-            cout << "partCand " << i << endl;
          } else {
-            cout << "fstFittedTrack " << i << endl;
-
             fstTrack=fstFittedTrack[i-partCand.GetEntries()];
             p=fstTrack->GetFourVector(M_CHARGED_PION);
-
-            cout << "fstTrack " << fstTrack << endl;
          }
          // ignore particles counted with scattered electron
          if(cand && isElectron.find(i)!=isElectron.end()) continue;
@@ -744,7 +737,8 @@ int main(int argc, char* argv[]) {
                   charge=track->GetCharge();
                }
                else if(fstTrack) {
-                 
+                  
+                  cout << "type [1] " << type << endl;
                   // do some track selection here
                   // (1) tracks shall be a primary track
                   H1Vertex const *v=fstTrack->GetVertex();
@@ -753,11 +747,16 @@ int main(int argc, char* argv[]) {
                      floatEqual(v->Z(),myEvent.vertex[2])) {
                      type=4;
                   }
+
+                  cout << "type [2] " << type << endl;
+
                   // (2) minimum transverse momentum of 0.1 GeV
                   if(fstTrack->GetPt()<0.1) {
                      type=0;
                   }
-         
+                  
+                  cout << "type [3] " << type << endl;
+
                   // (3) momentum vector shall be incompatible with 
                   //  any other central, combined or forward track
                   if(type) {
@@ -786,10 +785,13 @@ int main(int argc, char* argv[]) {
                          }
                      }
                   }
+                  cout << "type [4] " << type << endl;
                   if(type) {
                      myEvent.nRECfstSelected++;
                   }
                }
+
+               cout << "type [5] " << type << endl;
                trackType[type]++;
                if(type && (myEvent.nRECtrack<MyEvent::nRECtrack_MAX)) {
                   if(print) {
