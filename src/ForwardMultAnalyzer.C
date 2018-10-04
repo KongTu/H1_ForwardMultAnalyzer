@@ -691,6 +691,8 @@ int main(int argc, char* argv[]) {
 
       nPart += fstFittedTrack.GetEntries();
 
+      cout << "debug: nPart = " << nPart << "   and   fstFittedTrack = " << fstFittedTrack.GetEntries() << endl;
+
       for(int i=0;i<nPart;i++) {
          H1PartCand *cand=0;
          H1FSTFittedTrack *fstTrack=0;
@@ -698,9 +700,14 @@ int main(int argc, char* argv[]) {
          if(i<partCand.GetEntries()) {
             cand=partCand[i];
             p=cand->GetFourVector();
+            cout << "partCand " << i << endl;
          } else {
+            cout << "fstFittedTrack " << i << endl;
+
             fstTrack=fstFittedTrack[i-partCand.GetEntries()];
             p=fstTrack->GetFourVector(M_CHARGED_PION);
+
+            cout << "fstTrack " << fstTrack << endl;
          }
          // ignore particles counted with scattered electron
          if(cand && isElectron.find(i)!=isElectron.end()) continue;
@@ -732,7 +739,7 @@ int main(int argc, char* argv[]) {
                   if(track->IsCentralTrk()) type =1;
                   else if(track->IsCombinedTrk()) type=2;
                   else if(track->IsForwardTrk()) type =3;
-                  else if(track->IsFSTTrk()) type=4;
+                  else if(track->IsFSTTrk()) {type=4; cout << "does it ever get here?! " << endl;}
                   else if(track->IsBSTTrk()) type =5;
                   charge=track->GetCharge();
                }
