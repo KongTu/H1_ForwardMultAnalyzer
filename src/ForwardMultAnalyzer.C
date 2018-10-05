@@ -349,7 +349,7 @@ int main(int argc, char* argv[]) {
    H1PartMCArrayPtr mcpart;
 
    //H1FSTFittedTrackArrayPtr fstFittedTrack;
-   H1FSTTrackArrayPtr fstNonFittedTrack
+   H1FSTTrackArrayPtr fstNonFittedTrack;
 
    Int_t eventCounter = 0;
 
