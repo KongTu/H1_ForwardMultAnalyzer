@@ -52,8 +52,8 @@
 #include "H1Geom/H1DBManager.h"
 
 #include "H1Tracks/H1FSTFittedTrack.h"
-#include "H1Tracks/H1NonVertexFittedTrack.h"
 #include "H1Tracks/H1FSTFittedTrackArrayPtr.h"
+#include "H1Tracks/H1FSTTrackArrayPtr.h"
 
 
 //#include "H1Mods/H1GkiInfoArrayPtr.h"
@@ -348,7 +348,8 @@ int main(int argc, char* argv[]) {
 
    H1PartMCArrayPtr mcpart;
 
-   H1FSTFittedTrackArrayPtr fstFittedTrack;
+   //H1FSTFittedTrackArrayPtr fstFittedTrack;
+   H1FSTTrackArrayPtr fstNonFittedTrack
 
    Int_t eventCounter = 0;
 
@@ -683,23 +684,23 @@ int main(int argc, char* argv[]) {
       myEvent.nRECtrackAll=0;
       myEvent.nRECtrack=0;
 
-      myEvent.nRECfstFitted=fstFittedTrack.GetEntries();
+      myEvent.nRECfstFitted=fstNonFittedTrack.GetEntries();
       myEvent.nRECfstSelected=0;
 
       vector<int> trackType(10);
       int nPart=partCand.GetEntries();
 
-      nPart += fstFittedTrack.GetEntries();
+      nPart += fstNonFittedTrack.GetEntries();
 
       for(int i=0;i<nPart;i++) {
          H1PartCand *cand=0;
-         H1FSTFittedTrack *fstTrack=0;
+         H1FSTTrack *fstTrack=0;
          TLorentzVector p;
          if(i<partCand.GetEntries()) {
             cand=partCand[i];
             p=cand->GetFourVector();
          } else {
-            fstTrack=fstFittedTrack[i-partCand.GetEntries()];
+            fstTrack=fstNonFittedTrack[i-partCand.GetEntries()];
             p=fstTrack->GetFourVector(M_CHARGED_PION);
          }
          // ignore particles counted with scattered electron
@@ -819,18 +820,18 @@ int main(int argc, char* argv[]) {
                      myEvent.covREC[k]=fstTrack->GetMomentumCovar();
                      myEvent.imatchREC[k]=-1;
 
-                     H1FSTTrack* fstGeneralTrack = (H1FSTTrack*) fstTrack->GetFSTTrack();
-                     const float *fst_para;
-                     fst_para = fstGeneralTrack->GetParameter();
-                     myEvent.kappaFstSelected[k] = fst_para[0];
-                     myEvent.phiFstSelected[k] = fst_para[1];
-                     myEvent.thetaFstSelected[k] = fst_para[2];
-                     myEvent.dcaFstSelected[k] = fst_para[3];
-                     myEvent.z0FstSelected[k] = fst_para[4];
-                     myEvent.startRadiusFstSelected[k] = fstGeneralTrack->GetStartRadius();
-                     myEvent.ptResFstSelected[k] = (fstGeneralTrack->GetdPt())/(fstGeneralTrack->GetPt());
-                     myEvent.chi2SZnFstSelected[k] = (fstGeneralTrack->GetChi2SZ())/(fstGeneralTrack->GetNdfSZ());
-                     myEvent.chi2XYnFstSelected[k] = (fstGeneralTrack->GetChi2XY())/(fstGeneralTrack->GetNdfXY());
+                     // H1FSTTrack* fstGeneralTrack = (H1FSTTrack*) fstTrack->GetFSTTrack();
+                     // const float *fst_para;
+                     // fst_para = fstGeneralTrack->GetParameter();
+                     // myEvent.kappaFstSelected[k] = fst_para[0];
+                     // myEvent.phiFstSelected[k] = fst_para[1];
+                     // myEvent.thetaFstSelected[k] = fst_para[2];
+                     // myEvent.dcaFstSelected[k] = fst_para[3];
+                     // myEvent.z0FstSelected[k] = fst_para[4];
+                     // myEvent.startRadiusFstSelected[k] = fstGeneralTrack->GetStartRadius();
+                     // myEvent.ptResFstSelected[k] = (fstGeneralTrack->GetdPt())/(fstGeneralTrack->GetPt());
+                     // myEvent.chi2SZnFstSelected[k] = (fstGeneralTrack->GetChi2SZ())/(fstGeneralTrack->GetNdfSZ());
+                     // myEvent.chi2XYnFstSelected[k] = (fstGeneralTrack->GetChi2XY())/(fstGeneralTrack->GetNdfXY());
 
                      //need to ask about chi2 with nonfitted tracks
                   } else {
