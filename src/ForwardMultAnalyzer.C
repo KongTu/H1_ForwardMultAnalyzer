@@ -180,6 +180,7 @@ struct MyEvent {
    Float_t chi2vtxREC[nRECtrack_MAX];
    Float_t chi2nvREC[nRECtrack_MAX];
    Int_t   nHitsREC[nRECtrack_MAX];
+   Float_t radLengthREC[nRECtrack_MAX];
    Float_t log10zREC[nRECtrack_MAX];
    Float_t nucliaREC[nRECtrack_MAX];
    Float_t dmatchREC[nRECtrack_MAX];
@@ -304,6 +305,7 @@ int main(int argc, char* argv[]) {
    output->Branch("chi2vtxREC",myEvent.chi2vtxREC,"chi2vtxREC[nRECtrack]/F");
    output->Branch("chi2nvREC",myEvent.chi2nvREC,"chi2nvREC[nRECtrack]/F");
    output->Branch("nHitsREC",myEvent.nHitsREC,"nHitsREC[nRECtrack]/I");
+   output->Branch("radLengthREC",myEvent.radLengthREC,"radLengthREC[nRECtrack]/F");
    output->Branch("nucliaREC",myEvent.nucliaREC,"nucliaREC[nRECtrack]/F");
    output->Branch("dmatchREC",myEvent.dmatchREC,"dmatchREC[nRECtrack]/F");
    output->Branch("imatchREC",myEvent.imatchREC,"imatchREC[nRECtrack]/I");
@@ -762,6 +764,7 @@ int main(int argc, char* argv[]) {
                int charge=0;
                double chi2vtx=-1.;
                double chi2nv=-1.;
+               double trackRadialLength=-1.;
                if(track){
                   if(track->IsCentralTrk()) type =1;
                   else if(track->IsCombinedTrk()) type=2;
@@ -769,6 +772,7 @@ int main(int argc, char* argv[]) {
                   else if(track->IsFSTTrk()) type=4;
                   else if(track->IsBSTTrk()) type =5;
                   NHits = track->GetNHitWord();
+                  trackRadialLength = track->GetRadLength();
                   H1VertexFittedTrack const *h1track=
                      dynamic_cast<H1VertexFittedTrack const *>
                      (cand->GetTrack());
@@ -878,6 +882,7 @@ int main(int argc, char* argv[]) {
                   myEvent.chi2vtxREC[k]=chi2vtx;
                   myEvent.chi2nvREC[k]=chi2nv;
                   myEvent.nHitsREC[k]=NHits;
+                  myEvent.radLengthREC[k]=trackRadialLength;
                   myEvent.nucliaREC[k]=1.;
                   myEvent.momREC[k]=h.Vect();
                   myEvent.covREC[k].ResizeTo(3,3);
