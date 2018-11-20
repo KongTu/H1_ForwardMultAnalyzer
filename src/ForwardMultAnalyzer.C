@@ -768,7 +768,7 @@ int main(int argc, char* argv[]) {
                   else if(track->IsForwardTrk()) type =3;
                   else if(track->IsFSTTrk()) type=4;
                   else if(track->IsBSTTrk()) type =5;
-                  NHits = track->GetNHit();
+                  NHits = track->GetNHitWord();
                   H1VertexFittedTrack const *h1track=
                      dynamic_cast<H1VertexFittedTrack const *>
                      (cand->GetTrack());
