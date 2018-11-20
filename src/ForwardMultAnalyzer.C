@@ -757,7 +757,7 @@ int main(int argc, char* argv[]) {
                double etaStar=hStar.Eta();
                double ptStar=hStar.Pt();
                double phiStar=hStar.Phi();
-               int NHits = track->GetNHit();
+               int NHits = 0;
                int type=0;
                int charge=0;
                double chi2vtx=-1.;
@@ -768,7 +768,7 @@ int main(int argc, char* argv[]) {
                   else if(track->IsForwardTrk()) type =3;
                   else if(track->IsFSTTrk()) type=4;
                   else if(track->IsBSTTrk()) type =5;
-                  
+                  NHits = track->GetNHit();
                   H1VertexFittedTrack const *h1track=
                      dynamic_cast<H1VertexFittedTrack const *>
                      (cand->GetTrack());
