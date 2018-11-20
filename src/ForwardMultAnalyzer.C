@@ -179,6 +179,7 @@ struct MyEvent {
    Float_t phiStarREC[nRECtrack_MAX];
    Float_t chi2vtxREC[nRECtrack_MAX];
    Float_t chi2nvREC[nRECtrack_MAX];
+   Int_t   nHitsREC[nRECtrack_MAX];
    Float_t log10zREC[nRECtrack_MAX];
    Float_t nucliaREC[nRECtrack_MAX];
    Float_t dmatchREC[nRECtrack_MAX];
@@ -302,6 +303,7 @@ int main(int argc, char* argv[]) {
    output->Branch("log10zREC",myEvent.log10zREC,"log10zREC[nRECtrack]/F");
    output->Branch("chi2vtxREC",myEvent.chi2vtxREC,"chi2vtxREC[nRECtrack]/F");
    output->Branch("chi2nvREC",myEvent.chi2nvREC,"chi2nvREC[nRECtrack]/F");
+   output->Branch("nHitsREC",myEvent.nHitsREC,"nHitsREC[nRECtrack]/I");
    output->Branch("nucliaREC",myEvent.nucliaREC,"nucliaREC[nRECtrack]/F");
    output->Branch("dmatchREC",myEvent.dmatchREC,"dmatchREC[nRECtrack]/F");
    output->Branch("imatchREC",myEvent.imatchREC,"imatchREC[nRECtrack]/I");
@@ -759,6 +761,7 @@ int main(int argc, char* argv[]) {
                int charge=0;
                double chi2vtx=-1.;
                double chi2nv=-1.;
+               int NHits = -1.;
                if(track){
                   if(track->IsCentralTrk()) type =1;
                   else if(track->IsCombinedTrk()) type=2;
@@ -770,6 +773,7 @@ int main(int argc, char* argv[]) {
                      dynamic_cast<H1VertexFittedTrack const *>
                      (cand->GetTrack());
                   if(h1track) {
+                     NHits = h1track->GetNHit();
                      chi2vtx=h1track->GetFitChi2();
                      H1NonVertexFittedTrack const *nvtrack=
                         h1track-> GetNonVertexFittedTrack();
@@ -791,6 +795,7 @@ int main(int argc, char* argv[]) {
                }
                else if(fstTrack) {
 
+                  //NHits = fstTrack->GetFSTTrack()->GetNHit();
                   chi2vtx=fstTrack->GetFitChi2XY()+fstTrack->GetFitChi2SZ();
                   chi2nv=fstTrack->GetFSTTrack()->GetChi2XY()+
                      fstTrack->GetFSTTrack()->GetChi2XY();
@@ -873,6 +878,7 @@ int main(int argc, char* argv[]) {
                   myEvent.log10zREC[k]=log10z;
                   myEvent.chi2vtxREC[k]=chi2vtx;
                   myEvent.chi2nvREC[k]=chi2nv;
+                  myEvent.nHitsREC[k]=NHits;
                   myEvent.nucliaREC[k]=1.;
                   myEvent.momREC[k]=h.Vect();
                   myEvent.covREC[k].ResizeTo(3,3);
