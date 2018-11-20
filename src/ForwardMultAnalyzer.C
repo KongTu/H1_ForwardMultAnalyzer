@@ -438,7 +438,7 @@ int main(int argc, char* argv[]) {
          TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
 
          // final state particles
-         bool haveElectron=false;
+         //bool haveElectron=false;
          myEvent.nMCtrackAll=0;
          myEvent.nMCtrack=0;
          for(int i=0;i<mcpart.GetEntries();i++) {
@@ -630,7 +630,7 @@ int main(int argc, char* argv[]) {
                  <<" "<<simulatedVertex.Z();
          }
          cout<<"\n";
-         cout<<"number of part cand: "<<partCand.GetEntries()<<"\n";
+         cout<<"number of part cand: "<<partCandArray.GetEntries()<<"\n";
       }
 
       // find scattered electron as identified EM particle with highest PT in SpaCal
@@ -839,9 +839,9 @@ int main(int argc, char* argv[]) {
                          }
                      }
                   }
-                  if(type) {
-                     myEvent.nRECfstSelected++;
-                  }
+                  // if(type) {
+                  //    myEvent.nRECfstSelected++;
+                  // }
                }
                trackType[type]++;
                if(type && (myEvent.nRECtrack<MyEvent::nRECtrack_MAX)) {
