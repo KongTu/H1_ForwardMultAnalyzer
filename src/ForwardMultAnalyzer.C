@@ -757,11 +757,11 @@ int main(int argc, char* argv[]) {
                double etaStar=hStar.Eta();
                double ptStar=hStar.Pt();
                double phiStar=hStar.Phi();
+               int NHits = track->GetNHit();
                int type=0;
                int charge=0;
                double chi2vtx=-1.;
                double chi2nv=-1.;
-               int NHits = -1.;
                if(track){
                   if(track->IsCentralTrk()) type =1;
                   else if(track->IsCombinedTrk()) type=2;
@@ -773,7 +773,6 @@ int main(int argc, char* argv[]) {
                      dynamic_cast<H1VertexFittedTrack const *>
                      (cand->GetTrack());
                   if(h1track) {
-                     NHits = h1track->GetNHit();
                      chi2vtx=h1track->GetFitChi2();
                      H1NonVertexFittedTrack const *nvtrack=
                         h1track-> GetNonVertexFittedTrack();
