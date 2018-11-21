@@ -812,10 +812,10 @@ int main(int argc, char* argv[]) {
                      type=4;
                   }
                   // (2) minimum transverse momentum of 0.1 GeV
-                  if(fstTrack->GetPt()<0.1) {
-                     type=0;
-                  }
-                  else{ type = 4;}
+                  // if(fstTrack->GetPt()<0.1) {
+                  //    type=0;
+                  // }
+                  // else{ type = 4;}
                   // (3) momentum vector shall be incompatible with 
                   //  any other central, combined or forward track, any other
                   //  HFS track
