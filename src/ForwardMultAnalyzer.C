@@ -185,6 +185,8 @@ struct MyEvent {
    Int_t   nvNHitsREC[nRECtrack_MAX];
    Float_t vtxTrackLengthREC[nRECtrack_MAX];
    Float_t nvTrackLengthREC[nRECtrack_MAX];
+   Float_t dcaPrimeREC[nRECtrack_MAX];
+   Float_t dz0PrimeREC[nRECtrack_MAX];
    Float_t log10zREC[nRECtrack_MAX];
    Float_t nucliaREC[nRECtrack_MAX];
    Float_t dmatchREC[nRECtrack_MAX];
@@ -314,6 +316,8 @@ int main(int argc, char* argv[]) {
    output->Branch("nvNHitsREC",myEvent.nvNHitsREC,"nvNHitsREC[nRECtrack]/I");
    output->Branch("vtxTrackLengthREC",myEvent.vtxTrackLengthREC,"vtxTrackLengthREC[nRECtrack]/F");
    output->Branch("nvTrackLengthREC",myEvent.nvTrackLengthREC,"nvTrackLengthREC[nRECtrack]/F");
+   output->Branch("dcaPrimeREC",myEvent.dcaPrimeREC,"dcaPrimeREC[nRECtrack]/F");
+   output->Branch("dz0PrimeREC",myEvent.dz0PrimeREC,"dz0PrimeREC[nRECtrack]/F");
 
    output->Branch("nucliaREC",myEvent.nucliaREC,"nucliaREC[nRECtrack]/F");
    output->Branch("dmatchREC",myEvent.dmatchREC,"dmatchREC[nRECtrack]/F");
@@ -778,6 +782,8 @@ int main(int argc, char* argv[]) {
                int    nvNdf=-1;
                double vtxTrackLength=-1.;
                double nvTrackLength=-1.;
+               double dcaPrime=-1.;
+               double dz0Prime=-1.;
 
                if(track){
                   if(track->IsCentralTrk()) type =1;
@@ -791,9 +797,11 @@ int main(int argc, char* argv[]) {
                      (cand->GetTrack());
                   if(h1track) {
                      chi2vtx=h1track->GetFitChi2();
-                     vtxNdf=h1track->GetNdf();
+                     vtxNdf=h1track->GetFitNdf();
                      vtxNHits=h1track->GetNHitWord();
                      vtxTrackLength=h1track->GetLength();
+                     dcaPrime=h1track->GetDcaPrime();
+                     dz0Prime=h1track->GetDz0Prime();
 
                      H1NonVertexFittedTrack const *nvtrack=
                         h1track-> GetNonVertexFittedTrack();
@@ -907,6 +915,8 @@ int main(int argc, char* argv[]) {
                   myEvent.nvNHitsREC[k]=nvNHits;
                   myEvent.vtxTrackLengthREC[k]=vtxTrackLength;
                   myEvent.nvTrackLengthREC[k]=nvTrackLength;
+                  myEvent.dcaPrimeREC[k]=dcaPrime;
+                  myEvent.dz0PrimeREC[k]=dz0Prime;
 
                   myEvent.nucliaREC[k]=1.;
                   myEvent.momREC[k]=h.Vect();
