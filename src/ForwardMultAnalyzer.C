@@ -970,7 +970,7 @@ int main(int argc, char* argv[]) {
          //     and remove duplicates
          for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
             int iMC=myEvent.imatchREC[iREC];
-            if(iREC<0) continue; // no match for this particle
+            if(iMC<0) continue; // no match for this particle
             int jREC=myEvent.imatchMC[iMC];
             if(jREC>=0) {
                // duplicate match for this particle
