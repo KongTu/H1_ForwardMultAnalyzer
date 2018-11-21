@@ -831,6 +831,9 @@ int main(int argc, char* argv[]) {
                   chi2nv=fstTrack->GetFSTTrack()->GetChi2XY()+
                      fstTrack->GetFSTTrack()->GetChi2XY();
                   
+                  vtxNdf=fstTrack->GetFitNdf();
+                  nvNdf=fstTrack->GetFstTrack()->GetNdfXY()+fstTrack->GetFstTrack()->GetNdfSZ();
+
                   // do some track selection here
                   // (1) tracks shall be a primary track
                   H1Vertex const *v=fstTrack->GetVertex();
