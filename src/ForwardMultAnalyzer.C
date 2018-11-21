@@ -832,7 +832,7 @@ int main(int argc, char* argv[]) {
                      fstTrack->GetFSTTrack()->GetChi2XY();
                   
                   vtxNdf=fstTrack->GetFitNdf();
-                  nvNdf=fstTrack->GetFstTrack()->GetNdfXY()+fstTrack->GetFstTrack()->GetNdfSZ();
+                  nvNdf=fstTrack->GetFSTTrack()->GetNdfXY()+fstTrack->GetFSTTrack()->GetNdfSZ();
 
                   // do some track selection here
                   // (1) tracks shall be a primary track
