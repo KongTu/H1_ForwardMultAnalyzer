@@ -283,7 +283,6 @@ int main(int argc, char* argv[]) {
    output->Branch("elecPyMC",&myEvent.elecPyMC,"elecPyMC/F");
    output->Branch("elecPzMC",&myEvent.elecPzMC,"elecPzMC/F");
    output->Branch("elecEMC",&myEvent.elecEMC,"elecEMC/F");
-   output->Branch("elecEcraREC",&myEvent.elecEcraREC,"elecEcraREC/F");
    output->Branch("xGKI",&myEvent.xGKI,"xGKI/F");
    output->Branch("yGKI",&myEvent.yGKI,"yGKI/F");
    output->Branch("Q2GKI",&myEvent.Q2GKI,"Q2GKI/F");
@@ -312,6 +311,8 @@ int main(int argc, char* argv[]) {
    output->Branch("elecPyREC",&myEvent.elecPyREC,"elecPyREC/F");
    output->Branch("elecPzREC",&myEvent.elecPzREC,"elecPzREC/F");
    output->Branch("elecEREC",&myEvent.elecEREC,"elecEREC/F");
+   output->Branch("elecEcraREC",&myEvent.elecEcraREC,"elecEcraREC/F");
+
    output->Branch("xREC",&myEvent.xREC,"xREC/F");
    output->Branch("yREC",&myEvent.yREC,"yREC/F");
    output->Branch("Q2REC",&myEvent.Q2REC,"Q2REC/F");
@@ -415,7 +416,7 @@ int main(int argc, char* argv[]) {
       //    if(!goodRunList->FindRun(*run)) continue;
       //    // skip data events with bad detector status
       //    if(!detectorStatus->IsOn()) continue;
-      
+
       double w=*weight1 * *weight2;
       // if(*Q2Gki<10.) continue;
       if(print || ((eventCounter %10000)==0))  { 
