@@ -9,7 +9,6 @@
 //          by: $Author: msteder $
 //
 ///////////////////////////////////////////////////////
-
 #include <iostream>
 #include <iomanip>
 #include <stdlib.h>
@@ -111,6 +110,8 @@ struct MyEvent {
       // trigger information
    UInt_t l1l2l3ac[4];
    UInt_t l1l2l3rw[4];
+   UInt_t hasActualST;
+   UInt_t hasRawST;
    Float_t trigWeightRW;
    Float_t trigWeightAC;
 
@@ -134,6 +135,7 @@ struct MyEvent {
    Float_t xGKI,yGKI,Q2GKI;
 
    Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC,elecEradMC; // scattered electron
+   Float_t elecEcraREC;
    Float_t xMC,yMC,Q2MC;
    
    enum {
@@ -222,13 +224,34 @@ int main(int argc, char* argv[]) {
    H1StdCmdLine opts;
    opts.Parse(&argc, argv);
 
+   // open run selection and detector status file
+   TString goodRunFileName("SelectedRuns_0607-and-lowE.root");
+   TFile goodRunFile(goodRunFileName);
+   if(!goodRunFile.IsOpen()) {
+      cerr<<"Error: could not open file "<<goodRunFileName<<"\n";
+      return 2;
+   }
+   H1RunList* goodRunList
+      = (H1RunList*) goodRunFile.Get("H1RunList");
+   if(!goodRunList) {
+      cerr<<"Error: no runlist in file - return!\n";
+      return 2;
+   }
+   H1DetectorStatus *detectorStatus
+      = (H1DetectorStatus*)goodRunFile.Get("MyDetectorStatus");
+   if(!detectorStatus) {
+      cerr<<"Error: no detector status in file - return!\n";
+      return 3;
+   }
+
+
    // Load mODS/HAT files
    H1Tree::Instance()->Open();            // this statement must be there!
 
    //cout << H1Tree::Instance()->SelectHat("NumJPsi>0")
    //     << " events selected " << endl;
 
-   TFile file(opts.GetOutput(), "RECREATE");
+   TFile *file=new TFile(opts.GetOutput(), "RECREATE");
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
    output->Branch("run",&myEvent.run,"run/I");
@@ -259,6 +282,7 @@ int main(int argc, char* argv[]) {
    output->Branch("elecPyMC",&myEvent.elecPyMC,"elecPyMC/F");
    output->Branch("elecPzMC",&myEvent.elecPzMC,"elecPzMC/F");
    output->Branch("elecEMC",&myEvent.elecEMC,"elecEMC/F");
+   output->Branch("elecEcraREC",&myEvent.elecEcraREC,"elecEcraREC/F");
    output->Branch("xGKI",&myEvent.xGKI,"xGKI/F");
    output->Branch("yGKI",&myEvent.yGKI,"yGKI/F");
    output->Branch("Q2GKI",&myEvent.Q2GKI,"Q2GKI/F");
@@ -385,6 +409,13 @@ int main(int argc, char* argv[]) {
    static int print=10;
    while (gH1Tree->Next() && !opts.IsMaxEvent(eventCounter)) {
       ++eventCounter;
+
+
+      // skip runs not in list of good runs
+      if(!goodRunList->FindRun(*run)) continue;
+      // skip data events with bad detector status
+      if(!detectorStatus->IsOn()) continue;
+
       double w=*weight1 * *weight2;
       // if(*Q2Gki<10.) continue;
       if(print || ((eventCounter %10000)==0))  { 
@@ -558,6 +589,7 @@ int main(int argc, char* argv[]) {
       // not yet
       
       // trigger information
+      // prob_rw is the probability that none of the triggers has fired
       double prob_rw=1.0,prob_ac=1.0;
       H1TrigInfo *trigInfo=dynamic_cast<H1TrigInfo *>
          (H1DBManager::Instance()->GetDBEntry(H1TrigInfo::Class()));
@@ -565,6 +597,18 @@ int main(int argc, char* argv[]) {
       if(!trigInfo) {
          cout<<"TrigInfo not found!!!\n";
       }
+
+      set<int> spacalSubtrigger;
+      // define list of triggers for prescale weight calculations
+      // in the HAT selection, ensure that all those subtriggers
+      // are preselected
+      spacalSubtrigger.insert(0);
+      spacalSubtrigger.insert(1);
+      spacalSubtrigger.insert(2);
+      spacalSubtrigger.insert(3);
+      spacalSubtrigger.insert(61);
+
+
       const Int_t *prescales=trigInfo->GetPrescales();
       const Int_t *enabled=trigInfo->GetEnabledSubTriggers();
       for(int i=0;i<4;i++) {
@@ -575,16 +619,33 @@ int main(int argc, char* argv[]) {
             if(!enabled[st]) continue;
             if(l1l2l3ac[st]) {
                myEvent.l1l2l3ac[i]|=(1<<j);
-               prob_ac *= (1.-1./prescales[st]);
+               
+               if(spacalSubtrigger.find(st)!=spacalSubtrigger.end()) {
+                  prob_ac *= (1.-1./prescales[st]);
+               }
             }
             if(l1l2rw[st] && l1l3rw[st]) {
                myEvent.l1l2l3rw[i]|=(1<<j);
-               prob_rw *= (1.-1./prescales[st]);
+               if(spacalSubtrigger.find(st)!=spacalSubtrigger.end()) {
+                  prob_rw *= (1.-1./prescales[st]);
+               }
             }
          }
       }
+      // trigWeightRW corrects for prescales using raw trigger selection
       myEvent.trigWeightRW=(prob_rw<1.0) ? (1./(1.-prob_rw)) : 0.0;
+      // trigWeightAC corrects for prescales using acrual trigger selection
       myEvent.trigWeightAC=(prob_ac<1.0) ? (1./(1.-prob_ac)) : 0.0;
+
+      // trigger selection:
+      //   require trigWeightAC>0
+      //     -> one of the acrual subtriggers has fired
+      //   use event weight 
+      //      trigWeightRW*w
+      //   select on yor favourite subtrigger
+      //    e.g. S1 
+      //      ( l1l2l3rw[0] & (1<<1) )!=0
+
 
       // background and noise finders
       myEvent.ibg=*ibg;
@@ -706,6 +767,14 @@ int main(int argc, char* argv[]) {
       myEvent.elecPyREC=escatPhot_REC_lab.Y();
       myEvent.elecPzREC=escatPhot_REC_lab.Z();
       myEvent.elecEREC=escatPhot_REC_lab.E();
+
+      // auxillary variables: cluster radius etc
+      if(scatteredElectron>=0) {
+         H1PartEm const *partEM=partCandArray[scatteredElectron]->GetIDElec();
+         myEvent.elecEcraREC=partEM->GetEcra();
+      } else {
+         myEvent.elecEcraREC=-1;
+      }
 
       GetKinematics(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,
                     &myEvent.xREC,&myEvent.yREC,&myEvent.Q2REC);
@@ -1110,13 +1179,17 @@ int main(int argc, char* argv[]) {
     // Summary
     cout << "\nProcessed " << eventCounter
         << " events\n\n";
+    cerr << "\nProcessed " << eventCounter
+       << " events\n\n";
 
 
     // Write histogram to file
     output->Write();
-    file.Close();
+    //file.Close();
+    delete file;
 
     cout << "Histograms written to " << opts.GetOutput() << endl;
+    cerr << "Histograms written to " << opts.GetOutput() << endl;
 
     return 0;
 }
