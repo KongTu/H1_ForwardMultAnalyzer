@@ -224,29 +224,6 @@ int main(int argc, char* argv[]) {
    H1StdCmdLine opts;
    opts.Parse(&argc, argv);
 
-
-   if(*runtype!=1){
-      // open run selection and detector status file
-      TString goodRunFileName("SelectedRuns_0607-and-lowE.root");
-      TFile goodRunFile(goodRunFileName);
-      if(!goodRunFile.IsOpen()) {
-         cerr<<"Error: could not open file "<<goodRunFileName<<"\n";
-         return 2;
-      }
-      H1RunList* goodRunList
-         = (H1RunList*) goodRunFile.Get("H1RunList");
-      if(!goodRunList) {
-         cerr<<"Error: no runlist in file - return!\n";
-         return 2;
-      }
-      H1DetectorStatus *detectorStatus
-         = (H1DetectorStatus*)goodRunFile.Get("MyDetectorStatus");
-      if(!detectorStatus) {
-         cerr<<"Error: no detector status in file - return!\n";
-         return 3;
-      }
-   }
-
    // Load mODS/HAT files
    H1Tree::Instance()->Open();            // this statement must be there!
 
@@ -406,6 +383,27 @@ int main(int argc, char* argv[]) {
    H1HadronicCalibration *hadronicCalibration=H1HadronicCalibration::Instance();
    hadronicCalibration->ApplyHadronicCalibration(H1HadronicCalibration::eHighPtJet);
    hadronicCalibration->ApplyHadronicCalibration(kTRUE);
+
+   // open run selection and detector status file
+   TString goodRunFileName("SelectedRuns_0607-and-lowE.root");
+   TFile goodRunFile(goodRunFileName);
+   if(!goodRunFile.IsOpen()) {
+      cerr<<"Error: could not open file "<<goodRunFileName<<"\n";
+      if(*runtype!=1) return 2;
+   }
+   H1RunList* goodRunList
+      = (H1RunList*) goodRunFile.Get("H1RunList");
+   if(!goodRunList) {
+      cerr<<"Error: no runlist in file - return!\n";
+       if(*runtype!=1) return 2;
+   }
+   H1DetectorStatus *detectorStatus
+      = (H1DetectorStatus*)goodRunFile.Get("MyDetectorStatus");
+   if(!detectorStatus) {
+      cerr<<"Error: no detector status in file - return!\n";
+      if(*runtype!=1) return 3;
+   }
+   
 
    // Loop over events
    static int print=10;
