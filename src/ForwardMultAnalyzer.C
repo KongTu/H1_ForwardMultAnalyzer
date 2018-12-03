@@ -224,26 +224,28 @@ int main(int argc, char* argv[]) {
    H1StdCmdLine opts;
    opts.Parse(&argc, argv);
 
-   // open run selection and detector status file
-   TString goodRunFileName("SelectedRuns_0607-and-lowE.root");
-   TFile goodRunFile(goodRunFileName);
-   if(!goodRunFile.IsOpen()) {
-      cerr<<"Error: could not open file "<<goodRunFileName<<"\n";
-      return 2;
-   }
-   H1RunList* goodRunList
-      = (H1RunList*) goodRunFile.Get("H1RunList");
-   if(!goodRunList) {
-      cerr<<"Error: no runlist in file - return!\n";
-      return 2;
-   }
-   H1DetectorStatus *detectorStatus
-      = (H1DetectorStatus*)goodRunFile.Get("MyDetectorStatus");
-   if(!detectorStatus) {
-      cerr<<"Error: no detector status in file - return!\n";
-      return 3;
-   }
 
+   if(*runtype!=1){
+      // open run selection and detector status file
+      TString goodRunFileName("SelectedRuns_0607-and-lowE.root");
+      TFile goodRunFile(goodRunFileName);
+      if(!goodRunFile.IsOpen()) {
+         cerr<<"Error: could not open file "<<goodRunFileName<<"\n";
+         return 2;
+      }
+      H1RunList* goodRunList
+         = (H1RunList*) goodRunFile.Get("H1RunList");
+      if(!goodRunList) {
+         cerr<<"Error: no runlist in file - return!\n";
+         return 2;
+      }
+      H1DetectorStatus *detectorStatus
+         = (H1DetectorStatus*)goodRunFile.Get("MyDetectorStatus");
+      if(!detectorStatus) {
+         cerr<<"Error: no detector status in file - return!\n";
+         return 3;
+      }
+   }
 
    // Load mODS/HAT files
    H1Tree::Instance()->Open();            // this statement must be there!
@@ -410,12 +412,12 @@ int main(int argc, char* argv[]) {
    while (gH1Tree->Next() && !opts.IsMaxEvent(eventCounter)) {
       ++eventCounter;
 
-
-      // skip runs not in list of good runs
-      if(!goodRunList->FindRun(*run)) continue;
-      // skip data events with bad detector status
-      if(!detectorStatus->IsOn()) continue;
-
+      if(*runtype!=1){
+         // skip runs not in list of good runs
+         if(!goodRunList->FindRun(*run)) continue;
+         // skip data events with bad detector status
+         if(!detectorStatus->IsOn()) continue;
+      }
       double w=*weight1 * *weight2;
       // if(*Q2Gki<10.) continue;
       if(print || ((eventCounter %10000)==0))  { 
