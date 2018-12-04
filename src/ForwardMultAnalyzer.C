@@ -98,7 +98,7 @@ void GetKinematics(TLorentzVector const &ebeam,TLorentzVector const &pbeam,
    *Q2= -q.Mag2();
    double pq=pbeam.Dot(q);
    *y= pq/pbeam.Dot(ebeam);
-   *x= *Q2/2.*pq;
+   *x= *Q2/(2.*pq);
 }
 
 
