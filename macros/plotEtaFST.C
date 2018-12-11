@@ -11,10 +11,9 @@
 
 void plotEtaFST() {
    
-   //TFile* file = new TFile("../run/ForwardMultAnalyzer_LowE_8833.root");
-   TFile* file = new TFile("../run/ForwardMultAnalyzer_newVars.root");
-   TTree *tree = (TTree*) file->Get("properties");
-   //gFile->GetObject("properties",tree);
+   TChain* tree = new TChain("properties");
+   tree->Add("../run/mc_8927_all_0090-0094.root");
+
    int nEta=70;
    int etaMin=-7;
    int etaMax=7.;
@@ -115,7 +114,6 @@ void plotEtaFST() {
       tree->SetBranchAddress("nvTrackLengthREC",nvTrackLengthREC);
       tree->SetBranchAddress("dcaPrimeREC",dcaPrimeREC);
       tree->SetBranchAddress("dz0PrimeREC",dz0PrimeREC);
-      //tree->SetBranchAddress("ptResFstSelected",ptResFstSelected);
       
       for(int i=0;i<tree->GetEntries();i++) {
          tree->GetEntry(i);
@@ -127,7 +125,6 @@ void plotEtaFST() {
 
          //loop over MC tracks and match to REC: efficiency
          for(int k=0;k<nMCtrack;k++) {
-            //double pt = sqrt(pxMC[k]*pxMC[k]+pyMC[k]*pyMC[k]);
             if(TMath::Hypot(pxMC[k],pyMC[k])<ptcut) continue;
             double eta=etaStarMC[k];
             h_genEtaStar->Fill(eta,w);
@@ -253,7 +250,7 @@ void plotEtaFST() {
    legend1->SetTextSize(0.025);
    legend1->AddEntry(eff[0],"gen tracks","L");
    // legend1->AddEntry(eff[4],"cent matched","P");
-   legend1->AddEntry(eff[3],"fwd(type=2,3) matched","P");
+   //legend1->AddEntry(eff[3],"fwd(type=2,3) matched","P");
    legend1->AddEntry(eff[2],"cent(type=1) matched","P");
    legend1->AddEntry(eff[1],"FST(type=4) matched","P");
    legend1->Draw("same");
@@ -346,7 +343,7 @@ void plotEtaFST() {
    legend->SetTextSize(0.025);
    //legend->AddEntry(fak[0],"gen tracks","L");
    // legend->AddEntry(fak[4],"cent not matched","P");
-   legend->AddEntry(fak[3],"fwd(type=2,3) not matched","P");
+   //legend->AddEntry(fak[3],"fwd(type=2,3) not matched","P");
    legend->AddEntry(fak[2],"cent(type=1) not matched","P");
    legend->AddEntry(fak[1],"FST(type=4) not matched","P");
    legend->Draw("same");
@@ -368,6 +365,6 @@ void plotEtaFST() {
 
    // cout << "factor " << ff << endl;
   
-   c1->Print("../figures/Final/etaStar_eff_vtx0_2.pdf");
-   c2->Print("../figures/Final/etaStar_fak_vtx0_2.pdf");
+   c1->Print("../figures/Final/etaStar_eff_vtx0_3.pdf");
+   c2->Print("../figures/Final/etaStar_fak_vtx0_3.pdf");
 }
