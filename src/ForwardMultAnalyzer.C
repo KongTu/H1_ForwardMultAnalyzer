@@ -868,8 +868,8 @@ int main(int argc, char* argv[]) {
                double nvTrackLength=-1.;
                double dcaPrime=-1.;
                double dz0Prime=-1.;
-               float track_p = h->GetP();
-               float track_err_p = h->GetDp();
+               float track_p = track->GetP();
+               float track_err_p = track->GetDp();
 
                if(track){
                   if(track->IsCentralTrk()) type =1;
