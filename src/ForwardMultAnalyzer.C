@@ -317,6 +317,10 @@ int main(int argc, char* argv[]) {
    output->Branch("elecPzREC",&myEvent.elecPzREC,"elecPzREC/F");
    output->Branch("elecEREC",&myEvent.elecEREC,"elecEREC/F");
    output->Branch("elecEcraREC",&myEvent.elecEcraREC,"elecEcraREC/F");
+   output->Branch("elecXclusREC",&myEvent.elecXclusREC,"elecXclusREC/F");
+   output->Branch("elecYclusREC",&myEvent.elecYclusREC,"elecYclusREC/F");
+   output->Branch("elecThetaREC",&myEvent.elecThetaREC,"elecThetaREC/F");
+   output->Branch("elecTypeREC",&myEvent.elecTypeREC,"elecTypeREC/I");
    output->Branch("elecEnergyREC",&myEvent.elecEnergyREC,"elecEnergyREC/F");
 
    output->Branch("xREC",&myEvent.xREC,"xREC/F");
