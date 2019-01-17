@@ -160,6 +160,9 @@ struct MyEvent {
 
    // reconstructed quantities
    Float_t elecPxREC,elecPyREC,elecPzREC,elecEREC,elecEradREC; // scattered electron
+   Float_t elecXclusREC,elecYclusREC, elecThetaREC;
+   Int_t elecTypeREC;
+
    Float_t xREC,yREC,Q2REC;
    Float_t hfsPxREC,hfsPyREC,hfsPzREC,hfsEREC; // hadronic final state
    enum {
@@ -174,6 +177,8 @@ struct MyEvent {
    Float_t pxREC[nRECtrack_MAX];
    Float_t pyREC[nRECtrack_MAX];
    Float_t pzREC[nRECtrack_MAX];
+   Float_t pREC[nRECtrack_MAX];
+   Float_t peREC[nRECtrack_MAX];
    Float_t etaREC[nRECtrack_MAX];
 
    Float_t ptStarREC[nRECtrack_MAX];
@@ -328,6 +333,8 @@ int main(int argc, char* argv[]) {
    output->Branch("pxREC",myEvent.pxREC,"pxREC[nRECtrack]/F");
    output->Branch("pyREC",myEvent.pyREC,"pyREC[nRECtrack]/F");
    output->Branch("pzREC",myEvent.pzREC,"pzREC[nRECtrack]/F");
+   output->Branch("pREC",myEvent.pREC,"pREC[nRECtrack]/F");
+   output->Branch("peREC",myEvent.peREC,"peREC[nRECtrack]/F");
    output->Branch("etaREC",myEvent.etaREC,"etaREC[nRECtrack]/F");
 
    output->Branch("ptStarREC",myEvent.ptStarREC,"ptStarREC[nRECtrack]/F");
@@ -773,6 +780,11 @@ int main(int argc, char* argv[]) {
       if(scatteredElectron>=0) {
          H1PartEm const *partEM=partCandArray[scatteredElectron]->GetIDElec();
          myEvent.elecEcraREC=partEM->GetEcra();
+         myEvent.elecXclusREC=partEM->GetXClus();
+         myEvent.elecYclusREC=partEM->GetYClus();
+         myEvent.elecThetaREC=partEM->GetTheta();
+         myEvent.elecTypeREC=partEM->GetType();
+
       } else {
          myEvent.elecEcraREC=-1;
       }
@@ -854,6 +866,8 @@ int main(int argc, char* argv[]) {
                double nvTrackLength=-1.;
                double dcaPrime=-1.;
                double dz0Prime=-1.;
+               float track_p = h->GetP();
+               float track_err_p = h->GetDp();
 
                if(track){
                   if(track->IsCentralTrk()) type =1;
@@ -974,6 +988,8 @@ int main(int argc, char* argv[]) {
                   myEvent.pxREC[k]=h.X();
                   myEvent.pyREC[k]=h.Y();
                   myEvent.pzREC[k]=h.Z();
+                  myEvent.pREC[k]=track_p;
+                  myEvent.peREC[k]=track_err_p;
                   myEvent.etaREC[k]=h.Eta();
       
                   myEvent.ptStarREC[k]=hStar.Pt();
