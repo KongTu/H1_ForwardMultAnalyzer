@@ -160,7 +160,7 @@ struct MyEvent {
 
    // reconstructed quantities
    Float_t elecPxREC,elecPyREC,elecPzREC,elecEREC,elecEradREC; // scattered electron
-   Float_t elecXclusREC,elecYclusREC, elecThetaREC;
+   Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC;
    Int_t elecTypeREC;
 
    Float_t xREC,yREC,Q2REC;
@@ -317,6 +317,7 @@ int main(int argc, char* argv[]) {
    output->Branch("elecPzREC",&myEvent.elecPzREC,"elecPzREC/F");
    output->Branch("elecEREC",&myEvent.elecEREC,"elecEREC/F");
    output->Branch("elecEcraREC",&myEvent.elecEcraREC,"elecEcraREC/F");
+   output->Branch("elecEnergyREC",&myEvent.elecEnergyREC,"elecEnergyREC/F");
 
    output->Branch("xREC",&myEvent.xREC,"xREC/F");
    output->Branch("yREC",&myEvent.yREC,"yREC/F");
@@ -784,6 +785,7 @@ int main(int argc, char* argv[]) {
          myEvent.elecYclusREC=partEM->GetYClus();
          myEvent.elecThetaREC=partEM->GetTheta();
          myEvent.elecTypeREC=partEM->GetType();
+         myEvent.elecEnergyREC=partEM->GetE();
 
       } else {
          myEvent.elecEcraREC=-1;
