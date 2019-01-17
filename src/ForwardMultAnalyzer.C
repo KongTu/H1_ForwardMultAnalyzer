@@ -872,8 +872,8 @@ int main(int argc, char* argv[]) {
                double nvTrackLength=-1.;
                double dcaPrime=-1.;
                double dz0Prime=-1.;
-               float track_p = track->GetP();
-               float track_err_p = track->GetDp();
+               float track_p = -1.; 
+               float track_err_p = -1.;
 
                if(track){
                   if(track->IsCentralTrk()) type =1;
@@ -881,6 +881,10 @@ int main(int argc, char* argv[]) {
                   else if(track->IsForwardTrk()) type =3;
                   else if(track->IsFSTTrk()) type=4;
                   else if(track->IsBSTTrk()) type =5;
+
+                  //momentum of track
+                  track_p = track->GetP();
+                  track_err_p = track->GetDp();
 
                   H1VertexFittedTrack const *h1track=
                      dynamic_cast<H1VertexFittedTrack const *>
