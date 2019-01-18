@@ -743,9 +743,9 @@ int main(int argc, char* argv[]) {
       //Stefan version 2
       for(int i=0;i<partCandArray.GetEntries();i++) {
         H1PartCand *cand=partCandArray[i];
-        H1PartEm const *elec=cand->GetIDElec();
+        H1PartEm *elec=cand->GetIDElec();
         if(elec && cand->IsScatElec()) {
-         if (myElecCut.goodElec(*elec,*run)!=1) continue;
+         if (myElecCut.goodElec(elec,*run)!=1) continue;
             
             TLorentzVector p= elec->GetFourVector();
 
