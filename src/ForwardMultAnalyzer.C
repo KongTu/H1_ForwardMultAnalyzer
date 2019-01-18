@@ -730,6 +730,10 @@ int main(int argc, char* argv[]) {
          cout<<"number of part cand: "<<partCandArray.GetEntries()<<"\n";
       }
 
+
+      H1FloatPtr ElecE("ElecE"); //energy of scattered electron from e-finder
+      if(myEvent.vertex[2]==-999. || ElecE < 10. ) continue;
+
       static elecCut myElecCut=0;
 
       // find scattered electron as identified EM particle with highest PT in SpaCal
