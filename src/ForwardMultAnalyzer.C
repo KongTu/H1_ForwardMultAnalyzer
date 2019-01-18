@@ -751,7 +751,7 @@ int main(int argc, char* argv[]) {
 
             if(p.Pt()>ptMax) {
                escat0_REC_lab = p;
-               scatteredElectron=itr;
+               scatteredElectron=i;
                haveScatteredElectron=true;
                ptMax=p.Pt();
             }
