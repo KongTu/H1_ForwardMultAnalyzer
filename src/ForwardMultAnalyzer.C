@@ -732,7 +732,7 @@ int main(int argc, char* argv[]) {
 
 
       H1FloatPtr ElecE("ElecE"); //energy of scattered electron from e-finder
-      if(myEvent.vertex[2]==-999. || ElecE < 10. ) continue;
+      if(myEvent.vertex[2]==-999. || *ElecE < 10. ) continue;
 
       static elecCut myElecCut=0;
 
