@@ -464,7 +464,7 @@ void elecCut::fillDeadCellPositions() {
  * 2. cut on hadronic energy fraction
  * 3. track poiting to cluster 
  */
-int elecCut::goodElec( H1PartEm *elec, Int_t RunNumber_) { 
+int elecCut::goodElec( H1PartEm const *elec, Int_t RunNumber_) { 
  
   //check if cuts are still ok: 
   initElecCut(RunNumber_); 
@@ -501,7 +501,7 @@ int elecCut::goodElec( H1PartEm *elec, Int_t RunNumber_) {
  * 1. cut on hadronic energy fraction
  * 2. track poiting to cluster 
  */
-int elecCut::goodElec_noSpatialCuts( H1PartEm *elec) { 
+int elecCut::goodElec_noSpatialCuts( H1PartEm const *elec) { 
  
   //elec whether h1oo finder found it: 
   if(!elec->IsScatElec() ) { 
@@ -523,7 +523,7 @@ int elecCut::goodElec_noSpatialCuts( H1PartEm *elec) {
 /****************************************************************
  * goodElec_noSpatialCuts 
  */
-int elecCut::goodElec_noSpatialCuts( H1PartEm *elec, Int_t RunNumber_) { 
+int elecCut::goodElec_noSpatialCuts( H1PartEm const *elec, Int_t RunNumber_) { 
   //check if cuts are still ok: 
   initElecCut(RunNumber_); 
   return goodElec_noSpatialCuts(elec); 
@@ -534,7 +534,7 @@ int elecCut::goodElec_noSpatialCuts( H1PartEm *elec, Int_t RunNumber_) {
  * goodElec_NoTrackCond -- all electron cuts exect looking 
  * for a track
  */
-int elecCut::goodElec_TrackCond( H1PartEm *elec) { 
+int elecCut::goodElec_TrackCond( H1PartEm const *elec) { 
  
   //elec whether h1oo finder found it: 
   if(!elec->IsScatElec() ) { 
@@ -564,7 +564,7 @@ int elecCut::goodElec_TrackCond( H1PartEm *elec) {
  * for a track with previous check if cuts are still ok for the
  * given runnumber. 
  */
-int elecCut::goodElec_TrackCond( H1PartEm *elec, Int_t RunNumber_){ 
+int elecCut::goodElec_TrackCond( H1PartEm const *elec, Int_t RunNumber_){ 
   initElecCut(RunNumber_); 
   return goodElec_TrackCond(elec); 
 } 
@@ -613,7 +613,7 @@ int elecCut::elecCutSpatial(Float_t x, Float_t y ){
  * elecCutHadrEnergy -- 
  *
  */
-int elecCut::elecCutHadrEnergy( H1PartEm *elec ) { 
+int elecCut::elecCutHadrEnergy( H1PartEm const *elec ) { 
   H1FloatPtr ElecE("ElecE");              // energy of scattered electron (acc. to e-finder)
   Float_t EnHadSpac; 
 
@@ -641,7 +641,7 @@ int elecCut::elecCutHadrEnergy( H1PartEm *elec ) {
  *                 better. If cluster is neither acceptance range
  *                 accept the event. 
  */
-int elecCut::elecCutTrack( H1PartEm *elec) { 
+int elecCut::elecCutTrack( H1PartEm const *elec) { 
   Float_t distanceToBPC; 
 
   //look for any corresponding track: 
@@ -681,7 +681,7 @@ int elecCut::elecCutTrack( H1PartEm *elec) {
  * elecCutTrack -- calls above function but checks wether the cuts 
  * are still ok for this event. 
  */
-int elecCut::elecCutTrack( H1PartEm *elec , Int_t RunNumber_) { 
+int elecCut::elecCutTrack( H1PartEm const *elec , Int_t RunNumber_) { 
   initElecCut(RunNumber_); 
   return elecCutTrack(elec); 
 }
@@ -692,7 +692,7 @@ int elecCut::elecCutTrack( H1PartEm *elec , Int_t RunNumber_) {
  * the cell which is at the dead cell array at the given position. 
  * Returns 1 if this is the case.  
  */
-int elecCut::isInDeadCellArray(H1PartEm *elec, Int_t i ) { 
+int elecCut::isInDeadCellArray(H1PartEm const *elec, Int_t i ) { 
 
     //check range: 
     if(i>=nDeadCells || i<0) { 

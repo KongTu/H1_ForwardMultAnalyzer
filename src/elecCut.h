@@ -47,11 +47,11 @@ private:
   void fillDeadCellPositions(); 
 
   //make the actual cuts: 
-  int goodElec_TrackCond( H1PartEm *elec);
+  int goodElec_TrackCond( H1PartEm const *elec);
   int elecCutSpatial(Float_t x, Float_t y ); 
-  int elecCutHadrEnergy( H1PartEm *elec ); 
-  int elecCutTrack( H1PartEm *elec); 
-  int goodElec_noSpatialCuts( H1PartEm *elec); 
+  int elecCutHadrEnergy( H1PartEm const *elec ); 
+  int elecCutTrack( H1PartEm const *elec); 
+  int goodElec_noSpatialCuts( H1PartEm const *elec); 
 
   Int_t RunNumber; 
   Int_t RunRange; 
@@ -69,12 +69,12 @@ public:
   void initCuts2007();
 
   //  int initElecCut(int RunNumber); 
-  int goodElec( H1PartEm *elec , Int_t RunNumber_);
-  int goodElec_TrackCond( H1PartEm *elec, Int_t RunNumber_); 
-  int goodElec_noSpatialCuts( H1PartEm *elec, Int_t RunNumber_);
-  int elecCutTrack( H1PartEm *elec , Int_t RunNumber_); 
+  int goodElec( H1PartEm const *elec , Int_t RunNumber_);
+  int goodElec_TrackCond( H1PartEm const *elec, Int_t RunNumber_); 
+  int goodElec_noSpatialCuts( H1PartEm const *elec, Int_t RunNumber_);
+  int elecCutTrack( H1PartEm const *elec , Int_t RunNumber_); 
   void DrawCuts( Int_t RunNumber_);
-  int isInDeadCellArray(H1PartEm *elec, Int_t i ); 
+  int isInDeadCellArray(H1PartEm const *elec, Int_t i ); 
 
   //ClassDef(elecCut,1) 
 
