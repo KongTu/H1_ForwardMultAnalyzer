@@ -627,7 +627,6 @@ int main(int argc, char* argv[]) {
       spacalSubtrigger.insert(3);
       spacalSubtrigger.insert(61);
 
-
       const Int_t *prescales=trigInfo->GetPrescales();
       const Int_t *enabled=trigInfo->GetEnabledSubTriggers();
       for(int i=0;i<4;i++) {
@@ -664,7 +663,6 @@ int main(int argc, char* argv[]) {
       //   select on yor favourite subtrigger
       //    e.g. S1 
       //      ( l1l2l3rw[0] & (1<<1) )!=0
-
 
       // background and noise finders
       myEvent.ibg=*ibg;
