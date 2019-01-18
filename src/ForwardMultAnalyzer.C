@@ -48,6 +48,7 @@
 #include "H1Mods/H1PartSelTrack.h"
 #include "H1Mods/H1InclHfsIterator.h"
 #include "H1PhysUtils/H1NuclIACor.h"
+#include "H1Mods/H1PartEmArrayPtr.h"
 
 #include "H1Geom/H1DetectorStatus.h"
 #include "H1Geom/H1DBManager.h"
@@ -61,6 +62,9 @@
 //#include "H1Mods/H1GkiInfo.h"
 #include <TLorentzRotation.h>
 #include "H1HadronicCalibration/H1HadronicCalibration.h"
+
+#include "elecCut.C"
+#include "elecCut.h"
 
 using namespace std;
 
@@ -160,7 +164,7 @@ struct MyEvent {
 
    // reconstructed quantities
    Float_t elecPxREC,elecPyREC,elecPzREC,elecEREC,elecEradREC; // scattered electron
-   Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC;
+   Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
    Int_t elecTypeREC;
 
    Float_t xREC,yREC,Q2REC;
@@ -323,6 +327,7 @@ int main(int argc, char* argv[]) {
    output->Branch("elecTypeREC",&myEvent.elecTypeREC,"elecTypeREC/I");
    output->Branch("elecEnergyREC",&myEvent.elecEnergyREC,"elecEnergyREC/F");
    output->Branch("elecEfracREC",&myEvent.elecEfracREC,"elecEfracREC/F");
+   output->Branch("elecHfracREC",&myEvent.elecHfracREC,"elecHfracREC/F");
 
    output->Branch("xREC",&myEvent.xREC,"xREC/F");
    output->Branch("yREC",&myEvent.yREC,"yREC/F");
@@ -725,26 +730,30 @@ int main(int argc, char* argv[]) {
          cout<<"number of part cand: "<<partCandArray.GetEntries()<<"\n";
       }
 
+      static elecCut myElecCut=0;
+
       // find scattered electron as identified EM particle with highest PT in SpaCal
       bool haveScatteredElectron=false;
       TLorentzVector escat0_REC_lab;
       int scatteredElectron=-1;
       double ptMax=0;
+      //Stefan version 1
       // for(int i=0;i<partCand.GetEntries();i++) {
       //    H1PartCand *cand=partCand[i];
+      //Stefan version 2
       for(int i=0;i<partCandArray.GetEntries();i++) {
-         H1PartCand *cand=partCandArray[i];
-         H1PartEm const *elec=cand->GetIDElec();
-         //if(elec && (elec->GetType()==4)) {
-         if(elec &&
-            //(elec->GetType()==4)&&  // restrict to SpaCal 
-            cand->IsScatElec()
-            ) {
+        H1PartCand *cand=partCandArray[i];
+        H1PartEm const *elec=cand->GetIDElec();
+        if(elec && cand->IsScatElec()) {
+         if (myElecCut.goodElec(elec,*run)!=1) continue;
+            
             TLorentzVector p= elec->GetFourVector();
+
             if(p.Pt()>ptMax) {
                escat0_REC_lab = p;
-               scatteredElectron=i;
+               scatteredElectron=itr;
                haveScatteredElectron=true;
+               ptMax=p.Pt();
             }
          }
       }
@@ -792,6 +801,7 @@ int main(int argc, char* argv[]) {
          myEvent.elecTypeREC=partEM->GetType();
          myEvent.elecEnergyREC=partEM->GetE();
          myEvent.elecEfracREC=partEM->GetEaem();
+         myEvent.elecHfracREC=partEM->GetEnHadSpac();
 
       } else {
          myEvent.elecEcraREC=-1;
