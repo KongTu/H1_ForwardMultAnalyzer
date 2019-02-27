@@ -235,7 +235,7 @@ int main(int argc, char* argv[]) {
 
  
    // open run selection and detector status file
-   TString goodRunFileName("SelectedRuns_HighE07_920.root");
+   TString goodRunFileName("SelectedRuns_HighE06_e+p_920.root");
    TFile goodRunFile(goodRunFileName);
    if(!goodRunFile.IsOpen()) {
       cerr<<"Error: could not open file "<<goodRunFileName<<"\n";
