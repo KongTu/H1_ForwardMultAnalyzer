@@ -941,14 +941,12 @@ int main(int argc, char* argv[]) {
                   track_p = track->GetP();
                   track_err_p = track->GetDp();
                   trkTheta = track->GetTheta();
-                  TVector3 vect_start_hit = track->GetStartHit();
-                  TVector3 vect_end_hit = track->GetEndHit();
-                  zLengthHit = vect_start_hit.z()-vect_end_hit.z();
-
+            
                   H1VertexFittedTrack const *h1track=
                      dynamic_cast<H1VertexFittedTrack const *>
                      (cand->GetTrack());
                   if(h1track) {
+                    
                      chi2vtx=h1track->GetFitChi2();
                      vtxNdf=h1track->GetFitNdf();
                      chi2Trk=h1track->GetChi2();
@@ -959,7 +957,10 @@ int main(int argc, char* argv[]) {
                      dz0Prime=h1track->GetDz0Prime();
                      startHitsRadius->GetStartRadius();
                      endHitsRadius->GetEndRadius();
-
+                     TVector3 vect_start_hit = track->GetStartHit();
+                     TVector3 vect_end_hit = track->GetEndHit();
+                     zLengthHit = vect_start_hit.z()-vect_end_hit.z();
+                    
                      // H1NonVertexFittedTrack const *nvtrack=
                      //    h1track-> GetNonVertexFittedTrack();
                      // if(nvtrack) {
