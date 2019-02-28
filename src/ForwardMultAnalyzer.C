@@ -1090,7 +1090,6 @@ int main(int argc, char* argv[]) {
                   myEvent.dcaPrimeREC[k]=dcaPrime;
                   myEvent.dz0PrimeREC[k]=dz0Prime;
 
-                  myEvent.dcaPrimeREC[k]=dcaPrime;
                   myEvent.startHitsRadiusREC[k]=startHitsRadius;
                   myEvent.endHitsRadiusREC[k]=endHitsRadius;
                   myEvent.trkThetaREC[k]=trkTheta;
