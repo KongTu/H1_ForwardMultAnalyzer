@@ -961,22 +961,23 @@ int main(int argc, char* argv[]) {
                      TVector3 vect_end_hit = h1track->GetEndHit();
                      zLengthHit = vect_start_hit.z()-vect_end_hit.z();
                     
-                     // H1NonVertexFittedTrack const *nvtrack=
-                     //    h1track-> GetNonVertexFittedTrack();
-                     // if(nvtrack) {
-                     //    //do non vertex fitted tracks here
-                     // }
+                     H1NonVertexFittedTrack const *nvtrack=
+                        h1track-> GetNonVertexFittedTrack();
+                     if(nvtrack) {
+                        //do non vertex fitted tracks here
 
-                     H1CombinedFittedTrack const *combtrack = 0;
-                     if(combtrack){
-                        chi2Link=combtrack->GetLinkChi2();
-                        ndfLink=combtrack->GetLinkNdf();
                      }
+
+                     // H1CombinedFittedTrack const *combtrack = 0;
+                     // if(combtrack){
+                        chi2Link=h1track->GetLinkChi2();
+                        ndfLink=h1track->GetLinkNdf();
+                     //}
                      
-                     H1ForwardFittedTrack const *fwdtrack = 0;
-                     if(fwdtrack){
-                        rZero = fwdtrack->GetR0();
-                     }
+                     //H1ForwardFittedTrack const *fwdtrack = 0;
+                     //if(fwdtrack){
+                        rZero = h1track->GetR0();
+                     //}
 
                      H1Vertex const *v=h1track->GetVertex();
                      if(floatEqual(v->X(),myEvent.vertex[0])&&
