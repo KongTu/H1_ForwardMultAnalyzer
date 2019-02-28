@@ -968,16 +968,17 @@ int main(int argc, char* argv[]) {
 
                      }
 
-                     H1CombinedFittedTrack* combtrack;  
+                     H1CombinedFittedTrack const *combtrack=
+                        dynamic_cast<H1VertexFittedTrack const *>;  
                      if(track->IsCombinedTrk() ){
                         chi2Link=combtrack->GetLinkChi2();
                         ndfLink=combtrack->GetLinkNdf();
                      }
                      
-                     H1ForwardFittedTrack* fwdtrack;
-                     if(track->IsForwardTrk()){
-                        rZero = fwdtrack->GetR0();
-                     }
+                     // H1ForwardFittedTrack* fwdtrack;
+                     // if(track->IsForwardTrk()){
+                     //    rZero = fwdtrack->GetR0();
+                     // }
 
                      H1Vertex const *v=h1track->GetVertex();
                      if(floatEqual(v->X(),myEvent.vertex[0])&&
