@@ -968,14 +968,14 @@ int main(int argc, char* argv[]) {
 
                      }
 
-                     H1CombinedFittedTrack const *combtrack =1;  
-                     if(combtrack && track->IsCombinedTrk() ){
+                     H1CombinedFittedTrack const *combtrack = 0;  
+                     if(track->IsCombinedTrk() ){
                         chi2Link=combtrack->GetLinkChi2();
                         ndfLink=combtrack->GetLinkNdf();
                      }
                      
-                     H1ForwardFittedTrack const *fwdtrack = 1;
-                     if(fwdtrack && track->IsForwardTrk()){
+                     H1ForwardFittedTrack const *fwdtrack = 0;
+                     if(track->IsForwardTrk()){
                         rZero = fwdtrack->GetR0();
                      }
 
