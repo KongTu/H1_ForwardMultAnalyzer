@@ -955,10 +955,10 @@ int main(int argc, char* argv[]) {
                      vtxTrackLength=h1track->GetLength();
                      dcaPrime=h1track->GetDcaPrime();
                      dz0Prime=h1track->GetDz0Prime();
-                     startHitsRadius->GetStartRadius();
-                     endHitsRadius->GetEndRadius();
-                     TVector3 vect_start_hit = track->GetStartHit();
-                     TVector3 vect_end_hit = track->GetEndHit();
+                     startHitsRadius=h1track->GetStartRadius();
+                     endHitsRadius=h1track->GetEndRadius();
+                     TVector3 vect_start_hit = h1track->GetStartHit();
+                     TVector3 vect_end_hit = h1track->GetEndHit();
                      zLengthHit = vect_start_hit.z()-vect_end_hit.z();
                     
                      // H1NonVertexFittedTrack const *nvtrack=
