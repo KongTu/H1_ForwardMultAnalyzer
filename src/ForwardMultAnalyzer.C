@@ -969,7 +969,8 @@ int main(int argc, char* argv[]) {
                      }
 
                      H1CombinedFittedTrack const *combtrack=
-                        dynamic_cast<H1VertexFittedTrack const *>;  
+                        dynamic_cast<H1CombinedFittedTrack const *>
+                        (cand->GetTrack());  
                      if(track->IsCombinedTrk() ){
                         chi2Link=combtrack->GetLinkChi2();
                         ndfLink=combtrack->GetLinkNdf();
