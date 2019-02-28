@@ -55,6 +55,13 @@
 
 #include "H1Tracks/H1FSTFittedTrack.h"
 #include "H1Tracks/H1FSTFittedTrackArrayPtr.h"
+
+#include "H1Tracks/H1CombinedFittedTrack.h"
+#include "H1Tracks/H1CombinedFittedTrackArrayPtr.h"
+
+#include "H1Tracks/H1ForwardFittedTrack.h"
+#include "H1Tracks/H1ForwardFittedTrackArrayPtr.h"
+
 //#include "H1Tracks/H1FSTTrackArrayPtr.h"
 
 
@@ -189,15 +196,28 @@ struct MyEvent {
    Float_t etaStarREC[nRECtrack_MAX];
    Float_t phiStarREC[nRECtrack_MAX];
    Float_t chi2vtxREC[nRECtrack_MAX];
-   Float_t chi2nvREC[nRECtrack_MAX];
    Int_t   vtxNdfREC[nRECtrack_MAX];
-   Int_t   nvNdfREC[nRECtrack_MAX];
    Int_t   vtxNHitsREC[nRECtrack_MAX];
-   Int_t   nvNHitsREC[nRECtrack_MAX];
    Float_t vtxTrackLengthREC[nRECtrack_MAX];
-   Float_t nvTrackLengthREC[nRECtrack_MAX];
    Float_t dcaPrimeREC[nRECtrack_MAX];
    Float_t dz0PrimeREC[nRECtrack_MAX];
+
+//non vertex fitted parameter not used
+   Float_t chi2nvREC[nRECtrack_MAX]; 
+   Int_t   nvNdfREC[nRECtrack_MAX];
+   Int_t   nvNHitsREC[nRECtrack_MAX];
+   Float_t nvTrackLengthREC[nRECtrack_MAX];
+   
+   Float_t startHitsRadiusREC[nRECtrack_MAX];
+   Float_t endHitsRadiusREC[nRECtrack_MAX];
+   Float_t trkThetaREC[nRECtrack_MAX];
+   Float_t chi2TrkREC[nRECtrack_MAX];
+   Int_t   ndfTrkREC[nRECtrack_MAX];
+   Float_t zLengthHitREC[nRECtrack_MAX];
+   Float_t chi2LinkREC[nRECtrack_MAX];
+   Int_t ndfLinkREC[nRECtrack_MAX];
+   Float_t rZeroREC[nRECtrack_MAX];
+
    Float_t log10zREC[nRECtrack_MAX];
    Float_t nucliaREC[nRECtrack_MAX];
    Float_t dmatchREC[nRECtrack_MAX];
@@ -362,6 +382,16 @@ int main(int argc, char* argv[]) {
    output->Branch("nvTrackLengthREC",myEvent.nvTrackLengthREC,"nvTrackLengthREC[nRECtrack]/F");
    output->Branch("dcaPrimeREC",myEvent.dcaPrimeREC,"dcaPrimeREC[nRECtrack]/F");
    output->Branch("dz0PrimeREC",myEvent.dz0PrimeREC,"dz0PrimeREC[nRECtrack]/F");
+   
+   output->Branch("startHitsRadiusREC",myEvent.startHitsRadiusREC,"startHitsRadiusREC[nRECtrack]/F");
+   output->Branch("endHitsRadiusREC",myEvent.endHitsRadiusREC,"endHitsRadiusREC[nRECtrack]/F");
+   output->Branch("trkThetaREC",myEvent.trkThetaREC,"trkThetaREC[nRECtrack]/F");
+   output->Branch("chi2TrkREC",myEvent.chi2TrkREC,"chi2TrkREC[nRECtrack]/F");
+   output->Branch("ndfTrkREC",myEvent.ndfTrkREC,"ndfTrkREC[nRECtrack]/I");
+   output->Branch("zLengthHitREC",myEvent.zLengthHitREC,"zLengthHitREC[nRECtrack]/F");
+   output->Branch("chi2LinkREC",myEvent.chi2LinkREC,"chi2LinkREC[nRECtrack]/F");
+   output->Branch("ndfLinkREC",myEvent.ndfLinkREC,"ndfLinkREC[nRECtrack]/I");
+   output->Branch("rZeroREC",myEvent.rZeroREC,"rZeroREC[nRECtrack]/F");
 
    output->Branch("nucliaREC",myEvent.nucliaREC,"nucliaREC[nRECtrack]/F");
    output->Branch("dmatchREC",myEvent.dmatchREC,"dmatchREC[nRECtrack]/F");
@@ -888,6 +918,17 @@ int main(int argc, char* argv[]) {
                double dz0Prime=-1.;
                float track_p = -1.; 
                float track_err_p = -1.;
+               
+               float startHitsRadius = -1;
+               float endHitsRadius = -1;
+               float trkTheta = -1;
+               float chi2Trk = -1;
+               int ndfTrk = -1;
+               float zLengthHit = -1;
+               float chi2Link = -1;
+               int ndfLink = -1;
+               float rZero = -1;
+
 
                if(track){
                   if(track->IsCentralTrk()) type =1;
@@ -899,6 +940,10 @@ int main(int argc, char* argv[]) {
                   //momentum of track
                   track_p = track->GetP();
                   track_err_p = track->GetDp();
+                  trkTheta = track->GetTheta();
+                  TVector3 vect_start_hit = track->GetStartHit();
+                  TVector3 vect_end_hit = track->GetEndHit();
+                  zLengthHit = vect_start_hit.z()-vect_end_hit.z();
 
                   H1VertexFittedTrack const *h1track=
                      dynamic_cast<H1VertexFittedTrack const *>
@@ -906,19 +951,32 @@ int main(int argc, char* argv[]) {
                   if(h1track) {
                      chi2vtx=h1track->GetFitChi2();
                      vtxNdf=h1track->GetFitNdf();
+                     chi2Trk=h1track->GetChi2();
+                     ndfTrk=h1track->GetNdf();
                      vtxNHits=h1track->GetNHitWord();
                      vtxTrackLength=h1track->GetLength();
                      dcaPrime=h1track->GetDcaPrime();
                      dz0Prime=h1track->GetDz0Prime();
+                     startHitsRadius->GetStartRadius();
+                     endHitsRadius->GetEndRadius();
 
-                     H1NonVertexFittedTrack const *nvtrack=
-                        h1track-> GetNonVertexFittedTrack();
-                     if(nvtrack) {
-                        chi2nv=nvtrack->GetChi2();
-                        nvNdf=nvtrack->GetNdf();
-                        nvNHits =nvtrack->GetNHitWord();
-                        nvTrackLength=nvtrack->GetLength();
+                     // H1NonVertexFittedTrack const *nvtrack=
+                     //    h1track-> GetNonVertexFittedTrack();
+                     // if(nvtrack) {
+                     //    //do non vertex fitted tracks here
+                     // }
+
+                     H1CombinedFittedTrack const *combtrack = 0;
+                     if(combtrack){
+                        chi2Link=combtrack->GetLinkChi2();
+                        ndfLink=combtrack->GetLinkNdf();
                      }
+                     
+                     H1ForwardFittedTrack const *fwdtrack = 0;
+                     if(fwdtrack){
+                        rZero = fwdtrack->GetR0();
+                     }
+
                      H1Vertex const *v=h1track->GetVertex();
                      if(floatEqual(v->X(),myEvent.vertex[0])&&
                         floatEqual(v->Y(),myEvent.vertex[1])&&
@@ -1030,6 +1088,17 @@ int main(int argc, char* argv[]) {
                   myEvent.nvTrackLengthREC[k]=nvTrackLength;
                   myEvent.dcaPrimeREC[k]=dcaPrime;
                   myEvent.dz0PrimeREC[k]=dz0Prime;
+
+                  myEvent.dcaPrimeREC[k]=dcaPrime;
+                  myEvent.startHitsRadiusREC[k]=startHitsRadius;
+                  myEvent.endHitsRadiusREC[k]=endHitsRadius;
+                  myEvent.trkThetaREC[k]=trkTheta;
+                  myEvent.chi2TrkREC[k]=chi2Trk;
+                  myEvent.ndfTrkREC[k]=ndfTrk;
+                  myEvent.zLengthHitREC[k]=zLengthHit;
+                  myEvent.chi2LinkREC[k]=chi2Link;
+                  myEvent.ndfLinkREC[k]=ndfLink;
+                  myEvent.rZeroREC[k]=rZero;
 
                   myEvent.nucliaREC[k]=1.;
                   myEvent.momREC[k]=h.Vect();
