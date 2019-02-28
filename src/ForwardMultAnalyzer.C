@@ -965,7 +965,6 @@ int main(int argc, char* argv[]) {
                         h1track-> GetNonVertexFittedTrack();
                      if(nvtrack) {
                         //do non vertex fitted tracks here
-
                      }
 
                      H1CombinedFittedTrack const *combtrack=
@@ -976,10 +975,12 @@ int main(int argc, char* argv[]) {
                         ndfLink=combtrack->GetLinkNdf();
                      }
                      
-                     // H1ForwardFittedTrack* fwdtrack;
-                     // if(track->IsForwardTrk()){
-                     //    rZero = fwdtrack->GetR0();
-                     // }
+                     H1ForwardFittedTrack const *fwdtrack=
+                        dynamic_cast<H1ForwardFittedTrack const *>
+                        (cand->GetTrack());
+                     if(track->IsForwardTrk()){
+                        rZero = fwdtrack->GetR0();
+                     }
 
                      H1Vertex const *v=h1track->GetVertex();
                      if(floatEqual(v->X(),myEvent.vertex[0])&&
