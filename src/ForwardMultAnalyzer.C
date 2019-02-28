@@ -968,15 +968,15 @@ int main(int argc, char* argv[]) {
 
                      }
 
-                     H1CombinedFittedTrack const *combtrack = 0;  
+                     H1CombinedFittedTrackArrayPtr combtrack;  
                      if(track->IsCombinedTrk() ){
-                        chi2Link=combtrack->GetLinkChi2();
-                        ndfLink=combtrack->GetLinkNdf();
+                        chi2Link=combtrack.GetLinkChi2();
+                        ndfLink=combtrack.GetLinkNdf();
                      }
                      
-                     H1ForwardFittedTrack const *fwdtrack = 0;
+                     H1ForwardFittedTrackArrayPtr fwdtrack;
                      if(track->IsForwardTrk()){
-                        rZero = fwdtrack->GetR0();
+                        rZero = fwdtrack.GetR0();
                      }
 
                      H1Vertex const *v=h1track->GetVertex();
