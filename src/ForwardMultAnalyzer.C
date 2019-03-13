@@ -951,7 +951,7 @@ int main(int argc, char* argv[]) {
                      vtxNdf=h1track->GetFitNdf();
                      chi2Trk=h1track->GetChi2();
                      ndfTrk=h1track->GetNdf();
-                     vtxNHits=h1track->GetNHit(14);
+                     vtxNHits=h1track->GetNHit(H1Track::ETrackDetector);
                      vtxTrackLength=h1track->GetLength();
                      dcaPrime=h1track->GetDcaPrime();
                      dz0Prime=h1track->GetDz0Prime();
