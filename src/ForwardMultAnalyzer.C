@@ -282,6 +282,12 @@ int main(int argc, char* argv[]) {
    //     << " events selected " << endl;
 
    TFile *file=new TFile(opts.GetOutput(), "RECREATE");
+   /*
+   for debugging
+   */
+   TH1D* h_test_1 = new TH1D("h_test_1","h",10,0,1);
+   TH1D* h_test_2 = new TH1D("h_test_2","h",10,0,1);
+
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
    output->Branch("run",&myEvent.run,"run/I");
@@ -460,6 +466,7 @@ int main(int argc, char* argv[]) {
    while (gH1Tree->Next() && !opts.IsMaxEvent(eventCounter)) {
       ++eventCounter;
 
+      h_test_1->Fill( 0.5 );
          // // skip runs not in list of good runs
          // if(!goodRunList->FindRun(*run)) continue;
          // // skip data events with bad detector status
@@ -1285,6 +1292,7 @@ int main(int argc, char* argv[]) {
          print--;
       }
 
+      h_test_2->Fill( 0.5 );
       output->Fill();
    }
 
@@ -1298,6 +1306,8 @@ int main(int argc, char* argv[]) {
 
 
     // Write histogram to file
+    h_test_1->Write();
+    h_test_2->Write();
     output->Write();
     //file.Close();
     delete file;
