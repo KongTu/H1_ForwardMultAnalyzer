@@ -287,6 +287,9 @@ int main(int argc, char* argv[]) {
    */
    TH1D* h_test_1 = new TH1D("h_test_1","h",10,0,1);
    TH1D* h_test_2 = new TH1D("h_test_2","h",10,0,1);
+   TH1D* h_test_3 = new TH1D("h_test_3","h",10,0,1);
+   TH1D* h_test_4 = new TH1D("h_test_4","h",10,0,1);
+   TH1D* h_test_5 = new TH1D("h_test_5","h",10,0,1);
 
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
@@ -473,7 +476,6 @@ int main(int argc, char* argv[]) {
          // if(!detectorStatus->IsOn()) continue;
 
       double w=*weight1 * *weight2;
-      // if(*Q2Gki<10.) continue;
       if(print || ((eventCounter %10000)==0))  { 
          cout<<eventCounter
              <<" event "<<*run<<" "<<*evno<<" type="<<*runtype<<" weight="<<w<<"\n";
@@ -687,6 +689,7 @@ int main(int argc, char* argv[]) {
             }
          }
       }
+      h_test_3->Fill(0.5);
       // trigWeightRW corrects for prescales using raw trigger selection
       myEvent.trigWeightRW=(prob_rw<1.0) ? (1./(1.-prob_rw)) : 0.0;
       // trigWeightAC corrects for prescales using acrual trigger selection
@@ -768,6 +771,8 @@ int main(int argc, char* argv[]) {
 
       H1FloatPtr ElecE("ElecE"); //energy of scattered electron from e-finder
       if(myEvent.vertex[2]==-999. || *ElecE < 10. ) continue;
+
+      h_test_4->Fill(0.5);
 
       static elecCut myElecCut=0;
 
@@ -1308,6 +1313,8 @@ int main(int argc, char* argv[]) {
     // Write histogram to file
     h_test_1->Write();
     h_test_2->Write();
+    h_test_3->Write();
+    h_test_4->Write();
     output->Write();
     //file.Close();
     delete file;
