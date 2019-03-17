@@ -263,13 +263,13 @@ int main(int argc, char* argv[]) {
    }
    H1RunList* goodRunList
       = (H1RunList*) goodRunFile.Get("H1RunList");
-   if(!goodRunList) {
+   if(!goodRunList && *runtype==0) {
       cerr<<"Error: no runlist in file - return!\n";
       return 2;
    }
    H1DetectorStatus *detectorStatus
       = (H1DetectorStatus*)goodRunFile.Get("MyDetectorStatus");
-   if(!detectorStatus) {
+   if(!detectorStatus && *runtype==0) {
       cerr<<"Error: no detector status in file - return!\n";
       return 3;
    }
@@ -461,9 +461,9 @@ int main(int argc, char* argv[]) {
       ++eventCounter;
 
          // skip runs not in list of good runs
-         if(!goodRunList->FindRun(*run)) continue;
+         if(!goodRunList->FindRun(*run) && *runtype==0) continue;
          // skip data events with bad detector status
-         if(!detectorStatus->IsOn()) continue;
+         if(!detectorStatus->IsOn() && *runtype==0) continue;
 
       double w=*weight1 * *weight2;
       if(print || ((eventCounter %10000)==0))  { 
