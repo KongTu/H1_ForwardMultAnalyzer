@@ -554,9 +554,9 @@ int main(int argc, char* argv[]) {
          // double Q2_esigma = 0.;
          // double y_esigma = 0.;
          // double x_esigma = 0.;
-         double Q2_esigma = makeKin->GetQ2es();
-         double y_esigma = makeKin->GetYes();
-         double x_esigma = makeKin->GetXes();
+         double Q2_esigma = makeKin.GetQ2es();
+         double y_esigma = makeKin.GetYes();
+         double x_esigma = makeKin.GetXes();
          //end test
 
          // add radiative photon(s) in a cone
