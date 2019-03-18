@@ -551,12 +551,12 @@ int main(int argc, char* argv[]) {
 
          H1MakeKine makeKin;
          makeKin.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
-         double Q2_esigma = 0.;
-         double y_esigma = 0.;
-         double x_esigma = 0.;
-         // double Q2_esigma = makeKin->GetQ2es();
-         // double y_esigma = makeKin->GetYes();
-         // double x_esigma = makeKin->GetXes();
+         // double Q2_esigma = 0.;
+         // double y_esigma = 0.;
+         // double x_esigma = 0.;
+         double Q2_esigma = makeKin->GetQ2es();
+         double y_esigma = makeKin->GetYes();
+         double x_esigma = makeKin->GetXes();
          //end test
 
          // add radiative photon(s) in a cone
