@@ -536,13 +536,14 @@ int main(int argc, char* argv[]) {
          myEvent.nMCtrackAll=0;
          myEvent.nMCtrack=0;
          for(int i=0;i<mcpart.GetEntries();i++) {
+            
+            H1PartMC *part=mcpart[i];
+            if(print) {
+               cout << i << " " ; part->Print();
+            }
             // skip particles counted as electron
             if(isElectron.find(i)!=isElectron.end()) continue;
 
-            H1PartMC *part=mcpart[i];
-            if(print) {
-               part->Print();
-            }
             int status=part->GetStatus();
             if(status==0) {
                // generator "stable" particles
