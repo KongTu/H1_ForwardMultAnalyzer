@@ -289,6 +289,9 @@ int main(int argc, char* argv[]) {
    TH2D* h_dPhi_theta_FSR=new TH2D("h_dPhi_theta_FSR",";#theta;#Delta#phi",150,0,7,300,-7,7);
    TH2D* h_dPhi_theta_noR=new TH2D("h_dPhi_theta_noR",";#theta;#Delta#phi",150,0,7,300,-7,7);
 
+   TH1D* h_Q2diff = new TH1D("h_Q2diff",";#DeltaQ2",1000,-100,100);
+   TH1D* h_Xdiff = new TH1D("h_Xdiff",";#DeltaX",1000,-1,1);
+   TH1D* h_Ydiff = new TH1D("h_Ydiff",";#DeltaY",1000,-1,1);
 
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
@@ -548,7 +551,9 @@ int main(int argc, char* argv[]) {
 
          H1MakeKine* makeKin = 0;
          makeKin->MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
-
+         double Q2_esigma = makeKin->GetQ2es();
+         double y_esigma = makeKin->GetYes();
+         double x_esigma = makeKin->GetXes();
          //end test
 
          // add radiative photon(s) in a cone
@@ -580,6 +585,10 @@ int main(int argc, char* argv[]) {
          //H1MakeKine maybe helpful
          GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
                        &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
+
+         h_Xdiff->Fill( myEvent.xMC - x_esigma );
+         h_Q2diff->Fill( myEvent.Q2MC - Q2_esigma );
+         h_Ydiff->Fill( myEvent.yMC - y_esigma );
 
          TLorentzRotation boost_MC_HCM
             (BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab));
@@ -1354,6 +1363,11 @@ int main(int argc, char* argv[]) {
     h_dPhi_theta_noR->Write();
     h_dPhi_theta_ISR->Write();
     h_dPhi_theta_FSR->Write();
+
+    h_Q2diff->Write();
+    h_Xdiff->Write();
+    h_Y2diff->Write();
+
 
     //file.Close();
     delete file;
