@@ -69,6 +69,7 @@
 //#include "H1Mods/H1GkiInfo.h"
 #include <TLorentzRotation.h>
 #include "H1HadronicCalibration/H1HadronicCalibration.h"
+#include "H1MakeKine.h"
 
 #include "elecCut.C"
 #include "elecCut.h"
@@ -528,6 +529,23 @@ int main(int argc, char* argv[]) {
                cout << "something is wrong!" << endl;
             }
          }
+
+         //HFS 4-vectors
+         TLorentzVector hfs_MC_lab;
+         for(int i=0;i<mcpart.GetEntries();i++) {
+            H1PartMC *part=mcpart[i];
+            int status=part->GetStatus();
+            float charge=part->GetCharge();
+            int elec_id = mcPartId.GetIdxScatElectron();
+            if( status != 0 || charge == 0 || i == elec_id ) continue;
+
+            hfs_MC_lab += part->GetFourVector();
+         }
+
+         double hfs_MC_E_lab = hfs_MC_lab.E();
+         double hfs_MC_pz_lab = hfs_MC_lab.Pz();
+         double sigma = hfs_MC_E_lab - hfs_MC_pz_lab;
+
          //end test
 
          // add radiative photon(s) in a cone
@@ -625,7 +643,7 @@ int main(int argc, char* argv[]) {
                }
             } // end loop over stable particles
          }
-      }//end of looping MC particles
+      }//end of MC particles
 
       // define initial state particle four-vectors
       double ee=*eBeamE;
