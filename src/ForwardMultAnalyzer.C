@@ -513,13 +513,13 @@ int main(int argc, char* argv[]) {
             (mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector());
             
             double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
-            if( mcPartId.GetRadType() == 0 ){
+            if( mcpart[mcPartId.GetIdxRadPhoton()]->GetRadType() == 0 ){
                h_dPhi_theta_noR->Fill(escat0_MC_lab.Theta(), delta_phi );
             }
-            else if( mcPartId.GetRadType() == 1 ){
+            else if( mcpart[mcPartId.GetIdxRadPhoton()]->GetRadType() == 1 ){
                h_dPhi_theta_ISR->Fill(escat0_MC_lab.Theta(), delta_phi );
             }
-            else if( mcPartId.GetRadType() == 2 ){
+            else if( mcpart[mcPartId.GetIdxRadPhoton()]->GetRadType() == 2 ){
                h_dPhi_theta_FSR->Fill(escat0_MC_lab.Theta(), delta_phi );
             }
             else{
