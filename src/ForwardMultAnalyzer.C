@@ -293,6 +293,19 @@ int main(int argc, char* argv[]) {
    TH1D* h_Xdiff = new TH1D("h_Xdiff",";#DeltaX",1000,-1,1);
    TH1D* h_Ydiff = new TH1D("h_Ydiff",";#DeltaY",1000,-1,1);
 
+   TH1D* h_ISR_Q2diff = new TH1D("h_ISR_Q2diff",";#DeltaQ2",1000,-100,100);
+   TH1D* h_ISR_Xdiff = new TH1D("h_ISR_Xdiff",";#DeltaX",1000,-1,1);
+   TH1D* h_ISR_Ydiff = new TH1D("h_ISR_Ydiff",";#DeltaY",1000,-1,1);
+
+   TH1D* h_FSR_Q2diff = new TH1D("h_FSR_Q2diff",";#DeltaQ2",1000,-100,100);
+   TH1D* h_FSR_Xdiff = new TH1D("h_FSR_Xdiff",";#DeltaX",1000,-1,1);
+   TH1D* h_FSR_Ydiff = new TH1D("h_FSR_Ydiff",";#DeltaY",1000,-1,1);
+
+   TH1D* h_noR_Q2diff = new TH1D("h_noR_Q2diff",";#DeltaQ2",1000,-100,100);
+   TH1D* h_noR_Xdiff = new TH1D("h_noR_Xdiff",";#DeltaX",1000,-1,1);
+   TH1D* h_noR_Ydiff = new TH1D("h_noR_Ydiff",";#DeltaY",1000,-1,1);
+
+
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
    output->Branch("run",&myEvent.run,"run/I");
@@ -513,11 +526,11 @@ int main(int argc, char* argv[]) {
             (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
 
          /*begin test*/
-         if( mcPartId.GetIdxRadPhoton() >= 0 ){
-            TLorentzVector radPhot_MC_lab
+         TLorentzVector radPhot_MC_lab
             (mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector());
-            
-               double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
+         if( mcPartId.GetIdxRadPhoton() >= 0 ){
+      
+            double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
          
             if( mcPartId.GetRadType() == 0 ){
                h_dPhi_theta_noR->Fill(escat0_MC_lab.Theta(), delta_phi );
@@ -552,10 +565,59 @@ int main(int argc, char* argv[]) {
          H1MakeKine makeKin_es;
          makeKin_es.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
          
-         double Q2_esigma = makeKin_es.GetQ2e();
-         double y_esigma = makeKin_es.GetYe();
-         double x_esigma = makeKin_es.GetXe();
-    
+         double Q2_esigma = makeKin_es.GetQ2es();
+         double y_esigma = makeKin_es.GetYes();
+         double x_esigma = makeKin_es.GetXes();
+
+         H1MakeKine makeKin_ISR;
+         H1MakeKine makeKin_FSR;
+         H1MakeKine makeKin_noR;
+
+         double Q2_ISR=Q2_esigma;
+         double y_ISR=y_esigma;
+         double x_ISR=x_esigma;
+
+         double Q2_FSR=Q2_esigma;
+         double y_FSR=y_esigma;
+         double x_FSR=x_esigma;
+
+         double Q2_noR=Q2_esigma;
+         double y_noR=y_esigma;
+         double x_noR=x_esigma;
+
+         if( mcPartId.GetIdxRadPhoton() >= 0 ){
+            if( mcPartId.GetRadType() == 1 ){
+               makeKin_ISR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, (ebeam_MC_lab-radPhot_MC_lab).E(), pbeam_MC_lab.E());
+               Q2_ISR=makeKin_ISR.GetQe();
+               y_ISR=makeKin_ISR.GetYe();
+               x_ISR=makeKin_ISR.GetXe();
+
+               h_ISR_Q2diff->Fill( Q2_ISR - Q2_esigma );
+               h_ISR_Xdiff->Fill( x_ISR - x_esigma );
+               h_ISR_Ydiff->Fill( y_ISR - y_esigma );
+
+            }
+            else if( mcPartId.GetRadType() == 2 ){
+               makeKin_FSR.MakeESig((escat0_MC_lab-radPhot_MC_lab).E(), (escat0_MC_lab-radPhot_MC_lab).Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
+               Q2_FSR=makeKin_FSR.GetQe();
+               y_FSR=makeKin_FSR.GetYe();
+               x_FSR=makeKin_FSR.GetXe();
+
+               h_FSR_Q2diff->Fill( Q2_FSR - Q2_esigma );
+               h_FSR_Xdiff->Fill( x_FSR - x_esigma );
+               h_FSR_Ydiff->Fill( y_FSR - y_esigma );
+            }
+         }
+         else{
+            makeKin_noR.MakeElec(escat0_MC_lab.E(), escat0_MC_lab.Theta(), ebeam_MC_lab.E(), pbeam_MC_lab.E());
+            Q2_noR=makeKin_noR.GetQe();
+            y_noR=makeKin_noR.GetYe();
+            x_noR=makeKin_noR.GetXe();
+
+            h_noR_Q2diff->Fill( Q2_noR - Q2_esigma );
+            h_noR_Xdiff->Fill( x_noR - x_esigma );
+            h_noR_Ydiff->Fill( y_noR - y_esigma );
+         }
          //end test
 
          // add radiative photon(s) in a cone
@@ -1350,14 +1412,11 @@ int main(int argc, char* argv[]) {
       output->Fill();
    }
 
-
-
     // Summary
     cout << "\nProcessed " << eventCounter
         << " events\n\n";
     cerr << "\nProcessed " << eventCounter
        << " events\n\n";
-
 
     // Write histogram to file
     output->Write();
@@ -1370,6 +1429,17 @@ int main(int argc, char* argv[]) {
     h_Xdiff->Write();
     h_Ydiff->Write();
 
+    h_ISR_Q2diff->Write();
+    h_ISR_Xdiff->Write();
+    h_ISR_Ydiff->Write();
+
+    h_FSR_Q2diff->Write();
+    h_FSR_Xdiff->Write();
+    h_FSR_Ydiff->Write();
+
+    h_noR_Q2diff->Write();
+    h_noR_Xdiff->Write();
+    h_noR_Ydiff->Write();
 
     //file.Close();
     delete file;
