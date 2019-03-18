@@ -1366,7 +1366,7 @@ int main(int argc, char* argv[]) {
 
     h_Q2diff->Write();
     h_Xdiff->Write();
-    h_Y2diff->Write();
+    h_Ydiff->Write();
 
 
     //file.Close();
