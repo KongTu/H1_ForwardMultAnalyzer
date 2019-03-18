@@ -546,8 +546,8 @@ int main(int argc, char* argv[]) {
          double hfs_MC_pz_lab = hfs_MC_lab.Pz();
          double sigma = hfs_MC_E_lab - hfs_MC_pz_lab;
 
-         H1MakeKine makeKin(&mkin);
-         makeKin.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
+         H1MakeKine* makeKin = 0;
+         makeKin->MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
 
          //end test
 
