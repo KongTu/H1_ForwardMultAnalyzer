@@ -526,9 +526,9 @@ int main(int argc, char* argv[]) {
             (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
 
          /*begin test*/
-         TLorentzVector radPhot_MC_lab
-            (mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector());
+         TLorentzVector radPhot_MC_lab;
          if( mcPartId.GetIdxRadPhoton() >= 0 ){
+            radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
       
             double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
          
@@ -586,6 +586,7 @@ int main(int argc, char* argv[]) {
          double x_noR=x_esigma;
 
          if( mcPartId.GetIdxRadPhoton() >= 0 ){
+            radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
             if( mcPartId.GetRadType() == 1 ){
                makeKin_ISR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, (ebeam_MC_lab-radPhot_MC_lab).E(), pbeam_MC_lab.E());
                Q2_ISR=makeKin_ISR.GetQ2e();
