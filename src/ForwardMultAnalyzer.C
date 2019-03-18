@@ -509,12 +509,13 @@ int main(int argc, char* argv[]) {
             (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
 
          /*begin test*/
-         if(mcPartId.GetIdxRadPhoton()){
-            TLorentzVector radPhot_MC_lab
-            (mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector());
+            cout << "test " << mcPartId.GetIdxRadPhoton() << endl;
+         // if( mcPartId.GetIdxRadPhoton() != 0 ){
+         //    TLorentzVector radPhot_MC_lab
+         //    (mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector());
             
-            double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
-         }
+         //    double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
+         // }
             // if( mcPartId.GetRadType() == 0 ){
             //    h_dPhi_theta_noR->Fill(escat0_MC_lab.Theta(), delta_phi );
             // }
