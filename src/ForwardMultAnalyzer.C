@@ -69,7 +69,7 @@
 //#include "H1Mods/H1GkiInfo.h"
 #include <TLorentzRotation.h>
 #include "H1HadronicCalibration/H1HadronicCalibration.h"
-#include "H1PHYSUTILS/H1MakeKine.h"
+#include "H1PhysUtils/H1MakeKine.h"
 
 #include "elecCut.C"
 #include "elecCut.h"
