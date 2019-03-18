@@ -280,6 +280,15 @@ int main(int argc, char* argv[]) {
    //     << " events selected " << endl;
 
    TFile *file=new TFile(opts.GetOutput(), "RECREATE");
+
+   /*
+   Finding out more about ISR and FSR
+   */
+   TH2D* h_dPhi_theta_ISR=new TH2D("h_dPhi_theta_ISR",";#theta;#Delta#phi",150,0,7,300,-7,7);
+   TH2D* h_dPhi_theta_FSR=new TH2D("h_dPhi_theta_FSR",";#theta;#Delta#phi",150,0,7,300,-7,7);
+   TH2D* h_dPhi_theta_noR=new TH2D("h_dPhi_theta_noR",";#theta;#Delta#phi",150,0,7,300,-7,7);
+
+
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
    output->Branch("run",&myEvent.run,"run/I");
@@ -498,6 +507,26 @@ int main(int argc, char* argv[]) {
 
          TLorentzVector escat0_MC_lab
             (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
+
+         /*begin test*/
+            TLorentzVector radPhot_MC_lab
+            (mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector());
+            
+            double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
+            if( mcPartId.RadType() == 0 ){
+               h_dPhi_theta_noR->Fill(escat0_MC_lab.Theta(), delta_phi );
+            }
+            else if( mcPartId.RadType() == 1 ){
+               h_dPhi_theta_ISR->Fill(escat0_MC_lab.Theta(), delta_phi );
+            }
+            else if( mcPartId.RadType() == 2 ){
+               h_dPhi_theta_FSR->Fill(escat0_MC_lab.Theta(), delta_phi );
+            }
+            else{
+               cout << "something is wrong!" << endl;
+            }
+         //end test
+
          // add radiative photon(s) in a cone
          TLorentzVector escatPhot_MC_lab(escat0_MC_lab);
          set<int> isElectron;
@@ -524,6 +553,7 @@ int main(int argc, char* argv[]) {
             cout<<"MC scattered electron is made of "<<isElectron.size()<<" particle(s)\n";
          }
 
+         //H1MakeKine maybe helpful
          GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
                        &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
 
@@ -1296,6 +1326,11 @@ int main(int argc, char* argv[]) {
 
     // Write histogram to file
     output->Write();
+
+    h_dPhi_theta_noR->Write();
+    h_dPhi_theta_ISR->Write();
+    h_dPhi_theta_FSR->Write();
+
     //file.Close();
     delete file;
 
