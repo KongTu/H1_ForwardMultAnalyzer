@@ -119,8 +119,8 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
    double phi_elec = eScat_lab.Phi();
 
    TLorentzVector eScat_lab_ES;
-   //eScat_lab_ES.SetPtEtaPhiE(escat_lab_es_pt, escat_lab_es_eta, phi_elec, escat_lab_es_E);
-   eScat_lab_ES.SetPtEtaPhiE( eScat_lab.Pt(), eScat_lab.Eta(), eScat_lab.Phi(), eScat_lab.E());
+   eScat_lab_ES.SetPtEtaPhiE(escat_lab_es_pt, escat_lab_es_eta, phi_elec, escat_lab_es_E);
+   //eScat_lab_ES.SetPtEtaPhiE( eScat_lab.Pt(), eScat_lab.Eta(), eScat_lab.Phi(), eScat_lab.E());
 
    //same as before
    TLorentzVector q_lab=eBeam_lab - eScat_lab_ES;
@@ -145,6 +145,11 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
       cout << "escat_E = " << eScat_lab.E() << endl;
       cout << "escat_eta = " << eScat_lab.Eta() << endl;
       cout << "escat_theta = " << eScat_lab.Theta() << endl;
+      cout << "--------input--------" << endl;
+      cout << "escat_pt = " << escat_lab_es_pt << endl;
+      cout << "escat_eta = " << escat_lab_es_eta << endl;
+      cout << "escat_phi = " << phi_elec << endl;
+      cout << "escat_E = " << escat_lab_es_E << endl;
 
    }
 
