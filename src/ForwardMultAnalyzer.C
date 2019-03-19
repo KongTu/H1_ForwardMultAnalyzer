@@ -107,11 +107,11 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
                                TLorentzVector const &pBeam_lab,
                                TLorentzVector const &eScat_lab, 
                                double Q2_es, 
-                               double y_es,float Q2GKI,float yGKI) {
+                               double y_es) {
 
-   double escat_lab_es_E = (Q2_es*Q2_es)/(4*eBeam_lab.E()) + eBeam_lab.E()*(1-y_es);
-   double b_par = 4*eBeam_lab.E()*eBeam_lab.E()*(1-y_es)/(Q2_es*Q2_es);
-   double escat_lab_es_theta = TMath::ACos((1-b_par)/(1+b_par));
+   double escat_lab_es_E = (Q2_es*Q2_es)/(4.*eBeam_lab.E()) + eBeam_lab.E()*(1.-y_es);
+   double b_par = 4.*eBeam_lab.E()*eBeam_lab.E()*(1.-y_es)/(Q2_es*Q2_es);
+   double escat_lab_es_theta = TMath::ACos((1.-b_par)/(1.+b_par));
    
    double escat_lab_es_pz = sqrt(escat_lab_es_E*escat_lab_es_E - ME*ME)*TMath::Cos(escat_lab_es_theta);
    double escat_lab_es_pt = sqrt(escat_lab_es_E*escat_lab_es_E - ME*ME - escat_lab_es_pz*escat_lab_es_pz);
@@ -135,9 +135,7 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
    boost.RotateY(M_PI-axis.Theta());
 
    if( !(fabs(axis.Px()) < 1000000) ){
-
-      cout << "Q2_GKI = " << Q2GKI << endl;
-      cout << "y_GKI = " << yGKI << endl;
+      cout << "--------start--------" << endl;
       cout << "Q2_esigma = " << Q2_es << endl;
       cout << "y_esigma = " << y_es << endl;
       cout << "escat_px = " << eScat_lab.Px() << endl;
@@ -146,7 +144,7 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
       cout << "escat_E = " << eScat_lab.E() << endl;
       cout << "escat_eta = " << eScat_lab.Eta() << endl;
       cout << "escat_theta = " << eScat_lab.Theta() << endl;
-      cout << "--------input--------" << endl;
+      cout << "--------esigma input--------" << endl;
       cout << "escat_pt = " << escat_lab_es_pt << endl;
       cout << "escat_eta = " << escat_lab_es_eta << endl;
       cout << "escat_phi = " << phi_elec << endl;
@@ -578,6 +576,10 @@ int main(int argc, char* argv[]) {
          myEvent.yGKI = *yGki;
          myEvent.Q2GKI = *Q2Gki;
 
+         double _Q2GKI = myEvent.Q2GKI;
+         double _yGKI = myEvent.yGKI;
+         double _xGKI = myEvent.xGKI;
+
          H1GetPartMCId mcPartId(&*mcpart);
          mcPartId.Fill();
 
@@ -672,9 +674,9 @@ int main(int argc, char* argv[]) {
                y_ISR=makeKin_ISR.GetYes();
                x_ISR=makeKin_ISR.GetXes();
 
-               h_ISR_Q2diff->Fill( Q2_ISR - myEvent.Q2GKI );
-               h_ISR_Ydiff->Fill( y_ISR - myEvent.yGKI );
-               h_ISR_Xdiff->Fill( x_ISR - myEvent.xGKI );
+               h_ISR_Q2diff->Fill( Q2_ISR - _Q2GKI );
+               h_ISR_Ydiff->Fill( y_ISR - _yGKI );
+               h_ISR_Xdiff->Fill( x_ISR - _xGKI );
 
             }
             else if( mcPartId.GetRadType() == 2 ){
@@ -683,9 +685,9 @@ int main(int argc, char* argv[]) {
                y_FSR=makeKin_FSR.GetYes();
                x_FSR=makeKin_FSR.GetXes();
 
-               h_FSR_Q2diff->Fill( Q2_FSR - myEvent.Q2GKI );
-               h_FSR_Ydiff->Fill( y_FSR - myEvent.yGKI );
-               h_FSR_Xdiff->Fill( x_FSR - myEvent.xGKI );
+               h_FSR_Q2diff->Fill( Q2_FSR - _Q2GKI );
+               h_FSR_Ydiff->Fill( y_FSR - _yGKI );
+               h_FSR_Xdiff->Fill( x_FSR - _xGKI );
             }
          }
          else{
@@ -694,9 +696,9 @@ int main(int argc, char* argv[]) {
             y_noR=makeKin_noR.GetYes();
             x_noR=makeKin_noR.GetXes();
 
-            h_noR_Q2diff->Fill( Q2_noR - myEvent.Q2GKI );
-            h_noR_Ydiff->Fill( y_noR - myEvent.yGKI );
-            h_noR_Xdiff->Fill( x_noR - myEvent.xGKI );         
+            h_noR_Q2diff->Fill( Q2_noR - _Q2GKI );
+            h_noR_Ydiff->Fill( y_noR - _yGKI );
+            h_noR_Xdiff->Fill( x_noR - _xGKI );         
          }
          //end test
 
@@ -733,15 +735,12 @@ int main(int argc, char* argv[]) {
          TLorentzVector q_MC_lab(ebeam_MC_lab-escat0_MC_lab);
 
          //New boost using the e-Sigma method
-         double _Q2GKI = myEvent.Q2GKI;
-         double _yGKI = myEvent.yGKI;
-
-         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma,_Q2GKI,_yGKI);
+         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma);
 
          //difference with respect to GKI values:
-         h_Xdiff->Fill( x_esigma - myEvent.xGKI );
-         h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
-         h_Ydiff->Fill( y_esigma - myEvent.yGKI );
+         h_Xdiff->Fill( x_esigma - _xGKI );
+         h_Q2diff->Fill( Q2_esigma - _Q2GKI );
+         h_Ydiff->Fill( y_esigma - _yGKI );
 
          // final state particles
          //bool haveElectron=false;
