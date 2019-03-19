@@ -706,8 +706,8 @@ int main(int argc, char* argv[]) {
          TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
 
          //New boost using the e-Sigma method
-         double const q2_es = Q2_esigma;
-         double const y_es = y_esigma;
+          // const q2_es = Q2_esigma;
+          // const y_es = y_esigma;
          TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab);
 
          //difference with respect to GKI values:
