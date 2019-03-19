@@ -569,10 +569,6 @@ int main(int argc, char* argv[]) {
          double y_esigma = makeKin_es.GetYes();
          double x_esigma = makeKin_es.GetXes();
 
-         // h_Xdiff->Fill( x_esigma - myEvent.xGKI );
-         // h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
-         // h_Ydiff->Fill( y_esigma - myEvent.yGKI );
-
          H1MakeKine makeKin_ISR;
          H1MakeKine makeKin_FSR;
          H1MakeKine makeKin_noR;
@@ -657,6 +653,10 @@ int main(int argc, char* argv[]) {
          GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
                        &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
 
+         h_Xdiff->Fill( x_esigma - myEvent.xGKI );
+         h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
+         h_Ydiff->Fill( y_esigma - myEvent.yGKI );
+         
          // h_Xdiff->Fill( myEvent.xMC - x_esigma );
          // h_Q2diff->Fill( myEvent.Q2MC - Q2_esigma );
          // h_Ydiff->Fill( myEvent.yMC - y_esigma );
