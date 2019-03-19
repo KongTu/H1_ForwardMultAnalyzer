@@ -114,13 +114,12 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
    double escat_lab_es_theta = TMath::ACos((1-b_par)/(1+b_par));
    
    double escat_lab_es_pz = sqrt(escat_lab_es_E*escat_lab_es_E - ME*ME)*TMath::Cos(escat_lab_es_theta);
-   double escat_lab_es_pt = sqrt(escat_lab_es_E+escat_lab_es_E - ME*ME - escat_lab_es_pz*escat_lab_es_pz);
+   double escat_lab_es_pt = sqrt(escat_lab_es_E*escat_lab_es_E - ME*ME - escat_lab_es_pz*escat_lab_es_pz);
    double escat_lab_es_eta = -TMath::Log(TMath::Tan(escat_lab_es_theta/2.));
    double phi_elec = eScat_lab.Phi();
 
    TLorentzVector eScat_lab_ES;
    eScat_lab_ES.SetPtEtaPhiE(escat_lab_es_pt, escat_lab_es_eta, phi_elec, escat_lab_es_E);
-   //eScat_lab_ES.SetPtEtaPhiE( eScat_lab.Pt(), eScat_lab.Eta(), eScat_lab.Phi(), eScat_lab.E());
 
    //same as before
    TLorentzVector q_lab=eBeam_lab - eScat_lab_ES;
