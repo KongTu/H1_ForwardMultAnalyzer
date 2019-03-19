@@ -103,6 +103,41 @@ TLorentzRotation BoostToHCM(TLorentzVector const &eBeam_lab,
    return boost;
 }
 
+//boost to HCM frame with kinematics from e-sigma method
+TLorentzRotation BoostToHCM_eS(TLorentzVector const &eBeam_lab,
+                               TLorentzVector const &pBeam_lab,
+                               TLorentzVector const &eScat_lab, 
+                               double Q2_es, 
+                               double y_es){
+
+   double escat_lab_es_E = (Q2_es*Q2_es)/(4*eBeam_lab.E()) + eBeam_lab.E()*(1-y_es);
+   double b_par = 4*eBeam_lab.E()*eBeam_lab.E()*(1-y_es)/(Q2_es*Q2_es);
+   double escat_lab_es_theta = TMath::ACos((1-b_par)/(1+b_par));
+   
+   double escat_lab_es_pz = sqrt(escat_lab_es_E*escat_lab_es_E - ME*ME)*TMath::Cos(escat_lab_es_theta);
+   double escat_lab_es_pt = sqrt(escat_lab_es_E+escat_lab_es_E - ME*ME - escat_lab_es_pz*escat_lab_es_pz);
+   double escat_lab_es_eta = -TMath::Log(TMath::Tan(escat_lab_es_theta/2.));
+   double phi_elec = eScat_lab.Phi();
+
+   TLorentzVector eScat_lab_ES;
+   eScat_lab_ES.SetPtEtaPhiE(escat_lab_es_pt, escat_lab_es_eta, phi_elec, escat_lab_es_E);
+
+   //same as before
+   TLorentzVector q_lab=eBeam_lab - eScat_lab_ES;
+   TLorentzVector p_plus_q=pBeam_lab + q_lab;
+
+   // boost to HCM
+   TLorentzRotation boost=TLorentzRotation(-1.0*p_plus_q.BoostVector());
+   TLorentzVector pBoost=boost*pBeam_lab;
+   TVector3 axis=pBoost.BoostVector();
+   // rotate away y-coordinate
+   boost.RotateZ(-phi_elec);
+   // rotate away x-coordinate
+   boost.RotateY(M_PI-axis.Theta());
+   return boost;
+
+}
+
 void GetKinematics(TLorentzVector const &ebeam,TLorentzVector const &pbeam,
                    TLorentzVector const &escat,
                    Float_t *x,Float_t *y,Float_t *Q2) {
@@ -167,6 +202,10 @@ struct MyEvent {
    Float_t ptStarMC[nMCtrack_MAX];
    Float_t etaStarMC[nMCtrack_MAX];
    Float_t phiStarMC[nMCtrack_MAX];
+   Float_t ptStar2MC[nMCtrack_MAX];
+   Float_t etaStar2MC[nMCtrack_MAX];
+   Float_t phiStar2MC[nMCtrack_MAX];
+
    Float_t log10zMC[nMCtrack_MAX];
    Int_t imatchMC[nMCtrack_MAX];
 
@@ -203,7 +242,7 @@ struct MyEvent {
    Float_t dcaPrimeREC[nRECtrack_MAX];
    Float_t dz0PrimeREC[nRECtrack_MAX];
 
-//non vertex fitted parameter not used
+   //non vertex fitted parameter not used
    Float_t chi2nvREC[nRECtrack_MAX]; 
    Int_t   nvNdfREC[nRECtrack_MAX];
    Int_t   nvNHitsREC[nRECtrack_MAX];
@@ -356,6 +395,11 @@ int main(int argc, char* argv[]) {
    output->Branch("ptStarMC",myEvent.ptStarMC,"ptStarMC[nMCtrack]/F");
    output->Branch("etaStarMC",myEvent.etaStarMC,"etaStarMC[nMCtrack]/F");
    output->Branch("phiStarMC",myEvent.phiStarMC,"phiStarMC[nMCtrack]/F");
+   
+   output->Branch("ptStar2MC",myEvent.ptStar2MC,"ptStar2MC[nMCtrack]/F");
+   output->Branch("etaStar2MC",myEvent.etaStar2MC,"etaStar2MC[nMCtrack]/F");
+   output->Branch("phiStar2MC",myEvent.phiStar2MC,"phiStar2MC[nMCtrack]/F");
+   
    output->Branch("log10zMC",myEvent.log10zMC,"log10zMC[nMCtrack]/F");
    output->Branch("imatchMC",myEvent.imatchMC,"imatchMC[nMCtrack]/I");
 
@@ -557,7 +601,7 @@ int main(int argc, char* argv[]) {
             float charge=part->GetCharge();
             int elec_id = mcPartId.GetIdxScatElectron();
             if( status != 0 || i == elec_id ) continue;
-            if( TMath::RadToDeg()*part->GetTheta() > 177.5 || TMath::RadToDeg()*part->GetTheta() < 6. ) continue;
+            //if( TMath::RadToDeg()*part->GetTheta() > 177.5 || TMath::RadToDeg()*part->GetTheta() < 6. ) continue;
 
             hfs_MC_E_lab += part->GetE();
             hfs_MC_pz_lab += part->GetPz();
@@ -572,10 +616,10 @@ int main(int argc, char* argv[]) {
          double y_esigma = makeKin_es.GetYes();
          double x_esigma = makeKin_es.GetXes();
 
-         //manually
-         double y_kong = 2*ebeam_MC_lab.E()*(sigma/( (sigma+escat0_MC_lab.E()*(1-TMath::Cos(escat0_MC_lab.Theta())))*(sigma+escat0_MC_lab.E()*(1-TMath::Cos(escat0_MC_lab.Theta()))) ));
-         double Q2_kong = 4*ebeam_MC_lab.E()*escat0_MC_lab.E()*TMath::Cos(escat0_MC_lab.Theta()/2.)*TMath::Cos(escat0_MC_lab.Theta()/2.);
-         double x_kong = Q2_kong/( (ebeam_MC_lab+pbeam_MC_lab).Mag2() * y_kong );
+         // //manually
+         // double y_kong = 2*ebeam_MC_lab.E()*(sigma/( (sigma+escat0_MC_lab.E()*(1-TMath::Cos(escat0_MC_lab.Theta())))*(sigma+escat0_MC_lab.E()*(1-TMath::Cos(escat0_MC_lab.Theta()))) ));
+         // double Q2_kong = 4*ebeam_MC_lab.E()*escat0_MC_lab.E()*TMath::Cos(escat0_MC_lab.Theta()/2.)*TMath::Cos(escat0_MC_lab.Theta()/2.);
+         // double x_kong = Q2_kong/( (ebeam_MC_lab+pbeam_MC_lab).Mag2() * y_kong );
 
          H1MakeKine makeKin_ISR;
          H1MakeKine makeKin_FSR;
@@ -664,10 +708,15 @@ int main(int argc, char* argv[]) {
             (BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab));
          TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
 
+         //New boost using the e-Sigma method
+         TLorentzRotation boost_MC_HCM_es
+            (BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,Q2_esigma,y_esigma));
+
+         //difference with respect to GKI values:
          h_Xdiff->Fill( x_esigma - myEvent.xGKI );
          h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
          h_Ydiff->Fill( y_esigma - myEvent.yGKI );
-    
+
          // final state particles
          //bool haveElectron=false;
          myEvent.nMCtrackAll=0;
@@ -694,9 +743,15 @@ int main(int argc, char* argv[]) {
                   double log10z=TMath::Log10((h*pbeam_MC_lab)/(q_MC_lab*pbeam_MC_lab));
                   // boost to hadronic-centre-of-mass frame
                   TLorentzVector hStar = boost_MC_HCM*h;
+                  TLorentzVector hStar2 = boost_MC_HCM_es*h;
                   double etaStar=hStar.Eta();
                   double ptStar=hStar.Pt();
                   double phiStar=hStar.Phi();
+
+                  double etaStar2=hStar2.Eta();
+                  double ptStar2=hStar2.Pt();
+                  double phiStar2=hStar2.Phi();
+
                   if(print) {
                      // cout<<"MCpart "<<myEvent.nMCtrackAll
                      //     <<" "<<part->GetPDG()
@@ -721,6 +776,11 @@ int main(int argc, char* argv[]) {
                      myEvent.ptStarMC[k]=hStar.Pt();
                      myEvent.etaStarMC[k]=hStar.Eta();
                      myEvent.phiStarMC[k]=hStar.Phi();
+
+                     myEvent.ptStar2MC[k]=hStar2.Pt();
+                     myEvent.etaStar2MC[k]=hStar2.Eta();
+                     myEvent.phiStar2MC[k]=hStar2.Phi();
+
                      myEvent.log10zMC[k]=log10z;
                      myEvent.imatchMC[k]=-1;
                      myEvent.partMC[k]=part;
