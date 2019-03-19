@@ -710,7 +710,7 @@ int main(int argc, char* argv[]) {
 
          //New boost using the e-Sigma method
          TLorentzRotation boost_MC_HCM_es
-            (BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,Q2_esigma,y_esigma));
+            (BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,Q2_esigma,y_esigma));
 
          //difference with respect to GKI values:
          h_Xdiff->Fill( x_esigma - myEvent.xGKI );
