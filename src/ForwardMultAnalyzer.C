@@ -134,7 +134,7 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
    // rotate away x-coordinate
    boost.RotateY(M_PI-axis.Theta());
 
-   if( !(fabs(boost.Px()) < 1000000) ){
+   if( !(fabs(axis.Px()) < 1000000) ){
 
       cout << "Q2_esigma = " << Q2_es << endl;
       cout << "y_esigma = " << y_es << endl;
