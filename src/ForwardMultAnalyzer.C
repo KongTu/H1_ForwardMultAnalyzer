@@ -107,7 +107,7 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
                                TLorentzVector const &pBeam_lab,
                                TLorentzVector const &eScat_lab, 
                                double Q2_es, 
-                               double y_es,float yGKI,float Q2GKI) {
+                               double y_es,float Q2GKI,float yGKI) {
 
    double escat_lab_es_E = (Q2_es*Q2_es)/(4*eBeam_lab.E()) + eBeam_lab.E()*(1-y_es);
    double b_par = 4*eBeam_lab.E()*eBeam_lab.E()*(1-y_es)/(Q2_es*Q2_es);
@@ -733,6 +733,10 @@ int main(int argc, char* argv[]) {
          TLorentzVector q_MC_lab(ebeam_MC_lab-escat0_MC_lab);
 
          //New boost using the e-Sigma method
+         if( myEvent.yGKI > 1.0 ) {
+            cout << "stop here yGKI " << yGKI << endl;
+            return 0 ;
+         }
          TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma,myEvent.Q2GKI,myEvent.yGKI);
 
          //difference with respect to GKI values:
