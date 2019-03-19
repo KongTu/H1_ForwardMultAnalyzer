@@ -766,6 +766,9 @@ int main(int argc, char* argv[]) {
                          <<" ptStar2="<<ptStar2
                          <<" etaStar2="<<etaStar2
                          <<" phiStar2="<<phiStar2
+                         <<" Boost px "<<hStar2.Px()
+                         <<" Boost py "<<hStar2.Py()
+                         <<" Boost pz "<<hStar2.Pz()
                          <<" log10(z)="<<log10z<<"\n";
                   }
                   myEvent.nMCtrackAll++;
