@@ -550,7 +550,7 @@ int main(int argc, char* argv[]) {
          TLorentzVector hfs_MC_lab;
          for(int i=0;i<mcpart.GetEntries();i++) {
             H1PartMC *part=mcpart[i];
-            auto pdgid = part->GetPDG();
+            int pdgid = part->GetPDG();
             int status=part->GetStatus();
             float charge=part->GetCharge();
             int elec_id = mcPartId.GetIdxScatElectron();
