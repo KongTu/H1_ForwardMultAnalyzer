@@ -133,6 +133,21 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
    boost.RotateZ(-phi_elec);
    // rotate away x-coordinate
    boost.RotateY(M_PI-axis.Theta());
+
+   if( !(fabs(boost.Px()) < 1000000) ){
+
+      cout << "Q2_esigma = " << Q2_es << endl;
+      cout << "y_esigma = " << y_es << endl;
+      cout << "escat_px = " << eScat_lab.Px() << endl;
+      cout << "escat_py = " << eScat_lab.Py() << endl;
+      cout << "escat_pz = " << eScat_lab.Pz() << endl;
+      cout << "escat_E = " << eScat_lab.E() << endl;
+      cout << "escat_eta = " << eScat_lab.Eta() << endl;
+      cout << "escat_theta = " << eScat_lab.Theta() << endl;
+
+   }
+
+
    return boost;
 
 }
