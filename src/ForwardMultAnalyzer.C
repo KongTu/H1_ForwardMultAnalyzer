@@ -569,9 +569,9 @@ int main(int argc, char* argv[]) {
          double y_esigma = makeKin_es.GetYes();
          double x_esigma = makeKin_es.GetXes();
 
-         h_Xdiff->Fill( x_esigma - *xGKI );
-         h_Q2diff->Fill( Q2_esigma - *Q2GKI );
-         h_Ydiff->Fill( y_esigma - *yGKI );
+         h_Xdiff->Fill( x_esigma - myEvent.xGKI );
+         h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
+         h_Ydiff->Fill( y_esigma - myEvent.yGKI );
 
          H1MakeKine makeKin_ISR;
          H1MakeKine makeKin_FSR;
@@ -597,9 +597,9 @@ int main(int argc, char* argv[]) {
                y_ISR=makeKin_ISR.GetYe();
                x_ISR=makeKin_ISR.GetXe();
 
-               h_ISR_Q2diff->Fill( Q2_ISR - *Q2GKI );
-               h_ISR_Ydiff->Fill( y_ISR - *yGKI );
-               h_ISR_Xdiff->Fill( x_ISR - *xGKI );
+               h_ISR_Q2diff->Fill( Q2_ISR - myEvent.Q2GKI );
+               h_ISR_Ydiff->Fill( y_ISR - myEvent.yGKI );
+               h_ISR_Xdiff->Fill( x_ISR - myEvent.xGKI );
 
             }
             else if( mcPartId.GetRadType() == 2 ){
@@ -608,9 +608,9 @@ int main(int argc, char* argv[]) {
                y_FSR=makeKin_FSR.GetYe();
                x_FSR=makeKin_FSR.GetXe();
 
-               h_FSR_Q2diff->Fill( Q2_FSR - *Q2GKI );
-               h_FSR_Ydiff->Fill( y_FSR - *yGKI );
-               h_FSR_Xdiff->Fill( x_FSR - *xGKI );
+               h_FSR_Q2diff->Fill( Q2_FSR - myEvent.Q2GKI );
+               h_FSR_Ydiff->Fill( y_FSR - myEvent.yGKI );
+               h_FSR_Xdiff->Fill( x_FSR - myEvent.xGKI );
             }
          }
          else{
@@ -619,9 +619,9 @@ int main(int argc, char* argv[]) {
             y_noR=makeKin_noR.GetYe();
             x_noR=makeKin_noR.GetXe();
 
-            h_noR_Q2diff->Fill( Q2_noR - *Q2GKI );
-            h_noR_Ydiff->Fill( y_noR - *yGKI );
-            h_noR_Xdiff->Fill( x_noR - *xGKI );         
+            h_noR_Q2diff->Fill( Q2_noR - myEvent.Q2GKI );
+            h_noR_Ydiff->Fill( y_noR - myEvent.yGKI );
+            h_noR_Xdiff->Fill( x_noR - myEvent.xGKI );         
          }
          //end test
 
