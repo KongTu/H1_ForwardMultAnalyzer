@@ -635,7 +635,7 @@ int main(int argc, char* argv[]) {
          double sigma = hfs_MC_E_lab - hfs_MC_pz_lab;
 
          H1MakeKine makeKin_es;
-         makeKin_es.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
+         makeKin_es.MakeElec(escat0_MC_lab.E(), escat0_MC_lab.Theta(), ebeam_MC_lab.E(), pbeam_MC_lab.E());
          
          double Q2_esigma = makeKin_es.GetQ2e();
          double y_esigma = makeKin_es.GetYe();
