@@ -754,16 +754,19 @@ int main(int argc, char* argv[]) {
                   double phiStar2=hStar2.Phi();
 
                   if(print && etaStar2 < -20) {
-                     cout << i << " " ; part->Print();
-                     // cout<<"MCpart "<<myEvent.nMCtrackAll
-                     //     <<" "<<part->GetPDG()
-                     //     <<" etaLab="<<h.Eta()
-                     //     <<" ptLab="<<h.Pt()
-                     //     <<" phiLab="<<h.Phi()
-                     //     <<" ptStar="<<ptStar
-                     //     <<" etaStar="<<etaStar
-                     //     <<" phiStar="<<phiStar
-                     //     <<" log10(z)="<<log10z<<"\n";
+                     //cout << i << " " ; part->Print();
+                     cout<<"MCpart "<<myEvent.nMCtrackAll
+                         <<" "<<part->GetPDG()
+                         <<" etaLab="<<h.Eta()
+                         <<" ptLab="<<h.Pt()
+                         <<" phiLab="<<h.Phi()
+                         <<" ptStar="<<ptStar
+                         <<" etaStar="<<etaStar
+                         <<" phiStar="<<phiStar
+                         <<" ptStar2="<<ptStar2
+                         <<" etaStar2="<<etaStar2
+                         <<" phiStar2="<<phiStar2
+                         <<" log10(z)="<<log10z<<"\n";
                   }
                   myEvent.nMCtrackAll++;
                   if(myEvent.nMCtrack<MyEvent::nMCtrack_MAX) {
