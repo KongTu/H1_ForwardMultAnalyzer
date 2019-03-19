@@ -548,6 +548,8 @@ int main(int argc, char* argv[]) {
 
          //HFS 4-vectors
          TLorentzVector hfs_MC_lab;
+         double hfs_MC_E_lab = 0.;
+         double hfs_MC_pz_lab = 0.;
          for(int i=0;i<mcpart.GetEntries();i++) {
             H1PartMC *part=mcpart[i];
             int pdgid = part->GetPDG();
@@ -555,13 +557,11 @@ int main(int argc, char* argv[]) {
             float charge=part->GetCharge();
             int elec_id = mcPartId.GetIdxScatElectron();
             if( status != 0 || charge == 0 || i == elec_id ) continue;
-            cout << "part id " << pdgid << endl;
 
-            hfs_MC_lab += part->GetFourVector();
+            hfs_MC_E_lab += part->GetE();
+            hfs_MC_pz_lab += part->GetPz();
          }
 
-         double hfs_MC_E_lab = hfs_MC_lab.E();
-         double hfs_MC_pz_lab = hfs_MC_lab.Pz();
          double sigma = hfs_MC_E_lab - hfs_MC_pz_lab;
 
          H1MakeKine makeKin_es;
