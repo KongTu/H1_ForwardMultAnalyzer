@@ -183,7 +183,7 @@ struct MyEvent {
    Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC,elecEradMC; // scattered electron
    Float_t elecEcraREC;
    Float_t xMC,yMC,Q2MC;
-   
+
    enum {
       nMCtrack_MAX=400
    };
@@ -191,6 +191,7 @@ struct MyEvent {
    Int_t nMCtrackAll;
    Int_t nMCtrack;
    Int_t idMC[nMCtrack_MAX];
+   Int_t idxRad[10];
 
    Float_t pxMC[nMCtrack_MAX];
    Float_t pyMC[nMCtrack_MAX];
@@ -384,6 +385,7 @@ int main(int argc, char* argv[]) {
    output->Branch("nMCtrackAll",&myEvent.nMCtrackAll,"nMCtrackAll/I");
    output->Branch("nMCtrack",&myEvent.nMCtrack,"nMCtrack/I");
    output->Branch("idMC",myEvent.idMC,"idMC[nMCtrack]/I");
+   output->Branch("idxRad",myEvent.idxRad,"idxRad[10]/I");
 
    output->Branch("pxMC",myEvent.pxMC,"pxMC[nMCtrack]/F");
    output->Branch("pyMC",myEvent.pyMC,"pyMC[nMCtrack]/F");
@@ -635,6 +637,8 @@ int main(int argc, char* argv[]) {
          double Q2_noR=Q2_esigma;
          double y_noR=y_esigma;
          double x_noR=x_esigma;
+
+         myEvent.idxRad = mcPartId.GetRadType();
 
          if( mcPartId.GetIdxRadPhoton() >= 0 ){
             
