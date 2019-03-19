@@ -107,7 +107,7 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
                                TLorentzVector const &pBeam_lab,
                                TLorentzVector const &eScat_lab, 
                                double &Q2_es, 
-                               double &y_es,double &yGKI,double &Q2GKI) {
+                               double &y_es,float yGKI,float Q2GKI) {
 
    double escat_lab_es_E = (Q2_es*Q2_es)/(4*eBeam_lab.E()) + eBeam_lab.E()*(1-y_es);
    double b_par = 4*eBeam_lab.E()*eBeam_lab.E()*(1-y_es)/(Q2_es*Q2_es);
