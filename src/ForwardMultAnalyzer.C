@@ -642,9 +642,9 @@ int main(int argc, char* argv[]) {
          double x_esigma = makeKin_es.GetXes();
 
          // //manually
-         // double y_kong = 2*ebeam_MC_lab.E()*(sigma/( (sigma+escat0_MC_lab.E()*(1-TMath::Cos(escat0_MC_lab.Theta())))*(sigma+escat0_MC_lab.E()*(1-TMath::Cos(escat0_MC_lab.Theta()))) ));
-         // double Q2_kong = 4*ebeam_MC_lab.E()*escat0_MC_lab.E()*TMath::Cos(escat0_MC_lab.Theta()/2.)*TMath::Cos(escat0_MC_lab.Theta()/2.);
-         // double x_kong = Q2_kong/( (ebeam_MC_lab+pbeam_MC_lab).Mag2() * y_kong );
+         double y_kong = 2*ebeam_MC_lab.E()*(sigma/( (sigma+escat0_MC_lab.E()*(1-TMath::Cos(escat0_MC_lab.Theta())))*(sigma+escat0_MC_lab.E()*(1-TMath::Cos(escat0_MC_lab.Theta()))) ));
+         double Q2_kong = 4*ebeam_MC_lab.E()*escat0_MC_lab.E()*TMath::Cos(escat0_MC_lab.Theta()/2.)*TMath::Cos(escat0_MC_lab.Theta()/2.);
+         double x_kong = Q2_kong/( (ebeam_MC_lab+pbeam_MC_lab).Mag2() * y_kong );
 
          H1MakeKine makeKin_ISR;
          H1MakeKine makeKin_FSR;
@@ -735,7 +735,7 @@ int main(int argc, char* argv[]) {
          TLorentzVector q_MC_lab(ebeam_MC_lab-escat0_MC_lab);
 
          //New boost using the e-Sigma method
-         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma);
+         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_kong,y_kong);
 
          //difference with respect to GKI values:
          h_Xdiff->Fill( x_esigma - _xGKI );
