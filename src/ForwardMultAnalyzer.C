@@ -701,13 +701,13 @@ int main(int argc, char* argv[]) {
          }
 
          //H1MakeKine maybe helpful
-         GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
+         GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,
                        &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
-         TLorentzRotation boost_MC_HCM = BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab);
-         TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
+         TLorentzRotation boost_MC_HCM = BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab);
+         TLorentzVector q_MC_lab(ebeam_MC_lab-escat0_MC_lab);
 
          //New boost using the e-Sigma method
-         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,Q2_esigma,y_esigma);
+         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma);
 
          //difference with respect to GKI values:
          h_Xdiff->Fill( x_esigma - myEvent.xGKI );
