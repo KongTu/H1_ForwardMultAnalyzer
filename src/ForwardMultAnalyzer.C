@@ -191,7 +191,7 @@ struct MyEvent {
    Int_t nMCtrackAll;
    Int_t nMCtrack;
    Int_t idMC[nMCtrack_MAX];
-   Int_t idxRad[10];
+   Int_t idxRad;
 
    Float_t pxMC[nMCtrack_MAX];
    Float_t pyMC[nMCtrack_MAX];
@@ -385,7 +385,7 @@ int main(int argc, char* argv[]) {
    output->Branch("nMCtrackAll",&myEvent.nMCtrackAll,"nMCtrackAll/I");
    output->Branch("nMCtrack",&myEvent.nMCtrack,"nMCtrack/I");
    output->Branch("idMC",myEvent.idMC,"idMC[nMCtrack]/I");
-   output->Branch("idxRad",myEvent.idxRad,"idxRad[10]/I");
+   output->Branch("idxRad",&myEvent.idxRad,"idxRad/I");
 
    output->Branch("pxMC",myEvent.pxMC,"pxMC[nMCtrack]/F");
    output->Branch("pyMC",myEvent.pyMC,"pyMC[nMCtrack]/F");
