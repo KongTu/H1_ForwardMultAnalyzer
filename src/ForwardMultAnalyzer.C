@@ -657,24 +657,25 @@ int main(int argc, char* argv[]) {
          }
 
          //H1MakeKine maybe helpful
-         GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
-                       &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
 
-         // h_Xdiff->Fill( x_esigma - x_kong );
-         // h_Q2diff->Fill( Q2_esigma - Q2_kong );
-         // h_Ydiff->Fill( y_esigma - y_kong );
+         // GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
+         //               &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
+         // TLorentzRotation boost_MC_HCM
+         //    (BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab));
+         // TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
 
          h_Xdiff->Fill( x_esigma - myEvent.xGKI );
          h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
          h_Ydiff->Fill( y_esigma - myEvent.yGKI );
 
-         // h_Xdiff->Fill( myEvent.xMC - x_esigma );
-         // h_Q2diff->Fill( myEvent.Q2MC - Q2_esigma );
-         // h_Ydiff->Fill( myEvent.yMC - y_esigma );
+         
+         //try to remove photons
+         GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,
+                       &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
 
          TLorentzRotation boost_MC_HCM
-            (BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab));
-         TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
+            (BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab));
+         TLorentzVector q_MC_lab(ebeam_MC_lab-escat0_MC_lab);
 
          // final state particles
          //bool haveElectron=false;
@@ -981,11 +982,17 @@ int main(int argc, char* argv[]) {
          myEvent.elecEcraREC=-1;
       }
 
-      GetKinematics(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,
+      GetKinematics(ebeam_REC_lab,pbeam_REC_lab,escat0_REC_lab,
                     &myEvent.xREC,&myEvent.yREC,&myEvent.Q2REC);
 
-      TLorentzRotation boost_REC_HCM=BoostToHCM(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab);
-      TLorentzVector q_REC_lab(ebeam_REC_lab-escatPhot_REC_lab);
+      TLorentzRotation boost_REC_HCM=BoostToHCM(ebeam_REC_lab,pbeam_REC_lab,escat0_REC_lab);
+      TLorentzVector q_REC_lab(ebeam_REC_lab-escat0_REC_lab);
+
+      // GetKinematics(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,
+      //               &myEvent.xREC,&myEvent.yREC,&myEvent.Q2REC);
+
+      // TLorentzRotation boost_REC_HCM=BoostToHCM(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab);
+      // TLorentzVector q_REC_lab(ebeam_REC_lab-escatPhot_REC_lab);
 
       // calculate inclusive HFS 4-vector and track selection
       // exclude particles counted as electron
