@@ -569,9 +569,9 @@ int main(int argc, char* argv[]) {
          double y_esigma = makeKin_es.GetYes();
          double x_esigma = makeKin_es.GetXes();
 
-         h_Xdiff->Fill( x_esigma - myEvent.xGKI );
-         h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
-         h_Ydiff->Fill( y_esigma - myEvent.yGKI );
+         // h_Xdiff->Fill( x_esigma - myEvent.xGKI );
+         // h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
+         // h_Ydiff->Fill( y_esigma - myEvent.yGKI );
 
          H1MakeKine makeKin_ISR;
          H1MakeKine makeKin_FSR;
@@ -590,7 +590,9 @@ int main(int argc, char* argv[]) {
          double x_noR=x_esigma;
 
          if( mcPartId.GetIdxRadPhoton() >= 0 ){
+            
             radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
+            
             if( mcPartId.GetRadType() == 1 ){
                makeKin_ISR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, (ebeam_MC_lab-radPhot_MC_lab).E(), pbeam_MC_lab.E());
                Q2_ISR=makeKin_ISR.GetQ2e();
