@@ -733,11 +733,10 @@ int main(int argc, char* argv[]) {
          TLorentzVector q_MC_lab(ebeam_MC_lab-escat0_MC_lab);
 
          //New boost using the e-Sigma method
-         if( myEvent.yGKI > 1.0 ) {
-            cout << "stop here yGKI " << myEvent.yGKI << endl;
-            return 0 ;
-         }
-         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma,myEvent.Q2GKI,myEvent.yGKI);
+         double _Q2GKI = myEvent.Q2GKI;
+         double _yGKI = myEvent.yGKI;
+
+         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma,_Q2GKI,_yGKI);
 
          //difference with respect to GKI values:
          h_Xdiff->Fill( x_esigma - myEvent.xGKI );
