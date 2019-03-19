@@ -735,8 +735,12 @@ int main(int argc, char* argv[]) {
          TLorentzVector q_MC_lab(ebeam_MC_lab-escat0_MC_lab);
 
 
-         double _yMC = myEvent.yMC;
-         double _Q2MC = myEvent.Q2MC;
+         double _yMC =0.;
+         double _Q2MC = 0.;
+         TLorentzVector q=ebeam_MC_lab-escat0_MC_lab;
+         _Q2MC= -q.Mag2();
+         double pq=pbeam_MC_lab.Dot(q);
+         _yMC= pq/pbeam_MC_lab.Dot(ebeam_MC_lab);
          //New boost using the e-Sigma method
          TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,_Q2MC,_yMC);
 
