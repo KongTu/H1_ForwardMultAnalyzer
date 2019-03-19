@@ -119,7 +119,8 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
    double phi_elec = eScat_lab.Phi();
 
    TLorentzVector eScat_lab_ES;
-   eScat_lab_ES.SetPtEtaPhiE(escat_lab_es_pt, escat_lab_es_eta, phi_elec, escat_lab_es_E);
+   //eScat_lab_ES.SetPtEtaPhiE(escat_lab_es_pt, escat_lab_es_eta, phi_elec, escat_lab_es_E);
+   eScat_lab_ES = eScat_lab;
 
    //same as before
    TLorentzVector q_lab=eBeam_lab - eScat_lab_ES;
