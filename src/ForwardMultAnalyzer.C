@@ -590,10 +590,10 @@ int main(int argc, char* argv[]) {
             radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
             
             if( mcPartId.GetRadType() == 1 ){
-               makeKin_ISR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, (ebeam_MC_lab-radPhot_MC_lab).E(), pbeam_MC_lab.E());
-               Q2_ISR=makeKin_ISR.GetQ2e();
-               y_ISR=makeKin_ISR.GetYe();
-               x_ISR=makeKin_ISR.GetXe();
+               makeKin_ISR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, (ebeam_MC_lab).E(), pbeam_MC_lab.E());
+               Q2_ISR=makeKin_ISR.GetQ2es();
+               y_ISR=makeKin_ISR.GetYes();
+               x_ISR=makeKin_ISR.GetXes();
 
                h_ISR_Q2diff->Fill( Q2_ISR - myEvent.Q2GKI );
                h_ISR_Ydiff->Fill( y_ISR - myEvent.yGKI );
@@ -601,10 +601,10 @@ int main(int argc, char* argv[]) {
 
             }
             else if( mcPartId.GetRadType() == 2 ){
-               makeKin_FSR.MakeESig((escat0_MC_lab-radPhot_MC_lab).E(), (escat0_MC_lab-radPhot_MC_lab).Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
-               Q2_FSR=makeKin_FSR.GetQ2e();
-               y_FSR=makeKin_FSR.GetYe();
-               x_FSR=makeKin_FSR.GetXe();
+               makeKin_FSR.MakeESig((escat0_MC_lab).E(), (escat0_MC_lab).Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
+               Q2_FSR=makeKin_FSR.GetQ2es();
+               y_FSR=makeKin_FSR.GetYes();
+               x_FSR=makeKin_FSR.GetXes();
 
                h_FSR_Q2diff->Fill( Q2_FSR - myEvent.Q2GKI );
                h_FSR_Ydiff->Fill( y_FSR - myEvent.yGKI );
@@ -656,7 +656,7 @@ int main(int argc, char* argv[]) {
          h_Xdiff->Fill( x_esigma - myEvent.xGKI );
          h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
          h_Ydiff->Fill( y_esigma - myEvent.yGKI );
-         
+
          // h_Xdiff->Fill( myEvent.xMC - x_esigma );
          // h_Q2diff->Fill( myEvent.Q2MC - Q2_esigma );
          // h_Ydiff->Fill( myEvent.yMC - y_esigma );
