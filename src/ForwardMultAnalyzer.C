@@ -547,7 +547,7 @@ int main(int argc, char* argv[]) {
          }
 
          //HFS 4-vectors
-         TLorentzVector hfs_MC_lab;
+         TLorentzVector hfs_MC_lab = ebeam_MC_lab+pbeam_MC_lab-escat0_MC_lab;
          double hfs_MC_E_lab = 0.;
          double hfs_MC_pz_lab = 0.;
          for(int i=0;i<mcpart.GetEntries();i++) {
@@ -570,6 +570,11 @@ int main(int argc, char* argv[]) {
          double Q2_esigma = makeKin_es.GetQ2es();
          double y_esigma = makeKin_es.GetYes();
          double x_esigma = makeKin_es.GetXes();
+
+         //manually
+         double y_kong = 2*ebeam_MC_lab.E()*(sigma/( (sigma+escat0_MC_lab.E()*(1-TMath::Cos(escat0_MC_lab.Theta())))*(sigma+escat0_MC_lab.E()*(1-TMath::Cos(escat0_MC_lab.Theta()))) ));
+         double Q2_kong = 4*ebeam_MC_lab.E()*escat0_MC_lab.E()*TMath::Cos(escat0_MC_lab.Theta()/2.)*TMath::Cos(escat0_MC_lab.Theta()/2.);
+         double x_kong = Q2_kong/( (ebeam_MC_lab+pbeam_MC_lab).Mag2() * y_kong );
 
          H1MakeKine makeKin_ISR;
          H1MakeKine makeKin_FSR;
@@ -655,9 +660,13 @@ int main(int argc, char* argv[]) {
          GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
                        &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
 
-         h_Xdiff->Fill( x_esigma - myEvent.xGKI );
-         h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
-         h_Ydiff->Fill( y_esigma - myEvent.yGKI );
+         h_Xdiff->Fill( x_esigma - x_kong );
+         h_Q2diff->Fill( Q2_esigma - Q2_kong );
+         h_Ydiff->Fill( y_esigma - y_kong );
+
+         // h_Xdiff->Fill( x_esigma - myEvent.xGKI );
+         // h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
+         // h_Ydiff->Fill( y_esigma - myEvent.yGKI );
 
          // h_Xdiff->Fill( myEvent.xMC - x_esigma );
          // h_Q2diff->Fill( myEvent.Q2MC - Q2_esigma );
