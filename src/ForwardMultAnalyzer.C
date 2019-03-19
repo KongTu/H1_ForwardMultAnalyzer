@@ -557,6 +557,7 @@ int main(int argc, char* argv[]) {
             float charge=part->GetCharge();
             int elec_id = mcPartId.GetIdxScatElectron();
             if( status != 0 || i == elec_id ) continue;
+            if( TMath::RadToDeg()*part->GetTheta() > 177.5 || TMath::RadToDeg()*part->GetTheta() < 6. ) continue;
 
             hfs_MC_E_lab += part->GetE();
             hfs_MC_pz_lab += part->GetPz();
