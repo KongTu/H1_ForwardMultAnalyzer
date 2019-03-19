@@ -612,10 +612,10 @@ int main(int argc, char* argv[]) {
             }
          }
          else{
-            makeKin_noR.MakeElec(escat0_MC_lab.E(), escat0_MC_lab.Theta(), ebeam_MC_lab.E(), pbeam_MC_lab.E());
-            Q2_noR=makeKin_noR.GetQ2e();
-            y_noR=makeKin_noR.GetYe();
-            x_noR=makeKin_noR.GetXe();
+            makeKin_noR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(),sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
+            Q2_noR=makeKin_noR.GetQ2es();
+            y_noR=makeKin_noR.GetYes();
+            x_noR=makeKin_noR.GetXes();
 
             h_noR_Q2diff->Fill( Q2_noR - myEvent.Q2GKI );
             h_noR_Ydiff->Fill( y_noR - myEvent.yGKI );
