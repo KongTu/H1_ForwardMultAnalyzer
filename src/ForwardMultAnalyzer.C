@@ -660,13 +660,13 @@ int main(int argc, char* argv[]) {
          GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
                        &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
 
-         h_Xdiff->Fill( x_esigma - x_kong );
-         h_Q2diff->Fill( Q2_esigma - Q2_kong );
-         h_Ydiff->Fill( y_esigma - y_kong );
+         // h_Xdiff->Fill( x_esigma - x_kong );
+         // h_Q2diff->Fill( Q2_esigma - Q2_kong );
+         // h_Ydiff->Fill( y_esigma - y_kong );
 
-         // h_Xdiff->Fill( x_esigma - myEvent.xGKI );
-         // h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
-         // h_Ydiff->Fill( y_esigma - myEvent.yGKI );
+         h_Xdiff->Fill( x_esigma - myEvent.xGKI );
+         h_Q2diff->Fill( Q2_esigma - myEvent.Q2GKI );
+         h_Ydiff->Fill( y_esigma - myEvent.yGKI );
 
          // h_Xdiff->Fill( myEvent.xMC - x_esigma );
          // h_Q2diff->Fill( myEvent.Q2MC - Q2_esigma );
