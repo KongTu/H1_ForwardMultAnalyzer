@@ -753,7 +753,8 @@ int main(int argc, char* argv[]) {
                   double ptStar2=hStar2.Pt();
                   double phiStar2=hStar2.Phi();
 
-                  if(print) {
+                  if(print && etaStar2 < -20) {
+                     cout << i << " " ; part->Print();
                      // cout<<"MCpart "<<myEvent.nMCtrackAll
                      //     <<" "<<part->GetPDG()
                      //     <<" etaLab="<<h.Eta()
