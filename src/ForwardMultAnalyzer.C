@@ -556,7 +556,7 @@ int main(int argc, char* argv[]) {
             int status=part->GetStatus();
             float charge=part->GetCharge();
             int elec_id = mcPartId.GetIdxScatElectron();
-            if( status != 0 || fabs(pdgid) == 11 ) continue;
+            if( status != 0 || i == elec_id ) continue;
 
             hfs_MC_E_lab += part->GetE();
             hfs_MC_pz_lab += part->GetPz();
