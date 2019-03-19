@@ -106,8 +106,8 @@ TLorentzRotation BoostToHCM(TLorentzVector const &eBeam_lab,
 TLorentzRotation BoostToHCM_eS(TLorentzVector const &eBeam_lab,
                                TLorentzVector const &pBeam_lab,
                                TLorentzVector const &eScat_lab, 
-                               double &Q2_es, 
-                               double &y_es) {
+                               double const &Q2_es, 
+                               double const &y_es) {
 
    double escat_lab_es_E = (Q2_es*Q2_es)/(4*eBeam_lab.E()) + eBeam_lab.E()*(1-y_es);
    double b_par = 4*eBeam_lab.E()*eBeam_lab.E()*(1-y_es)/(Q2_es*Q2_es);
@@ -707,8 +707,9 @@ int main(int argc, char* argv[]) {
          TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
 
          //New boost using the e-Sigma method
-         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,Q2_esigma,y_esigma);
-         TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
+         double const q2_es = Q2_esigma;
+         double const y_es = y_esigma;
+         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,q2_es,y_es);
 
          //difference with respect to GKI values:
          h_Xdiff->Fill( x_esigma - myEvent.xGKI );
