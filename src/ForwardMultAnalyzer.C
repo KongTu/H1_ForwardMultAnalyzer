@@ -569,6 +569,10 @@ int main(int argc, char* argv[]) {
          double y_esigma = makeKin_es.GetYes();
          double x_esigma = makeKin_es.GetXes();
 
+         h_Xdiff->Fill( x_esigma - *xGKI );
+         h_Q2diff->Fill( Q2_esigma - *Q2GKI );
+         h_Ydiff->Fill( y_esigma - *yGKI );
+
          H1MakeKine makeKin_ISR;
          H1MakeKine makeKin_FSR;
          H1MakeKine makeKin_noR;
@@ -593,9 +597,9 @@ int main(int argc, char* argv[]) {
                y_ISR=makeKin_ISR.GetYe();
                x_ISR=makeKin_ISR.GetXe();
 
-               h_ISR_Q2diff->Fill( Q2_ISR - Q2_esigma );
-               h_ISR_Xdiff->Fill( x_ISR - x_esigma );
-               h_ISR_Ydiff->Fill( y_ISR - y_esigma );
+               h_ISR_Q2diff->Fill( Q2_ISR - *Q2GKI );
+               h_ISR_Ydiff->Fill( y_ISR - *yGKI );
+               h_ISR_Xdiff->Fill( x_ISR - *xGKI );
 
             }
             else if( mcPartId.GetRadType() == 2 ){
@@ -604,9 +608,9 @@ int main(int argc, char* argv[]) {
                y_FSR=makeKin_FSR.GetYe();
                x_FSR=makeKin_FSR.GetXe();
 
-               h_FSR_Q2diff->Fill( Q2_FSR - Q2_esigma );
-               h_FSR_Xdiff->Fill( x_FSR - x_esigma );
-               h_FSR_Ydiff->Fill( y_FSR - y_esigma );
+               h_FSR_Q2diff->Fill( Q2_FSR - *Q2GKI );
+               h_FSR_Ydiff->Fill( y_FSR - *yGKI );
+               h_FSR_Xdiff->Fill( x_FSR - *xGKI );
             }
          }
          else{
@@ -615,9 +619,9 @@ int main(int argc, char* argv[]) {
             y_noR=makeKin_noR.GetYe();
             x_noR=makeKin_noR.GetXe();
 
-            h_noR_Q2diff->Fill( Q2_noR - Q2_esigma );
-            h_noR_Xdiff->Fill( x_noR - x_esigma );
-            h_noR_Ydiff->Fill( y_noR - y_esigma );
+            h_noR_Q2diff->Fill( Q2_noR - *Q2GKI );
+            h_noR_Ydiff->Fill( y_noR - *yGKI );
+            h_noR_Xdiff->Fill( x_noR - *xGKI );         
          }
          //end test
 
@@ -651,9 +655,9 @@ int main(int argc, char* argv[]) {
          GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
                        &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
 
-         h_Xdiff->Fill( myEvent.xMC - x_esigma );
-         h_Q2diff->Fill( myEvent.Q2MC - Q2_esigma );
-         h_Ydiff->Fill( myEvent.yMC - y_esigma );
+         // h_Xdiff->Fill( myEvent.xMC - x_esigma );
+         // h_Q2diff->Fill( myEvent.Q2MC - Q2_esigma );
+         // h_Ydiff->Fill( myEvent.yMC - y_esigma );
 
          TLorentzRotation boost_MC_HCM
             (BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab));
