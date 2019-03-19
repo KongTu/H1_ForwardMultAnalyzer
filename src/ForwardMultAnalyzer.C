@@ -734,8 +734,11 @@ int main(int argc, char* argv[]) {
          TLorentzRotation boost_MC_HCM = BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab);
          TLorentzVector q_MC_lab(ebeam_MC_lab-escat0_MC_lab);
 
+
+         double _yMC = myEvent.yMC;
+         double _Q2MC = myEvent.Q2MC;
          //New boost using the e-Sigma method
-         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma);
+         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,_Q2MC,_yMC);
 
          //difference with respect to GKI values:
          h_Xdiff->Fill( x_esigma - _xGKI );
