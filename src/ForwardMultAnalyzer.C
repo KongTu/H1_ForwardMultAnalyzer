@@ -309,7 +309,7 @@ int main(int argc, char* argv[]) {
    // }
 
    // Load mODS/HAT files
-   H1Tree::Instance()->Open();            // this statement must be there!
+   H1Tree::Instance()->Open("*.root");            // this statement must be there!
 
    //cout << H1Tree::Instance()->SelectHat("NumJPsi>0")
    //     << " events selected " << endl;
