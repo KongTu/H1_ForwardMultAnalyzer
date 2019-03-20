@@ -184,6 +184,7 @@ struct MyEvent {
    Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC,elecEradMC; // scattered electron
    Float_t elecEcraREC;
    Float_t xMC,yMC,Q2MC;
+   Float_t xMC_es,yMC_es,Q2MC_es;
 
    enum {
       nMCtrack_MAX=400
@@ -216,6 +217,7 @@ struct MyEvent {
    Int_t elecTypeREC;
 
    Float_t xREC,yREC,Q2REC;
+   Float_t xREC_es,yREC_es,Q2REC_es;
    Float_t hfsPxREC,hfsPyREC,hfsPzREC,hfsEREC; // hadronic final state
    enum {
       nRECtrack_MAX=200
@@ -373,6 +375,9 @@ int main(int argc, char* argv[]) {
    output->Branch("xMC",&myEvent.xMC,"xMC/F");
    output->Branch("yMC",&myEvent.yMC,"yMC/F");
    output->Branch("Q2MC",&myEvent.Q2MC,"Q2MC/F");
+   output->Branch("xMC_es",&myEvent.xMC_es,"xMC_es/F");
+   output->Branch("yMC_es",&myEvent.yMC_es,"yMC_es/F");
+   output->Branch("Q2MC_es",&myEvent.Q2MC_es,"Q2MC_es/F");
 
    output->Branch("nMCtrackAll",&myEvent.nMCtrackAll,"nMCtrackAll/I");
    output->Branch("nMCtrack",&myEvent.nMCtrack,"nMCtrack/I");
@@ -384,11 +389,9 @@ int main(int argc, char* argv[]) {
    output->Branch("pzMC",myEvent.pzMC,"pzMC[nMCtrack]/F");
    output->Branch("etaMC",myEvent.etaMC,"etaMC[nMCtrack]/F");
    output->Branch("chargeMC",myEvent.chargeMC,"chargeMC[nMCtrack]/F");
-
    output->Branch("ptStarMC",myEvent.ptStarMC,"ptStarMC[nMCtrack]/F");
    output->Branch("etaStarMC",myEvent.etaStarMC,"etaStarMC[nMCtrack]/F");
    output->Branch("phiStarMC",myEvent.phiStarMC,"phiStarMC[nMCtrack]/F");
-   
    output->Branch("ptStar2MC",myEvent.ptStar2MC,"ptStar2MC[nMCtrack]/F");
    output->Branch("etaStar2MC",myEvent.etaStar2MC,"etaStar2MC[nMCtrack]/F");
    output->Branch("phiStar2MC",myEvent.phiStar2MC,"phiStar2MC[nMCtrack]/F");
@@ -413,6 +416,9 @@ int main(int argc, char* argv[]) {
    output->Branch("xREC",&myEvent.xREC,"xREC/F");
    output->Branch("yREC",&myEvent.yREC,"yREC/F");
    output->Branch("Q2REC",&myEvent.Q2REC,"Q2REC/F");
+   output->Branch("xREC_es",&myEvent.xREC_es,"xREC_es/F");
+   output->Branch("yREC_es",&myEvent.yREC_es,"yREC_es/F");
+   output->Branch("Q2REC_es",&myEvent.Q2REC_es,"Q2REC_es/F");
    output->Branch("hfsPxREC",&myEvent.hfsPxREC,"hfsPxREC/F");
    output->Branch("hfsPyREC",&myEvent.hfsPyREC,"hfsPyREC/F");
    output->Branch("hfsPzREC",&myEvent.hfsPzREC,"hfsPzREC/F");
@@ -607,6 +613,10 @@ int main(int argc, char* argv[]) {
          double y_esigma = makeKin_es.GetYes();
          double x_esigma = makeKin_es.GetXes();
 
+         myEvent.Q2MC_es = Q2_esigma;
+         myEvent.yMC_es = y_esigma;
+         myEvent.xMC_es = x_esigma;
+
          H1MakeKine makeKin_ISR;
          H1MakeKine makeKin_FSR;
          H1MakeKine makeKin_noR;
@@ -695,7 +705,7 @@ int main(int argc, char* argv[]) {
          TLorentzRotation boost_MC_HCM = BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab);
          TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
          //New boost using the e-Sigma method
-         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,Q2_esigma,y_esigma);
+         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma);
 
          //difference with respect to GKI values:
          h_Xdiff->Fill( x_esigma - _xGKI );
@@ -1041,8 +1051,10 @@ int main(int argc, char* argv[]) {
       int nPart=inclHfs.GetEntries();
       nPart += fstFittedTrack.GetEntries();
 
-      //for hfs sigma
-      TLorentzVector hfs_count;
+      /*
+      Start new kinematics and boost here
+      */
+      TLorentzVector hfs_count;//for hfs e-sigma method
       for(int i =0;i<inclHfs.GetEntries();i++){
          H1PartCand *cand=0;
          cand=inclHfs[i];
@@ -1062,9 +1074,7 @@ int main(int argc, char* argv[]) {
       }
 
       double sigma_REC = hfs_count.E()-hfs_count.Pz();//not use for Elec method
-      /*
-      Start new boost here
-      */
+      
       H1MakeKine makeKin_esREC;
       makeKin_esREC.MakeESig(escat0_REC_lab.E(), escat0_REC_lab.Theta(), sigma_REC, ebeam_REC_lab.E(), pbeam_REC_lab.E());
       
@@ -1072,8 +1082,13 @@ int main(int argc, char* argv[]) {
       double y_esigma_REC = makeKin_esREC.GetYes();
       double x_esigma_REC = makeKin_esREC.GetXes();
 
+      myEvent.Q2REC_es = Q2_esigma_REC;
+      myEvent.yREC_es = y_esigma_REC;
+      myEvent.xREC_es = x_esigma_REC;
+
       //New boost using the e-Sigma method
-      TLorentzRotation boost_MC_HCM_esREC = BoostToHCM_es(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,Q2_esigma_REC,y_esigma_REC);
+      TLorentzRotation boost_MC_HCM_esREC = BoostToHCM_es(ebeam_REC_lab,pbeam_REC_lab,escat0_REC_lab,Q2_esigma_REC,y_esigma_REC);
+      //end new boost
       
       for(int i=0;i<nPart;i++) {
          H1PartCand *cand=0;
