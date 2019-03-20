@@ -109,8 +109,8 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
                                double Q2_es, 
                                double y_es) {
 
-   double escat_lab_es_E = (Q2_es*Q2_es)/(4.*eBeam_lab.E()) + eBeam_lab.E()*(1.-y_es);
-   double b_par = 4.*eBeam_lab.E()*eBeam_lab.E()*(1.-y_es)/(Q2_es*Q2_es);
+   double escat_lab_es_E = (Q2_es)/(4.*eBeam_lab.E()) + eBeam_lab.E()*(1.-y_es);
+   double b_par = 4.*eBeam_lab.E()*eBeam_lab.E()*(1.-y_es)/(Q2_es);
    double escat_lab_es_theta = TMath::ACos((1.-b_par)/(1.+b_par));
    
    double escat_lab_es_pz = sqrt(escat_lab_es_E*escat_lab_es_E - ME*ME)*TMath::Cos(escat_lab_es_theta);
