@@ -1046,7 +1046,7 @@ int main(int argc, char* argv[]) {
       for(int i =0;i<inclHfs.GetEntries();i++){
          H1PartCand *cand=0;
          TLorentzVector p;
-         p=cand->GetFourVector()
+         p=cand->GetFourVector();
          // ignore particles counted with scattered electron
          if(cand && isElectron.find(i)!=isElectron.end()) continue;
 
