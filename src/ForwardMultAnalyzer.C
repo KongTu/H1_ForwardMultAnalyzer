@@ -601,11 +601,11 @@ int main(int argc, char* argv[]) {
          double sigma = hfs_MC_E_lab - hfs_MC_pz_lab;
 
          H1MakeKine makeKin_es;
-         makeKin_es.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
+         makeKin_es.MakeElec(escat0_MC_lab.E(), escat0_MC_lab.Theta(), ebeam_MC_lab.E(), pbeam_MC_lab.E());
          
-         double Q2_esigma = makeKin_es.GetQ2es();
-         double y_esigma = makeKin_es.GetYes();
-         double x_esigma = makeKin_es.GetXes();
+         double Q2_esigma = makeKin_es.GetQ2e();
+         double y_esigma = makeKin_es.GetYe();
+         double x_esigma = makeKin_es.GetXe();
 
          H1MakeKine makeKin_ISR;
          H1MakeKine makeKin_FSR;
@@ -1061,16 +1061,16 @@ int main(int argc, char* argv[]) {
          }
       }
 
-      double sigma_REC = hfs_count.E()-hfs_count.Pz();
+      double sigma_REC = hfs_count.E()-hfs_count.Pz();//not use for Elec method
       /*
       Start new boost here
       */
       H1MakeKine makeKin_esREC;
-      makeKin_esREC.MakeESig(escat0_REC_lab.E(), escat0_REC_lab.Theta(), sigma_REC, ebeam_REC_lab.E(), pbeam_REC_lab.E());
+      makeKin_esREC.MakeElec(escat0_REC_lab.E(), escat0_REC_lab.Theta(), ebeam_REC_lab.E(), pbeam_REC_lab.E());
       
-      double Q2_esigma_REC = makeKin_esREC.GetQ2es();
-      double y_esigma_REC = makeKin_esREC.GetYes();
-      double x_esigma_REC = makeKin_esREC.GetXes();
+      double Q2_esigma_REC = makeKin_esREC.GetQ2e();
+      double y_esigma_REC = makeKin_esREC.GetYe();
+      double x_esigma_REC = makeKin_esREC.GetXe();
 
       //New boost using the e-Sigma method
       TLorentzRotation boost_MC_HCM_esREC = BoostToHCM_es(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,Q2_esigma_REC,y_esigma_REC);
