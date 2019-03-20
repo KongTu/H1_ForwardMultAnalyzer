@@ -236,6 +236,9 @@ struct MyEvent {
    Float_t ptStarREC[nRECtrack_MAX];
    Float_t etaStarREC[nRECtrack_MAX];
    Float_t phiStarREC[nRECtrack_MAX];
+   Float_t ptStar2REC[nRECtrack_MAX];
+   Float_t etaStar2REC[nRECtrack_MAX];
+   Float_t phiStar2REC[nRECtrack_MAX];
    Float_t chi2vtxREC[nRECtrack_MAX];
    Int_t   vtxNdfREC[nRECtrack_MAX];
    Int_t   vtxNHitsREC[nRECtrack_MAX];
@@ -266,17 +269,6 @@ struct MyEvent {
 
    // FST tracks
    Int_t nRECfstFitted;
-   // Int_t nRECfstSelected;
-   // Float_t ptResFstSelected[nRECtrack_MAX];
-   // Float_t chi2SZnFstSelected[nRECtrack_MAX];
-   // Float_t chi2XYnFstSelected[nRECtrack_MAX];
-   // Float_t kappaFstSelected[nRECtrack_MAX];
-   // Float_t phiFstSelected[nRECtrack_MAX];
-   // Float_t thetaFstSelected[nRECtrack_MAX];
-   // Float_t dcaFstSelected[nRECtrack_MAX];
-   // Float_t z0FstSelected[nRECtrack_MAX];
-   // Float_t startRadiusFstSelected[nRECtrack_MAX];
-
 
    // auxillary information, not to be saved
    H1PartMC const *partMC[nMCtrack_MAX];
@@ -344,7 +336,6 @@ int main(int argc, char* argv[]) {
    TH1D* h_noR_Q2diff = new TH1D("h_noR_Q2diff",";#DeltaQ2",1000,-100,100);
    TH1D* h_noR_Xdiff = new TH1D("h_noR_Xdiff",";#DeltaX",1000,-1,1);
    TH1D* h_noR_Ydiff = new TH1D("h_noR_Ydiff",";#DeltaY",1000,-1,1);
-
 
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
@@ -441,6 +432,10 @@ int main(int argc, char* argv[]) {
    output->Branch("ptStarREC",myEvent.ptStarREC,"ptStarREC[nRECtrack]/F");
    output->Branch("etaStarREC",myEvent.etaStarREC,"etaStarREC[nRECtrack]/F");
    output->Branch("phiStarREC",myEvent.phiStarREC,"phiStarREC[nRECtrack]/F");
+   output->Branch("ptStar2REC",myEvent.ptStar2REC,"ptStar2REC[nRECtrack]/F");
+   output->Branch("etaStar2REC",myEvent.etaStar2REC,"etaStar2REC[nRECtrack]/F");
+   output->Branch("phiStar2REC",myEvent.phiStar2REC,"phiStar2REC[nRECtrack]/F");
+
    output->Branch("log10zREC",myEvent.log10zREC,"log10zREC[nRECtrack]/F");
    output->Branch("chi2vtxREC",myEvent.chi2vtxREC,"chi2vtxREC[nRECtrack]/F");
    output->Branch("chi2nvREC",myEvent.chi2nvREC,"chi2nvREC[nRECtrack]/F");
@@ -468,16 +463,6 @@ int main(int argc, char* argv[]) {
    output->Branch("imatchREC",myEvent.imatchREC,"imatchREC[nRECtrack]/I");
 
    output->Branch("nRECfstFitted",&myEvent.nRECfstFitted,"nRECfstFitted/I");
-   // output->Branch("nRECfstSelected",&myEvent.nRECfstSelected,"nRECfstSelected/I");
-   // output->Branch("kappaFstSelected",myEvent.kappaFstSelected,"kappaFstSelected[nRECtrack]/F");
-   // output->Branch("phiFstSelected",myEvent.phiFstSelected,"phiFstSelected[nRECtrack]/F");
-   // output->Branch("thetaFstSelected",myEvent.thetaFstSelected,"thetaFstSelected[nRECtrack]/F");
-   // output->Branch("dcaFstSelected",myEvent.dcaFstSelected,"dcaFstSelected[nRECtrack]/F");
-   // output->Branch("z0FstSelected",myEvent.z0FstSelected,"z0FstSelected[nRECtrack]/F");
-   // output->Branch("startRadiusFstSelected",myEvent.startRadiusFstSelected,"startRadiusFstSelected[nRECtrack]/F");
-   // output->Branch("ptResFstSelected",myEvent.ptResFstSelected,"ptResFstSelected[nRECtrack]/F");
-   // output->Branch("chi2SZnFstSelected",myEvent.chi2SZnFstSelected,"chi2SZnFstSelected[nRECtrack]/F");
-   // output->Branch("chi2XYnFstSelected",myEvent.chi2XYnFstSelected,"chi2XYnFstSelected[nRECtrack]/F");
 
    H1ShortPtr runtype("RunType"); // 0=data, 1=MC, 2=CERN test, 3=CERN MC test
    H1FloatPtr beamx0("BeamX0");          // x position of beam spot (at z=0)
@@ -970,10 +955,6 @@ int main(int argc, char* argv[]) {
       TLorentzVector escat0_REC_lab;
       int scatteredElectron=-1;
       double ptMax=0;
-      //Stefan version 1
-      // for(int i=0;i<partCand.GetEntries();i++) {
-      //    H1PartCand *cand=partCand[i];
-      //Stefan version 2
       for(int i=0;i<partCandArray.GetEntries();i++) {
         H1PartCand *cand=partCandArray[i];
         H1PartEm const *elec=cand->GetIDElec();
@@ -1052,19 +1033,47 @@ int main(int argc, char* argv[]) {
       myEvent.nRECtrackAll=0;
       myEvent.nRECtrack=0;
 
-      // myEvent.nRECfstFitted=fstNonFittedTrack.GetEntries();
-      // myEvent.nRECfstSelected=0;
       myEvent.nRECfstFitted=fstFittedTrack.GetEntries();
 
       vector<int> trackType(10);
-      //int nPart=partCand.GetEntries();
-      //nPart += fstNonFittedTrack.GetEntries();
-      //for(int i=0;i<nPart;i++) {
 
       H1InclHfsIterator inclHfs;
       int nPart=inclHfs.GetEntries();
       nPart += fstFittedTrack.GetEntries();
 
+      //for hfs sigma
+      TLorentzVector hfs_count;
+      for(int=0;i<inclHfs.GetEntries();i++){
+         H1PartCand *cand=0;
+         TLorentzVector p;
+         p=cand->GetFourVector()
+         // ignore particles counted with scattered electron
+         if(cand && isElectron.find(i)!=isElectron.end()) continue;
+
+         // exclude particles close to electron
+         if(haveScatteredElectron &&
+            (p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE)) continue;
+
+         if(cand) {
+            // only particle candidates belong to the calibrated HFS
+            hfs_count += p;
+         }
+      }
+
+      double sigma_REC = hfs_count.E()-hfs_count.Pz();
+      /*
+      Start new boost here
+      */
+      H1MakeKine makeKin_esREC;
+      makeKin_esREC.MakeESig(escat0_REC_lab.E(), escat0_REC_lab.Theta(), sigma_REC, ebeam_REC_lab.E(), pbeam_REC_lab.E());
+      
+      double Q2_esigma_REC = makeKin_esREC.GetQ2es();
+      double y_esigma_REC = makeKin_esREC.GetYes();
+      double x_esigma_REC = makeKin_esREC.GetXes();
+
+      //New boost using the e-Sigma method
+      TLorentzRotation boost_MC_HCM_esREC = BoostToHCM_es(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,Q2_esigma_REC,y_esigma_REC);
+      
       for(int i=0;i<nPart;i++) {
          H1PartCand *cand=0;
          //H1FSTTrack *fstTrack=0;
@@ -1093,6 +1102,7 @@ int main(int argc, char* argv[]) {
             hfs += p;
          }
 
+
          H1PartSelTrack const *track=0;
          if(cand) track=cand->GetIDTrack();
          if(track || fstTrack) {
@@ -1102,9 +1112,13 @@ int main(int argc, char* argv[]) {
                double log10z=TMath::Log10((h*pbeam_REC_lab)/(q_REC_lab*pbeam_REC_lab));
                // boost to hadronic-centre-of-mass frame
                TLorentzVector hStar = boost_REC_HCM*h;
+               TLorentzVector hStar2 = boost_MC_HCM_esREC*h;
                double etaStar=hStar.Eta();
                double ptStar=hStar.Pt();
                double phiStar=hStar.Phi();
+               double etaStar2=hStar2.Eta();
+               double ptStar2=hStar2.Pt();
+               double phiStar2=hStar2.Phi();
                int vtxNHits = 0;
                int nvNHits = 0;
                int type=0;
@@ -1265,6 +1279,9 @@ int main(int argc, char* argv[]) {
                          <<" ptStar="<<ptStar
                          <<" etaStar="<<etaStar
                          <<" phiStar="<<phiStar
+                         <<" ptStar2="<<ptStar2
+                         <<" etaStar2="<<etaStar2
+                         <<" phiStar2="<<phiStar2
                          <<" log10(z)="<<log10z
                          <<" chi2vtx="<<chi2vtx
                          <<" chi2nv="<<chi2nv
@@ -1283,6 +1300,10 @@ int main(int argc, char* argv[]) {
                   myEvent.ptStarREC[k]=hStar.Pt();
                   myEvent.etaStarREC[k]=hStar.Eta();
                   myEvent.phiStarREC[k]=hStar.Phi();
+                  myEvent.ptStar2REC[k]=hStar2.Pt();
+                  myEvent.etaStar2REC[k]=hStar2.Eta();
+                  myEvent.phiStar2REC[k]=hStar2.Phi();
+
                   myEvent.log10zREC[k]=log10z;
                   myEvent.chi2vtxREC[k]=chi2vtx;
                   myEvent.chi2nvREC[k]=chi2nv;
