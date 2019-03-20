@@ -1043,7 +1043,7 @@ int main(int argc, char* argv[]) {
 
       //for hfs sigma
       TLorentzVector hfs_count;
-      for(int=0;i<inclHfs.GetEntries();i++){
+      for(int i =0;i<inclHfs.GetEntries();i++){
          H1PartCand *cand=0;
          TLorentzVector p;
          p=cand->GetFourVector()
