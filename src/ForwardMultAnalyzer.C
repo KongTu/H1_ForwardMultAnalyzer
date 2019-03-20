@@ -1045,6 +1045,7 @@ int main(int argc, char* argv[]) {
       TLorentzVector hfs_count;
       for(int i =0;i<inclHfs.GetEntries();i++){
          H1PartCand *cand=0;
+         cand=inclHfs[i]
          TLorentzVector p;
          p=cand->GetFourVector();
          // ignore particles counted with scattered electron
