@@ -548,7 +548,7 @@ int main(int argc, char* argv[]) {
          double _xGKI = myEvent.xGKI;
       }
          H1GetPartMCId mcPartId(&*mcpart);
-         mcPartId.Fill();
+         // mcPartId.Fill();
 
          TLorentzVector ebeam_MC_lab
             (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
