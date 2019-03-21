@@ -555,6 +555,8 @@ int main(int argc, char* argv[]) {
          H1GetPartMCId mcPartId(&*mcpart);
          mcPartId.Fill();
 
+         if(mcpart.GetEntries() <= 0){cout << "empty events!"; continue;}
+
          TLorentzVector ebeam_MC_lab
             (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
          TLorentzVector pbeam_MC_lab
