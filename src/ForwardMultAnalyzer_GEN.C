@@ -548,8 +548,9 @@ int main(int argc, char* argv[]) {
          double _xGKI = myEvent.xGKI;
       }
          H1GetPartMCId mcPartId(&*mcpart);
-         // mcPartId.Fill();
-
+         mcPartId.Fill();
+         cout << "number of particles " << mcPartId.GetEntries() << endl;
+         
          TLorentzVector ebeam_MC_lab
             (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
          TLorentzVector pbeam_MC_lab
