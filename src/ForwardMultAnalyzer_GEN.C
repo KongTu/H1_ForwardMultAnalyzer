@@ -549,7 +549,7 @@ int main(int argc, char* argv[]) {
       }
          H1GetPartMCId mcPartId(&*mcpart);
          mcPartId.Fill();
-         cout << "number of particles " << mcPartId.GetEntries() << endl;
+         cout << "number of particles " << mcpart.GetEntries() << endl;
          
          TLorentzVector ebeam_MC_lab
             (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
