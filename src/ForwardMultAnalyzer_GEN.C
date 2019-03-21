@@ -550,13 +550,13 @@ int main(int argc, char* argv[]) {
          H1GetPartMCId mcPartId(&*mcpart);
          mcPartId.Fill();
 
-      //    TLorentzVector ebeam_MC_lab
-      //       (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
-      //    TLorentzVector pbeam_MC_lab
-      //       (mcpart[mcPartId.GetIdxBeamProton()]->GetFourVector());
+         TLorentzVector ebeam_MC_lab
+            (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
+         TLorentzVector pbeam_MC_lab
+            (mcpart[mcPartId.GetIdxBeamProton()]->GetFourVector());
 
-      //    myEvent.eProtonBeamMC=pbeam_MC_lab.E();
-      //    myEvent.eElectronBeamMC=ebeam_MC_lab.E();
+         myEvent.eProtonBeamMC=pbeam_MC_lab.E();
+         myEvent.eElectronBeamMC=ebeam_MC_lab.E();
 
       //    TLorentzVector escat0_MC_lab
       //       (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
