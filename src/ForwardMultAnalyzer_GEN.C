@@ -547,246 +547,246 @@ int main(int argc, char* argv[]) {
          double _yGKI = myEvent.yGKI;
          double _xGKI = myEvent.xGKI;
 
-         H1GetPartMCId mcPartId(&*mcpart);
-         mcPartId.Fill();
+      //    H1GetPartMCId mcPartId(&*mcpart);
+      //    mcPartId.Fill();
 
-         TLorentzVector ebeam_MC_lab
-            (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
-         TLorentzVector pbeam_MC_lab
-            (mcpart[mcPartId.GetIdxBeamProton()]->GetFourVector());
+      //    TLorentzVector ebeam_MC_lab
+      //       (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
+      //    TLorentzVector pbeam_MC_lab
+      //       (mcpart[mcPartId.GetIdxBeamProton()]->GetFourVector());
 
-         myEvent.eProtonBeamMC=pbeam_MC_lab.E();
-         myEvent.eElectronBeamMC=ebeam_MC_lab.E();
+      //    myEvent.eProtonBeamMC=pbeam_MC_lab.E();
+      //    myEvent.eElectronBeamMC=ebeam_MC_lab.E();
 
-         TLorentzVector escat0_MC_lab
-            (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
+      //    TLorentzVector escat0_MC_lab
+      //       (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
 
-         /*begin test*/
-         TLorentzVector radPhot_MC_lab;
-         if( mcPartId.GetIdxRadPhoton() >= 0 ){
-            radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
+      //    /*begin test*/
+      //    TLorentzVector radPhot_MC_lab;
+      //    if( mcPartId.GetIdxRadPhoton() >= 0 ){
+      //       radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
       
-            double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
+      //       double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
          
-            if( mcPartId.GetRadType() == 0 ){
-               h_dPhi_theta_noR->Fill(escat0_MC_lab.Theta(), delta_phi );
-            }
-            else if( mcPartId.GetRadType() == 1 ){
-               h_dPhi_theta_ISR->Fill(escat0_MC_lab.Theta(), delta_phi );
-            }
-            else if( mcPartId.GetRadType() == 2 ){
-               h_dPhi_theta_FSR->Fill(escat0_MC_lab.Theta(), delta_phi );
-            }
-            else{
-               cout << "something is wrong!" << endl;
-            }
-         }
+      //       if( mcPartId.GetRadType() == 0 ){
+      //          h_dPhi_theta_noR->Fill(escat0_MC_lab.Theta(), delta_phi );
+      //       }
+      //       else if( mcPartId.GetRadType() == 1 ){
+      //          h_dPhi_theta_ISR->Fill(escat0_MC_lab.Theta(), delta_phi );
+      //       }
+      //       else if( mcPartId.GetRadType() == 2 ){
+      //          h_dPhi_theta_FSR->Fill(escat0_MC_lab.Theta(), delta_phi );
+      //       }
+      //       else{
+      //          cout << "something is wrong!" << endl;
+      //       }
+      //    }
 
-         //HFS 4-vectors
-         //TLorentzVector hfs_MC_lab = ebeam_MC_lab+pbeam_MC_lab-escat0_MC_lab;
-         double hfs_MC_E_lab = 0.;
-         double hfs_MC_pz_lab = 0.;
-         for(int i=0;i<mcpart.GetEntries();i++) {
-            H1PartMC *part=mcpart[i];
-            int pdgid = part->GetPDG();
-            int status=part->GetStatus();
-            float charge=part->GetCharge();
-            int elec_id = mcPartId.GetIdxScatElectron();
-            if( status != 0 || i == elec_id ) continue;
-            //if( TMath::RadToDeg()*part->GetTheta() > 177.5 || TMath::RadToDeg()*part->GetTheta() < 6. ) continue;
+      //    //HFS 4-vectors
+      //    //TLorentzVector hfs_MC_lab = ebeam_MC_lab+pbeam_MC_lab-escat0_MC_lab;
+      //    double hfs_MC_E_lab = 0.;
+      //    double hfs_MC_pz_lab = 0.;
+      //    for(int i=0;i<mcpart.GetEntries();i++) {
+      //       H1PartMC *part=mcpart[i];
+      //       int pdgid = part->GetPDG();
+      //       int status=part->GetStatus();
+      //       float charge=part->GetCharge();
+      //       int elec_id = mcPartId.GetIdxScatElectron();
+      //       if( status != 0 || i == elec_id ) continue;
+      //       //if( TMath::RadToDeg()*part->GetTheta() > 177.5 || TMath::RadToDeg()*part->GetTheta() < 6. ) continue;
 
-            hfs_MC_E_lab += part->GetE();
-            hfs_MC_pz_lab += part->GetPz();
-         }
+      //       hfs_MC_E_lab += part->GetE();
+      //       hfs_MC_pz_lab += part->GetPz();
+      //    }
 
-         double sigma = hfs_MC_E_lab - hfs_MC_pz_lab;
+      //    double sigma = hfs_MC_E_lab - hfs_MC_pz_lab;
 
-         H1MakeKine makeKin_es;
-         makeKin_es.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(),sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
+      //    H1MakeKine makeKin_es;
+      //    makeKin_es.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(),sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
          
-         double Q2_esigma = makeKin_es.GetQ2es();
-         double y_esigma = makeKin_es.GetYes();
-         double x_esigma = makeKin_es.GetXes();
+      //    double Q2_esigma = makeKin_es.GetQ2es();
+      //    double y_esigma = makeKin_es.GetYes();
+      //    double x_esigma = makeKin_es.GetXes();
 
-         myEvent.Q2MC_es = Q2_esigma;
-         myEvent.yMC_es = y_esigma;
-         myEvent.xMC_es = x_esigma;
+      //    myEvent.Q2MC_es = Q2_esigma;
+      //    myEvent.yMC_es = y_esigma;
+      //    myEvent.xMC_es = x_esigma;
 
-         H1MakeKine makeKin_ISR;
-         H1MakeKine makeKin_FSR;
-         H1MakeKine makeKin_noR;
+      //    H1MakeKine makeKin_ISR;
+      //    H1MakeKine makeKin_FSR;
+      //    H1MakeKine makeKin_noR;
 
-         double Q2_ISR=Q2_esigma;
-         double y_ISR=y_esigma;
-         double x_ISR=x_esigma;
+      //    double Q2_ISR=Q2_esigma;
+      //    double y_ISR=y_esigma;
+      //    double x_ISR=x_esigma;
 
-         double Q2_FSR=Q2_esigma;
-         double y_FSR=y_esigma;
-         double x_FSR=x_esigma;
+      //    double Q2_FSR=Q2_esigma;
+      //    double y_FSR=y_esigma;
+      //    double x_FSR=x_esigma;
 
-         double Q2_noR=Q2_esigma;
-         double y_noR=y_esigma;
-         double x_noR=x_esigma;
+      //    double Q2_noR=Q2_esigma;
+      //    double y_noR=y_esigma;
+      //    double x_noR=x_esigma;
 
-         myEvent.idxRad = mcPartId.GetRadType();
+      //    myEvent.idxRad = mcPartId.GetRadType();
 
-         if( mcPartId.GetIdxRadPhoton() >= 0 ){
+      //    if( mcPartId.GetIdxRadPhoton() >= 0 ){
             
-            radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
+      //       radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
             
-            if( mcPartId.GetRadType() == 1 ){
-               makeKin_ISR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, (ebeam_MC_lab).E(), pbeam_MC_lab.E());
-               Q2_ISR=makeKin_ISR.GetQ2es();
-               y_ISR=makeKin_ISR.GetYes();
-               x_ISR=makeKin_ISR.GetXes();
+      //       if( mcPartId.GetRadType() == 1 ){
+      //          makeKin_ISR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, (ebeam_MC_lab).E(), pbeam_MC_lab.E());
+      //          Q2_ISR=makeKin_ISR.GetQ2es();
+      //          y_ISR=makeKin_ISR.GetYes();
+      //          x_ISR=makeKin_ISR.GetXes();
 
-               h_ISR_Q2diff->Fill( Q2_ISR - _Q2GKI );
-               h_ISR_Ydiff->Fill( y_ISR - _yGKI );
-               h_ISR_Xdiff->Fill( x_ISR - _xGKI );
+      //          h_ISR_Q2diff->Fill( Q2_ISR - _Q2GKI );
+      //          h_ISR_Ydiff->Fill( y_ISR - _yGKI );
+      //          h_ISR_Xdiff->Fill( x_ISR - _xGKI );
 
-            }
-            else if( mcPartId.GetRadType() == 2 ){
-               makeKin_FSR.MakeESig((escat0_MC_lab).E(), (escat0_MC_lab).Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
-               Q2_FSR=makeKin_FSR.GetQ2es();
-               y_FSR=makeKin_FSR.GetYes();
-               x_FSR=makeKin_FSR.GetXes();
+      //       }
+      //       else if( mcPartId.GetRadType() == 2 ){
+      //          makeKin_FSR.MakeESig((escat0_MC_lab).E(), (escat0_MC_lab).Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
+      //          Q2_FSR=makeKin_FSR.GetQ2es();
+      //          y_FSR=makeKin_FSR.GetYes();
+      //          x_FSR=makeKin_FSR.GetXes();
 
-               h_FSR_Q2diff->Fill( Q2_FSR - _Q2GKI );
-               h_FSR_Ydiff->Fill( y_FSR - _yGKI );
-               h_FSR_Xdiff->Fill( x_FSR - _xGKI );
-            }
-         }
-         else{
-            makeKin_noR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(),sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
-            Q2_noR=makeKin_noR.GetQ2es();
-            y_noR=makeKin_noR.GetYes();
-            x_noR=makeKin_noR.GetXes();
+      //          h_FSR_Q2diff->Fill( Q2_FSR - _Q2GKI );
+      //          h_FSR_Ydiff->Fill( y_FSR - _yGKI );
+      //          h_FSR_Xdiff->Fill( x_FSR - _xGKI );
+      //       }
+      //    }
+      //    else{
+      //       makeKin_noR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(),sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
+      //       Q2_noR=makeKin_noR.GetQ2es();
+      //       y_noR=makeKin_noR.GetYes();
+      //       x_noR=makeKin_noR.GetXes();
 
-            h_noR_Q2diff->Fill( Q2_noR - _Q2GKI );
-            h_noR_Ydiff->Fill( y_noR - _yGKI );
-            h_noR_Xdiff->Fill( x_noR - _xGKI );         
-         }
-         //end test
+      //       h_noR_Q2diff->Fill( Q2_noR - _Q2GKI );
+      //       h_noR_Ydiff->Fill( y_noR - _yGKI );
+      //       h_noR_Xdiff->Fill( x_noR - _xGKI );         
+      //    }
+      //    //end test
 
-         // add radiative photon(s) in a cone
-         TLorentzVector escatPhot_MC_lab(escat0_MC_lab);
-         set<int> isElectron;
-         isElectron.insert(mcPartId.GetIdxScatElectron());
-         for(int i=0;i<mcpart.GetEntries();i++) {
-            H1PartMC *part=mcpart[i];
-            int status=part->GetStatus();
-            if((status==0 )&&(part->GetPDG()==22)) {
-               TLorentzVector p(part->GetFourVector());
-               if(p.DeltaR(escat0_MC_lab)<ELEC_ISOLATION_CONE) {
-                  // this photon counts with the electron
-                  isElectron.insert(i);
-                  escatPhot_MC_lab += p;
-               }
-            }
-         }
-         myEvent.elecEradMC=escatPhot_MC_lab.E()-escat0_MC_lab.E();
-         myEvent.elecPxMC=escatPhot_MC_lab.X();
-         myEvent.elecPyMC=escatPhot_MC_lab.Y();
-         myEvent.elecPzMC=escatPhot_MC_lab.Z();
-         myEvent.elecEMC=escatPhot_MC_lab.E();
+      //    // add radiative photon(s) in a cone
+      //    TLorentzVector escatPhot_MC_lab(escat0_MC_lab);
+      //    set<int> isElectron;
+      //    isElectron.insert(mcPartId.GetIdxScatElectron());
+      //    for(int i=0;i<mcpart.GetEntries();i++) {
+      //       H1PartMC *part=mcpart[i];
+      //       int status=part->GetStatus();
+      //       if((status==0 )&&(part->GetPDG()==22)) {
+      //          TLorentzVector p(part->GetFourVector());
+      //          if(p.DeltaR(escat0_MC_lab)<ELEC_ISOLATION_CONE) {
+      //             // this photon counts with the electron
+      //             isElectron.insert(i);
+      //             escatPhot_MC_lab += p;
+      //          }
+      //       }
+      //    }
+      //    myEvent.elecEradMC=escatPhot_MC_lab.E()-escat0_MC_lab.E();
+      //    myEvent.elecPxMC=escatPhot_MC_lab.X();
+      //    myEvent.elecPyMC=escatPhot_MC_lab.Y();
+      //    myEvent.elecPzMC=escatPhot_MC_lab.Z();
+      //    myEvent.elecEMC=escatPhot_MC_lab.E();
 
-         if(print) {
-            cout<<"MC scattered electron is made of "<<isElectron.size()<<" particle(s)\n";
-         }
+      //    if(print) {
+      //       cout<<"MC scattered electron is made of "<<isElectron.size()<<" particle(s)\n";
+      //    }
 
-         //H1MakeKine maybe helpful
-         GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
-                       &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
-         TLorentzRotation boost_MC_HCM = BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab);
-         TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
-         //New boost using the e-Sigma method
-         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma);
+      //    //H1MakeKine maybe helpful
+      //    GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
+      //                  &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
+      //    TLorentzRotation boost_MC_HCM = BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab);
+      //    TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
+      //    //New boost using the e-Sigma method
+      //    TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma);
 
-         //difference with respect to GKI values:
-         h_Xdiff->Fill( x_esigma - _xGKI );
-         h_Q2diff->Fill( Q2_esigma - _Q2GKI );
-         h_Ydiff->Fill( y_esigma - _yGKI );
+      //    //difference with respect to GKI values:
+      //    h_Xdiff->Fill( x_esigma - _xGKI );
+      //    h_Q2diff->Fill( Q2_esigma - _Q2GKI );
+      //    h_Ydiff->Fill( y_esigma - _yGKI );
 
-         // final state particles
-         //bool haveElectron=false;
-         myEvent.nMCtrackAll=0;
-         myEvent.nMCtrack=0;
-         for(int i=0;i<mcpart.GetEntries();i++) {
+      //    // final state particles
+      //    //bool haveElectron=false;
+      //    myEvent.nMCtrackAll=0;
+      //    myEvent.nMCtrack=0;
+      //    for(int i=0;i<mcpart.GetEntries();i++) {
             
-            H1PartMC *part=mcpart[i];
-            if(print) {
-               //cout << i << " " ; part->Print();
-            }
-            // skip particles counted as electron
-            if(isElectron.find(i)!=isElectron.end()) continue;
+      //       H1PartMC *part=mcpart[i];
+      //       if(print) {
+      //          //cout << i << " " ; part->Print();
+      //       }
+      //       // skip particles counted as electron
+      //       if(isElectron.find(i)!=isElectron.end()) continue;
 
-            int status=part->GetStatus();
-            if(status==0) {
-               // generator "stable" particles
-               // if((!haveElectron)&&
-               //    ((part->GetPDG()==11)||(part->GetPDG()== -11))) {
-               //    haveElectron=true;               
-               // } else 
-               if(part->GetCharge()!=0.) {
-                  // other charged particles
-                  TLorentzVector h=part->GetFourVector();
-                  double log10z=TMath::Log10((h*pbeam_MC_lab)/(q_MC_lab*pbeam_MC_lab));
-                  // boost to hadronic-centre-of-mass frame
-                  TLorentzVector hStar = boost_MC_HCM*h;
-                  TLorentzVector hStar2 = boost_MC_HCM_es*h;
-                  double etaStar=hStar.Eta();
-                  double ptStar=hStar.Pt();
-                  double phiStar=hStar.Phi();
+      //       int status=part->GetStatus();
+      //       if(status==0) {
+      //          // generator "stable" particles
+      //          // if((!haveElectron)&&
+      //          //    ((part->GetPDG()==11)||(part->GetPDG()== -11))) {
+      //          //    haveElectron=true;               
+      //          // } else 
+      //          if(part->GetCharge()!=0.) {
+      //             // other charged particles
+      //             TLorentzVector h=part->GetFourVector();
+      //             double log10z=TMath::Log10((h*pbeam_MC_lab)/(q_MC_lab*pbeam_MC_lab));
+      //             // boost to hadronic-centre-of-mass frame
+      //             TLorentzVector hStar = boost_MC_HCM*h;
+      //             TLorentzVector hStar2 = boost_MC_HCM_es*h;
+      //             double etaStar=hStar.Eta();
+      //             double ptStar=hStar.Pt();
+      //             double phiStar=hStar.Phi();
 
-                  double etaStar2=hStar2.Eta();
-                  double ptStar2=hStar2.Pt();
-                  double phiStar2=hStar2.Phi();
+      //             double etaStar2=hStar2.Eta();
+      //             double ptStar2=hStar2.Pt();
+      //             double phiStar2=hStar2.Phi();
 
-                  if(print && etaStar2 < -20) {
-                     //cout << i << " " ; part->Print();
-                     cout<<"MCpart "<<myEvent.nMCtrackAll
-                         <<" "<<part->GetPDG()
-                         <<" etaLab="<<h.Eta()
-                         <<" ptLab="<<h.Pt()
-                         <<" phiLab="<<h.Phi()
-                         <<" ptStar="<<ptStar
-                         <<" etaStar="<<etaStar
-                         <<" phiStar="<<phiStar
-                         <<" ptStar2="<<ptStar2
-                         <<" etaStar2="<<etaStar2
-                         <<" phiStar2="<<phiStar2
-                         <<" Boost px "<<hStar2.Px()
-                         <<" Boost py "<<hStar2.Py()
-                         <<" Boost pz "<<hStar2.Pz()
-                         <<" log10(z)="<<log10z<<"\n";
-                  }
-                  myEvent.nMCtrackAll++;
-                  if(myEvent.nMCtrack<MyEvent::nMCtrack_MAX) {
-                     int k=myEvent.nMCtrack;
-                     myEvent.idMC[k]=part->GetPDG();
-                     myEvent.pxMC[k]=h.X();
-                     myEvent.pyMC[k]=h.Y();
-                     myEvent.pzMC[k]=h.Z();
-                     myEvent.etaMC[k]=h.Eta();
-                     myEvent.chargeMC[k]=part->GetCharge();
+      //             if(print && etaStar2 < -20) {
+      //                //cout << i << " " ; part->Print();
+      //                cout<<"MCpart "<<myEvent.nMCtrackAll
+      //                    <<" "<<part->GetPDG()
+      //                    <<" etaLab="<<h.Eta()
+      //                    <<" ptLab="<<h.Pt()
+      //                    <<" phiLab="<<h.Phi()
+      //                    <<" ptStar="<<ptStar
+      //                    <<" etaStar="<<etaStar
+      //                    <<" phiStar="<<phiStar
+      //                    <<" ptStar2="<<ptStar2
+      //                    <<" etaStar2="<<etaStar2
+      //                    <<" phiStar2="<<phiStar2
+      //                    <<" Boost px "<<hStar2.Px()
+      //                    <<" Boost py "<<hStar2.Py()
+      //                    <<" Boost pz "<<hStar2.Pz()
+      //                    <<" log10(z)="<<log10z<<"\n";
+      //             }
+      //             myEvent.nMCtrackAll++;
+      //             if(myEvent.nMCtrack<MyEvent::nMCtrack_MAX) {
+      //                int k=myEvent.nMCtrack;
+      //                myEvent.idMC[k]=part->GetPDG();
+      //                myEvent.pxMC[k]=h.X();
+      //                myEvent.pyMC[k]=h.Y();
+      //                myEvent.pzMC[k]=h.Z();
+      //                myEvent.etaMC[k]=h.Eta();
+      //                myEvent.chargeMC[k]=part->GetCharge();
 
-                     myEvent.ptStarMC[k]=hStar.Pt();
-                     myEvent.etaStarMC[k]=hStar.Eta();
-                     myEvent.phiStarMC[k]=hStar.Phi();
+      //                myEvent.ptStarMC[k]=hStar.Pt();
+      //                myEvent.etaStarMC[k]=hStar.Eta();
+      //                myEvent.phiStarMC[k]=hStar.Phi();
 
-                     myEvent.ptStar2MC[k]=hStar2.Pt();
-                     myEvent.etaStar2MC[k]=hStar2.Eta();
-                     myEvent.phiStar2MC[k]=hStar2.Phi();
+      //                myEvent.ptStar2MC[k]=hStar2.Pt();
+      //                myEvent.etaStar2MC[k]=hStar2.Eta();
+      //                myEvent.phiStar2MC[k]=hStar2.Phi();
 
-                     myEvent.log10zMC[k]=log10z;
-                     myEvent.imatchMC[k]=-1;
-                     myEvent.partMC[k]=part;
-                     myEvent.nMCtrack=k+1;
-                  }
-               }
-            } // end loop over stable particles
-         }
-      }//end of MC particles
+      //                myEvent.log10zMC[k]=log10z;
+      //                myEvent.imatchMC[k]=-1;
+      //                myEvent.partMC[k]=part;
+      //                myEvent.nMCtrack=k+1;
+      //             }
+      //          }
+      //       } // end loop over stable particles
+      //    }
+      // }//end of MC particles
 
 
       output->Fill();
