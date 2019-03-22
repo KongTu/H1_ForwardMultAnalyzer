@@ -64,7 +64,6 @@
 
 //#include "H1Tracks/H1FSTTrackArrayPtr.h"
 
-
 //#include "H1Mods/H1GkiInfoArrayPtr.h"
 //#include "H1Mods/H1GkiInfo.h"
 #include <TLorentzRotation.h>
@@ -323,6 +322,7 @@ int main(int argc, char* argv[]) {
    TH2D* h_dPhi_theta_FSR=new TH2D("h_dPhi_theta_FSR",";#theta;#Delta#phi",150,0,7,300,-7,7);
    TH2D* h_dPhi_theta_noR=new TH2D("h_dPhi_theta_noR",";#theta;#Delta#phi",150,0,7,300,-7,7);
 
+   //All kinematics diffs are with respect to GKI values
    TH1D* h_Q2diff = new TH1D("h_Q2diff",";#DeltaQ2",1000,-100,100);
    TH1D* h_Xdiff = new TH1D("h_Xdiff",";#DeltaX",1000,-1,1);
    TH1D* h_Ydiff = new TH1D("h_Ydiff",";#DeltaY",1000,-1,1);
@@ -555,7 +555,11 @@ int main(int argc, char* argv[]) {
          H1GetPartMCId mcPartId(&*mcpart);
          mcPartId.Fill();
 
-         if(mcpart.GetEntries() <= 0){cout << "empty events!"; continue;}
+         //protection over the gen only MC, nonradiative MC
+         if(mcpart.GetEntries() <= 0){
+            cout << "empty events!"; 
+            continue;
+         }
 
          TLorentzVector ebeam_MC_lab
             (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
@@ -568,7 +572,7 @@ int main(int argc, char* argv[]) {
          TLorentzVector escat0_MC_lab
             (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
 
-         /*begin test*/
+         /*begin scattered electron and radiative photons*/
          TLorentzVector radPhot_MC_lab;
          if( mcPartId.GetIdxRadPhoton() >= 0 ){
             radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
@@ -600,7 +604,6 @@ int main(int argc, char* argv[]) {
             float charge=part->GetCharge();
             int elec_id = mcPartId.GetIdxScatElectron();
             if( status != 0 || i == elec_id ) continue;
-            //if( TMath::RadToDeg()*part->GetTheta() > 177.5 || TMath::RadToDeg()*part->GetTheta() < 6. ) continue;
 
             hfs_MC_E_lab += part->GetE();
             hfs_MC_pz_lab += part->GetPz();
@@ -706,7 +709,7 @@ int main(int argc, char* argv[]) {
                        &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
          TLorentzRotation boost_MC_HCM = BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab);
          TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
-         //New boost using the e-Sigma method
+         //New boost using the e-Sigma method, scattered electrons are without radiative photon
          TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma);
 
          //difference with respect to GKI values:
@@ -1352,21 +1355,6 @@ int main(int argc, char* argv[]) {
                   if(fstTrack) {
                      myEvent.covREC[k]=fstTrack->GetMomentumCovar();
                      myEvent.imatchREC[k]=-1;
-
-                     // H1FSTTrack* fstGeneralTrack = (H1FSTTrack*) fstTrack->GetFSTTrack();
-                     // const float *fst_para;
-                     // fst_para = fstGeneralTrack->GetParameter();
-                     // myEvent.kappaFstSelected[k] = fst_para[0];
-                     // myEvent.phiFstSelected[k] = fst_para[1];
-                     // myEvent.thetaFstSelected[k] = fst_para[2];
-                     // myEvent.dcaFstSelected[k] = fst_para[3];
-                     // myEvent.z0FstSelected[k] = fst_para[4];
-                     // myEvent.startRadiusFstSelected[k] = fstGeneralTrack->GetStartRadius();
-                     // myEvent.ptResFstSelected[k] = (fstGeneralTrack->GetdPt())/(fstGeneralTrack->GetPt());
-                     // myEvent.chi2SZnFstSelected[k] = (fstGeneralTrack->GetChi2SZ())/(fstGeneralTrack->GetNdfSZ());
-                     // myEvent.chi2XYnFstSelected[k] = (fstGeneralTrack->GetChi2XY())/(fstGeneralTrack->GetNdfXY());
-
-                     //need to ask about chi2 with nonfitted tracks
                   } else {
                      // H1PartCand const *partCandI=track->GetParticle();
                      // H1Track const *trackI=partCandI ? partCandI->GetTrack():0;
