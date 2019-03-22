@@ -521,7 +521,7 @@ int main(int argc, char* argv[]) {
    while (gH1Tree->Next() && !opts.IsMaxEvent(eventCounter)) {
       ++eventCounter;
 
-         skip runs not in list of good runs
+         // skip runs not in list of good runs
          if(!goodRunList->FindRun(*run)) continue;
          // skip data events with bad detector status
          if(!detectorStatus->IsOn()) continue;
