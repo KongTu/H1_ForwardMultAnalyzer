@@ -64,7 +64,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
    TChain* tree = new TChain("properties");
    
    if( doRapgap_ && doGen_ ){
-      tree->Add("../batch/output/mc_9*/*.root");
+      tree->Add("../batch/output/mc_9299/*.root");
    }
    else if( !doRapgap_ && doGen_){
       tree->Add("../batch/output/mc_892*_4/*.root");
