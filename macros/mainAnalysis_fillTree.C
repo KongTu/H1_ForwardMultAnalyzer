@@ -78,12 +78,10 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
    TH2D* DATA_Q2vsX = 0;
    TH2D* DATA_etaPt = 0;
    TH1D* DATA_vtxZ = 0;
-   TH1D* h_Pn_all_data = 0;
 
    TH2D* MC_Q2vsX = 0;
    TH2D* MC_etaPt = 0;
    TH1D* MC_vtxZ = 0;
-   TH1D* h_Pn_all_mc = 0;
 
    if( doReweight_ ){
       TFile* file_data = new TFile("../new_output/data_highE_0607_noReweight.root");
@@ -169,8 +167,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
    float Q2max=100.;
    float ymin=0.05;
    float ymax=0.6;
-   float xmin=0.0001;
-   float xmax=0.01;
+
 
    double zvtxOffset=0.;
    double ptcut=0.15;
@@ -464,11 +461,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
          for(int j = 0; j<nRECtrack; j++){
             int type=typeChgREC[j];            
             if(type<0) type= -type;
-            double etaStar = etaStarREC[j];
-            double ptStar = ptStarREC[j];
-            double phiStar = phiStarREC[j];
-            double eta = etaREC[j];
-            double pt = TMath::Hypot(pxREC[j],pyREC[j]);
+           
             double phi = TMath::ATan(pyREC[j]/pxREC[j]);
             if( pxREC[j] < 0 && pyREC[j] > 0 ) phi = phi+3.14;
             if( pxREC[j] < 0 && pyREC[j] < 0 ) phi = phi-3.14;
