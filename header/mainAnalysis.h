@@ -73,7 +73,6 @@ TH1D *h_xREC[4][5];
 TH1D *h_Pn[4][5];
 TH1D *h_Pn_gen[4][5];
 TH2D *h_response_Pn[4][5];
-RooUnfoldResponse response[4][5];
 TH1D *h_Pn_all = new TH1D("h_Pn_all",";N",50,0,50);
 
 
