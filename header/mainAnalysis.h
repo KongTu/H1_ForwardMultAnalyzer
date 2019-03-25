@@ -9,6 +9,7 @@
 #include <TChain.h>
 #include <TMath.h>
 #include <TRandom.h>
+#include <TF1.h>
 #include "/Users/kong/Software/RooUnfold/src/RooUnfoldResponse.h"
 #include "/Users/kong/Software/RooUnfold/src/RooUnfoldBayes.h"
 #include "/Users/kong/Software/RooUnfold/src/RooUnfold.h"

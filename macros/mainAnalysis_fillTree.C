@@ -1,5 +1,4 @@
 #include "../header/mainAnalysis.h"
-#include "RiceStyle.h"
 
 using namespace std;
 
