@@ -262,6 +262,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
       tree->SetBranchAddress("pyMC",&pyMC);
       tree->SetBranchAddress("pzMC",&pzMC);
       tree->SetBranchAddress("etaMC",&etaMC);
+      tree->SetBranchAddress("chargeMC",&chargeMC);
       tree->SetBranchAddress("xMC",&xMC);
       tree->SetBranchAddress("yMC",&yMC);
       tree->SetBranchAddress("Q2MC",&Q2MC);
