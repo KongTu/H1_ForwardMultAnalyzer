@@ -10,10 +10,6 @@
 #include <TMath.h>
 #include <TRandom.h>
 #include <TF1.h>
-#include "/Users/kong/Software/RooUnfold/src/RooUnfoldResponse.h"
-#include "/Users/kong/Software/RooUnfold/src/RooUnfoldBayes.h"
-#include "/Users/kong/Software/RooUnfold/src/RooUnfold.h"
-#include "/Users/kong/Software/RooUnfold/src/RooUnfoldParms.h"
 
 int nEta=100;
 int etaMin=-5;
