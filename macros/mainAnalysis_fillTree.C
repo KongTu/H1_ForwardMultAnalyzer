@@ -67,10 +67,12 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
       tree->Add("../batch/output/mc_9299/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_892*_4/*.root");
+      //tree->Add("../batch/output/mc_8926_4/*.root");
+      tree->Add("../batch/output/mc_8927_4/*.root");
    }
    else if( !doGen_ ){
-      tree->Add("../batch/output/data_highE_*_resubmit/*.root");
+      //tree->Add("../batch/output/data_highE_06_resubmit/*.root");
+      tree->Add("../batch/output/data_highE_07_resubmit/*.root");
    }
    else{ cout << "no files" << endl;}
   
