@@ -237,11 +237,9 @@ struct MyEvent {
    Float_t ptStarREC[nRECtrack_MAX];
    Float_t etaStarREC[nRECtrack_MAX];
    Float_t phiStarREC[nRECtrack_MAX];
-   //e-sigma method boost
    Float_t ptStar2REC[nRECtrack_MAX];
    Float_t etaStar2REC[nRECtrack_MAX];
    Float_t phiStar2REC[nRECtrack_MAX];
-
    Float_t chi2vtxREC[nRECtrack_MAX];
    Int_t   vtxNdfREC[nRECtrack_MAX];
    Int_t   vtxNHitsREC[nRECtrack_MAX];
@@ -255,7 +253,6 @@ struct MyEvent {
    Int_t   nvNHitsREC[nRECtrack_MAX];
    Float_t nvTrackLengthREC[nRECtrack_MAX];
    
-   //some cut variables
    Float_t startHitsRadiusREC[nRECtrack_MAX];
    Float_t endHitsRadiusREC[nRECtrack_MAX];
    Float_t trkThetaREC[nRECtrack_MAX];
@@ -317,6 +314,30 @@ int main(int argc, char* argv[]) {
    //     << " events selected " << endl;
 
    TFile *file=new TFile(opts.GetOutput(), "RECREATE");
+
+   /*
+   Finding out more about ISR and FSR
+   */
+   TH2D* h_dPhi_theta_ISR=new TH2D("h_dPhi_theta_ISR",";#theta;#Delta#phi",150,0,7,300,-7,7);
+   TH2D* h_dPhi_theta_FSR=new TH2D("h_dPhi_theta_FSR",";#theta;#Delta#phi",150,0,7,300,-7,7);
+   TH2D* h_dPhi_theta_noR=new TH2D("h_dPhi_theta_noR",";#theta;#Delta#phi",150,0,7,300,-7,7);
+
+   //All kinematics diffs are with respect to GKI values
+   TH1D* h_Q2diff = new TH1D("h_Q2diff",";#DeltaQ2",1000,-100,100);
+   TH1D* h_Xdiff = new TH1D("h_Xdiff",";#DeltaX",1000,-1,1);
+   TH1D* h_Ydiff = new TH1D("h_Ydiff",";#DeltaY",1000,-1,1);
+
+   TH1D* h_ISR_Q2diff = new TH1D("h_ISR_Q2diff",";#DeltaQ2",1000,-100,100);
+   TH1D* h_ISR_Xdiff = new TH1D("h_ISR_Xdiff",";#DeltaX",1000,-1,1);
+   TH1D* h_ISR_Ydiff = new TH1D("h_ISR_Ydiff",";#DeltaY",1000,-1,1);
+
+   TH1D* h_FSR_Q2diff = new TH1D("h_FSR_Q2diff",";#DeltaQ2",1000,-100,100);
+   TH1D* h_FSR_Xdiff = new TH1D("h_FSR_Xdiff",";#DeltaX",1000,-1,1);
+   TH1D* h_FSR_Ydiff = new TH1D("h_FSR_Ydiff",";#DeltaY",1000,-1,1);
+
+   TH1D* h_noR_Q2diff = new TH1D("h_noR_Q2diff",";#DeltaQ2",1000,-100,100);
+   TH1D* h_noR_Xdiff = new TH1D("h_noR_Xdiff",";#DeltaX",1000,-1,1);
+   TH1D* h_noR_Ydiff = new TH1D("h_noR_Ydiff",";#DeltaY",1000,-1,1);
 
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
@@ -515,8 +536,6 @@ int main(int argc, char* argv[]) {
       myEvent.evno=*evno;
       myEvent.w=w;
 
-      cout << "run type " << *runtype << endl;
-
       if(*runtype==1) {
          // handle MC information
          if(print) {
@@ -528,6 +547,10 @@ int main(int argc, char* argv[]) {
          myEvent.xGKI = *xGki;
          myEvent.yGKI = *yGki;
          myEvent.Q2GKI = *Q2Gki;
+
+         double _Q2GKI = myEvent.Q2GKI;
+         double _yGKI = myEvent.yGKI;
+         double _xGKI = myEvent.xGKI;
 
          H1GetPartMCId mcPartId(&*mcpart);
          mcPartId.Fill();
@@ -548,6 +571,27 @@ int main(int argc, char* argv[]) {
 
          TLorentzVector escat0_MC_lab
             (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
+
+         /*begin scattered electron and radiative photons*/
+         TLorentzVector radPhot_MC_lab;
+         if( mcPartId.GetIdxRadPhoton() >= 0 ){
+            radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
+      
+            double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
+         
+            if( mcPartId.GetRadType() == 0 ){
+               h_dPhi_theta_noR->Fill(escat0_MC_lab.Theta(), delta_phi );
+            }
+            else if( mcPartId.GetRadType() == 1 ){
+               h_dPhi_theta_ISR->Fill(escat0_MC_lab.Theta(), delta_phi );
+            }
+            else if( mcPartId.GetRadType() == 2 ){
+               h_dPhi_theta_FSR->Fill(escat0_MC_lab.Theta(), delta_phi );
+            }
+            else{
+               cout << "something is wrong!" << endl;
+            }
+         }
 
          //HFS 4-vectors
          //TLorentzVector hfs_MC_lab = ebeam_MC_lab+pbeam_MC_lab-escat0_MC_lab;
@@ -578,7 +622,61 @@ int main(int argc, char* argv[]) {
          myEvent.yMC_es = y_esigma;
          myEvent.xMC_es = x_esigma;
 
+         H1MakeKine makeKin_ISR;
+         H1MakeKine makeKin_FSR;
+         H1MakeKine makeKin_noR;
+
+         double Q2_ISR=Q2_esigma;
+         double y_ISR=y_esigma;
+         double x_ISR=x_esigma;
+
+         double Q2_FSR=Q2_esigma;
+         double y_FSR=y_esigma;
+         double x_FSR=x_esigma;
+
+         double Q2_noR=Q2_esigma;
+         double y_noR=y_esigma;
+         double x_noR=x_esigma;
+
          myEvent.idxRad = mcPartId.GetRadType();
+
+         if( mcPartId.GetIdxRadPhoton() >= 0 ){
+            
+            radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
+            
+            if( mcPartId.GetRadType() == 1 ){
+               makeKin_ISR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, (ebeam_MC_lab).E(), pbeam_MC_lab.E());
+               Q2_ISR=makeKin_ISR.GetQ2es();
+               y_ISR=makeKin_ISR.GetYes();
+               x_ISR=makeKin_ISR.GetXes();
+
+               h_ISR_Q2diff->Fill( Q2_ISR - _Q2GKI );
+               h_ISR_Ydiff->Fill( y_ISR - _yGKI );
+               h_ISR_Xdiff->Fill( x_ISR - _xGKI );
+
+            }
+            else if( mcPartId.GetRadType() == 2 ){
+               makeKin_FSR.MakeESig((escat0_MC_lab).E(), (escat0_MC_lab).Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
+               Q2_FSR=makeKin_FSR.GetQ2es();
+               y_FSR=makeKin_FSR.GetYes();
+               x_FSR=makeKin_FSR.GetXes();
+
+               h_FSR_Q2diff->Fill( Q2_FSR - _Q2GKI );
+               h_FSR_Ydiff->Fill( y_FSR - _yGKI );
+               h_FSR_Xdiff->Fill( x_FSR - _xGKI );
+            }
+         }
+         else{
+            makeKin_noR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(),sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
+            Q2_noR=makeKin_noR.GetQ2es();
+            y_noR=makeKin_noR.GetYes();
+            x_noR=makeKin_noR.GetXes();
+
+            h_noR_Q2diff->Fill( Q2_noR - _Q2GKI );
+            h_noR_Ydiff->Fill( y_noR - _yGKI );
+            h_noR_Xdiff->Fill( x_noR - _xGKI );         
+         }
+         //end test
 
          // add radiative photon(s) in a cone
          TLorentzVector escatPhot_MC_lab(escat0_MC_lab);
@@ -606,12 +704,18 @@ int main(int argc, char* argv[]) {
             cout<<"MC scattered electron is made of "<<isElectron.size()<<" particle(s)\n";
          }
 
+         //H1MakeKine maybe helpful
          GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
                        &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
          TLorentzRotation boost_MC_HCM = BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab);
          TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
          //New boost using the e-Sigma method, scattered electrons are without radiative photon
          TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma);
+
+         //difference with respect to GKI values:
+         h_Xdiff->Fill( x_esigma - _xGKI );
+         h_Q2diff->Fill( Q2_esigma - _Q2GKI );
+         h_Ydiff->Fill( y_esigma - _yGKI );
 
          // final state particles
          //bool haveElectron=false;
@@ -694,7 +798,6 @@ int main(int argc, char* argv[]) {
          }
       }//end of MC particles
 
-      cout << "test test test test " << endl;
       // define initial state particle four-vectors
       double ee=*eBeamE;
       double pe= sqrt((ee+ME)*(ee-ME));
@@ -750,9 +853,11 @@ int main(int argc, char* argv[]) {
       // define list of triggers for prescale weight calculations
       // in the HAT selection, ensure that all those subtriggers
       // are preselected
-      spacalSubtrigger.insert(74);
-      spacalSubtrigger.insert(82);
-      spacalSubtrigger.insert(86);
+      spacalSubtrigger.insert(0);
+      spacalSubtrigger.insert(1);
+      spacalSubtrigger.insert(2);
+      spacalSubtrigger.insert(3);
+      spacalSubtrigger.insert(61);
 
       const Int_t *prescales=trigInfo->GetPrescales();
       const Int_t *enabled=trigInfo->GetEnabledSubTriggers();
@@ -1419,6 +1524,26 @@ int main(int argc, char* argv[]) {
 
     // Write histogram to file
     output->Write();
+
+    h_dPhi_theta_noR->Write();
+    h_dPhi_theta_ISR->Write();
+    h_dPhi_theta_FSR->Write();
+
+    h_Q2diff->Write();
+    h_Xdiff->Write();
+    h_Ydiff->Write();
+
+    h_ISR_Q2diff->Write();
+    h_ISR_Xdiff->Write();
+    h_ISR_Ydiff->Write();
+
+    h_FSR_Q2diff->Write();
+    h_FSR_Xdiff->Write();
+    h_FSR_Ydiff->Write();
+
+    h_noR_Q2diff->Write();
+    h_noR_Xdiff->Write();
+    h_noR_Ydiff->Write();
 
     //file.Close();
     delete file;
