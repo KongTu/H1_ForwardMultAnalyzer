@@ -515,6 +515,8 @@ int main(int argc, char* argv[]) {
       myEvent.evno=*evno;
       myEvent.w=w;
 
+      cout << "run type " << *runtype << endl;
+
       if(*runtype==1) {
          // handle MC information
          if(print) {
