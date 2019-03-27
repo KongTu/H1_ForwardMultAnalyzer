@@ -23,8 +23,8 @@ void mainAnalysis_all(const bool doGenOnly_ = false, const bool doGen_ = true, c
       // tree->Add("../run/test_boost/ForwardMultAnalyzer_ESigma_cleanEenergy.root");
    }
    else if( !doGen_ && !doGenOnly_ ){
-      tree->Add("../data/data_highE_06_resubmit/*.root");
-      tree->Add("../data/data_highE_07_resubmit/*.root");
+      tree->Add("../batch/output/data_highE_06_resubmit/*.root");
+      tree->Add("../batch/output/data_highE_07_resubmit/*.root");
       // tree->Add("../data/test_boost/ForwardMultAnalyzer_confirm.root");
    }
    else if( doGen_ && doGenOnly_ && doRapgap_ ){
