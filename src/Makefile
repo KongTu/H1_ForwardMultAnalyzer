@@ -21,7 +21,7 @@ SLIB =
 LIB = 
 #
 # The binaries you would like to make, you have to provide the final linking
-BIN = ForwardMultAnalyzer chargedForwardKongTest
+BIN = PartCorrAnalyzer ForwardMultAnalyzer
 
 #ifeq ($(STANDALONE),yes)
   # no rerun_rec
@@ -64,38 +64,42 @@ endif
 
 
 # the executables
-
-chargedForwardKongTest: outputdirs $(BUILDDIR)/chargedForwardKongTest.o
-	@echo ""
-	@echo Linking test program for mods access: $@ ...
-	$(LOADER) \
-	$(BUILDDIR)/chargedForwardKongTest.o \
-	$(OO_LIBS) \
-	-lH1Tools -lH1Arrays -lH1Hat -lH1Mods -lH1Geom -lH1Skeleton \
-	-lH1HadronicCalibration \
-	-lH1OOBanks -lH1Pointers -lH1Skeleton -lH1Steering \
-	-lH1Tracks -lH1PhysUtils -lH1JetFinder -lH1Finder -lH1Clusters \
-	\
-	$(ROOTLIBS) -lEG -l${FORTRANLIB} \
-	\
-	-o $(BINDIR)/chargedForwardKongTest
-	@echo $@ created ...
-	@echo ""
-
 ForwardMultAnalyzer: outputdirs $(BUILDDIR)/ForwardMultAnalyzer.o
 	@echo ""
-	@echo Linking test program for mods access: $@ ...
+	@echo Linking test program for ods access: $@ ...
 	$(LOADER) \
-	$(BUILDDIR)/ForwardMultAnalyzer.o \
-	$(OO_LIBS) \
-	-lH1Tools -lH1Arrays -lH1Hat -lH1Mods -lH1Geom -lH1Skeleton \
-	-lH1HadronicCalibration \
-	-lH1OOBanks -lH1Pointers -lH1Skeleton -lH1Steering \
-	-lH1Tracks -lH1PhysUtils -lH1JetFinder -lH1Finder -lH1Clusters \
-	\
-	$(ROOTLIBS) -lEG -l${FORTRANLIB} \
-	\
-	-o $(BINDIR)/ForwardMultAnalyzer
+        $(BUILDDIR)/ForwardMultAnalyzer.o \
+        $(OO_LIBS) \
+        -lH1Tools -lH1Arrays -lH1Hat -lH1Mods \
+        -lH1Ods -lH1MagfieldOO \
+        -lH1Geom -lH1Skeleton \
+        -lH1HadronicCalibration \
+        -lH1OOBanks -lH1Pointers -lH1Skeleton  \
+        -lH1Steering \
+        -lH1Tracks -lH1PhysUtils  -lH1JetFinder -lH1Finder -lH1Clusters \
+        \
+        $(ROOTLIBS) -lEG -l${FORTRANLIB} \
+        -Wl,-rpath=../lib/amd64_rhel60 \
+        -o $(BINDIR)/ForwardMultAnalyzer
 	@echo $@ created ...
 	@echo ""
 
+PartCorrAnalyzer: outputdirs $(BUILDDIR)/PartCorrAnalyzer.o
+	@echo ""
+	@echo Linking test program for ods access: $@ ...
+	$(LOADER) \
+	$(BUILDDIR)/ForwardMultAnalyzer_GEN.o \
+        $(OO_LIBS) \
+        -lH1Tools -lH1Arrays -lH1Hat -lH1Mods \
+        -lH1Ods -lH1MagfieldOO \
+        -lH1Geom -lH1Skeleton \
+        -lH1HadronicCalibration \
+        -lH1OOBanks -lH1Pointers -lH1Skeleton  \
+        -lH1Steering \
+        -lH1Tracks -lH1PhysUtils  -lH1JetFinder -lH1Finder -lH1Clusters \
+        \
+        $(ROOTLIBS) -lEG -l${FORTRANLIB} \
+        -Wl,-rpath=../lib/amd64_rhel60 \
+        -o $(BINDIR)/PartCorrAnalyzer
+	@echo $@ created ...
+	@echo ""
