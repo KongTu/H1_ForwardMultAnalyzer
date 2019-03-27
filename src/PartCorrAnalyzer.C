@@ -692,6 +692,7 @@ int main(int argc, char* argv[]) {
          }
       }//end of MC particles
 
+      cout << "test test test test " << endl;
       // define initial state particle four-vectors
       double ee=*eBeamE;
       double pe= sqrt((ee+ME)*(ee-ME));
