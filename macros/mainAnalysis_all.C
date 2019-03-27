@@ -23,7 +23,7 @@ void mainAnalysis_all(const bool doGenOnly_ = false, const bool doGen_ = true, c
       // tree->Add("../run/test_boost/ForwardMultAnalyzer_ESigma_cleanEenergy.root");
    }
    else if( !doGen_ && !doGenOnly_ ){
-      tree->Add("../batch/output/data_highE_06_resubmit/*.root");
+      tree->Add("../batch/output/data_highE_06_resubmit_baseline/*.root");
       tree->Add("../batch/output/data_highE_07_resubmit/*.root");
       // tree->Add("../data/test_boost/ForwardMultAnalyzer_confirm.root");
    }
@@ -309,7 +309,7 @@ void mainAnalysis_all(const bool doGenOnly_ = false, const bool doGen_ = true, c
          }
          else if( doGen_ && doReweight_ ) {
             //reweighting MC to DATA distribution in phase space variables
-            double Q2x_weight = DATA_Q2vsX->GetBinContent( DATA_Q2vsX->FindBin(xMC_es,Q2MC_es) );
+            double Q2x_weight = DATA_Q2vsX->GetBinContent( DATA_Q2vsX->FindBin(xREC_es,Q2REC_es) );
             if( Q2x_weight == 0. ) Q2x_weight = 1.0;
             double vtxZ_weight = DATA_vtxZ->GetBinContent( DATA_vtxZ->FindBin( vertex[2]) );
             if( vtxZ_weight == 0. ) vtxZ_weight = 1.0;
