@@ -53,7 +53,7 @@ struct MyEvent {
    Float_t etaStarREC_mini[nRECtrack_MAX];
    Float_t phiStarREC_mini[nRECtrack_MAX];
 
-   //non vertex fitted parameter not used
+   Float_t nucliaREC_mini[nRECtrack_MAX];
    Float_t dmatchREC_mini[nRECtrack_MAX];
    Int_t imatchREC_mini[nRECtrack_MAX];
    Int_t passREC_mini[nRECtrack_MAX];
@@ -65,13 +65,20 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
    
    if( doRapgap_ && doGen_ ){
       tree->Add("../batch/output/mc_9299/*.root");
+      tree->Add("../batch/output/mc_9300/*.root");
+      tree->Add("../batch/output/mc_9301/*.root");
+      tree->Add("../batch/output/mc_9302/*.root");
+      tree->Add("../batch/output/mc_9303/*.root");
+      tree->Add("../batch/output/mc_9304/*.root");
+      tree->Add("../batch/output/mc_9305/*.root");
+      tree->Add("../batch/output/mc_9306/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      //tree->Add("../batch/output/mc_8926_4/*.root");
+      tree->Add("../batch/output/mc_8926_4/*.root");
       tree->Add("../batch/output/mc_8927_4/*.root");
    }
    else if( !doGen_ ){
-      //tree->Add("../batch/output/data_highE_06_resubmit/*.root");
+      tree->Add("../batch/output/data_highE_06_resubmit/*.root");
       tree->Add("../batch/output/data_highE_07_resubmit/*.root");
    }
    else{ cout << "no files" << endl;}
@@ -160,6 +167,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
    outtree->Branch("etaStarREC_mini",myEvent.etaStarREC_mini,"etaStarREC_mini[nRECtrack_mini]/F");
    outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
 
+   outtree->Branch("nucliaREC_mini",myEvent.nucliaREC_mini,"nucliaREC_mini[nRECtrack_mini]/F");
    outtree->Branch("dmatchREC_mini",myEvent.dmatchREC_mini,"dmatchREC_mini[nRECtrack_mini]/F");
    outtree->Branch("imatchREC_mini",myEvent.imatchREC_mini,"imatchREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passREC_mini",myEvent.passREC_mini,"passREC_mini[nRECtrack_mini]/I");
@@ -526,6 +534,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
             myEvent.etaStarREC_mini[j] = etaStarREC[j];
             myEvent.ptStarREC_mini[j] = ptStarREC[j];
             myEvent.phiStarREC_mini[j] = phiStarREC[j];
+            myEvent.nucliaREC_mini[j] = nucliaREC[j];
             myEvent.dmatchREC_mini[j] = dmatchREC[j];
             myEvent.imatchREC_mini[j] = imatchREC[j];       
             myEvent.passREC_mini[j] = pass;       
