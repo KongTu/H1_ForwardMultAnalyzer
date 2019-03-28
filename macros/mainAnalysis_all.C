@@ -379,9 +379,9 @@ void mainAnalysis_all(const bool doGenOnly_ = false, const bool doGen_ = true, c
          //vertex cuts:
          if(TMath::Abs(vertex[2]+zvtxOffset)>35.) continue;
          //phase space cuts:
-         if(yREC_es<ymin) continue;
-         if(yREC_es>ymax) continue;
-         if(Q2REC_es<Q2min || Q2REC_es>Q2max) continue;
+         if(yREC<ymin) continue;
+         if(yREC>ymax) continue;
+         if(Q2REC<Q2min || Q2REC>Q2max) continue;
          //Cut electron spatial :
          if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) continue;
          if( elecEnergyREC < 12. ) continue;
@@ -454,7 +454,7 @@ void mainAnalysis_all(const bool doGenOnly_ = false, const bool doGen_ = true, c
             if( pxREC[j] < 0 && pyREC[j] > 0 ) phi = phi+3.14;
             if( pxREC[j] < 0 && pyREC[j] < 0 ) phi = phi-3.14;
 
-            if( eta > 2.5 || eta < -2.0 ) continue;
+            //if( eta > 2.5 || eta < -2.0 ) continue;
             //if( etaStar > 5.0 || etaStar < 0.0 ) continue;
             //if( ptStarREC[j] > 10. || ptStarREC[j] < 0 ) continue;
             
