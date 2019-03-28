@@ -338,8 +338,8 @@ void mainAnalysis_all(const bool doGenOnly_ = false, const bool doGen_ = true, c
                         //do something to gen particle here 
                         if( eta > 2.5 || eta < -2.0 ) continue;
                         if(TMath::Hypot(pxMC[j],pyMC[j])<ptcut) continue;
-                        if( etaStar > 5.0 || etaStar < 0.0 ) continue;
-                        if( ptStarMC[j] > 10. || ptStarMC[j] < 0 ) continue;
+                        // if( etaStar > 5.0 || etaStar < 0.0 ) continue;
+                        // if( ptStarMC[j] > 10. || ptStarMC[j] < 0 ) continue;
 
                         h_eta_gen[1]->Fill( eta, evt_weight);
 
@@ -384,7 +384,7 @@ void mainAnalysis_all(const bool doGenOnly_ = false, const bool doGen_ = true, c
          if(Q2REC_es<Q2min || Q2REC_es>Q2max) continue;
          //Cut electron spatial :
          if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) continue;
-         if( elecEREC < 12. ) continue;
+         if( elecEnergyREC < 12. ) continue;
 
          //filling all event histograms after cuts:
          for(int bit = 0; bit < 10; bit++){
@@ -438,7 +438,7 @@ void mainAnalysis_all(const bool doGenOnly_ = false, const bool doGen_ = true, c
          h_xyCluster[truth_index]->Fill( elecXclusREC, elecYclusREC, evt_weight*pow(Q2REC_es,2) );
          h_emE[truth_index]->Fill( elecEfracREC, evt_weight );
          h_hadESpacal[truth_index]->Fill( elecHfracREC, evt_weight );
-         h_eEnergy[truth_index]->Fill( elecEREC, evt_weight );
+         h_eEnergy[truth_index]->Fill( elecEnergyREC, evt_weight );
          h_eTheta[truth_index]->Fill( elecThetaREC, evt_weight );
          h_clusterRadius[truth_index]->Fill( elecEcraREC, evt_weight );
          
@@ -455,8 +455,8 @@ void mainAnalysis_all(const bool doGenOnly_ = false, const bool doGen_ = true, c
             if( pxREC[j] < 0 && pyREC[j] < 0 ) phi = phi-3.14;
 
             if( eta > 2.5 || eta < -2.0 ) continue;
-            if( etaStar > 5.0 || etaStar < 0.0 ) continue;
-            if( ptStarREC[j] > 10. || ptStarREC[j] < 0 ) continue;
+            //if( etaStar > 5.0 || etaStar < 0.0 ) continue;
+            //if( ptStarREC[j] > 10. || ptStarREC[j] < 0 ) continue;
             
             //filling the track distributions:
             if( type == 1 || (type == 2 && doComb_) || (type == 3 && doFwd_) ){
