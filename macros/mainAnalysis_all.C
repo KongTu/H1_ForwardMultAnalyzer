@@ -383,8 +383,8 @@ void mainAnalysis_all(const bool doGenOnly_ = false, const bool doGen_ = true, c
          if(yREC_es>ymax) continue;
          if(Q2REC_es<Q2min || Q2REC_es>Q2max) continue;
          //Cut electron spatial :
-         if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) continue;
-         if( elecEnergyREC < 12. ) continue;
+         //if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) continue;
+         if( elecEnergyREC < 10. ) continue;
 
          //filling all event histograms after cuts:
          for(int bit = 0; bit < 10; bit++){
