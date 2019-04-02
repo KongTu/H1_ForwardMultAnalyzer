@@ -447,10 +447,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
          if( Epz > 70 || Epz < 35 ) event_pass = 0;
          //vertex cuts
          if(TMath::Abs(vertex[2]+zvtxOffset)>35.) event_pass = 0;
-         //kinematic cuts
-         if(yREC_es<ymin) event_pass = 0;
-         if(yREC_es>ymax) event_pass = 0;
-         if(Q2REC_es<Q2min || Q2REC_es>Q2max) event_pass = 0;
+         //kinematic cuts are not included   
          //Cut electron spatial 
          if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) event_pass = 0;
          if( elecEREC < 12. ) event_pass = 0;
