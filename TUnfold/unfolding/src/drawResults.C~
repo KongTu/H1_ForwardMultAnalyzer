@@ -1,0 +1,537 @@
+#include "VarList.h"
+#include "ClassifierBinning.h"
+
+#include <TError.h>
+#include <TFile.h>
+#include <TDOMParser.h>
+#include <TXMLNode.h>
+#include <TKey.h>
+#include <TList.h>
+
+#ifdef PRIVATE_TUNFOLD
+#include "../TUnfold_V17.7/TUnfoldBinningXML.h"
+#else
+#include <TUnfoldBinningXML.h>
+#endif
+
+#include "UnfoldingResult.h"
+#include "UnfoldingTUnfoldDensity.h"
+#include "UnfoldingIterative.h"
+
+using namespace std;
+
+void extractMultiplicity(int i0,int i1,Int_t const *binMap,
+                         TH1 const *src,TH1 *dest,
+                         TH2 const *src_e=0,TH2 *dest_e=0);
+
+
+int main(int argc, char const *argv[]) {
+  // switch on histogram errors
+  TH1::SetDefaultSumw2();
+  gErrorIgnoreLevel=kInfo;
+  gErrorAbortLevel=kError;
+
+  TString xmlBinning;
+  if(argc>=2) {
+    xmlBinning=argv[1];
+  } else {
+    cout<<"usage: "<<argv[0]<<" binning.xml\n";
+    return 1;
+  }
+
+  // read steering in XML format                                                
+  TDOMParser binningParser;
+  Int_t XMLerror=binningParser.ParseFile(xmlBinning);
+  if(XMLerror) {
+    cout<<"error="<<XMLerror<<" from TDOMParser (while parsing \""
+        <<xmlBinning<<"\")\n";
+    return 2;
+  }
+  TXMLDocument const *document=binningParser.GetXMLDocument();
+
+  TString outputFileName;
+  TXMLNode *root=document->GetRootNode();
+
+  if(root && (!TString(root->GetNodeName()).CompareTo("TUnfoldBinning")) &&
+     (root->GetNodeType()==TXMLNode::kXMLElementNode)) {
+    for(TXMLNode *node=root->GetChildren();node;node=node->GetNextNode()) {
+      if(node->GetNodeType()==TXMLNode::kXMLElementNode &&
+         !TString(node->GetNodeName()).CompareTo("UnfoldingOutput")) {
+	outputFileName=node->GetChildren()->GetContent();
+        int l;
+        do {
+          l=outputFileName.Length();
+          outputFileName=outputFileName.Strip(TString::kLeading,'\n');
+          outputFileName=outputFileName.Strip(TString::kLeading,' ');
+          outputFileName=outputFileName.Strip(TString::kTrailing,'\n');
+          outputFileName=outputFileName.Strip(TString::kTrailing,' ');
+        } while(l!=outputFileName.Length());
+	cout<<"main: outputFileName: "<<outputFileName<<"\n";
+      }
+    }
+  }
+
+  // open output file
+  TString resultFileName="results_"+outputFileName;
+
+  TFile *outputFile=new TFile(resultFileName,"recreate");
+     
+  //==================================================
+  // read binning schemes and input histograms
+  TFile *inputFile=new TFile(outputFileName);
+
+  if(!inputFile->IsOpen()) {
+    cout<<"failed to open: "<<outputFileName<<"\n";
+    exit(2);
+  }
+
+  outputFile->cd();
+
+  TUnfoldBinning *recBinning,*genBinning,*covBinning;
+
+  inputFile->GetObject("recQ2",recBinning);
+  inputFile->GetObject("genQ2",genBinning);
+  inputFile->GetObject("covBinning",covBinning);
+
+  TObjString *binningXML_object;
+  inputFile->GetObject("binningXML",binningXML_object);
+  if(!binningXML_object) {
+     cout<<"Error: can not read binning from unfolding input\n";
+  }
+
+  if(!(recBinning && genBinning && covBinning)) {
+
+     TString binningXML=binningXML_object->GetString();
+     binningParser.ParseBuffer(binningXML,binningXML.Length());
+
+     document=binningParser.GetXMLDocument();
+
+     if(!genBinning) {
+        genBinning=TUnfoldBinningXML::ImportXML(document,"genQ2");
+     }
+     if(!recBinning) {
+        recBinning=TUnfoldBinningXML::ImportXML(document,"recQ2");
+     }
+     if(!covBinning) {
+        covBinning=TUnfoldBinningXML::ImportXML(document,"covBinning");
+     }
+     if((!recBinning)||(!genBinning)||(!covBinning)) {
+        cout<<"problem to read binning schemes\n";
+     }
+  }
+
+  // save binning schemes to output file
+  binningXML_object->Write("binningXML");
+  recBinning->Write();
+  genBinning->Write();
+  covBinning->Write();
+
+  // read directories in output file
+  TList *keys=inputFile->GetListOfKeys();
+  TIter next(keys);
+  TKey *key;
+  vector<TDirectory *> source;
+  while ((key = (TKey *)next())) {
+     TDirectory *dir=key->ReadObject<TDirectory>();
+     if(dir) {
+        source.push_back(dir);
+     }
+  }
+  //genBinning->PrintStream(cout);
+  VarList dummyVars;
+  ClassifierBinning covClasses(covBinning,dummyVars);
+  ClassifierBinning genClasses(genBinning,dummyVars);
+  ClassifierBinning recClasses(recBinning,dummyVars);
+
+  // covClassifier:
+  //    describes bins in (etaRec,ntrackRec)
+  //
+  //    the input file contains mant covariance matrices in this binning
+  //    each of these covariance matrixes describes the correlations
+  //    between the (etaRec,ntrackRec) bins for a fixed (Q2rec,yrec) bin
+  //
+  //
+  // recClassifier
+  //    describes binning in (Q2rec,yrec,ntrackRec)
+  //
+  //    this is the "rec" axis of the unfolding matrix
+  //
+  //
+  // genClassifier:
+  //    describes binning in (Q2gen,ygen,ntrackGen)
+  //
+  //    this is the "gen" axis of the unfolding matrix
+  //
+
+  vector<ClassifierBinning const *> covClasses=covClassifier.Enumerate();
+  vector<ClassifierBinning const *> recClasses=recClassifier.Enumerate();
+  vector<ClassifierBinning const *> genClasses=genClassifier.Enumerate();
+
+  //   covClasses:
+  //      these are bins in eta
+  //   recClasses
+  //      these are bins in (Q2rec,yrec)
+  //   genClasses
+  //      these are bins in (Q2gen,ygen)
+  
+  for(size_t src=0;src<source.size();src++) {
+     cout<<"plotting "<<source[src]->GetName()<<"\n";
+
+     // read data covariances
+     //    there is one covariance for each (Q2rec,yrec) bin
+     //   -> the loop to read these histograms is over "recClasses"
+     //
+     //  store result in (eta,eta) blocks, with "rec binning
+     vector<vector<TMatrixD> > data_covariance;
+
+     for(size_t iRec=0;iRec<recClasses.size();iRec++) {
+        TString recName=recClasses[iRec]->GetName();
+        TH2 *cov;
+        source[src]->GetObject("hist_rec_"+recName,cov);
+        // store the data in "rec" binning
+
+
+     }
+     // read transfer matrices
+     //    the transfer matrix describes by how much the result changes
+     //      "dx" given a change in the data "dy"
+     //    there is a different transfer matrix for each eta bin
+     //    -> the loop to read these histograms is over "covClasses"
+     vector<TH2*> hist_dxdy;
+     for(size_t iCov=0;iCov<covClasses.size();iCov++) {
+        TString iCovName=covClasses[iCov]->GetName();
+        TH2 *dxdy;
+        source[src]->GetObject("hist_dxdy_"+iCovName,dxdy);
+        hist_dxdy.push_back(dxdy);
+     }
+     // calculate error matrices:
+     //       dxdy#  * COV * dxdy
+     //
+     // step 1: calculate COV*dxdy
+     //
+     //   dxdy is different for each eta bin
+     //   COV describes correlations between eta bins
+     //  The result are 3x3 matrices in (etaGen,etaRec)
+     //  one side of the matrix has "gen" binning (Q2gen,yGen,ntrackGen)
+     //   the other side has "rec" binning (Q2rec,yRec,ntrackRec)
+ 
+     // first dimension: etaGen
+     // second dimension: etaRec
+     vector<vector<TMatrixD> > cov_dxdy(covClasses.size());
+     for(size_t iCovGen=0;iCovGen<covClasses.size();iCovGen++) {
+        cov_dxdy[iCovGen].resize(covClasses.size());
+        // matrix rows: generator bins (Q2gen,ygen,ntrackGen)
+        // matrix columns: reconstructed bins (Q2rec,yrec,ntrackRec)
+        for(size_t jCovRec=0;jCovRec<covClasses.size();jCovRec++) {
+           cov_dxdy[iCovGen][jCovRec].ResizeTo
+              (genBinning->GetEndBin(),recBinning->GetEndBin());
+        }
+     }
+
+     // loop over (Q2gen,yGen) bins
+     for(size_t iGen=0;iGen<genClasses.size();iGen++) {
+        int iGenBin0=genClasses[iGen]->GetBinningNodeDistribution()->
+           GetStartBin();
+        int iGenBin1=genClasses[iGen]->GetBinningNodeDistribution()->
+           GetEndBin();
+        // loop over ntrackGen bins
+        for(int iGenBin=iGenBin0;iGenBin<iGenBin1;iGenBin++) {
+           // loop over (Q2rec,yRec) bins
+           for(size_t jRec=0;jRec<recClasses.size();jRec++) {
+              int jRecBin0=recClasses[jRec]->GetBinningNodeDistribution()->
+                 GetStartBin();
+              int jRecBin1=recClasses[jRec]->GetBinningNodeDistribution()->
+                 GetEndBin();
+              for(int jRecBin=jRecBin0;jRecBin<jRecBin1;jRecBin++) {
+                 double dxdi_IJ=hist_dxdy[iCov]->
+                    GetBinContent(iGenBin,jRecBin);
+                 // double-loop over eta bins
+                 for(size_t iCovGen=0;iCovGen<covClasses.size();iCovGen++) {
+                    int iCovBin0=covClasses[iCovGen]->
+                       GetBinningNodeDistribution()->GetStartBin();
+                    for(size_t jCovRec=0;jCovRec<covClasses.size();jCovRec++) {
+                       int jCovBin0=covClasses[jCovGen]->
+                          GetBinningNodeDistribution()->GetStartBin();
+                       int jCovBin1=covClasses[jCovGen]->
+                          GetBinningNodeDistribution()->GetEndBin();
+                       for(int jCovBin=jCovBin0;jCovBin<jCovBin1;jCovBin++) {
+                          cov_dxdy[iCovGen][jCovRec](iGenBin,jRecBin) +=
+                             dxdi_IJ*hist_covar[jRec]->
+                             GetBinContent(iCovBin0+jRecBin-jRecBin0,jCovBin);
+                       }
+                    }
+                 }
+              }
+           }
+        }
+     }
+
+     // step 2:  calculate dxdy# * (COV*dxdy)
+     //
+     // the result are 3x3 histograms indexed by (etaGen,etagen)
+     // each matrix is binned in (Q2gen,yGen,ntrackGen)
+
+     vector<vector<TH2 *> > hist_ematrix(covClasses.size());
+     for(size_t iCovGen=0;iCovGen<covClasses.size();iCovGen++) {
+        TString iCovName=covClasses[iCovGen]->GetName();
+        hist_ematrix[iCovGen].resize(covClasses.size());
+        // matrix rows: generator bins (Q2gen,ygen,ntrackGen)
+        // matrix columns: reconstructed bins (Q2rec,yrec,ntrackRec)
+        for(size_t jCovGen=0;jCovGen<covClasses.size();jCovGen++) {
+           TString jCovName=covClasses[jCovGen]->GetName();
+           cov_dxdy[iCovGen][jCovRen]=
+              genBinning->CreateErrorMatrixHistogram
+              ("hist_ematrix_"+iCovName+"_"+jCovName);
+        }
+     }
+
+     // loop over (Q2gen,yGen) bins
+     for(size_t iGen=0;iGen<genClasses.size();iGen++) {
+        int iGenBin0=genClasses[iGen]->GetBinningNodeDistribution()->
+           GetStartBin();
+        int iGenBin1=genClasses[iGen]->GetBinningNodeDistribution()->
+           GetEndBin();
+        // loop over ntrackGen bins
+        for(int iGenBin=iGenBin0;iGenBin<iGenBin1;iGenBin++) {
+           // loop over (Q2rec,yRec) bins
+           for(size_t jRec=0;jRec<recClasses.size();jRec++) {
+              int jRecBin0=recClasses[jRec]->GetBinningNodeDistribution()->
+                 GetStartBin();
+              int jRecBin1=recClasses[jRec]->GetBinningNodeDistribution()->
+                 GetEndBin();
+              for(int jRecBin=jRecBin0;jRecBin<jRecBin1;jRecBin++) {
+                 double dxdi_IJ=hist_dxdy[iCov]->
+                    GetBinContent(iGenBin,jRecBin);
+                 // double-loop over eta bins
+                 for(size_t iCovGen=0;iCovGen<covClasses.size();iCovGen++) {
+                    int iCovBin0=covClasses[iCovGen]->
+                       GetBinningNodeDistribution()->GetStartBin();
+                    for(size_t jCovRec=0;jCovRec<covClasses.size();jCovRec++) {
+                       int jCovBin0=covClasses[jCovGen]->
+                          GetBinningNodeDistribution()->GetStartBin();
+                       int jCovBin1=covClasses[jCovGen]->
+                          GetBinningNodeDistribution()->GetEndBin();
+                       for(int jCovBin=jCovBin0;jCovBin<jCovBin1;jCovBin++) {
+                          cov_dxdy[iCovGen][jCovRec](iGenBin,jRecBin) +=
+                             dxdi_IJ*hist_covar[jRec]->
+                             GetBinContent(iCovBin0+jRecBin-jRecBin0,jCovBin);
+                       }
+                    }
+                 }
+              }
+           }
+        }
+     }
+    
+
+     // save error histograms
+     for(size_t iCovGen=0;iCovGen<covClasses.size();iCovGen++) {
+        for(size_t jCovGen=0;jCovGen<covClasses.size();jCovGen++) {
+           cov_dxdy[iCovGen][jCovRen]->Write();
+        }
+     }
+     
+    
+
+     vector<Int_t *> binMap(genClasses.size());
+        TString iCovName=covClasses[iCov]->GetName();
+        TH1 *iUnfold;
+        source[src]->GetObject("hist_unfolded_"+iCovName,iUnfold);
+
+           TString iGenName=genClasses[iGen]->GetName();
+           Int_t *binMap=0;
+           // unfolded data histograms
+           TH1 *hist_ntrack=genClasses[iGen]->CreateHistogram
+              ("hist_ntrack_"+iGenName+iCovName,true,&binMapI,title1D);
+
+           int iBin0=genClasses[iGen]->GetStartBin();
+           int iBin1=genClasses[iGen]->GetEndBin();
+
+
+           double nEventI=0.;
+           for(int iBin=iBin0;iBin<iBin1;iBin++) {
+               if(binMap[iBin]<0) continue;
+              nEventI +=  iUnfold->GetBinContent(iBin);
+           }
+
+           // error matrix histograms
+           TH2 *hist_ii=0;
+           for(size_t jCov=0;jCov<covClasses.size();jCov++) {
+              TString jCovName=covClasses[jCov]->GetName();
+              for(size_t jGen=0;jGen<genClasses.size();jGen++) {
+                 TString jGenName=genClasses[jGen]->GetName();
+                 TH2 *hist_ematrix=TUnfoldBinning::CreateHistogramOfMigrations
+                    (genClasses[iGen]->GetBinningNodeDistribution(),
+                     genClasses[jGen]->GetBinningNodeDistribution(),
+                     "hist_ematrix_"+iGenName+iCovName+"_"+
+                     jGenName+jCovName,kTRUE,kTRUE);
+
+                 int jBin0=genClasses[jGen]->GetStartBin();
+                 int jBin1=genClasses[jGen]->GetEndBin();
+                 double nEventJ=0.;
+                 for(int jBin=jBin0;jBin<jBin1;jBin++) {
+                    if(binMap[jBin]<0) continue;
+                    nEventJ +=  jUnfold->GetBinContent(jBin);
+                 }
+
+                 for(int iBin=iBin0;iBin<iBin1;iBin++) {
+                    if(binMap[iBin]<0) continue;
+                    for(int jBin=jBin0;jBin<jBin1;jBin++) {
+                       if(binMap[jBin]<0) continue;
+
+                       hist_ematrix->SetBinContent(
+                       
+                    }
+                 }
+
+                 if((iCov==jCov)&&(iGen==jGen)) {
+                    hist_ii=hist_ematrix;
+                 }
+                 hist_ematrix->Write();
+              }
+           }
+
+           for(int iBin=iBin0;iBin<iBin1;iBin++) {
+              if(binMap[iBin]<0) continue;
+              hist_ntrack->SetBinContent(binMap[iBin],
+                                         iUnfold->GetBinContent(iBin)/nEvent);
+              double eSQ=hist_ii->GetBinContent(binMap[iBin],binMap[iBin]);
+              hist_ntrack->SetBinError(binMap[iBin],TMath::Sqrt(eSQ));
+           }
+           hist_ntrack->Write();
+        }
+     }
+  }
+  delete inputFile;
+  delete outputFile;
+
+  return 0;
+}
+
+#ifdef UNUSED
+
+
+              // extract all distributions, normalize and store
+                    //extract node
+                    TString base_name=TString::Format("%lu_",chan)+path;
+                    TString title1D=";N_{chg};#LT_{}P(N_{chg})#GT";
+                    TString title2D=";N_{chg};N_{chg}";
+
+                    // gen histogram (used for unfolding matrix)
+                    TH1 *hist_ntrackMCtruth=
+                       node->CreateHistogram
+                       ("MCtruth"+base_name,true,0,title1D);
+                    // truth histograms (if available)
+                    TH1 *hist_ntrackTruth=0;
+                    if(hist_truth) {
+                       hist_ntrackTruth=node->CreateHistogram
+                          ("truth"+base_name,true,0,title1D);
+                    }
+                    // unfolded histograms
+                    TH2 *hist_ntrackUnfEmatrix=
+                       node->CreateErrorMatrixHistogram
+                       ("unfEmatrix"+base_name,true,0,title2D);
+                    TH2 *hist_ntrackUnfRhoIJ=
+                       node->CreateErrorMatrixHistogram
+                       ("unfRhoIJ"+base_name,true,0,title2D);
+                    Int_t *binMap;
+                    // extract histograms
+                    //cout<<"... extracting histograms\n";
+                    int i0=node->GetStartBin();
+                    int i1=node->GetEndBin();
+                    extractMultiplicity(i0,i1,binMap,
+                                        unfolded,hist_ntrackUnf,
+                                        ematrix,hist_ntrackUnfEmatrix);
+                    extractMultiplicity(i0,i1,binMap,
+                                        hist_genMC,hist_ntrackMCtruth);
+                    extractMultiplicity(i0,i1,binMap,
+                                        hist_truth,hist_ntrackTruth);
+                    delete binMap;
+
+                    for(int i=0;i<=hist_ntrackUnfEmatrix->GetNbinsX()+1;i++) {
+                       double v_ii=hist_ntrackUnfEmatrix->GetBinContent(i,i);
+                       if(!(v_ii>0.)) continue;
+                       for(int j=0;j<=hist_ntrackUnfEmatrix->GetNbinsY()+1;
+                           j++) {
+                          double v_jj=hist_ntrackUnfEmatrix->GetBinContent(j,j);
+                          if(!(v_jj>0.)) continue;
+                          hist_ntrackUnfRhoIJ->SetBinContent
+                             (i,j,hist_ntrackUnfEmatrix->GetBinContent(i,j)/
+                              TMath::Sqrt(v_ii*v_jj));
+                       }
+                    }
+                    //cout<<"writing histograms\n";
+                    hist_ntrackUnf->Write();
+                    hist_ntrackUnfEmatrix->Write();
+                    hist_ntrackUnfRhoIJ->Write();
+                    hist_ntrackMCtruth->Write();
+                    if(hist_ntrackTruth) {
+                       hist_ntrackTruth->Write();
+                    }
+                 }
+              }
+           }
+        }
+#ifdef STOP_EARLY
+        break;
+#endif
+     }
+#ifdef STOP_EARLY
+     break;
+#endif
+  }
+
+  delete outputFile;
+  delete inputFile;
+
+  return 0;
+}
+
+void extractMultiplicity(int i0,int i1,Int_t const *binMap,
+                         TH1 const *src,TH1 *dest,
+                         TH2 const *src_e,TH2 *dest_e) {
+   if(!(src && dest)) return;
+   //cout<<"extractMultiplicity "<<src->GetName()<<" "<<i0<<","<<i1<<" -> "<<dest->GetName()<<"\n";
+   double n=0.;
+   for(int i=i0;i<i1;i++) {
+      if(binMap[i]<0) continue;
+      n += src->GetBinContent(i);
+   }
+   //cout<<"n="<<n<<"\n";
+   vector<double> Vin(i1-i0+1);
+   double Vnn=0.;
+   if(src_e) {
+      for(int i=i0;i<i1;i++) {
+         if(binMap[i]<0) continue;
+         for(int j=i0;j<i1;j++) {
+            if(binMap[j]<0) continue;
+            Vin[i-i0] += src_e->GetBinContent(i,j);
+         }
+         Vnn += Vin[i-i0];
+      }
+   }
+   //cout<<"Vnn="<<Vnn<<"\n";
+   for(int i=i0;i<i1;i++) {
+      if(binMap[i]<0) continue;
+      double wi=dest->GetBinWidth(binMap[i]);
+      double xi=src->GetBinContent(i)/n;
+      dest->SetBinContent(binMap[i],xi/wi);
+      if(src_e) {
+         double e=0.;
+         for(int j=i0;j<i1;j++) {
+            if(binMap[j]<0) continue;
+            double wj=dest->GetBinWidth(binMap[j]);
+            double xj=src->GetBinContent(j)/n;
+            double e_ij = 
+               (src_e->GetBinContent(i,j)-xi*Vin[j-i0]-xj*Vin[i-i0]+xi*xj*Vnn)/
+               (n*n*wi*wj);
+            if(dest_e) {
+               dest_e->SetBinContent(binMap[i],binMap[j],e_ij); 
+            }
+            if(i==j) e=TMath::Sqrt(e_ij);
+         }
+         dest->SetBinError(binMap[i],e);
+      }
+   }
+}
+#endif

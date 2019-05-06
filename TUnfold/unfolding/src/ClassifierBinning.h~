@@ -1,0 +1,78 @@
+#ifdef PRIVATE_TUNFOLD
+#include "../TUnfold_V17.7/TUnfoldBinningXML.h"
+#else
+#include <TUnfoldBinningXML.h>
+#endif
+
+#include <string>
+#include <vector>
+
+class VarList;
+
+class ClassifierBinning {
+  // this helper class is to define "categories" as bins in a given variables
+  //
+  // in the XML file, the syntax is:
+  //   <BinningNode name="var:EDGE">
+  // where
+  //   var : a variable in the minitree
+  // EDGE : a number
+  //
+  // this will define a new bin in the range [previous,EDGE]
+  // where previous is the lower edge of the virtual bin
+  // For the first virtual bin, previous=-infinity
+  // For the other virtual bin, previous is taken from the EDGE
+  //   of the preceeding bin
+  //
+  //  example:
+  //    <BinningNode name="cosDPhi_reco:-0.65">
+  //      ...
+  //    </BinningNode>
+  //    <BinningNode name="cosDPhi_reco:1.0">
+  //      ...
+  //    </BinningNode>
+  //
+  // this defines two categories
+  //   the first category contains events with
+  //       cosDPhi_reco<-0.65
+  //   the second category contains events with
+  //       -0.65<=cosDPhi_reco<1
+  //
+  // within the categories, define
+  //   - further sub-categories (using <BinningNode> )
+  //   - N-dimensional histograms (using <Axis> and <Bin> )
+  //
+public:
+  // construct a new "ClassifierBinning"
+  // input:  binning schene (from parsing XML file)
+  // output: vars (all classifier variables will be added to "vars")
+  //
+   ClassifierBinning(TUnfoldBinning const *binning,VarList &vars,
+                     int indentLevel=0);
+   virtual ~ClassifierBinning();
+   size_t GetNbin(void) const { return fBins.size(); }
+   double Xmin(size_t k) const { return fBins[k].fXmin; }
+   double Xmax(size_t k) const { return fBins[k].fXmax; }
+   bool IsInside(double x,size_t k) const {
+      return (x>=fBins[k].fXmin)&&(x<fBins[k].fXmax); }
+  //
+  // locate appropriate BinningNode (unconnected bins,N-dimensional histogram)
+  // using classifier information
+   ClassifierBinning const *FindNode(VarList const &vars,int print=0) const;
+
+   TUnfoldBinning const *GetBinningNodeClassifier(void) const { return fBinningClassifier; }
+   TUnfoldBinning const *GetBinningNodeDistribution(void) const { return fBinningDistribution; }
+   TUnfoldBinning const *GetBinningNodeUnconnected(void) const { return fBinningUnconnected; }
+protected:
+   std::string fName;
+   struct ClassifierBin {
+      double fXmin,fXmax;
+      ClassifierBinning *fClassifier;
+   };
+   std::vector<ClassifierBin> fBins;
+   TUnfoldBinning const *fBinningClassifier;
+   TUnfoldBinning const *fBinningDistribution;
+   TUnfoldBinning const *fBinningUnconnected;
+   void AddSubBins(TUnfoldBinning const *binning,
+                   VarList &allVars,int indentLevel);
+};

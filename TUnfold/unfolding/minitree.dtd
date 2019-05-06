@@ -1,0 +1,3 @@
+<!ELEMENT Minitree (InputFile)+ >
+<!ELEMENT InputFile (#PCDATA) >
+<!ATTLIST InputFile name CDATA #REQUIRED type CDATA #REQUIRED luminosity CDATA #REQUIRED treename CDATA #REQUIRED>
