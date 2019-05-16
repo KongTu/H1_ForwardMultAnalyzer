@@ -119,6 +119,7 @@ struct MyEvent {
    Int_t nRECtrack_mini;
    Int_t typeChgREC_mini[nRECtrack_MAX];
    Float_t etaAsymREC_mini;
+   Float_t EpzREC_mini;
 
    Float_t pxREC_mini[nRECtrack_MAX];
    Float_t pyREC_mini[nRECtrack_MAX];
@@ -236,6 +237,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
    outtree->Branch("nRECtrack_mini",&myEvent.nRECtrack_mini,"nRECtrack_mini/I");
    outtree->Branch("typeChgREC_mini",myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
    outtree->Branch("etaAsymREC_mini",&myEvent.etaAsymREC_mini,"etaAsymREC_mini/F");
+   outtree->Branch("EpzREC_mini",&myEvent.EpzREC_mini,"EpzREC_mini/F");
 
    outtree->Branch("pxREC_mini",myEvent.pxREC_mini,"pxREC_mini[nRECtrack_mini]/F");
    outtree->Branch("pyREC_mini",myEvent.pyREC_mini,"pyREC_mini[nRECtrack_mini]/F");
@@ -512,6 +514,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
          if( vertexType != 1 ) event_pass = 0;
 
          double Epz = hfsEREC+elecEREC - (hfsPzREC+elecPzREC);
+         myEvent.EpzREC_mini = Epz;
 
          //bkg finder bit cuts:
          if( (ibgREC & 1) != 0 ) event_pass = 0;
