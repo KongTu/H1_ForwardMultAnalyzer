@@ -2,6 +2,90 @@
 
 using namespace std;
 
+int getPassFlag(vector<int> trackType, vector<double> cuts, int trackQuality){
+
+   //Generate a random number:
+      TF1* rand = new TF1("rand","1",0,1);
+
+   //trackType   
+   int type = trackType[0];   
+   int doComb_ = trackType[1];
+   int doFwd_ = trackType[2];
+
+   //define cut variables
+   double pt = cuts[0];
+   double dcaPrime = cuts[1];
+   double trkTheta = cuts[2];
+   double startHitsRadius = cuts[3];
+   double endHitsRadius = cuts[4];
+   double vtxNHits = cuts[5];
+   double elecTheta = cuts[6];
+   double nuclia = cuts[7];
+   double p = cuts[8];
+   double pe = cuts[9];
+   double chi2vtx = cuts[10];
+   double chi2Link = cuts[11];
+   double zLengthHit = cuts[12];
+   double rZero = cuts[13];
+   double chi2Trk = cuts[14];
+
+   //define pass flag
+   int pass = 0;
+
+   //define track quality, trackQuality = 0 (tight), = 1 (default), = 2 (loose)
+   double ptcut = 0.15;
+   double cuts_1_value[3]={1.0,2.0,3.0};
+   double cuts_2_value[3]={40.,50.,60.};
+   double cuts_3_value[3]={15.,10.,7.};
+   double cuts_4_value[3]={3.,5.,8.};
+
+   if( type == 1 ){
+      if( pt<ptcut ) pass = 0;
+      if( fabs( dcaPrime*TMath::Sin(trkTheta) ) > cuts_1_value[trackQuality] ) pass = 0;
+      if( startHitsRadius > cuts_2_value[trackQuality] ) pass = 0;
+      if( fabs(startHitsRadius - endHitsRadius) < cuts_3_value[trackQuality] ) pass = 0;
+      if( vtxNHits < 0 ) pass = 0;
+      if( fabs(trkTheta - elecTheta) < 0.2 ) pass = 0;
+      if( rand->GetRandom() > nuclia && rand->GetRandom() < 1.0 ) pass = 0; 
+      //pass everything
+      pass = 1;
+   }      
+   else if( doComb_ && type == 2 ){
+      if( pt<ptcut ) pass = 0;
+      if( p < 0.5 ) pass = 0;
+      if( TMath::RadToDeg()*trkTheta < 10. || TMath::RadToDeg()*trkTheta > 30. ) pass = 0;
+      if( fabs(dcaPrime) > cuts_4_value[trackQuality] ) pass = 0;
+      if( startHitsRadius > cuts_2_value[trackQuality] ) pass = 0;
+      if( vtxNHits < 0 ) pass = 0;
+      if( pe/p > 99999.9 ) pass = 0;
+      if( chi2vtx > 50. ) pass = 0;
+      if( chi2Link > 50. ) pass = 0;
+      if( rand->GetRandom() > nuclia && rand->GetRandom() < 1.0 ) pass = 0; 
+      //pass everything
+      pass = 1;
+   }  
+   else if( doFwd_ && type == 3 ){
+      if( pt<ptcut ) pass = 0;
+      if( p < 0.5 ) pass = 0;
+      if( TMath::RadToDeg()*trkTheta < 6. || TMath::RadToDeg()*trkTheta > 25. ) pass = 0;
+      if( startHitsRadius > 25.0 ) pass = 0;
+      if( fabs(zLengthHit) < 10. ) pass = 0;
+      if( rZero > 20. ) pass = 0;
+      if( pe/p > 99999.9 ) pass = 0;
+      if( chi2vtx > 25. ) pass = 0;
+      if( chi2Trk > 10. ) pass = 0;
+      if( rand->GetRandom() > nuclia && rand->GetRandom() < 1.0 ) pass = 0; 
+      //pass everything
+      pass = 1;
+   }  
+   else{
+      pass = 0;
+   }
+
+   return pass;
+
+}
+
 struct MyEvent {
    // general information
    Int_t run_mini,evno_mini; // run and event number
@@ -57,6 +141,8 @@ struct MyEvent {
    Float_t dmatchREC_mini[nRECtrack_MAX];
    Int_t imatchREC_mini[nRECtrack_MAX];
    Int_t passREC_mini[nRECtrack_MAX];
+   Int_t passTightREC_mini[nRECtrack_MAX];
+   Int_t passLooseREC_mini[nRECtrack_MAX];
 };
 
 void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true, const bool doReweight_ = false, const bool doComb_=true, const bool doFwd_= false) {
@@ -171,6 +257,8 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
    outtree->Branch("dmatchREC_mini",myEvent.dmatchREC_mini,"dmatchREC_mini[nRECtrack_mini]/F");
    outtree->Branch("imatchREC_mini",myEvent.imatchREC_mini,"imatchREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passREC_mini",myEvent.passREC_mini,"passREC_mini[nRECtrack_mini]/I");
+   outtree->Branch("passTightREC_mini",myEvent.passTightREC_mini,"passTightREC_mini[nRECtrack_mini]/I");
+   outtree->Branch("passLooseREC_mini",myEvent.passLooseREC_mini,"passLooseREC_mini[nRECtrack_mini]/I");
 
 
    float Q2min=5.;
@@ -345,9 +433,6 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
       tree->SetBranchAddress("ndfLinkREC",ndfLinkREC);
       tree->SetBranchAddress("rZeroREC",rZeroREC);
 
-      //Generate a random number:
-      TF1* rand = new TF1("rand","1",0,1);
-
       cout << "total. number of events = " << tree->GetEntries() << endl;
       for(int i=0;i<tree->GetEntries();i++) {
          tree->GetEntry(i);
@@ -473,49 +558,25 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
             if( pxREC[j] < 0 && pyREC[j] > 0 ) phi = phi+3.14;
             if( pxREC[j] < 0 && pyREC[j] < 0 ) phi = phi-3.14;
 
-            int pass = 1; 
+            int pass_default = 0;
+            int pass_tight = 0;
+            int pass_loose = 0; 
             /*track quality cut
             1. central tracks
             2. combined tracks
             3. forward tracks
             */
+
+            double ptREC = TMath::Hypot(pxREC[j],pyREC[j]);
+            vector<double> cutVar{ptREC,dcaPrimeREC[j],trkThetaREC[j],startHitsRadiusREC[j],endHitsRadiusREC[j],
+               (double)vtxNHitsREC[j],elecThetaREC,nucliaREC[j],pREC[j],peREC[j],chi2vtxREC[j],chi2LinkREC[j],zLengthHitREC[j],
+               rZeroREC[j],chi2TrkREC[j]}; 
             
-            if( type == 1 ){
-               if( TMath::Hypot(pxREC[j],pyREC[j])<ptcut ) pass = 0;
-               if( fabs( dcaPrimeREC[j]*TMath::Sin(trkThetaREC[j]) ) > 2.0 ) pass = 0;
-               if( startHitsRadiusREC[j] > 50.0 ) pass = 0;
-               if( fabs(startHitsRadiusREC[j] - endHitsRadiusREC[j]) < 10. ) pass = 0;
-               if( vtxNHitsREC[j] < 0 ) pass = 0;
-               if( fabs(trkThetaREC[j] - elecThetaREC) < 0.2 ) pass = 0;
-               if( rand->GetRandom() > nucliaREC[j] && rand->GetRandom() < 1.0 ) pass = 0; 
-            }      
-            else if( doComb_ && type == 2 ){
-               if( TMath::Hypot(pxREC[j],pyREC[j])<ptcut ) pass = 0;
-               if( pREC[j] < 0.5 ) pass = 0;
-               if( TMath::RadToDeg()*trkThetaREC[j] < 10. || TMath::RadToDeg()*trkThetaREC[j] > 30. ) pass = 0;
-               if( fabs(dcaPrimeREC[j]) > 5.0 ) pass = 0;
-               if( startHitsRadiusREC[j] > 50.0 ) pass = 0;
-               if( vtxNHitsREC[j] < 0 ) pass = 0;
-               if( peREC[j]/pREC[j] > 99999.9 ) pass = 0;
-               if( chi2vtxREC[j] > 50. ) pass = 0;
-               if( chi2LinkREC[j] > 50. ) pass = 0;
-               if( rand->GetRandom() > nucliaREC[j] && rand->GetRandom() < 1.0 ) pass = 0; 
-            }  
-            else if( doFwd_ && type == 3 ){
-               if( TMath::Hypot(pxREC[j],pyREC[j])<ptcut ) pass = 0;
-               if( pREC[j] < 0.5 ) pass = 0;
-               if( TMath::RadToDeg()*trkThetaREC[j] < 6. || TMath::RadToDeg()*trkThetaREC[j] > 25. ) pass = 0;
-               if( startHitsRadiusREC[j] > 25.0 ) pass = 0;
-               if( fabs(zLengthHitREC[j]) < 10. ) pass = 0;
-               if( rZeroREC[j] > 20. ) pass = 0;
-               if( peREC[j]/pREC[j] > 99999.9 ) pass = 0;
-               if( chi2vtxREC[j] > 25. ) pass = 0;
-               if( chi2TrkREC[j] > 10. ) pass = 0;
-               if( rand->GetRandom() > nucliaREC[j] && rand->GetRandom() < 1.0 ) pass = 0; 
-            }  
-            else{
-               pass = 0;
-            } 
+            vector<int> trackType{type, (int)doComb_, (int)doFwd_ };
+
+            pass_tight = getPassFlag(trackType, cutVar, 0);
+            pass_default = getPassFlag(trackType, cutVar, 1);
+            pass_loose = getPassFlag(trackType, cutVar, 2);
 
             //assign values to each branch on track levels:
             myEvent.typeChgREC_mini[j] = typeChgREC[j];
@@ -534,7 +595,9 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
             myEvent.nucliaREC_mini[j] = nucliaREC[j];
             myEvent.dmatchREC_mini[j] = dmatchREC[j];
             myEvent.imatchREC_mini[j] = imatchREC[j];       
-            myEvent.passREC_mini[j] = pass;       
+            myEvent.passREC_mini[j] = pass_default; 
+            myEvent.passTightREC_mini[j] = pass_tight;
+            myEvent.passLooseREC_mini[j] = pass_loose;      
          }
          outtree->Fill();
       }  
