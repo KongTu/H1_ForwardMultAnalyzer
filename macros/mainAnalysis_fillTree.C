@@ -34,10 +34,10 @@ int getPassFlag(int trackType[3], double cuts[15], int trackQuality){
 
    //define track quality, trackQuality = 0 (tight), = 1 (default), = 2 (loose)
    double ptcut[3] = {0.15,0.15,0.15};
-   double cuts_1_value[3]={1.0,2.0,3.0};
-   double cuts_2_value[3]={40.,50.,60.};
+   double cuts_1_value[3]={0.07,2.0,5.0};
+   double cuts_2_value[3]={30.,50.,70.};
    double cuts_3_value[3]={15.,10.,7.};
-   double cuts_4_value[3]={3.,5.,8.};
+   double cuts_4_value[3]={2.,5.,10.};
 
    if( type == 1 ){
       if( pt<ptcut[trackQuality] ) pass = 0;
@@ -118,6 +118,7 @@ struct MyEvent {
    Int_t eventpass_mini;
    Int_t nRECtrack_mini;
    Int_t typeChgREC_mini[nRECtrack_MAX];
+   Float_t etaAsymREC_mini;
 
    Float_t pxREC_mini[nRECtrack_MAX];
    Float_t pyREC_mini[nRECtrack_MAX];
@@ -232,7 +233,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
    outtree->Branch("Q2REC_es_mini",&myEvent.Q2REC_es_mini,"Q2REC_es_mini/F");
 
    outtree->Branch("eventpass_mini",&myEvent.eventpass_mini,"eventpass_mini/I");
-   
+   outtree->Branch("etaAsymREC_mini",&myEvent.etaAsymREC_mini,"etaAsymREC_mini/F");
    outtree->Branch("nRECtrack_mini",&myEvent.nRECtrack_mini,"nRECtrack_mini/I");
    outtree->Branch("typeChgREC_mini",myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
    
@@ -542,6 +543,8 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
          myEvent.eventpass_mini = event_pass;
          myEvent.nRECtrack_mini = nRECtrack;
 
+         int Ntracks_eta_m = 0;
+         int Ntracks_eta_p = 0;
          //loop over reconstructed tracks:
          for(int j = 0; j<nRECtrack; j++){
             int type=typeChgREC[j];            
@@ -554,12 +557,9 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
             int pass_default = 0;
             int pass_tight = 0;
             int pass_loose = 0; 
-            /*track quality cut
-            1. central tracks
-            2. combined tracks
-            3. forward tracks
+            /*
+            track quality variables are stored using arrays below
             */
-
             double ptREC = TMath::Hypot(pxREC[j],pyREC[j]);
             double cutVar[15]={ptREC,dcaPrimeREC[j],trkThetaREC[j],startHitsRadiusREC[j],endHitsRadiusREC[j],
                (double)vtxNHitsREC[j],elecThetaREC,nucliaREC[j],pREC[j],peREC[j],chi2vtxREC[j],chi2LinkREC[j],zLengthHitREC[j],
@@ -570,6 +570,13 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
             pass_tight = getPassFlag(trackType, cutVar, 0);
             pass_default = getPassFlag(trackType, cutVar, 1);
             pass_loose = getPassFlag(trackType, cutVar, 2);
+
+            if( pass_default ){
+               if(pass_default){
+                  if(etaREC[j] > 0.2 && etaREC[j] < 1.6 ) Ntracks_eta_p++;
+                  if(etaREC[j] < 0.2 && etaREC[j] > -1.2) Ntracks_eta_m++;
+               }
+            }
 
             //assign values to each branch on track levels:
             myEvent.typeChgREC_mini[j] = typeChgREC[j];
@@ -592,6 +599,10 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
             myEvent.passTightREC_mini[j] = pass_tight;
             myEvent.passLooseREC_mini[j] = pass_loose;      
          }
+
+         double etaAsym = (Ntracks_eta_p - Ntracks_eta_m)/(Ntracks_eta_p + Ntracks_eta_m);
+         myEvent.etaAsymREC_mini = etaAsym;
+
          outtree->Fill();
       }  
    }
