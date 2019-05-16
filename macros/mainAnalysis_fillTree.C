@@ -598,6 +598,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
          }
 
          float etaAsym = (Ntracks_eta_p - Ntracks_eta_m)/(Ntracks_eta_p + Ntracks_eta_m);
+         if( (Ntracks_eta_p + Ntracks_eta_m) == 0 ) etaAsym = -999.;
          myEvent.etaAsymREC_mini = etaAsym;
 
          outtree->Fill();
