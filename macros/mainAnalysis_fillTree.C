@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int getPassFlag(int trackType[], double cuts[], int trackQuality){
+int getPassFlag(int trackType[3], double cuts[15], int trackQuality){
 
    //Generate a random number:
       TF1* rand = new TF1("rand","1",0,1);
@@ -33,7 +33,7 @@ int getPassFlag(int trackType[], double cuts[], int trackQuality){
    int pass = 0;
 
    //define track quality, trackQuality = 0 (tight), = 1 (default), = 2 (loose)
-   double ptcut[3] = {0.2,0.15,0.1};
+   double ptcut[3] = {999.,0.15,0.1};
    double cuts_1_value[3]={1.0,2.0,3.0};
    double cuts_2_value[3]={40.,50.,60.};
    double cuts_3_value[3]={15.,10.,7.};
@@ -567,11 +567,11 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
             */
 
             double ptREC = TMath::Hypot(pxREC[j],pyREC[j]);
-            double cutVar[]={ptREC,dcaPrimeREC[j],trkThetaREC[j],startHitsRadiusREC[j],endHitsRadiusREC[j],
+            double cutVar[15]={ptREC,dcaPrimeREC[j],trkThetaREC[j],startHitsRadiusREC[j],endHitsRadiusREC[j],
                (double)vtxNHitsREC[j],elecThetaREC,nucliaREC[j],pREC[j],peREC[j],chi2vtxREC[j],chi2LinkREC[j],zLengthHitREC[j],
                rZeroREC[j],chi2TrkREC[j]}; 
             
-            int trackType[] = {type, (int)doComb_, (int)doFwd_ };
+            int trackType[3] = {type, (int)doComb_, (int)doFwd_ };
 
             pass_tight = getPassFlag(trackType, cutVar, 0);
             pass_default = getPassFlag(trackType, cutVar, 1);
