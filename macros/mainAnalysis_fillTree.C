@@ -29,10 +29,8 @@ int getPassFlag(int trackType[3], double cuts[15], int trackQuality){
    double rZero = cuts[13];
    double chi2Trk = cuts[14];
 
-   cout << "test pt " << pt << endl;
-
    //define pass flag
-   int pass = 0;
+   int pass = 1;
 
    //define track quality, trackQuality = 0 (tight), = 1 (default), = 2 (loose)
    double ptcut[3] = {999.,0.15,0.1};
@@ -49,8 +47,6 @@ int getPassFlag(int trackType[3], double cuts[15], int trackQuality){
       if( vtxNHits < 0 ) pass = 0;
       if( fabs(trkTheta - elecTheta) < 0.2 ) pass = 0;
       if( rand->GetRandom() > nuclia && rand->GetRandom() < 1.0 ) pass = 0; 
-      //pass everything
-      pass = 1;
    }      
    else if( doComb_ && type == 2 ){
       if( pt<ptcut[trackQuality] ) pass = 0;
@@ -63,8 +59,6 @@ int getPassFlag(int trackType[3], double cuts[15], int trackQuality){
       if( chi2vtx > 50. ) pass = 0;
       if( chi2Link > 50. ) pass = 0;
       if( rand->GetRandom() > nuclia && rand->GetRandom() < 1.0 ) pass = 0; 
-      //pass everything
-      pass = 1;
    }  
    else if( doFwd_ && type == 3 ){
       if( pt<ptcut[trackQuality] ) pass = 0;
@@ -77,8 +71,6 @@ int getPassFlag(int trackType[3], double cuts[15], int trackQuality){
       if( chi2vtx > 25. ) pass = 0;
       if( chi2Trk > 10. ) pass = 0;
       if( rand->GetRandom() > nuclia && rand->GetRandom() < 1.0 ) pass = 0; 
-      //pass everything
-      pass = 1;
    }  
    else{
       pass = 0;
