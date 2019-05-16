@@ -33,7 +33,7 @@ int getPassFlag(int trackType[3], double cuts[15], int trackQuality){
    int pass = 1;
 
    //define track quality, trackQuality = 0 (tight), = 1 (default), = 2 (loose)
-   double ptcut[3] = {999.,0.15,0.1};
+   double ptcut[3] = {0.15,0.15,0.15};
    double cuts_1_value[3]={1.0,2.0,3.0};
    double cuts_2_value[3]={40.,50.,60.};
    double cuts_3_value[3]={15.,10.,7.};
