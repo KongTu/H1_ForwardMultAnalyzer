@@ -29,6 +29,8 @@ int getPassFlag(int trackType[3], double cuts[15], int trackQuality){
    double rZero = cuts[13];
    double chi2Trk = cuts[14];
 
+   cout << "test pt " << pt << endl;
+
    //define pass flag
    int pass = 0;
 
