@@ -233,10 +233,10 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
    outtree->Branch("Q2REC_es_mini",&myEvent.Q2REC_es_mini,"Q2REC_es_mini/F");
 
    outtree->Branch("eventpass_mini",&myEvent.eventpass_mini,"eventpass_mini/I");
-   outtree->Branch("etaAsymREC_mini",&myEvent.etaAsymREC_mini,"etaAsymREC_mini/F");
    outtree->Branch("nRECtrack_mini",&myEvent.nRECtrack_mini,"nRECtrack_mini/I");
    outtree->Branch("typeChgREC_mini",myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
-   
+   outtree->Branch("etaAsymREC_mini",&myEvent.etaAsymREC_mini,"etaAsymREC_mini/F");
+
    outtree->Branch("pxREC_mini",myEvent.pxREC_mini,"pxREC_mini[nRECtrack_mini]/F");
    outtree->Branch("pyREC_mini",myEvent.pyREC_mini,"pyREC_mini[nRECtrack_mini]/F");
    outtree->Branch("pzREC_mini",myEvent.pzREC_mini,"pzREC_mini[nRECtrack_mini]/F");
@@ -254,7 +254,6 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
    outtree->Branch("passREC_mini",myEvent.passREC_mini,"passREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passTightREC_mini",myEvent.passTightREC_mini,"passTightREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passLooseREC_mini",myEvent.passLooseREC_mini,"passLooseREC_mini[nRECtrack_mini]/I");
-
 
    float Q2min=5.;
    float Q2max=100.;
@@ -572,10 +571,8 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
             pass_loose = getPassFlag(trackType, cutVar, 2);
 
             if( pass_default ){
-               if(pass_default){
-                  if(etaREC[j] > 0.2 && etaREC[j] < 1.6 ) Ntracks_eta_p++;
-                  if(etaREC[j] < 0.2 && etaREC[j] > -1.2) Ntracks_eta_m++;
-               }
+               if(etaREC[j] > 0.2 && etaREC[j] < 1.6 ) Ntracks_eta_p++;
+               if(etaREC[j] < 0.2 && etaREC[j] > -1.2) Ntracks_eta_m++;
             }
 
             //assign values to each branch on track levels:
@@ -600,7 +597,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
             myEvent.passLooseREC_mini[j] = pass_loose;      
          }
 
-         double etaAsym = (Ntracks_eta_p - Ntracks_eta_m)/(Ntracks_eta_p + Ntracks_eta_m);
+         float etaAsym = (Ntracks_eta_p - Ntracks_eta_m)/(Ntracks_eta_p + Ntracks_eta_m);
          myEvent.etaAsymREC_mini = etaAsym;
 
          outtree->Fill();
