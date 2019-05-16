@@ -428,6 +428,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
       tree->SetBranchAddress("rZeroREC",rZeroREC);
 
       cout << "total. number of events = " << tree->GetEntries() << endl;
+      int totalEvents = 0;
       int Nevents = tree->GetEntries();
       for(int i=0;i<Nevents;i++) {
          tree->GetEntry(i);
@@ -605,8 +606,10 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
          myEvent.etaAsymREC_mini = etaAsym;
 
          outtree->Fill();
+         totalEvents++;
+
       }
-      cout << "Number of events processed ~ " << i << endl;  
+      cout << "Number of events processed ~ " << totalEvents << endl;  
    }
 
 
