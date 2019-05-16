@@ -33,14 +33,14 @@ int getPassFlag(int trackType[], double cuts[], int trackQuality){
    int pass = 0;
 
    //define track quality, trackQuality = 0 (tight), = 1 (default), = 2 (loose)
-   double ptcut = 0.15;
+   double ptcut[3] = {0.2,0.15,0.1};
    double cuts_1_value[3]={1.0,2.0,3.0};
    double cuts_2_value[3]={40.,50.,60.};
    double cuts_3_value[3]={15.,10.,7.};
    double cuts_4_value[3]={3.,5.,8.};
 
    if( type == 1 ){
-      if( pt<ptcut ) pass = 0;
+      if( pt<ptcut[trackQuality] ) pass = 0;
       if( fabs( dcaPrime*TMath::Sin(trkTheta) ) > cuts_1_value[trackQuality] ) pass = 0;
       if( startHitsRadius > cuts_2_value[trackQuality] ) pass = 0;
       if( fabs(startHitsRadius - endHitsRadius) < cuts_3_value[trackQuality] ) pass = 0;
@@ -51,7 +51,7 @@ int getPassFlag(int trackType[], double cuts[], int trackQuality){
       pass = 1;
    }      
    else if( doComb_ && type == 2 ){
-      if( pt<ptcut ) pass = 0;
+      if( pt<ptcut[trackQuality] ) pass = 0;
       if( p < 0.5 ) pass = 0;
       if( TMath::RadToDeg()*trkTheta < 10. || TMath::RadToDeg()*trkTheta > 30. ) pass = 0;
       if( fabs(dcaPrime) > cuts_4_value[trackQuality] ) pass = 0;
@@ -65,7 +65,7 @@ int getPassFlag(int trackType[], double cuts[], int trackQuality){
       pass = 1;
    }  
    else if( doFwd_ && type == 3 ){
-      if( pt<ptcut ) pass = 0;
+      if( pt<ptcut[trackQuality] ) pass = 0;
       if( p < 0.5 ) pass = 0;
       if( TMath::RadToDeg()*trkTheta < 6. || TMath::RadToDeg()*trkTheta > 25. ) pass = 0;
       if( startHitsRadius > 25.0 ) pass = 0;
@@ -266,9 +266,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
    float ymin=0.05;
    float ymax=0.6;
 
-
    double zvtxOffset=0.;
-   double ptcut=0.15;
 
    if(tree) {
       Int_t run, evno;
