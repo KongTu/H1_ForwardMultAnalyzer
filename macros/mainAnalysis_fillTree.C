@@ -605,8 +605,10 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
          myEvent.etaAsymREC_mini = etaAsym;
 
          outtree->Fill();
-      }  
+      }
+      cout << "Number of events processed ~ " << i << endl;  
    }
+
 
    TString outfile_name;
    if( !doReweight_ ){
