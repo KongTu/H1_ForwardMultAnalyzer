@@ -542,8 +542,8 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
          myEvent.eventpass_mini = event_pass;
          myEvent.nRECtrack_mini = nRECtrack;
 
-         int Ntracks_eta_m = 0;
-         int Ntracks_eta_p = 0;
+         double Ntracks_eta_m = 0;
+         double Ntracks_eta_p = 0;
          //loop over reconstructed tracks:
          for(int j = 0; j<nRECtrack; j++){
             int type=typeChgREC[j];            
@@ -597,7 +597,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
             myEvent.passLooseREC_mini[j] = pass_loose;      
          }
 
-         float etaAsym = (Ntracks_eta_p - Ntracks_eta_m)/(Ntracks_eta_p + Ntracks_eta_m);
+         double etaAsym = (Ntracks_eta_p - Ntracks_eta_m)/(Ntracks_eta_p + Ntracks_eta_m);
          if( (Ntracks_eta_p + Ntracks_eta_m) == 0 ) etaAsym = -999.;
          myEvent.etaAsymREC_mini = etaAsym;
 
