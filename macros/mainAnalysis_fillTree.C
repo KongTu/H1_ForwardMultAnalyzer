@@ -426,7 +426,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
       tree->SetBranchAddress("rZeroREC",rZeroREC);
 
       cout << "total. number of events = " << tree->GetEntries() << endl;
-      int Nevents = 1000;
+      int Nevents = 100000;
       for(int i=0;i<Nevents;i++) {
          tree->GetEntry(i);
 
