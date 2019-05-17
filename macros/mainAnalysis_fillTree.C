@@ -431,8 +431,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
 
       cout << "total. number of events = " << tree->GetEntries() << endl;
       int totalEvents = 0;
-      // int Nevents = tree->GetEntries();
-      int Nevents = 10000;
+      int Nevents = tree->GetEntries();
       for(int i=0;i<Nevents;i++) {
          tree->GetEntry(i);
 
