@@ -120,6 +120,7 @@ struct MyEvent {
    Int_t typeChgREC_mini[nRECtrack_MAX];
    Float_t etaAsymREC_mini;
    Float_t EpzREC_mini;
+   Int_t totalMultREC_mini;
 
    Float_t pxREC_mini[nRECtrack_MAX];
    Float_t pyREC_mini[nRECtrack_MAX];
@@ -238,6 +239,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
    outtree->Branch("typeChgREC_mini",myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
    outtree->Branch("etaAsymREC_mini",&myEvent.etaAsymREC_mini,"etaAsymREC_mini/F");
    outtree->Branch("EpzREC_mini",&myEvent.EpzREC_mini,"EpzREC_mini/F");
+   outtree->Branch("totalMultREC_mini",&myEvent.totalMultREC_mini,"totalMultREC_mini/I");
 
    outtree->Branch("pxREC_mini",myEvent.pxREC_mini,"pxREC_mini[nRECtrack_mini]/F");
    outtree->Branch("pyREC_mini",myEvent.pyREC_mini,"pyREC_mini[nRECtrack_mini]/F");
@@ -429,7 +431,8 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
 
       cout << "total. number of events = " << tree->GetEntries() << endl;
       int totalEvents = 0;
-      int Nevents = tree->GetEntries();
+      // int Nevents = tree->GetEntries();
+      int Nevents = 10000;
       for(int i=0;i<Nevents;i++) {
          tree->GetEntry(i);
 
@@ -604,6 +607,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
          double etaAsym = (Ntracks_eta_p - Ntracks_eta_m)/(Ntracks_eta_p + Ntracks_eta_m);
          if( (Ntracks_eta_p + Ntracks_eta_m) == 0 ) etaAsym = -999.;
          myEvent.etaAsymREC_mini = etaAsym;
+         myEvent.totalMultREC_mini = (int) (Ntracks_eta_p + Ntracks_eta_m);
 
          outtree->Fill();
          totalEvents++;
