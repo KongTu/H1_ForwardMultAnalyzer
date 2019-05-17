@@ -431,8 +431,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
 
       cout << "total. number of events = " << tree->GetEntries() << endl;
       int totalEvents = 0;
-      int Nevents = tree->GetEntries();
-      for(int i=0;i<Nevents;i++) {
+      for(int i=0;i<tree->GetEntries();i++) {
          tree->GetEntry(i);
 
          //assigning all reweights:
@@ -462,6 +461,7 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
          myEvent.run_mini = run;
          myEvent.evno_mini = evno;
          myEvent.w_mini = evt_weight;
+         myEvent.totalMultREC_mini = -999;
 
          myEvent.xGKI_mini = -999.;
          myEvent.yGKI_mini = -999.;
