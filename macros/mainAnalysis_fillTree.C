@@ -432,7 +432,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("rZeroREC",rZeroREC);
 
       cout << "total. number of events = " << tree->GetEntries() << endl;
-      if(end == -1) {end = tree->GetEntries();}
+      if(end == -1 || end >= tree->GetEntries()) {end = tree->GetEntries();}
       cout << "starting events = " << start << endl;
       cout << "ending events = " << end << endl;
       
