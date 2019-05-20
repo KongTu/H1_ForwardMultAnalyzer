@@ -142,7 +142,7 @@ struct MyEvent {
    Int_t passLooseREC_mini[nRECtrack_MAX];
 };
 
-void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true, const bool doReweight_ = false, const bool doComb_=true, const bool doFwd_= false) {
+void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ = true, const bool doRapgap_ = true, const bool doReweight_ = false, const bool doComb_=true, const bool doFwd_= false) {
    
    TChain* tree = new TChain("properties");
    
@@ -430,8 +430,12 @@ void mainAnalysis_fillTree(const bool doGen_ = true, const bool doRapgap_ = true
       tree->SetBranchAddress("rZeroREC",rZeroREC);
 
       cout << "total. number of events = " << tree->GetEntries() << endl;
+      if(end == -1) {end = tree->GetEntries();}
+      cout << "starting events = " << start << endl;
+      cout << "ending events = " << endl << endl;
+      
       int totalEvents = 0;
-      for(int i=0;i<tree->GetEntries();i++) {
+      for(int i=start;i<end;i++) {
          tree->GetEntry(i);
 
          //assigning all reweights:
