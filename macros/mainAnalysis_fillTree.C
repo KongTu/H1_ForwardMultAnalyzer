@@ -621,15 +621,16 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
 
    TString outfile_name;
+   TString outfile_index = std::to_string(start);
    if( !doReweight_ ){
       if( doRapgap_ && doGen_ ){
-            outfile_name = "../new_output/mc_highE_RAPGAP_noReweight_Tree"+to_string(start)+".root";
+            outfile_name = "../new_output/mc_highE_RAPGAP_noReweight_Tree_"+outfile_index+".root";
       }
       else if( !doRapgap_ && doGen_ ){
-            outfile_name = "../new_output/mc_highE_DJANGOH_noReweight_Tree"+to_string(start)+".root";
+            outfile_name = "../new_output/mc_highE_DJANGOH_noReweight_Tree_"+outfile_index+".root";
       }
       else{
-            outfile_name = "../new_output/data_highE_0607_noReweight_Tree_"+to_string(start)+".root";
+            outfile_name = "../new_output/data_highE_0607_noReweight_Tree_"+outfile_index+".root";
       }
 
    }
