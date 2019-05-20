@@ -10,6 +10,7 @@
 #include <TMath.h>
 #include <TRandom.h>
 #include <TF1.h>
+#include <string>
 
 int nEta=100;
 int etaMin=-5;
