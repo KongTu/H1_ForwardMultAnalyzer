@@ -431,7 +431,6 @@ int main(int argc, char* argv[]) {
    output->Branch("elecEnergyREC",&myEvent.elecEnergyREC,"elecEnergyREC/F");
    output->Branch("elecEfracREC",&myEvent.elecEfracREC,"elecEfracREC/F");
    output->Branch("elecHfracREC",&myEvent.elecHfracREC,"elecHfracREC/F");
-   output->Branch("elecTrackMatchREC",&myEvent.elecTrackMatchREC,"elecTrackMatchREC/B");
    output->Branch("elecTrackMatchThetaREC",&myEvent.elecTrackMatchThetaREC,"elecTrackMatchThetaREC/F");
    output->Branch("elecTrackMatchPhiREC",&myEvent.elecTrackMatchPhiREC,"elecTrackMatchPhiREC/F");
 
