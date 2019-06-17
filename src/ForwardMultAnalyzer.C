@@ -230,7 +230,7 @@ struct MyEvent {
    // reconstructed quantities
    Float_t elecPxREC,elecPyREC,elecPzREC,elecEREC,elecEradREC; // scattered electron
    Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
-   Bool_t elecTrackMatchREC;
+   Float_t elecTrackMatchPhiREC,elecTrackMatchThetaREC;
    Int_t elecTypeREC;
 
    Float_t xREC,yREC,Q2REC;
@@ -250,7 +250,7 @@ struct MyEvent {
    Float_t pzREC[nRECtrack_MAX];
    Float_t pREC[nRECtrack_MAX];
    Float_t peREC[nRECtrack_MAX];
-   Bool_t matchBCTrack[nRECtrack_MAX];
+   Bool_t bestMatchBSTrack[nRECtrack_MAX];
    Float_t etaREC[nRECtrack_MAX];
 
    Float_t ptStarREC[nRECtrack_MAX];
@@ -432,6 +432,8 @@ int main(int argc, char* argv[]) {
    output->Branch("elecEfracREC",&myEvent.elecEfracREC,"elecEfracREC/F");
    output->Branch("elecHfracREC",&myEvent.elecHfracREC,"elecHfracREC/F");
    output->Branch("elecTrackMatchREC",&myEvent.elecTrackMatchREC,"elecTrackMatchREC/B");
+   output->Branch("elecTrackMatchThetaREC",&myEvent.elecTrackMatchThetaREC,"elecTrackMatchThetaREC/F");
+   output->Branch("elecTrackMatchPhiREC",&myEvent.elecTrackMatchPhiREC,"elecTrackMatchPhiREC/F");
 
    output->Branch("xREC",&myEvent.xREC,"xREC/F");
    output->Branch("yREC",&myEvent.yREC,"yREC/F");
@@ -453,8 +455,7 @@ int main(int argc, char* argv[]) {
    output->Branch("pzREC",myEvent.pzREC,"pzREC[nRECtrack]/F");
    output->Branch("pREC",myEvent.pREC,"pREC[nRECtrack]/F");
    output->Branch("peREC",myEvent.peREC,"peREC[nRECtrack]/F");
-   output->Branch("matchBCTrack",myEvent.matchBCTrack,"matchBCTrack[nRECtrack]/B");
-
+   output->Branch("bestMatchBSTrack",myEvent.bestMatchBSTrack,"bestMatchBSTrack[nRECtrack]/I");
    output->Branch("etaREC",myEvent.etaREC,"etaREC[nRECtrack]/F");
 
    output->Branch("ptStarREC",myEvent.ptStarREC,"ptStarREC[nRECtrack]/F");
@@ -1046,6 +1047,7 @@ int main(int argc, char* argv[]) {
       Float_t fKappa=-999.;Float_t fPhi=-999.; Float_t fTheta=-999.;
       Float_t fDca=-999.; Float_t fZ0=-999.;
       Int_t nLinkedBst=-999; Int_t nLinkedCjc=-999;
+      Bool_t elecTrackMatchREC = false;
       // auxillary variables: cluster radius etc
       if(scatteredElectron>=0) {
          H1PartEm const *partEM=partCandArray[scatteredElectron]->GetIDElec();
@@ -1057,7 +1059,7 @@ int main(int argc, char* argv[]) {
          myEvent.elecEnergyREC=partEM->GetE();
          myEvent.elecEfracREC=partEM->GetEaem();
          myEvent.elecHfracREC=partEM->GetEnHadSpac();
-         myEvent.elecTrackMatchREC= (bool) partEM->GetBCTrack(fKappa,fPhi,fTheta,fDca,fZ0,nLinkedBst,nLinkedCjc);
+         elecTrackMatchREC = (bool) partEM->GetBCTrack(fKappa,fPhi,fTheta,fDca,fZ0,nLinkedBst,nLinkedCjc);
       } else {
          myEvent.elecEcraREC=-1;
       }
@@ -1121,6 +1123,10 @@ int main(int argc, char* argv[]) {
       TLorentzRotation boost_MC_HCM_esREC = BoostToHCM_es(ebeam_REC_lab,pbeam_REC_lab,escat0_REC_lab,Q2_esigma_REC,y_esigma_REC);
       //end new boost
       
+      //matching electron to tracks;
+      double dPhi_min = 999.;
+      double dTheta_min = 999.;
+
       for(int i=0;i<nPart;i++) {
          H1PartCand *cand=0;
          //H1FSTTrack *fstTrack=0;
@@ -1180,7 +1186,7 @@ int main(int argc, char* argv[]) {
                double dz0Prime=-1.;
                float track_p = -1.; 
                float track_err_p = -1.;
-               bool matchBst = false;
+               int matchBSTrack = -1;
                
                float startHitsRadius = -1;
                float endHitsRadius = -1;
@@ -1203,11 +1209,16 @@ int main(int argc, char* argv[]) {
                   track_p = track->GetP();
                   track_err_p = track->GetDp();
                   trkTheta = track->GetTheta();
+                  charge=track->GetCharge();
                   //matching GetBCTrack()
-                  double dPhi = deltaPhi(fPhi,track->GetPhi()); 
-                  if( &myEvent.elecTrackMatchREC && dPhi < 0.2 
-                     && TMath::Abs(fTheta - track->GetTheta()) < 0.2 ){
-                     matchBst = true;
+                  double dPhi = deltaPhi(fPhi,track->GetPhi());
+                  double dTheta = TMath::Abs(fTheta - trkTheta);
+                   
+                  if( elecTrackMatchREC && dPhi < dPhi_min 
+                     && dTheta < dTheta_min ){
+                     dPhi_min = dPhi;
+                     dTheta_min = dTheta;
+                     matchBSTrack++;
                   }
             
                   H1VertexFittedTrack const *h1track=
@@ -1261,7 +1272,7 @@ int main(int argc, char* argv[]) {
                   } else {
                    type=0;
                   }
-                  charge=track->GetCharge();
+                  
                }
                else if(fstTrack) {
 
@@ -1348,7 +1359,7 @@ int main(int argc, char* argv[]) {
                   myEvent.pzREC[k]=h.Z();
                   myEvent.pREC[k]=track_p;
                   myEvent.peREC[k]=track_err_p;
-                  myEvent.matchBCTrack[k]=matchBst;
+                  myEvent.bestMatchBSTrack[k]=matchBSTrack;
                   myEvent.etaREC[k]=h.Eta();
       
                   myEvent.ptStarREC[k]=hStar.Pt();
@@ -1402,6 +1413,9 @@ int main(int argc, char* argv[]) {
             }
          }
       }
+
+      myEvent.elecTrackMatchThetaREC = dTheta_min;
+      myEvent.elecTrackMatchPhiREC = dPhi_min;
 
       // match MC particles and REC particles
       // (1) for each REC particle, find the best MC particle
