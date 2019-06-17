@@ -1033,7 +1033,10 @@ int main(int argc, char* argv[]) {
          myEvent.elecEnergyREC=partEM->GetE();
          myEvent.elecEfracREC=partEM->GetEaem();
          myEvent.elecHfracREC=partEM->GetEnHadSpac();
-         myEvent.elecTrackMatchREC=partEM->GetBCTrack();
+
+         Float_t fKappa,fPhi,fTheta,fDca,fZ0;
+         Int_t nLinkedBst, nLinkedCjc;
+         myEvent.elecTrackMatchREC= (bool) partEM->GetBCTrack(fKappa,fPhi,fTheta,fDca,fZ0,nLinkedBst,nLinkedCjc);
       } else {
          myEvent.elecEcraREC=-1;
       }
