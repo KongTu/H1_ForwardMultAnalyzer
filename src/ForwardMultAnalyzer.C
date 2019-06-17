@@ -137,6 +137,21 @@ TLorentzRotation BoostToHCM_es(TLorentzVector const &eBeam_lab,
 
 }
 
+double deltaPhi( double phi_1, double phi_2 ){
+
+   double relAngle = 0.;
+   if( phi_1 > phi_2 ){
+      relAngle = phi_1 - phi_2;
+      if( relAngle > PI ) relAngle = 2*PI - relAngle; 
+   }
+   else{
+      relAngle = phi_1 - phi_2;
+      if( relAngle > -PI ) relAngle = -relAngle;
+      else relAngle = 2*PI + relAngle;
+   }
+   return relAngle;
+}
+
 void GetKinematics(TLorentzVector const &ebeam,TLorentzVector const &pbeam,
                    TLorentzVector const &escat,
                    Float_t *x,Float_t *y,Float_t *Q2) {
@@ -233,6 +248,7 @@ struct MyEvent {
    Float_t pzREC[nRECtrack_MAX];
    Float_t pREC[nRECtrack_MAX];
    Float_t peREC[nRECtrack_MAX];
+   Bool_t matchBCTrack[nRECtrack_MAX];
    Float_t etaREC[nRECtrack_MAX];
 
    Float_t ptStarREC[nRECtrack_MAX];
@@ -435,6 +451,8 @@ int main(int argc, char* argv[]) {
    output->Branch("pzREC",myEvent.pzREC,"pzREC[nRECtrack]/F");
    output->Branch("pREC",myEvent.pREC,"pREC[nRECtrack]/F");
    output->Branch("peREC",myEvent.peREC,"peREC[nRECtrack]/F");
+   output->Branch("matchBCTrack",myEvent.matchBCTrack,"matchBCTrack[nRECtrack]/B");
+
    output->Branch("etaREC",myEvent.etaREC,"etaREC[nRECtrack]/F");
 
    output->Branch("ptStarREC",myEvent.ptStarREC,"ptStarREC[nRECtrack]/F");
@@ -1022,6 +1040,10 @@ int main(int argc, char* argv[]) {
       myEvent.elecPzREC=escatPhot_REC_lab.Z();
       myEvent.elecEREC=escatPhot_REC_lab.E();
 
+
+      Float_t fKappa=-999.;Float_t fPhi=-999.; Float_t fTheta=-999.;
+      Float_t fDca=-999.; Float_t fZ0=-999.;
+      Int_t nLinkedBst=-999; Int_t nLinkedCjc=-999;
       // auxillary variables: cluster radius etc
       if(scatteredElectron>=0) {
          H1PartEm const *partEM=partCandArray[scatteredElectron]->GetIDElec();
@@ -1033,9 +1055,6 @@ int main(int argc, char* argv[]) {
          myEvent.elecEnergyREC=partEM->GetE();
          myEvent.elecEfracREC=partEM->GetEaem();
          myEvent.elecHfracREC=partEM->GetEnHadSpac();
-
-         Float_t fKappa,fPhi,fTheta,fDca,fZ0;
-         Int_t nLinkedBst, nLinkedCjc;
          myEvent.elecTrackMatchREC= (bool) partEM->GetBCTrack(fKappa,fPhi,fTheta,fDca,fZ0,nLinkedBst,nLinkedCjc);
       } else {
          myEvent.elecEcraREC=-1;
@@ -1159,6 +1178,7 @@ int main(int argc, char* argv[]) {
                double dz0Prime=-1.;
                float track_p = -1.; 
                float track_err_p = -1.;
+               bool matchBst = false;
                
                float startHitsRadius = -1;
                float endHitsRadius = -1;
@@ -1169,7 +1189,6 @@ int main(int argc, char* argv[]) {
                float chi2Link = -1;
                int ndfLink = -1;
                float rZero = -1;
-
 
                if(track){
                   if(track->IsCentralTrk()) type =1;
@@ -1182,12 +1201,18 @@ int main(int argc, char* argv[]) {
                   track_p = track->GetP();
                   track_err_p = track->GetDp();
                   trkTheta = track->GetTheta();
+                  //matching GetBCTrack()
+                  double dPhi = deltaPhi(fPhi,track->GetPhi()); 
+                  if( &myEvent.elecTrackMatchREC && dPhi < 0.2 
+                     && TMath::Abs(fTheta - track->GetTheta()) < 0.2 ){
+                     matchBst = true;
+                  }
             
                   H1VertexFittedTrack const *h1track=
                      dynamic_cast<H1VertexFittedTrack const *>
                      (cand->GetTrack());
                   if(h1track) {
-                    
+                     
                      chi2vtx=h1track->GetFitChi2();
                      vtxNdf=h1track->GetFitNdf();
                      chi2Trk=h1track->GetChi2();
@@ -1201,7 +1226,7 @@ int main(int argc, char* argv[]) {
                      TVector3 vect_start_hit = h1track->GetStartHit();
                      TVector3 vect_end_hit = h1track->GetEndHit();
                      zLengthHit = vect_start_hit.z()-vect_end_hit.z();
-                    
+
                      H1NonVertexFittedTrack const *nvtrack=
                         h1track-> GetNonVertexFittedTrack();
                      if(nvtrack) {
@@ -1321,6 +1346,7 @@ int main(int argc, char* argv[]) {
                   myEvent.pzREC[k]=h.Z();
                   myEvent.pREC[k]=track_p;
                   myEvent.peREC[k]=track_err_p;
+                  myEvent.matchBCTrack[k]=matchBst;
                   myEvent.etaREC[k]=h.Eta();
       
                   myEvent.ptStarREC[k]=hStar.Pt();
