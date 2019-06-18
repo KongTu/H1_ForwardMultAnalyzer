@@ -1418,7 +1418,8 @@ int main(int argc, char* argv[]) {
 
       myEvent.elecTrackMatchThetaREC = dTheta_min;
       myEvent.elecTrackMatchPhiREC = dPhi_min;
-      if( index_min >= 0 ) myEvent.bestMatchBSTrack[index_min] = 2;
+      if( index_min >= 0 ) {myEvent.bestMatchBSTrack[index_min] = 2;}
+      else{ myEvent.bestMatchBSTrack[index_min] = -999; }
       cout << "myEvent.bestMatchBSTrack[index_min] = " << myEvent.bestMatchBSTrack[index_min] << endl;
       // match MC particles and REC particles
       // (1) for each REC particle, find the best MC particle
