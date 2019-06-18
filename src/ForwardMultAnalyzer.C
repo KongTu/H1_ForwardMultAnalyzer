@@ -250,7 +250,7 @@ struct MyEvent {
    Float_t pzREC[nRECtrack_MAX];
    Float_t pREC[nRECtrack_MAX];
    Float_t peREC[nRECtrack_MAX];
-   Bool_t bestMatchBSTrack[nRECtrack_MAX];
+   Int_t bestMatchBSTrack[nRECtrack_MAX];
    Float_t etaREC[nRECtrack_MAX];
 
    Float_t ptStarREC[nRECtrack_MAX];
@@ -1186,7 +1186,7 @@ int main(int argc, char* argv[]) {
                double dz0Prime=-1.;
                float track_p = -1.; 
                float track_err_p = -1.;
-               int matchBSTrack = -1;
+               int matchBSTrackTemp = -999;
                
                float startHitsRadius = -1;
                float endHitsRadius = -1;
@@ -1359,7 +1359,7 @@ int main(int argc, char* argv[]) {
                   myEvent.pzREC[k]=h.Z();
                   myEvent.pREC[k]=track_p;
                   myEvent.peREC[k]=track_err_p;
-                  myEvent.bestMatchBSTrack[k]=matchBSTrack;
+                  myEvent.bestMatchBSTrack[k]=matchBSTrackTemp;
                   cout << "bestMatchBSTrack ~ " << myEvent.bestMatchBSTrack[k] << endl;
                   myEvent.etaREC[k]=h.Eta();
       
