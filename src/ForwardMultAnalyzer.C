@@ -1360,7 +1360,7 @@ int main(int argc, char* argv[]) {
                   myEvent.pREC[k]=track_p;
                   myEvent.peREC[k]=track_err_p;
                   myEvent.bestMatchBSTrack[k]=matchBSTrackTemp;
-                  cout << "bestMatchBSTrack ~ " << &myEvent.bestMatchBSTrack[k] << endl;
+                  cout << "bestMatchBSTrack ~ " << myEvent.bestMatchBSTrack[k] << endl;
                   cout << "matchBSTrackTemp ~ " << matchBSTrackTemp << endl;
                   myEvent.etaREC[k]=h.Eta();
       
@@ -1419,7 +1419,7 @@ int main(int argc, char* argv[]) {
       myEvent.elecTrackMatchThetaREC = dTheta_min;
       myEvent.elecTrackMatchPhiREC = dPhi_min;
       if( index_min >= 0 ) myEvent.bestMatchBSTrack[index_min] = 2;
-      cout << "myEvent.bestMatchBSTrack[index_min] = " << &myEvent.bestMatchBSTrack[index_min] << endl;
+      cout << "myEvent.bestMatchBSTrack[index_min] = " << myEvent.bestMatchBSTrack[index_min] << endl;
       // match MC particles and REC particles
       // (1) for each REC particle, find the best MC particle
       //    [may result in multiple REC particles matched to the same MCpart]
