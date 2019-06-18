@@ -1125,6 +1125,7 @@ int main(int argc, char* argv[]) {
       //matching electron to tracks;
       double dPhi_min = 999.;
       double dTheta_min = 999.;
+      int index_min = -1;
 
       for(int i=0;i<nPart;i++) {
          H1PartCand *cand=0;
@@ -1217,7 +1218,7 @@ int main(int argc, char* argv[]) {
                      && dTheta < dTheta_min ){
                      dPhi_min = dPhi;
                      dTheta_min = dTheta;
-                     matchBSTrack++;
+                     index_min = myEvent.nRECtrack;
                   }
             
                   H1VertexFittedTrack const *h1track=
@@ -1415,6 +1416,7 @@ int main(int argc, char* argv[]) {
 
       myEvent.elecTrackMatchThetaREC = dTheta_min;
       myEvent.elecTrackMatchPhiREC = dPhi_min;
+      if( index_min >= 0 ) myEvent.bestMatchBSTrack[index_min] = 1;
 
       // match MC particles and REC particles
       // (1) for each REC particle, find the best MC particle
