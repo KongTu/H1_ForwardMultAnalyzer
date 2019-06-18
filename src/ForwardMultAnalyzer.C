@@ -1360,6 +1360,7 @@ int main(int argc, char* argv[]) {
                   myEvent.pREC[k]=track_p;
                   myEvent.peREC[k]=track_err_p;
                   myEvent.bestMatchBSTrack[k]=matchBSTrack;
+                  cout << "bestMatchBSTrack ~ " << myEvent.bestMatchBSTrack[k] << endl;
                   myEvent.etaREC[k]=h.Eta();
       
                   myEvent.ptStarREC[k]=hStar.Pt();
