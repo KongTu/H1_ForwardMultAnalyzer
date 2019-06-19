@@ -230,7 +230,7 @@ struct MyEvent {
    // reconstructed quantities
    Float_t elecPxREC,elecPyREC,elecPzREC,elecEREC,elecEradREC; // scattered electron
    Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
-   Float_t elecTrackMatchPhiREC,elecTrackMatchThetaREC;
+   Float_t elecTrackMatchRREC;
    Int_t elecTypeREC;
 
    Float_t xREC,yREC,Q2REC;
@@ -431,8 +431,7 @@ int main(int argc, char* argv[]) {
    output->Branch("elecEnergyREC",&myEvent.elecEnergyREC,"elecEnergyREC/F");
    output->Branch("elecEfracREC",&myEvent.elecEfracREC,"elecEfracREC/F");
    output->Branch("elecHfracREC",&myEvent.elecHfracREC,"elecHfracREC/F");
-   output->Branch("elecTrackMatchThetaREC",&myEvent.elecTrackMatchThetaREC,"elecTrackMatchThetaREC/F");
-   output->Branch("elecTrackMatchPhiREC",&myEvent.elecTrackMatchPhiREC,"elecTrackMatchPhiREC/F");
+   output->Branch("elecTrackMatchRREC",&myEvent.elecTrackMatchRREC,"elecTrackMatchRREC/F");
 
    output->Branch("xREC",&myEvent.xREC,"xREC/F");
    output->Branch("yREC",&myEvent.yREC,"yREC/F");
@@ -1123,8 +1122,7 @@ int main(int argc, char* argv[]) {
       //end new boost
       
       //matching electron to tracks;
-      double dPhi_min = 999.;
-      double dTheta_min = 999.;
+      double dR_min = 999.;
       int index_min = -1;
 
       for(int i=0;i<nPart;i++) {
@@ -1212,15 +1210,14 @@ int main(int argc, char* argv[]) {
                   charge=track->GetCharge();
                   //matching GetBCTrack()
                   double dPhi = deltaPhi(fPhi,track->GetPhi());
-                  double dTheta = TMath::Abs(fTheta - trkTheta);
+                  double bEta = -TMath::Log(TMath::Tan(fTheta/2.));
+                  double dEta = bEta - h.Eta();
+                  double dR = sqrt( dPhi*dPhi + dEta*dEta );
                    
-                  if( elecTrackMatchREC && dPhi < dPhi_min 
-                     && dTheta < dTheta_min ){
-                     dPhi_min = dPhi;
-                     dTheta_min = dTheta;
+                  if( elecTrackMatchREC && dR < dR_min ){
+                     dR_min = dR;
                      index_min = myEvent.nRECtrack;
                   }
-            
                   H1VertexFittedTrack const *h1track=
                      dynamic_cast<H1VertexFittedTrack const *>
                      (cand->GetTrack());
@@ -1414,8 +1411,7 @@ int main(int argc, char* argv[]) {
          }
       }
 
-      myEvent.elecTrackMatchThetaREC = dTheta_min;
-      myEvent.elecTrackMatchPhiREC = dPhi_min;
+      myEvent.elecTrackMatchRREC = dR_min;
       if( index_min >= 0 ) {myEvent.bestMatchBSTrack[index_min] = 2;}
 
       // match MC particles and REC particles
