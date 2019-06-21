@@ -1018,11 +1018,9 @@ int main(int argc, char* argv[]) {
             if( i==scatteredElectron){
                H1Track const *scatElec=cand->GetTrack();
                if(scatElec){
-                  TLorentzVector elec4vect = scatElec->GetFourVector();
-                  cout << "Pt ~ " << elec4vect.Pt() << endl;
+                  cout << "Pt ~ " << scatElec->GetPt() << endl;
                   cout << "Charge ~ " << scatElec->GetCharge() << endl;
-                  cout << "E ~ " << elec4vect.E() << endl;
-                  cout << "Pz ~ " << elec4vect.Pz() << endl;
+                  cout << "P ~ " << scatElec->GetP() << endl;
                }
                else{
                   TLorentzVector neut4vect = cand->GetFourVector();
