@@ -228,7 +228,7 @@ struct MyEvent {
    Int_t imatchMC[nMCtrack_MAX];
 
    // reconstructed quantities
-   Float_t elec0PxREC,elec0PyREC,elec0PzREC,elec0EREC,elecChargeREC; //scattered electron alone
+   Float_t elec0PxREC,elec0PyREC,elec0PzREC,elec0EREC; Int_t elecChargeREC; //scattered electron alone
    Float_t neutPxREC,neutPyREC,neutPzREC,neutEREC; //neutrals as bkg
    Float_t elecPxREC,elecPyREC,elecPzREC,elecEREC,elecEradREC; // scattered electron + neutrals
    Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
