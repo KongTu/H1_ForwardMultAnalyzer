@@ -228,7 +228,9 @@ struct MyEvent {
    Int_t imatchMC[nMCtrack_MAX];
 
    // reconstructed quantities
-   Float_t elecPxREC,elecPyREC,elecPzREC,elecEREC,elecEradREC; // scattered electron
+   Float_t elec0PxREC,elec0PyREC,elec0PzREC,elec0EREC,elecChargeREC; //scattered electron alone
+   Float_t neutPxREC,neutPyREC,neutPzREC,neutEREC; //neutrals as bkg
+   Float_t elecPxREC,elecPyREC,elecPzREC,elecEREC,elecEradREC; // scattered electron + neutrals
    Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
    Float_t elecTrackMatchRREC;
    Int_t elecTypeREC;
@@ -989,24 +991,51 @@ int main(int argc, char* argv[]) {
       // find scattered electron as identified EM particle with highest PT in SpaCal
       bool haveScatteredElectron=false;
       TLorentzVector escat0_REC_lab;
+      TLorentzVector escatNeut_REC_lab;
       int scatteredElectron=-1;
+      int scatteredElectronCharge=0;
+      int scatteredNeut=-1
       double ptMax=0;
+      double ptNeutMax=0;
       for(int i=0;i<partCandArray.GetEntries();i++) {
         H1PartCand *cand=partCandArray[i];
         H1PartEm const *elec=cand->GetIDElec();
         if(elec && cand->IsScatElec()) {
          if (myElecCut.goodElec(elec,*run)!=1) continue;
-            
-            TLorentzVector p= elec->GetFourVector();
+         //must match to a charged track
+            H1Track const *scatElecTrk=cand->GetTrack();
+            if(scatElecTrk){
+               TLorentzVector p= elec->GetFourVector();
+               if(p.Pt()>ptMax) {
+                  escat0_REC_lab = p;
+                  scatteredElectron=i;
+                  haveScatteredElectron=true;
+                  scatteredElectronCharge=scatElecTrk->GetCharge();
+                  ptMax=p.Pt();
+               }
+            }
+            else{
+               TLorentzVector p= elec->GetFourVector();
+               if(p.Pt()>ptNeutMax) {
+                  escatNeut_REC_lab = p;
+                  scatteredNeut=i;
+                  ptNeutMax=p.Pt();
+               }
 
-            if(p.Pt()>ptMax) {
-               escat0_REC_lab = p;
-               scatteredElectron=i;
-               haveScatteredElectron=true;
-               ptMax=p.Pt();
             }
          }
       }
+
+      myEvent.elec0PxREC=escat0_REC_lab.X();
+      myEvent.elec0PyREC=escat0_REC_lab.Y();
+      myEvent.elec0PzREC=escat0_REC_lab.Z();
+      myEvent.elec0EREC=escat0_REC_lab.E();
+      myEvent.elecChargeREC=scatteredElectronCharge;
+
+      myEvent.neutPxREC=escatNeut_REC_lab.X();
+      myEvent.neutPyREC=escatNeut_REC_lab.Y();
+      myEvent.neutPzREC=escatNeut_REC_lab.Z();
+      myEvent.neutEREC=escatNeut_REC_lab.E();
       
       // add EM particles and neutrals in a cone around the electron
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
@@ -1014,25 +1043,8 @@ int main(int argc, char* argv[]) {
       if(scatteredElectron>=0) {
          isElectron.insert(scatteredElectron);
          for(int i=0;i<partCandArray.GetEntries();i++) {
-            H1PartCand *cand=partCandArray[i];
-            if( i==scatteredElectron){
-               H1Track const *scatElec=cand->GetTrack();
-               if(scatElec){
-                  cout << "Pt ~ " << scatElec->GetPt() << endl;
-                  cout << "Charge ~ " << scatElec->GetCharge() << endl;
-                  cout << "P ~ " << scatElec->GetP() << endl;
-               }
-               else{
-                  TLorentzVector neut4vect = cand->GetFourVector();
-                  cout << "Not a track - Pt ~ " << neut4vect.Pt() << endl;
-                  cout << "Not a track - Charge ~ " << cand->GetCharge() << endl;
-                  cout << "Not a track - E ~ " << neut4vect.E() << endl;
-                  cout << "Not a track - Pz ~ " << neut4vect.Pz() << endl;
-               }
-            }
-
             if(i==scatteredElectron) continue;
-            
+            H1PartCand *cand=partCandArray[i];
             H1PartEm const *elec=cand->GetIDElec();
             if(elec) {
                TLorentzVector p= elec->GetFourVector();
@@ -1055,7 +1067,6 @@ int main(int argc, char* argv[]) {
       myEvent.elecPyREC=escatPhot_REC_lab.Y();
       myEvent.elecPzREC=escatPhot_REC_lab.Z();
       myEvent.elecEREC=escatPhot_REC_lab.E();
-
 
       Float_t fKappa=-999.;Float_t fPhi=-999.; Float_t fTheta=-999.;
       Float_t fDca=-999.; Float_t fZ0=-999.;
