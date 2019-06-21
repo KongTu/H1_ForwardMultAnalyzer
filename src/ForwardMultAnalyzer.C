@@ -1003,7 +1003,7 @@ int main(int argc, char* argv[]) {
       TLorentzVector escat0_REC_lab;
       TLorentzVector escatNeut_REC_lab;
       int scatteredElectron=-1;
-      int scatteredElectronCharge=0;
+      int scatteredElectronCharge=9;// 9 is default to not be confused with 0
       int scatteredNeut=-1;
       double ptMax=0;
       double ptNeutMax=0;
