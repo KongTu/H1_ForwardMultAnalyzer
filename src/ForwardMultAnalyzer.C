@@ -994,7 +994,7 @@ int main(int argc, char* argv[]) {
       TLorentzVector escatNeut_REC_lab;
       int scatteredElectron=-1;
       int scatteredElectronCharge=0;
-      int scatteredNeut=-1
+      int scatteredNeut=-1;
       double ptMax=0;
       double ptNeutMax=0;
       for(int i=0;i<partCandArray.GetEntries();i++) {
