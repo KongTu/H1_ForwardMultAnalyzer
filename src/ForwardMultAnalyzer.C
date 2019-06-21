@@ -420,6 +420,16 @@ int main(int argc, char* argv[]) {
    output->Branch("log10zMC",myEvent.log10zMC,"log10zMC[nMCtrack]/F");
    output->Branch("imatchMC",myEvent.imatchMC,"imatchMC[nMCtrack]/I");
 
+   output->Branch("elec0PxREC",&myEvent.elec0PxREC,"elec0PxREC/F");
+   output->Branch("elec0PyREC",&myEvent.elec0PyREC,"elec0PyREC/F");
+   output->Branch("elec0PzREC",&myEvent.elec0PzREC,"elec0PzREC/F");
+   output->Branch("elec0EREC",&myEvent.elec0EREC,"elec0EREC/F");
+   output->Branch("elecChargeREC",&myEvent.elecChargeREC,"elecChargeREC/I");
+   output->Branch("neutPxREC",&myEvent.neutPxREC,"neutPxREC/F");
+   output->Branch("neutPyREC",&myEvent.neutPyREC,"neutPyREC/F");
+   output->Branch("neutPzREC",&myEvent.neutPzREC,"neutPzREC/F");
+   output->Branch("neutEREC",&myEvent.neutEREC,"neutEREC/F");
+
    output->Branch("elecEradREC",&myEvent.elecEradREC,"elecEradREC/F");
    output->Branch("elecPxREC",&myEvent.elecPxREC,"elecPxREC/F");
    output->Branch("elecPyREC",&myEvent.elecPyREC,"elecPyREC/F");
