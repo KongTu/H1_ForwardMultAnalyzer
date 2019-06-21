@@ -1013,11 +1013,28 @@ int main(int argc, char* argv[]) {
       set<int> isElectron;
       if(scatteredElectron>=0) {
          isElectron.insert(scatteredElectron);
-         //for(int i=0;i<partCand.GetEntries();i++) {
          for(int i=0;i<partCandArray.GetEntries();i++) {
-            if(i==scatteredElectron) continue;
-            // H1PartCand *cand=partCand[i];
             H1PartCand *cand=partCandArray[i];
+            if( i==scatteredElectron){
+               H1Track const *scatElec=cand->GetTrack();
+               if(scatElec){
+                  TLorentzVector elec4vect = scatElec->GetFourVector();
+                  cout << "Pt ~ " << elec4vect.Pt() << endl;
+                  cout << "Charge ~ " << scatElec->GetCharge() << endl;
+                  cout << "E ~ " << elec4vect.E() << endl;
+                  cout << "Pz ~ " << elec4vect.Pz() << endl;
+               }
+               else{
+                  TLorentzVector neut4vect = cand->GetFourVector();
+                  cout << "Not a track - Pt ~ " << neut4vect.Pt() << endl;
+                  cout << "Not a track - Charge ~ " << cand->GetCharge() << endl;
+                  cout << "Not a track - E ~ " << neut4vect.E() << endl;
+                  cout << "Not a track - Pz ~ " << neut4vect.Pz() << endl;
+               }
+            }
+
+            if(i==scatteredElectron) continue;
+            
             H1PartEm const *elec=cand->GetIDElec();
             if(elec) {
                TLorentzVector p= elec->GetFourVector();
