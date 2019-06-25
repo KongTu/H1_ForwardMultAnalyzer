@@ -268,10 +268,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("passTightREC_mini",myEvent.passTightREC_mini,"passTightREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passLooseREC_mini",myEvent.passLooseREC_mini,"passLooseREC_mini[nRECtrack_mini]/I");
 
-   float Q2min=5.;
-   float Q2max=100.;
-   float ymin=0.05;
-   float ymax=0.6;
+   // float Q2min=5.;
+   // float Q2max=100.;
+   // float ymin=0.05;
+   // float ymax=0.6;
 
    double zvtxOffset=0.;
 
@@ -287,7 +287,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t hfsEREC,hfsPxREC, hfsPyREC, hfsPzREC;
       Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
       Float_t elecEradREC,elecEcraREC;
-      Float_t elecTrackMatchRREC;
+      // Float_t elecTrackMatchRREC;
       Int_t elecChargeREC;
      
       Int_t ibgREC;
@@ -333,7 +333,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t dcaPrimeREC[400];
       Float_t dz0PrimeREC[400];
       Float_t nucliaREC[400];
-      Int_t bestMatchBSTrack[400];
+      // Int_t bestMatchBSTrack[400];
 
       Int_t imatchREC[400];
       Int_t dmatchREC[400];
