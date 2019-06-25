@@ -108,6 +108,8 @@ struct MyEvent {
    Float_t hfsEREC_mini, hfsPtREC_mini, hfsPzREC_mini;
    Float_t elecEREC_mini, elecPtREC_mini, elecPzREC_mini;
    Int_t elecChargeREC_mini;
+   Float_t elec0EREC_mini, elec0PtREC_mini, elec0PzREC_mini;
+   Float_t neutEREC_mini, neutPtREC_mini, neutPzREC_mini;
 
    Int_t totalMultREC_mini;
    Float_t elecTrackMatchPhiREC_mini;
@@ -168,18 +170,18 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    TChain* tree = new TChain("properties");
    
    if( doRapgap_ && doGen_ ){
-      tree->Add("../data/mc_9299/*.root");
-      tree->Add("../data/mc_9300/*.root");
-      tree->Add("../data/mc_9301/*.root");
-      tree->Add("../data/mc_9302/*.root");
-      tree->Add("../data/mc_9303/*.root");
-      tree->Add("../data/mc_9304/*.root");
-      tree->Add("../data/mc_9305/*.root");
-      tree->Add("../data/mc_9306/*.root");
+      tree->Add("../data/mc_9299_scatElec/*.root");
+      tree->Add("../data/mc_9300_scatElec/*.root");
+      tree->Add("../data/mc_9301_scatElec/*.root");
+      tree->Add("../data/mc_9302_scatElec/*.root");
+      tree->Add("../data/mc_9303_scatElec/*.root");
+      tree->Add("../data/mc_9304_scatElec/*.root");
+      tree->Add("../data/mc_9305_scatElec/*.root");
+      tree->Add("../data/mc_9306_scatElec/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../data/mc_8926_4/*.root");
-      tree->Add("../data/mc_8927_4/*.root");
+      tree->Add("../data/mc_8926_4_scatElec/*.root");
+      tree->Add("../data/mc_8927_4_scatElec/*.root");
    }
    else if( !doGen_ ){
       tree->Add("../data/data_highE_06_scatElec/*.root");
@@ -224,6 +226,14 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("elecPtREC_mini",&myEvent.elecPtREC_mini,"elecPtREC_mini/F");
    outtree->Branch("elecPzREC_mini",&myEvent.elecPzREC_mini,"elecPzREC_mini/F");
    outtree->Branch("elecChargeREC_mini",&myEvent.elecChargeREC_mini,"elecChargeREC_mini/I");
+
+   outtree->Branch("elec0EREC_mini",&myEvent.elec0EREC_mini,"elec0EREC_mini/F");
+   outtree->Branch("elec0PtREC_mini",&myEvent.elec0PtREC_mini,"elec0PtREC_mini/F");
+   outtree->Branch("elec0PzREC_mini",&myEvent.elec0PzREC_mini,"elec0PzREC_mini/F");
+
+   outtree->Branch("neutEREC_mini",&myEvent.neutEREC_mini,"neutEREC_mini/F");
+   outtree->Branch("neutPtREC_mini",&myEvent.neutPtREC_mini,"neutPtREC_mini/F");
+   outtree->Branch("neutPzREC_mini",&myEvent.neutPzREC_mini,"neutPzREC_mini/F");
 
    outtree->Branch("xREC_es_mini",&myEvent.xREC_es_mini,"xREC_es_mini/F");
    outtree->Branch("yREC_es_mini",&myEvent.yREC_es_mini,"yREC_es_mini/F");
@@ -272,6 +282,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t trigWeightAC;
       Float_t trigWeightRW;
       Float_t elecPxREC,elecPyREC,elecEREC,elecPzREC;
+      Float_t elec0PxREC,elec0PyREC,elec0PzREC,elec0EREC; //scattered electron alone
+      Float_t neutPxREC,neutPyREC,neutPzREC,neutEREC; //neutrals as bkg
       Float_t hfsEREC,hfsPxREC, hfsPyREC, hfsPzREC;
       Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
       Float_t elecEradREC,elecEcraREC;
@@ -390,6 +402,14 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("elecPyREC",&elecPyREC);
       tree->SetBranchAddress("elecPzREC",&elecPzREC);
       tree->SetBranchAddress("elecEREC",&elecEREC);
+      tree->SetBranchAddress("elec0PxREC",&elec0PxREC);
+      tree->SetBranchAddress("elec0PyREC",&elec0PyREC);
+      tree->SetBranchAddress("elec0PzREC",&elec0PzREC);
+      tree->SetBranchAddress("elec0EREC",&elec0EREC);
+      tree->SetBranchAddress("neutPxREC",&neutPxREC);
+      tree->SetBranchAddress("neutPyREC",&neutPyREC);
+      tree->SetBranchAddress("neutPzREC",&neutPzREC);
+      tree->SetBranchAddress("neutEREC",&neutEREC);
       tree->SetBranchAddress("elecEradREC",&elecEradREC);
       tree->SetBranchAddress("elecEcraREC",&elecEcraREC);
 
@@ -543,11 +563,19 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          double Epz = hfsEREC+elecEREC - (hfsPzREC+elecPzREC);
          myEvent.EpzREC_mini = Epz;
          double elecPt = TMath::Hypot(elecPxREC,elecPyREC);
-         double hfsPt = TMath::Hypot(hfsPxREC,hfsPyREC);
          myEvent.elecPtREC_mini = elecPt;
          myEvent.elecPzREC_mini = elecPzREC;
          myEvent.elecEREC_mini = elecEREC;
          myEvent.elecChargeREC_mini = elecChargeREC;
+         double elec0Pt = TMath::Hypot(elec0PxREC,elec0PyREC);
+         myEvent.elec0PtREC_mini = elec0Pt;
+         myEvent.elec0PzREC_mini = elec0PzREC;
+         myEvent.elec0EREC_mini = elec0EREC;
+         double neutPt = TMath::Hypot(neutPxREC,neutPyREC);
+         myEvent.neutPtREC_mini = neutPt;
+         myEvent.neutPzREC_mini = neutPzREC;
+         myEvent.neutEREC_mini = neutEREC;
+         double hfsPt = TMath::Hypot(hfsPxREC,hfsPyREC);
          myEvent.hfsPtREC_mini = hfsPt;
          myEvent.hfsPzREC_mini = hfsPzREC;
          myEvent.hfsEREC_mini = hfsEREC;
