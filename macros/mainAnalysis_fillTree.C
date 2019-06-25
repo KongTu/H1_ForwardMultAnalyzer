@@ -1,85 +1,62 @@
 #include "../header/mainAnalysis.h"
-#include <string>
-
+#include "../header/MCweight.h"
 
 using namespace std;
 
-int getPassFlag(int trackType[3], double cuts[15], int trackQuality){
+double ptcut[3] = {0.15,0.15,0.15};
+double cuts_1_value[3]={1.0,2.0,5.0};
+double cuts_2_value[3]={40.,50.,60.};
+double cuts_3_value[3]={12.,10.,8.};
+double cuts_4_value[3]={3.,5.,10.};
+//Generate a random number:
+TF1* randn = new TF1("randn","1",0,1);
 
-   //Generate a random number:
-      TF1* rand = new TF1("rand","1",0,1);
-
-   //trackType   
-   int type = trackType[0];   
-   int doComb_ = trackType[1];
-   int doFwd_ = trackType[2];
-
-   //define cut variables
-   double pt = cuts[0];
-   double dcaPrime = cuts[1];
-   double trkTheta = cuts[2];
-   double startHitsRadius = cuts[3];
-   double endHitsRadius = cuts[4];
-   double vtxNHits = cuts[5];
-   double elecTheta = cuts[6];
-   double nuclia = cuts[7];
-   double p = cuts[8];
-   double pe = cuts[9];
-   double chi2vtx = cuts[10];
-   double chi2Link = cuts[11];
-   double zLengthHit = cuts[12];
-   double rZero = cuts[13];
-   double chi2Trk = cuts[14];
+int getPassFlag(vector<int> trackType, vector<double> cuts, int trackQuality){
 
    //define pass flag
    int pass = 1;
 
    //define track quality, trackQuality = 0 (tight), = 1 (default), = 2 (loose)
-   double ptcut[3] = {0.15,0.15,0.15};
-   double cuts_1_value[3]={0.07,2.0,5.0};
-   double cuts_2_value[3]={30.,50.,70.};
-   double cuts_3_value[3]={15.,10.,7.};
-   double cuts_4_value[3]={2.,5.,10.};
+   //pt,dcaPrime,trkTheta,startHits,endHits,vtxNhits,elecTheta,nuclia,p,pe,chi2vtx,chi2Link,zLength,rZero,chi2Trk
 
-   if( type == 1 ){
-      if( pt<ptcut[trackQuality] ) pass = 0;
-      if( fabs( dcaPrime*TMath::Sin(trkTheta) ) > cuts_1_value[trackQuality] ) pass = 0;
-      if( startHitsRadius > cuts_2_value[trackQuality] ) pass = 0;
-      if( fabs(startHitsRadius - endHitsRadius) < cuts_3_value[trackQuality] ) pass = 0;
-      if( vtxNHits < 0 ) pass = 0;
-      if( fabs(trkTheta - elecTheta) < 0.2 ) pass = 0;
-      if( rand->GetRandom() > nuclia && rand->GetRandom() < 1.0 ) pass = 0; 
+   if( trackType[0] == 1 ){
+      if( cuts[0]<ptcut[trackQuality] ) pass = 0;
+      if( fabs( cuts[1]*TMath::Sin(cuts[2]) ) > cuts_1_value[trackQuality] ) pass = 0;
+      if( cuts[3] > cuts_2_value[trackQuality] ) pass = 0;
+      if( fabs(cuts[3] - cuts[4]) < cuts_3_value[trackQuality] ) pass = 0;
+      if( cuts[5] < 0 ) pass = 0;
+      if( fabs(cuts[2] - cuts[6]) < 0.2 ) pass = 0;
+      if( randn->GetRandom() > cuts[7] && randn->GetRandom() < 1.0 ) pass = 0; 
    }      
-   else if( doComb_ && type == 2 ){
-      if( pt<ptcut[trackQuality] ) pass = 0;
-      if( p < 0.5 ) pass = 0;
-      if( TMath::RadToDeg()*trkTheta < 10. || TMath::RadToDeg()*trkTheta > 30. ) pass = 0;
-      if( fabs(dcaPrime) > cuts_4_value[trackQuality] ) pass = 0;
-      if( startHitsRadius > cuts_2_value[trackQuality] ) pass = 0;
-      if( vtxNHits < 0 ) pass = 0;
-      if( pe/p > 99999.9 ) pass = 0;
-      if( chi2vtx > 50. ) pass = 0;
-      if( chi2Link > 50. ) pass = 0;
-      if( rand->GetRandom() > nuclia && rand->GetRandom() < 1.0 ) pass = 0; 
+   else if( trackType[1] && trackType[0] == 2 ){
+      if( cuts[0]<ptcut[trackQuality] ) pass = 0;
+      if( cuts[8] < 0.5 ) pass = 0;
+      if( TMath::RadToDeg()*cuts[2] < 10. || TMath::RadToDeg()*cuts[2] > 30. ) pass = 0;
+      if( fabs(cuts[1]) > cuts_4_value[trackQuality] ) pass = 0;
+      if( cuts[3] > cuts_2_value[trackQuality] ) pass = 0;
+      if( cuts[5] < 0 ) pass = 0;
+      if( cuts[9]/cuts[8] > 99999.9 ) pass = 0;
+      if( cuts[10] > 50. ) pass = 0;
+      if( cuts[11] > 50. ) pass = 0;
+      if( randn->GetRandom() > cuts[7] && randn->GetRandom() < 1.0 ) pass = 0; 
    }  
-   else if( doFwd_ && type == 3 ){
-      if( pt<ptcut[trackQuality] ) pass = 0;
-      if( p < 0.5 ) pass = 0;
-      if( TMath::RadToDeg()*trkTheta < 6. || TMath::RadToDeg()*trkTheta > 25. ) pass = 0;
-      if( startHitsRadius > 25.0 ) pass = 0;
-      if( fabs(zLengthHit) < 10. ) pass = 0;
-      if( rZero > 20. ) pass = 0;
-      if( pe/p > 99999.9 ) pass = 0;
-      if( chi2vtx > 25. ) pass = 0;
-      if( chi2Trk > 10. ) pass = 0;
-      if( rand->GetRandom() > nuclia && rand->GetRandom() < 1.0 ) pass = 0; 
+   else if( trackType[2] && trackType[0] == 3 ){
+      if( cuts[0]<ptcut[trackQuality] ) pass = 0;
+      if( cuts[8] < 0.5 ) pass = 0;
+      if( TMath::RadToDeg()*cuts[2] < 6. || TMath::RadToDeg()*cuts[2] > 25. ) pass = 0;
+      if( cuts[3] > 25.0 ) pass = 0;
+      if( fabs(cuts[12]) < 10. ) pass = 0;
+      if( cuts[13] > 20. ) pass = 0;
+      if( cuts[9]/cuts[8] > 99999.9 ) pass = 0;
+      if( cuts[10] > 25. ) pass = 0;
+      if( cuts[14] > 10. ) pass = 0;
+      if( randn->GetRandom() > cuts[7] && randn->GetRandom() < 1.0 ) pass = 0; 
    }  
    else{
       pass = 0;
    }
 
    return pass;
-
 }
 
 struct MyEvent {
@@ -109,6 +86,8 @@ struct MyEvent {
    Float_t phiStarMC_mini[nMCtrack_MAX];
 
    Int_t imatchMC_mini[nMCtrack_MAX];
+   Float_t etaAsymMC_mini;
+   Int_t totalMultMC_mini;
 
    // reconstructed quantities
    Float_t xREC_es_mini,yREC_es_mini,Q2REC_es_mini;
@@ -118,11 +97,21 @@ struct MyEvent {
    };
  
    Int_t eventpass_mini;
+   Int_t eventpassTight_mini;
+   Int_t eventpassLoose_mini;
    Int_t nRECtrack_mini;
    Int_t typeChgREC_mini[nRECtrack_MAX];
    Float_t etaAsymREC_mini;
    Float_t EpzREC_mini;
+
+   //hfs and elec kinematics
+   Float_t hfsEREC_mini, hfsPtREC_mini, hfsPzREC_mini;
+   Float_t elecEREC_mini, elecPtREC_mini, elecPzREC_mini;
+   Int_t elecChargeREC_mini;
+
    Int_t totalMultREC_mini;
+   Float_t elecTrackMatchPhiREC_mini;
+   Float_t elecTrackMatchRREC_mini;
 
    Float_t pxREC_mini[nRECtrack_MAX];
    Float_t pyREC_mini[nRECtrack_MAX];
@@ -135,6 +124,7 @@ struct MyEvent {
    Float_t ptStarREC_mini[nRECtrack_MAX];
    Float_t etaStarREC_mini[nRECtrack_MAX];
    Float_t phiStarREC_mini[nRECtrack_MAX];
+   Int_t   bestMatchBSTrack_mini[nRECtrack_MAX]; 
 
    Float_t nucliaREC_mini[nRECtrack_MAX];
    Float_t dmatchREC_mini[nRECtrack_MAX];
@@ -145,118 +135,125 @@ struct MyEvent {
 };
 
 void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ = true, const bool doRapgap_ = true, const bool doReweight_ = false, const bool doComb_=true, const bool doFwd_= false) {
-   
+
+   //dirty hack of the problem of using TFile with TTree here. 
+   TH2D* DATA_Q2vsX = new TH2D("h_Q2vsX_1","h_Q2vsX_1",1000,0.00001,0.01,50,1,100);
+   TH1D* DATA_vtxZ = new TH1D("h_vtxZ_1","h_vtxZ_1", 100,-50,50);
+   if( doRapgap_ ){
+      for(int i = 0; i < DATA_vtxZ->GetNbinsX(); i++){
+         DATA_vtxZ->SetBinContent(i+1,vtxz_weight_rapgap[i]);
+      }
+      int count = 0;
+      for(int i = 0; i < DATA_Q2vsX->GetNbinsX(); i++){
+         for(int j = 0; j < DATA_Q2vsX->GetNbinsY(); j++){
+            DATA_Q2vsX->SetBinContent(i+1,j+1,Q2vsX_weight_rapgap[count]);
+            count++;
+         }
+      }
+   }
+   else{
+      for(int i = 0; i < DATA_vtxZ->GetNbinsX(); i++){
+         DATA_vtxZ->SetBinContent(i+1,vtxz_weight_django[i]);
+      }
+      int count = 0;
+      for(int i = 0; i < DATA_Q2vsX->GetNbinsX(); i++){
+         for(int j = 0; j < DATA_Q2vsX->GetNbinsY(); j++){
+            DATA_Q2vsX->SetBinContent(i+1,j+1,Q2vsX_weight_django[count]);
+            count++;
+         }
+      }
+   }
+
+   //starting TChain;
    TChain* tree = new TChain("properties");
    
    if( doRapgap_ && doGen_ ){
-      tree->Add("../batch/output/mc_9299/*.root");
-      tree->Add("../batch/output/mc_9300/*.root");
-      tree->Add("../batch/output/mc_9301/*.root");
-      tree->Add("../batch/output/mc_9302/*.root");
-      tree->Add("../batch/output/mc_9303/*.root");
-      tree->Add("../batch/output/mc_9304/*.root");
-      tree->Add("../batch/output/mc_9305/*.root");
-      tree->Add("../batch/output/mc_9306/*.root");
+      tree->Add("../data/mc_9299/*.root");
+      tree->Add("../data/mc_9300/*.root");
+      tree->Add("../data/mc_9301/*.root");
+      tree->Add("../data/mc_9302/*.root");
+      tree->Add("../data/mc_9303/*.root");
+      tree->Add("../data/mc_9304/*.root");
+      tree->Add("../data/mc_9305/*.root");
+      tree->Add("../data/mc_9306/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_4/*.root");
-      tree->Add("../batch/output/mc_8927_4/*.root");
+      tree->Add("../data/mc_8926_4/*.root");
+      tree->Add("../data/mc_8927_4/*.root");
    }
    else if( !doGen_ ){
-      tree->Add("../batch/output/data_highE_06_resubmit/*.root");
-      tree->Add("../batch/output/data_highE_07_resubmit/*.root");
+      tree->Add("../data/data_highE_06_scatElec/*.root");
+      tree->Add("../data/data_highE_07_scatElec/*.root");
+      // tree->Add("~/Desktop/ForwardMultAnalyzer.root");
    }
    else{ cout << "no files" << endl;}
   
-   //doReweighting on Q2,x,zvertex,pt,eta,Nch
-   TH2D* DATA_Q2vsX = 0;
-   TH2D* DATA_etaPt = 0;
-   TH1D* DATA_vtxZ = 0;
-
-   TH2D* MC_Q2vsX = 0;
-   TH2D* MC_etaPt = 0;
-   TH1D* MC_vtxZ = 0;
-
-   if( doReweight_ ){
-      TFile* file_data = new TFile("../new_output/data_highE_0607_noReweight.root");
-      DATA_Q2vsX = (TH2D*) file_data->Get("h_Q2vsX_1");
-      DATA_Q2vsX->Scale( 1.0/DATA_Q2vsX->Integral() );
-      DATA_etaPt = (TH2D*) file_data->Get("h_etaPt_1");
-      DATA_etaPt->Scale( 1.0/DATA_etaPt->Integral() );
-      DATA_vtxZ = (TH1D*) file_data->Get("h_vtxZ_1");
-      DATA_vtxZ->Scale( 1.0/DATA_vtxZ->Integral() );
-
-      TFile* file_mc = 0;
-      if( doRapgap_ ){
-         file_mc = new TFile("../new_output/mc_highE_RAPGAP_noReweight.root");
-      }
-      else{ 
-         file_mc = new TFile("../new_output/mc_highE_DJANGOH_noReweight.root");
-      }
-      MC_Q2vsX = (TH2D*) file_mc->Get("h_Q2vsX_1");
-      MC_Q2vsX->Scale( 1.0/MC_Q2vsX->Integral() );
-      MC_etaPt = (TH2D*) file_mc->Get("h_etaPt_1");
-      MC_etaPt->Scale( 1.0/MC_etaPt->Integral() );
-      MC_vtxZ = (TH1D*) file_mc->Get("h_vtxZ_1");
-      MC_vtxZ->Scale( 1.0/MC_vtxZ->Integral() );
-
-      DATA_Q2vsX->Divide( MC_Q2vsX );
-      DATA_etaPt->Divide( MC_etaPt );
-      DATA_vtxZ->Divide( MC_vtxZ );
-   }
-
    //start to define new miniTree:
    TTree *outtree =new TTree("miniTree","miniTree");
    MyEvent myEvent;
-   outtree->Branch("run_mini",&myEvent.run_mini,"run_mini/I");
-   outtree->Branch("evno_mini",&myEvent.evno_mini,"evno_mini/I");
+   // outtree->Branch("run_mini",&myEvent.run_mini,"run_mini/I");
+   // outtree->Branch("evno_mini",&myEvent.evno_mini,"evno_mini/I");
    outtree->Branch("w_mini",&myEvent.w_mini,"w_mini/F");
    outtree->Branch("vertex_mini",myEvent.vertex_mini,"vertex_mini[3]/F");
 
-   outtree->Branch("xGKI_mini",&myEvent.xGKI_mini,"xGKI_mini/F");
-   outtree->Branch("yGKI_mini",&myEvent.yGKI_mini,"yGKI_mini/F");
-   outtree->Branch("Q2GKI_mini",&myEvent.Q2GKI_mini,"Q2GKI_mini/F");
-   outtree->Branch("xMC_es_mini",&myEvent.xMC_es_mini,"xMC_es_mini/F");
+   // outtree->Branch("xGKI_mini",&myEvent.xGKI_mini,"xGKI_mini/F");
+   // outtree->Branch("yGKI_mini",&myEvent.yGKI_mini,"yGKI_mini/F");
+   // outtree->Branch("Q2GKI_mini",&myEvent.Q2GKI_mini,"Q2GKI_mini/F");
+   // outtree->Branch("xMC_es_mini",&myEvent.xMC_es_mini,"xMC_es_mini/F");
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
 
    outtree->Branch("nMCtrack_mini",&myEvent.nMCtrack_mini,"nMCtrack_mini/I");
 
-   outtree->Branch("pxMC_mini",myEvent.pxMC_mini,"pxMC_mini[nMCtrack_mini]/F");
-   outtree->Branch("pyMC_mini",myEvent.pyMC_mini,"pyMC_mini[nMCtrack_mini]/F");
-   outtree->Branch("pzMC_mini",myEvent.pzMC_mini,"pzMC_mini[nMCtrack_mini]/F");
+   // outtree->Branch("pxMC_mini",myEvent.pxMC_mini,"pxMC_mini[nMCtrack_mini]/F");
+   // outtree->Branch("pyMC_mini",myEvent.pyMC_mini,"pyMC_mini[nMCtrack_mini]/F");
+   // outtree->Branch("pzMC_mini",myEvent.pzMC_mini,"pzMC_mini[nMCtrack_mini]/F");
    outtree->Branch("etaMC_mini",myEvent.etaMC_mini,"etaMC_mini[nMCtrack_mini]/F");
-   outtree->Branch("chargeMC_mini",myEvent.chargeMC_mini,"chargeMC_mini[nMCtrack_mini]/F");
-   outtree->Branch("ptStarMC_mini",myEvent.ptStarMC_mini,"ptStarMC_mini[nMCtrack_mini]/F");
+   // outtree->Branch("chargeMC_mini",myEvent.chargeMC_mini,"chargeMC_mini[nMCtrack_mini]/F");
+   // outtree->Branch("ptStarMC_mini",myEvent.ptStarMC_mini,"ptStarMC_mini[nMCtrack_mini]/F");
    outtree->Branch("etaStarMC_mini",myEvent.etaStarMC_mini,"etaStarMC_mini[nMCtrack_mini]/F");
-   outtree->Branch("phiStarMC_mini",myEvent.phiStarMC_mini,"phiStarMC_mini[nMCtrack_mini]/F");
-   outtree->Branch("imatchMC_mini",myEvent.imatchMC_mini,"imatchMC_mini[nMCtrack_mini]/I");
+   // outtree->Branch("phiStarMC_mini",myEvent.phiStarMC_mini,"phiStarMC_mini[nMCtrack_mini]/F");
+   // outtree->Branch("imatchMC_mini",myEvent.imatchMC_mini,"imatchMC_mini[nMCtrack_mini]/I");
+   // outtree->Branch("etaAsymMC_mini",&myEvent.etaAsymMC_mini,"etaAsymMC_mini/F");
+   outtree->Branch("totalMultMC_mini",&myEvent.totalMultMC_mini,"totalMultMC_mini/I");
+
+   outtree->Branch("hfsEREC_mini",&myEvent.hfsEREC_mini,"hfsEREC_mini/F");
+   outtree->Branch("hfsPtREC_mini",&myEvent.hfsPtREC_mini,"hfsPtREC_mini/F");
+   outtree->Branch("hfsPzREC_mini",&myEvent.hfsPzREC_mini,"hfsPzREC_mini/F");
+   outtree->Branch("elecEREC_mini",&myEvent.elecEREC_mini,"elecEREC_mini/F");
+   outtree->Branch("elecPtREC_mini",&myEvent.elecPtREC_mini,"elecPtREC_mini/F");
+   outtree->Branch("elecPzREC_mini",&myEvent.elecPzREC_mini,"elecPzREC_mini/F");
+   outtree->Branch("elecChargeREC_mini",&myEvent.elecChargeREC_mini,"elecChargeREC_mini/I");
 
    outtree->Branch("xREC_es_mini",&myEvent.xREC_es_mini,"xREC_es_mini/F");
    outtree->Branch("yREC_es_mini",&myEvent.yREC_es_mini,"yREC_es_mini/F");
    outtree->Branch("Q2REC_es_mini",&myEvent.Q2REC_es_mini,"Q2REC_es_mini/F");
 
    outtree->Branch("eventpass_mini",&myEvent.eventpass_mini,"eventpass_mini/I");
+   outtree->Branch("eventpassTight_mini",&myEvent.eventpassTight_mini,"eventpassTight_mini/I");
+   outtree->Branch("eventpassLoose_mini",&myEvent.eventpassLoose_mini,"eventpassLoose_mini/I");
    outtree->Branch("nRECtrack_mini",&myEvent.nRECtrack_mini,"nRECtrack_mini/I");
-   outtree->Branch("typeChgREC_mini",myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
-   outtree->Branch("etaAsymREC_mini",&myEvent.etaAsymREC_mini,"etaAsymREC_mini/F");
+   // outtree->Branch("typeChgREC_mini",myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
+   // outtree->Branch("etaAsymREC_mini",&myEvent.etaAsymREC_mini,"etaAsymREC_mini/F");
    outtree->Branch("EpzREC_mini",&myEvent.EpzREC_mini,"EpzREC_mini/F");
    outtree->Branch("totalMultREC_mini",&myEvent.totalMultREC_mini,"totalMultREC_mini/I");
+   // outtree->Branch("elecTrackMatchRREC_mini",&myEvent.elecTrackMatchRREC_mini,"elecTrackMatchRREC_mini/F");
 
-   outtree->Branch("pxREC_mini",myEvent.pxREC_mini,"pxREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("pyREC_mini",myEvent.pyREC_mini,"pyREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("pzREC_mini",myEvent.pzREC_mini,"pzREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("pREC_mini",myEvent.pREC_mini,"pREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("peREC_mini",myEvent.peREC_mini,"peREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("pxREC_mini",myEvent.pxREC_mini,"pxREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("pyREC_mini",myEvent.pyREC_mini,"pyREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("pzREC_mini",myEvent.pzREC_mini,"pzREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("pREC_mini",myEvent.pREC_mini,"pREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("peREC_mini",myEvent.peREC_mini,"peREC_mini[nRECtrack_mini]/F");
    outtree->Branch("etaREC_mini",myEvent.etaREC_mini,"etaREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("phiREC_mini",myEvent.phiREC_mini,"phiREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("phiREC_mini",myEvent.phiREC_mini,"phiREC_mini[nRECtrack_mini]/F");
    outtree->Branch("ptStarREC_mini",myEvent.ptStarREC_mini,"ptStarREC_mini[nRECtrack_mini]/F");
    outtree->Branch("etaStarREC_mini",myEvent.etaStarREC_mini,"etaStarREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("bestMatchBSTrack_mini",myEvent.bestMatchBSTrack_mini,"bestMatchBSTrack_mini[nRECtrack_mini]/I");
 
    outtree->Branch("nucliaREC_mini",myEvent.nucliaREC_mini,"nucliaREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("dmatchREC_mini",myEvent.dmatchREC_mini,"dmatchREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("imatchREC_mini",myEvent.imatchREC_mini,"imatchREC_mini[nRECtrack_mini]/I");
+   // outtree->Branch("dmatchREC_mini",myEvent.dmatchREC_mini,"dmatchREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("imatchREC_mini",myEvent.imatchREC_mini,"imatchREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passREC_mini",myEvent.passREC_mini,"passREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passTightREC_mini",myEvent.passTightREC_mini,"passTightREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passLooseREC_mini",myEvent.passLooseREC_mini,"passLooseREC_mini[nRECtrack_mini]/I");
@@ -274,11 +271,12 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t w;
       Float_t trigWeightAC;
       Float_t trigWeightRW;
-      Float_t elecPxREC,elecPyREC;
-      Float_t hfsEREC,hfsPzREC;
-      Float_t elecEREC,elecPzREC;
+      Float_t elecPxREC,elecPyREC,elecEREC,elecPzREC;
+      Float_t hfsEREC,hfsPxREC, hfsPyREC, hfsPzREC;
       Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
       Float_t elecEradREC,elecEcraREC;
+      Float_t elecTrackMatchRREC;
+      Int_t elecChargeREC;
      
       Int_t ibgREC;
 
@@ -323,6 +321,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t dcaPrimeREC[400];
       Float_t dz0PrimeREC[400];
       Float_t nucliaREC[400];
+      Int_t bestMatchBSTrack[400];
 
       Int_t imatchREC[400];
       Int_t dmatchREC[400];
@@ -373,6 +372,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("elecEnergyREC",&elecEnergyREC);
       tree->SetBranchAddress("elecEfracREC",&elecEfracREC);
       tree->SetBranchAddress("elecHfracREC",&elecHfracREC);
+      tree->SetBranchAddress("elecChargeREC",&elecChargeREC);
+      // tree->SetBranchAddress("elecTrackMatchRREC",&elecTrackMatchRREC);
       
       tree->SetBranchAddress("w",&w);
       tree->SetBranchAddress("vertexType",&vertexType);
@@ -392,6 +393,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("elecEradREC",&elecEradREC);
       tree->SetBranchAddress("elecEcraREC",&elecEcraREC);
 
+      tree->SetBranchAddress("hfsPxREC",&hfsPxREC);
+      tree->SetBranchAddress("hfsPyREC",&hfsPyREC);
       tree->SetBranchAddress("hfsPzREC",&hfsPzREC);
       tree->SetBranchAddress("hfsEREC",&hfsEREC);
       
@@ -417,6 +420,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("dcaPrimeREC",dcaPrimeREC);
       tree->SetBranchAddress("dz0PrimeREC",dz0PrimeREC);
       tree->SetBranchAddress("nucliaREC",nucliaREC);
+      // tree->SetBranchAddress("bestMatchBSTrack",bestMatchBSTrack);
       
       tree->SetBranchAddress("imatchREC",imatchREC);
       tree->SetBranchAddress("dmatchREC",dmatchREC);
@@ -478,6 +482,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.Q2MC_es_mini = -999.;
 
          myEvent.nMCtrack_mini = -999;
+         myEvent.etaAsymMC_mini = -999.;
 
          for(int j=0;j<400;j++) {
                myEvent.pxMC_mini[j] = -999.;
@@ -503,6 +508,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
             myEvent.nMCtrack_mini = nMCtrack;
 
+            double Ntracks_eta_p_MC=0.;
+            double Ntracks_eta_m_MC=0.;
+            double etaAsymMC=0.;
             for(int j=0;j<nMCtrack;j++) {
                myEvent.pxMC_mini[j] = pxMC[j];
                myEvent.pyMC_mini[j] = pyMC[j];
@@ -513,10 +521,20 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                myEvent.etaStarMC_mini[j] = etaStarMC[j];
                myEvent.phiStarMC_mini[j] = phiStarMC[j];
                myEvent.imatchMC_mini[j] = imatchMC[j];
-            }
+
+               if( TMath::Hypot(pxMC[j],pyMC[j]) < 0.15 ) continue;
+               if(etaMC[j] > 0.2 && etaMC[j] < 1.6 ) Ntracks_eta_p_MC++;
+               if(etaMC[j] < 0.2 && etaMC[j] > -1.2) Ntracks_eta_m_MC++;
+            } 
+            etaAsymMC = (Ntracks_eta_p_MC - Ntracks_eta_m_MC)/(Ntracks_eta_p_MC + Ntracks_eta_m_MC);
+            if( (Ntracks_eta_p_MC + Ntracks_eta_m_MC) == 0. ) etaAsymMC = -999.;
+            myEvent.etaAsymMC_mini = etaAsymMC;
+            myEvent.totalMultMC_mini = (int) (Ntracks_eta_p_MC+Ntracks_eta_m_MC);
           }//end doGen_
 
          int event_pass = 1;
+         int event_pass_tight = 1;
+         int event_pass_loose = 1;
 
          /**RECO level starts here both MC and DATA**/
          if( (doGen_ && trigWeightRW <= 0) || (!doGen_ && trigWeightAC <= 0) ) event_pass = 0; //require trigger fired
@@ -524,7 +542,15 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
          double Epz = hfsEREC+elecEREC - (hfsPzREC+elecPzREC);
          myEvent.EpzREC_mini = Epz;
-
+         double elecPt = TMath::Hypot(elecPxREC,elecPyREC);
+         double hfsPt = TMath::Hypot(hfsPxREC,hfsPyREC);
+         myEvent.elecPtREC_mini = elecPt;
+         myEvent.elecPzREC_mini = elecPzREC;
+         myEvent.elecEREC_mini = elecEREC;
+         myEvent.elecChargeREC_mini = elecChargeREC;
+         myEvent.hfsPtREC_mini = hfsPt;
+         myEvent.hfsPzREC_mini = hfsPzREC;
+         myEvent.hfsEREC_mini = hfsEREC;
          //bkg finder bit cuts:
          if( (ibgREC & 1) != 0 ) event_pass = 0;
          if( (ibgREC & 2) != 0 ) event_pass = 0;
@@ -532,30 +558,43 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          if( (ibgREC & 8) != 0 ) event_pass = 0;
          if( (ibgREC & 16) != 0 ) event_pass = 0;
          if( (ibgREC & 32) != 0 ) event_pass = 0;
-         if( (ibgREC & 64) != 0 ) event_pass = 0;   
-         //E-pz cuts
-         if( Epz > 70 || Epz < 35 ) event_pass = 0;
-         //vertex cuts
-         if(TMath::Abs(vertex[2]+zvtxOffset)>35.) event_pass = 0;
+         if( (ibgREC & 64) != 0 ) event_pass = 0;  
          //kinematic cuts are not included   
          //Cut electron spatial 
          if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) event_pass = 0;
          if( elecEREC < 12. ) event_pass = 0;
-   
+         //same cuts for all eventpass
+         event_pass_tight = event_pass;
+         event_pass_loose = event_pass; 
+         //E-pz cuts
+         if( Epz > 70 || Epz < 35 ) event_pass = 0;
+         if( Epz > 80 || Epz < 25 ) event_pass_loose = 0;
+         if( Epz > 60 || Epz < 45 ) event_pass_tight = 0;
+         //vertex cuts
+         if(TMath::Abs(vertex[2]+zvtxOffset)>35.) event_pass = 0;
+         if(TMath::Abs(vertex[2]+zvtxOffset)>20.) event_pass_tight = 0;
+         if(TMath::Abs(vertex[2]+zvtxOffset)>50.) event_pass_loose = 0;
+
          //after all event selection cuts:
          myEvent.xREC_es_mini = xREC_es;
          myEvent.yREC_es_mini = yREC_es;
          myEvent.Q2REC_es_mini = Q2REC_es;
+
+         // myEvent.elecTrackMatchRREC_mini = elecTrackMatchRREC;
 
          myEvent.vertex_mini[0] = vertex[0];
          myEvent.vertex_mini[1] = vertex[1];
          myEvent.vertex_mini[2] = vertex[2];
 
          myEvent.eventpass_mini = event_pass;
+         myEvent.eventpassTight_mini = event_pass_tight;
+         myEvent.eventpassLoose_mini = event_pass_loose;
          myEvent.nRECtrack_mini = nRECtrack;
 
          double Ntracks_eta_m = 0;
          double Ntracks_eta_p = 0;
+         vector<double> cutVar;
+         vector<int> trackType;
          //loop over reconstructed tracks:
          for(int j = 0; j<nRECtrack; j++){
             int type=typeChgREC[j];            
@@ -572,15 +611,22 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             track quality variables are stored using arrays below
             */
             double ptREC = TMath::Hypot(pxREC[j],pyREC[j]);
-            double cutVar[15]={ptREC,dcaPrimeREC[j],trkThetaREC[j],startHitsRadiusREC[j],endHitsRadiusREC[j],
-               (double)vtxNHitsREC[j],elecThetaREC,nucliaREC[j],pREC[j],peREC[j],chi2vtxREC[j],chi2LinkREC[j],zLengthHitREC[j],
-               rZeroREC[j],chi2TrkREC[j]}; 
-            
-            int trackType[3] = {type, (int)doComb_, (int)doFwd_ };
+
+            cutVar.push_back(ptREC); cutVar.push_back(dcaPrimeREC[j]); cutVar.push_back(trkThetaREC[j]);
+            cutVar.push_back(startHitsRadiusREC[j]); cutVar.push_back(endHitsRadiusREC[j]); cutVar.push_back((double)vtxNHitsREC[j]);
+            cutVar.push_back(elecThetaREC); cutVar.push_back(nucliaREC[j]); cutVar.push_back(pREC[j]);
+            cutVar.push_back(peREC[j]); cutVar.push_back(chi2vtxREC[j]); cutVar.push_back(chi2LinkREC[j]);
+            cutVar.push_back(zLengthHitREC[j]); cutVar.push_back(rZeroREC[j]); cutVar.push_back(chi2TrkREC[j]);
+
+            trackType.push_back(type); trackType.push_back((int)doComb_);
+            trackType.push_back( (int)doFwd_ );
 
             pass_tight = getPassFlag(trackType, cutVar, 0);
             pass_default = getPassFlag(trackType, cutVar, 1);
             pass_loose = getPassFlag(trackType, cutVar, 2);
+
+            trackType.clear();
+            cutVar.clear();
 
             if( pass_default ){
                if(etaREC[j] > 0.2 && etaREC[j] < 1.6 ) Ntracks_eta_p++;
@@ -593,6 +639,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.pxREC_mini[j] = pxREC[j];
             myEvent.pyREC_mini[j] = pyREC[j];
             myEvent.pzREC_mini[j] = pzREC[j];
+            // myEvent.bestMatchBSTrack_mini[j] = bestMatchBSTrack[j];
 
             myEvent.pREC_mini[j] = pREC[j];
             myEvent.peREC_mini[j] = peREC[j];
@@ -616,6 +663,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
          outtree->Fill();
          totalEvents++;
+         if( totalEvents%100000 == 0 )cout << "Events ~ " << totalEvents << endl;
 
       }
       cout << "Number of events processed ~ " << totalEvents << endl;  
