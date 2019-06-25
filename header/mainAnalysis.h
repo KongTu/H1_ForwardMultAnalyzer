@@ -76,7 +76,6 @@ TH1D *h_Pn_gen[4][5];
 TH2D *h_response_Pn[4][5];
 TH1D *h_Pn_all = new TH1D("h_Pn_all",";N",50,0,50);
 
-
 // for(int jbin=0;jbin<4;jbin++){
 //   for(int ibin=0;ibin<4;ibin++){
 //      response[jbin][ibin].Setup(50,0,50);
