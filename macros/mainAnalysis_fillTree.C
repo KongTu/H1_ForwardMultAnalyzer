@@ -170,22 +170,22 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    TChain* tree = new TChain("properties");
    
    if( doRapgap_ && doGen_ ){
-      tree->Add("../data/mc_9299_scatElec/*.root");
-      tree->Add("../data/mc_9300_scatElec/*.root");
-      tree->Add("../data/mc_9301_scatElec/*.root");
-      tree->Add("../data/mc_9302_scatElec/*.root");
-      tree->Add("../data/mc_9303_scatElec/*.root");
-      tree->Add("../data/mc_9304_scatElec/*.root");
-      tree->Add("../data/mc_9305_scatElec/*.root");
-      tree->Add("../data/mc_9306_scatElec/*.root");
+      tree->Add("../batch/mc_9299_scatElec/*.root");
+      tree->Add("../batch/mc_9300_scatElec/*.root");
+      tree->Add("../batch/mc_9301_scatElec/*.root");
+      tree->Add("../batch/mc_9302_scatElec/*.root");
+      tree->Add("../batch/mc_9303_scatElec/*.root");
+      tree->Add("../batch/mc_9304_scatElec/*.root");
+      tree->Add("../batch/mc_9305_scatElec/*.root");
+      tree->Add("../batch/mc_9306_scatElec/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../data/mc_8926_4_scatElec/*.root");
-      tree->Add("../data/mc_8927_4_scatElec/*.root");
+      tree->Add("../batch/mc_8926_4_scatElec/*.root");
+      tree->Add("../batch/mc_8927_4_scatElec/*.root");
    }
    else if( !doGen_ ){
-      tree->Add("../data/data_highE_06_scatElec/*.root");
-      tree->Add("../data/data_highE_07_scatElec/*.root");
+      tree->Add("../batch/data_highE_06_scatElec/*.root");
+      tree->Add("../batch/data_highE_07_scatElec/*.root");
       // tree->Add("~/Desktop/ForwardMultAnalyzer.root");
    }
    else{ cout << "no files" << endl;}
