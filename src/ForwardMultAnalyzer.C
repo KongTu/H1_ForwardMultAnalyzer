@@ -1050,7 +1050,7 @@ int main(int argc, char* argv[]) {
       // add EM particles and neutrals in a cone around the electron
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
       set<int> isElectron;
-      if(scatteredElectron>=0) {
+      if(scatteredElectron>=0 && scatteredElectronCharge < 9) {
          isElectron.insert(scatteredElectron);
          for(int i=0;i<partCandArray.GetEntries();i++) {
             if(i==scatteredElectron) continue;
