@@ -1047,7 +1047,7 @@ int main(int argc, char* argv[]) {
       myEvent.neutPzREC=escatNeut_REC_lab.Z();
       myEvent.neutEREC=escatNeut_REC_lab.E();
       
-      // add EM particles and neutrals in a cone around the electron
+      // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
       set<int> isElectron;
       if(scatteredElectron>=0 && scatteredElectronCharge < 9) {
