@@ -1011,46 +1011,24 @@ int main(int argc, char* argv[]) {
         H1PartEm const *elec=cand->GetIDElec();
         if(elec && cand->IsScatElec()) {
          if (myElecCut.goodElec(elec,*run)!=1) continue;
-         //must match to a charged track
-            H1Track const *scatElecTrk=cand->GetTrack();
-            if(scatElecTrk){
-               TLorentzVector p= elec->GetFourVector();
-               if(p.Pt()>ptMax) {
-                  escat0_REC_lab = p;
-                  scatteredElectron=i;
-                  haveScatteredElectron=true;
-                  scatteredElectronCharge=scatElecTrk->GetCharge();
-                  ptMax=p.Pt();
-               }
-            }
-            else{
-               TLorentzVector p= elec->GetFourVector();
-               if(p.Pt()>ptNeutMax) {
-                  escatNeut_REC_lab = p;
-                  scatteredElectron=i;
-                  haveScatteredElectron=true;
-                  ptNeutMax=p.Pt();
-               }
-
-            }
+            H1Track const *scatElecTrk=cand->GetTrack();//to match a track
+            TLorentzVector p= elec->GetFourVector();
+            if(p.Pt()>ptMax) {
+               escat0_REC_lab = p;
+               scatteredElectron=i;
+               haveScatteredElectron=true;
+               if(scatElecTrk) scatteredElectronCharge=scatElecTrk->GetCharge();
+               ptMax=p.Pt();
+            }   
          }
       }
-
-      myEvent.elec0PxREC=escat0_REC_lab.X();
-      myEvent.elec0PyREC=escat0_REC_lab.Y();
-      myEvent.elec0PzREC=escat0_REC_lab.Z();
-      myEvent.elec0EREC=escat0_REC_lab.E();
+      //adding a charge variable to later decide if it matched to a track with its charge
       myEvent.elecChargeREC=scatteredElectronCharge;
-
-      myEvent.neutPxREC=escatNeut_REC_lab.X();
-      myEvent.neutPyREC=escatNeut_REC_lab.Y();
-      myEvent.neutPzREC=escatNeut_REC_lab.Z();
-      myEvent.neutEREC=escatNeut_REC_lab.E();
       
       // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
       set<int> isElectron;
-      if(scatteredElectron>=0 && scatteredElectronCharge < 9) {
+      if(scatteredElectron>=0) {
          isElectron.insert(scatteredElectron);
          for(int i=0;i<partCandArray.GetEntries();i++) {
             if(i==scatteredElectron) continue;
