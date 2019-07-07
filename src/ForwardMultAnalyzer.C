@@ -1113,10 +1113,6 @@ int main(int argc, char* argv[]) {
       //New boost using the e-Sigma method
       TLorentzRotation boost_MC_HCM_esREC = BoostToHCM_es(ebeam_REC_lab,pbeam_REC_lab,escat0_REC_lab,Q2_esigma_REC,y_esigma_REC);
       //end new boost
-      
-      //matching electron to tracks;
-      double dR_min = 999.;
-      int index_min = -1;
 
       for(int i=0;i<nPart;i++) {
          H1PartCand *cand=0;
@@ -1177,7 +1173,6 @@ int main(int argc, char* argv[]) {
                double dz0Prime=-1.;
                float track_p = -1.; 
                float track_err_p = -1.;
-               int matchBSTrackTemp = -999;
                
                float startHitsRadius = -1;
                float endHitsRadius = -1;
