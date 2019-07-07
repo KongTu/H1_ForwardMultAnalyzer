@@ -1004,7 +1004,6 @@ int main(int argc, char* argv[]) {
       TLorentzVector escatNeut_REC_lab;
       int scatteredElectron=-1;
       int scatteredElectronCharge=9;// 9 is default to not be confused with 0
-      int scatteredNeut=-1;
       double ptMax=0;
       double ptNeutMax=0;
       for(int i=0;i<partCandArray.GetEntries();i++) {
@@ -1028,7 +1027,8 @@ int main(int argc, char* argv[]) {
                TLorentzVector p= elec->GetFourVector();
                if(p.Pt()>ptNeutMax) {
                   escatNeut_REC_lab = p;
-                  scatteredNeut=i;
+                  scatteredElectron=i;
+                  haveScatteredElectron=true;
                   ptNeutMax=p.Pt();
                }
 
