@@ -228,11 +228,9 @@ struct MyEvent {
    Int_t imatchMC[nMCtrack_MAX];
 
    // reconstructed quantities
-   Float_t elec0PxREC,elec0PyREC,elec0PzREC,elec0EREC; Int_t elecChargeREC; //scattered electron alone
-   Float_t neutPxREC,neutPyREC,neutPzREC,neutEREC; //neutrals as bkg
+   Int_t elecChargeREC; //scattered electron alone
    Float_t elecPxREC,elecPyREC,elecPzREC,elecEREC,elecEradREC; // scattered electron + neutrals
    Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
-   Float_t elecTrackMatchRREC;
    Int_t elecTypeREC;
 
    Float_t xREC,yREC,Q2REC;
@@ -252,7 +250,6 @@ struct MyEvent {
    Float_t pzREC[nRECtrack_MAX];
    Float_t pREC[nRECtrack_MAX];
    Float_t peREC[nRECtrack_MAX];
-   Int_t bestMatchBSTrack[nRECtrack_MAX];
    Float_t etaREC[nRECtrack_MAX];
 
    Float_t ptStarREC[nRECtrack_MAX];
@@ -420,16 +417,7 @@ int main(int argc, char* argv[]) {
    output->Branch("log10zMC",myEvent.log10zMC,"log10zMC[nMCtrack]/F");
    output->Branch("imatchMC",myEvent.imatchMC,"imatchMC[nMCtrack]/I");
 
-   output->Branch("elec0PxREC",&myEvent.elec0PxREC,"elec0PxREC/F");
-   output->Branch("elec0PyREC",&myEvent.elec0PyREC,"elec0PyREC/F");
-   output->Branch("elec0PzREC",&myEvent.elec0PzREC,"elec0PzREC/F");
-   output->Branch("elec0EREC",&myEvent.elec0EREC,"elec0EREC/F");
    output->Branch("elecChargeREC",&myEvent.elecChargeREC,"elecChargeREC/I");
-   output->Branch("neutPxREC",&myEvent.neutPxREC,"neutPxREC/F");
-   output->Branch("neutPyREC",&myEvent.neutPyREC,"neutPyREC/F");
-   output->Branch("neutPzREC",&myEvent.neutPzREC,"neutPzREC/F");
-   output->Branch("neutEREC",&myEvent.neutEREC,"neutEREC/F");
-
    output->Branch("elecEradREC",&myEvent.elecEradREC,"elecEradREC/F");
    output->Branch("elecPxREC",&myEvent.elecPxREC,"elecPxREC/F");
    output->Branch("elecPyREC",&myEvent.elecPyREC,"elecPyREC/F");
@@ -443,7 +431,6 @@ int main(int argc, char* argv[]) {
    output->Branch("elecEnergyREC",&myEvent.elecEnergyREC,"elecEnergyREC/F");
    output->Branch("elecEfracREC",&myEvent.elecEfracREC,"elecEfracREC/F");
    output->Branch("elecHfracREC",&myEvent.elecHfracREC,"elecHfracREC/F");
-   output->Branch("elecTrackMatchRREC",&myEvent.elecTrackMatchRREC,"elecTrackMatchRREC/F");
 
    output->Branch("xREC",&myEvent.xREC,"xREC/F");
    output->Branch("yREC",&myEvent.yREC,"yREC/F");
@@ -465,7 +452,6 @@ int main(int argc, char* argv[]) {
    output->Branch("pzREC",myEvent.pzREC,"pzREC[nRECtrack]/F");
    output->Branch("pREC",myEvent.pREC,"pREC[nRECtrack]/F");
    output->Branch("peREC",myEvent.peREC,"peREC[nRECtrack]/F");
-   output->Branch("bestMatchBSTrack",myEvent.bestMatchBSTrack,"bestMatchBSTrack[nRECtrack]/I");
    output->Branch("etaREC",myEvent.etaREC,"etaREC[nRECtrack]/F");
 
    output->Branch("ptStarREC",myEvent.ptStarREC,"ptStarREC[nRECtrack]/F");
@@ -1001,11 +987,9 @@ int main(int argc, char* argv[]) {
       // find scattered electron as identified EM particle with highest PT in SpaCal
       bool haveScatteredElectron=false;
       TLorentzVector escat0_REC_lab;
-      TLorentzVector escatNeut_REC_lab;
       int scatteredElectron=-1;
       int scatteredElectronCharge=9;// 9 is default to not be confused with 0
       double ptMax=0;
-      double ptNeutMax=0;
       for(int i=0;i<partCandArray.GetEntries();i++) {
         H1PartCand *cand=partCandArray[i];
         H1PartEm const *elec=cand->GetIDElec();
@@ -1056,10 +1040,6 @@ int main(int argc, char* argv[]) {
       myEvent.elecPzREC=escatPhot_REC_lab.Z();
       myEvent.elecEREC=escatPhot_REC_lab.E();
 
-      Float_t fKappa=-999.;Float_t fPhi=-999.; Float_t fTheta=-999.;
-      Float_t fDca=-999.; Float_t fZ0=-999.;
-      Int_t nLinkedBst=-999; Int_t nLinkedCjc=-999;
-      Bool_t elecTrackMatchREC = false;
       // auxillary variables: cluster radius etc
       if(scatteredElectron>=0) {
          H1PartEm const *partEM=partCandArray[scatteredElectron]->GetIDElec();
@@ -1071,7 +1051,6 @@ int main(int argc, char* argv[]) {
          myEvent.elecEnergyREC=partEM->GetE();
          myEvent.elecEfracREC=partEM->GetEaem();
          myEvent.elecHfracREC=partEM->GetEnHadSpac();
-         elecTrackMatchREC = (bool) partEM->GetBCTrack(fKappa,fPhi,fTheta,fDca,fZ0,nLinkedBst,nLinkedCjc);
       } else {
          myEvent.elecEcraREC=-1;
       }
@@ -1222,16 +1201,7 @@ int main(int argc, char* argv[]) {
                   track_err_p = track->GetDp();
                   trkTheta = track->GetTheta();
                   charge=track->GetCharge();
-                  //matching GetBCTrack()
-                  double dPhi = deltaPhi(fPhi,track->GetPhi());
-                  double bEta = -TMath::Log(TMath::Tan(fTheta/2.));
-                  double dEta = bEta - h.Eta();
-                  double dR = sqrt( dPhi*dPhi + dEta*dEta );
-                   
-                  if( elecTrackMatchREC && dR < dR_min ){
-                     dR_min = dR;
-                     index_min = myEvent.nRECtrack;
-                  }
+                 
                   H1VertexFittedTrack const *h1track=
                      dynamic_cast<H1VertexFittedTrack const *>
                      (cand->GetTrack());
@@ -1370,7 +1340,6 @@ int main(int argc, char* argv[]) {
                   myEvent.pzREC[k]=h.Z();
                   myEvent.pREC[k]=track_p;
                   myEvent.peREC[k]=track_err_p;
-                  myEvent.bestMatchBSTrack[k]=matchBSTrackTemp;
                   myEvent.etaREC[k]=h.Eta();
       
                   myEvent.ptStarREC[k]=hStar.Pt();
@@ -1424,9 +1393,6 @@ int main(int argc, char* argv[]) {
             }
          }
       }
-
-      myEvent.elecTrackMatchRREC = dR_min;
-      if( index_min >= 0 ) {myEvent.bestMatchBSTrack[index_min] = 2;}
 
       // match MC particles and REC particles
       // (1) for each REC particle, find the best MC particle
