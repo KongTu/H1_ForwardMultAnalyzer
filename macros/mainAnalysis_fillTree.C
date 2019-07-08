@@ -143,24 +143,24 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    TH1D* DATA_vtxZ = new TH1D("h_vtxZ_1","h_vtxZ_1", 100,-50,50);
    if( doRapgap_ ){
       for(int i = 0; i < DATA_vtxZ->GetNbinsX(); i++){
-         DATA_vtxZ->SetBinContent(i+1,vtxz_weight_scatElec_rapgap[i]);
+         DATA_vtxZ->SetBinContent(i+1,vtxz_weight_rapgap[i]);
       }
       int count = 0;
       for(int i = 0; i < DATA_Q2vsX->GetNbinsX(); i++){
          for(int j = 0; j < DATA_Q2vsX->GetNbinsY(); j++){
-            DATA_Q2vsX->SetBinContent(i+1,j+1,Q2vsX_weight_scatElec_rapgap[count]);
+            DATA_Q2vsX->SetBinContent(i+1,j+1,Q2vsX_weight_rapgap[count]);
             count++;
          }
       }
    }
    else{
       for(int i = 0; i < DATA_vtxZ->GetNbinsX(); i++){
-         DATA_vtxZ->SetBinContent(i+1,vtxz_weight_scatElec_django[i]);
+         DATA_vtxZ->SetBinContent(i+1,vtxz_weight_django[i]);
       }
       int count = 0;
       for(int i = 0; i < DATA_Q2vsX->GetNbinsX(); i++){
          for(int j = 0; j < DATA_Q2vsX->GetNbinsY(); j++){
-            DATA_Q2vsX->SetBinContent(i+1,j+1,Q2vsX_weight_scatElec_django[count]);
+            DATA_Q2vsX->SetBinContent(i+1,j+1,Q2vsX_weight_django[count]);
             count++;
          }
       }
@@ -227,14 +227,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("elecPzREC_mini",&myEvent.elecPzREC_mini,"elecPzREC_mini/F");
    outtree->Branch("elecChargeREC_mini",&myEvent.elecChargeREC_mini,"elecChargeREC_mini/I");
 
-   outtree->Branch("elec0EREC_mini",&myEvent.elec0EREC_mini,"elec0EREC_mini/F");
-   outtree->Branch("elec0PtREC_mini",&myEvent.elec0PtREC_mini,"elec0PtREC_mini/F");
-   outtree->Branch("elec0PzREC_mini",&myEvent.elec0PzREC_mini,"elec0PzREC_mini/F");
-
-   outtree->Branch("neutEREC_mini",&myEvent.neutEREC_mini,"neutEREC_mini/F");
-   outtree->Branch("neutPtREC_mini",&myEvent.neutPtREC_mini,"neutPtREC_mini/F");
-   outtree->Branch("neutPzREC_mini",&myEvent.neutPzREC_mini,"neutPzREC_mini/F");
-
    outtree->Branch("xREC_es_mini",&myEvent.xREC_es_mini,"xREC_es_mini/F");
    outtree->Branch("yREC_es_mini",&myEvent.yREC_es_mini,"yREC_es_mini/F");
    outtree->Branch("Q2REC_es_mini",&myEvent.Q2REC_es_mini,"Q2REC_es_mini/F");
@@ -247,7 +239,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    // outtree->Branch("etaAsymREC_mini",&myEvent.etaAsymREC_mini,"etaAsymREC_mini/F");
    outtree->Branch("EpzREC_mini",&myEvent.EpzREC_mini,"EpzREC_mini/F");
    outtree->Branch("totalMultREC_mini",&myEvent.totalMultREC_mini,"totalMultREC_mini/I");
-   // outtree->Branch("elecTrackMatchRREC_mini",&myEvent.elecTrackMatchRREC_mini,"elecTrackMatchRREC_mini/F");
 
    outtree->Branch("pxREC_mini",myEvent.pxREC_mini,"pxREC_mini[nRECtrack_mini]/F");
    outtree->Branch("pyREC_mini",myEvent.pyREC_mini,"pyREC_mini[nRECtrack_mini]/F");
@@ -259,7 +250,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("ptStarREC_mini",myEvent.ptStarREC_mini,"ptStarREC_mini[nRECtrack_mini]/F");
    outtree->Branch("etaStarREC_mini",myEvent.etaStarREC_mini,"etaStarREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
-   // outtree->Branch("bestMatchBSTrack_mini",myEvent.bestMatchBSTrack_mini,"bestMatchBSTrack_mini[nRECtrack_mini]/I");
 
    outtree->Branch("nucliaREC_mini",myEvent.nucliaREC_mini,"nucliaREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("dmatchREC_mini",myEvent.dmatchREC_mini,"dmatchREC_mini[nRECtrack_mini]/F");
@@ -267,11 +257,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("passREC_mini",myEvent.passREC_mini,"passREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passTightREC_mini",myEvent.passTightREC_mini,"passTightREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passLooseREC_mini",myEvent.passLooseREC_mini,"passLooseREC_mini[nRECtrack_mini]/I");
-
-   // float Q2min=5.;
-   // float Q2max=100.;
-   // float ymin=0.05;
-   // float ymax=0.6;
 
    double zvtxOffset=0.;
 
@@ -282,12 +267,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t trigWeightAC;
       Float_t trigWeightRW;
       Float_t elecPxREC,elecPyREC,elecEREC,elecPzREC;
-      Float_t elec0PxREC,elec0PyREC,elec0PzREC,elec0EREC; //scattered electron alone
-      Float_t neutPxREC,neutPyREC,neutPzREC,neutEREC; //neutrals as bkg
       Float_t hfsEREC,hfsPxREC, hfsPyREC, hfsPzREC;
       Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
       Float_t elecEradREC,elecEcraREC;
-      // Float_t elecTrackMatchRREC;
       Int_t elecChargeREC;
      
       Int_t ibgREC;
@@ -333,7 +315,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t dcaPrimeREC[400];
       Float_t dz0PrimeREC[400];
       Float_t nucliaREC[400];
-      // Int_t bestMatchBSTrack[400];
 
       Int_t imatchREC[400];
       Int_t dmatchREC[400];
@@ -385,7 +366,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("elecEfracREC",&elecEfracREC);
       tree->SetBranchAddress("elecHfracREC",&elecHfracREC);
       tree->SetBranchAddress("elecChargeREC",&elecChargeREC);
-      // tree->SetBranchAddress("elecTrackMatchRREC",&elecTrackMatchRREC);
       
       tree->SetBranchAddress("w",&w);
       tree->SetBranchAddress("vertexType",&vertexType);
@@ -402,14 +382,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("elecPyREC",&elecPyREC);
       tree->SetBranchAddress("elecPzREC",&elecPzREC);
       tree->SetBranchAddress("elecEREC",&elecEREC);
-      tree->SetBranchAddress("elec0PxREC",&elec0PxREC);
-      tree->SetBranchAddress("elec0PyREC",&elec0PyREC);
-      tree->SetBranchAddress("elec0PzREC",&elec0PzREC);
-      tree->SetBranchAddress("elec0EREC",&elec0EREC);
-      tree->SetBranchAddress("neutPxREC",&neutPxREC);
-      tree->SetBranchAddress("neutPyREC",&neutPyREC);
-      tree->SetBranchAddress("neutPzREC",&neutPzREC);
-      tree->SetBranchAddress("neutEREC",&neutEREC);
       tree->SetBranchAddress("elecEradREC",&elecEradREC);
       tree->SetBranchAddress("elecEcraREC",&elecEcraREC);
 
@@ -440,7 +412,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("dcaPrimeREC",dcaPrimeREC);
       tree->SetBranchAddress("dz0PrimeREC",dz0PrimeREC);
       tree->SetBranchAddress("nucliaREC",nucliaREC);
-      // tree->SetBranchAddress("bestMatchBSTrack",bestMatchBSTrack);
       
       tree->SetBranchAddress("imatchREC",imatchREC);
       tree->SetBranchAddress("dmatchREC",dmatchREC);
@@ -567,14 +538,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.elecPzREC_mini = elecPzREC;
          myEvent.elecEREC_mini = elecEREC;
          myEvent.elecChargeREC_mini = elecChargeREC;
-         double elec0Pt = TMath::Hypot(elec0PxREC,elec0PyREC);
-         myEvent.elec0PtREC_mini = elec0Pt;
-         myEvent.elec0PzREC_mini = elec0PzREC;
-         myEvent.elec0EREC_mini = elec0EREC;
-         double neutPt = TMath::Hypot(neutPxREC,neutPyREC);
-         myEvent.neutPtREC_mini = neutPt;
-         myEvent.neutPzREC_mini = neutPzREC;
-         myEvent.neutEREC_mini = neutEREC;
          double hfsPt = TMath::Hypot(hfsPxREC,hfsPyREC);
          myEvent.hfsPtREC_mini = hfsPt;
          myEvent.hfsPzREC_mini = hfsPzREC;
@@ -607,8 +570,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.xREC_es_mini = xREC_es;
          myEvent.yREC_es_mini = yREC_es;
          myEvent.Q2REC_es_mini = Q2REC_es;
-
-         // myEvent.elecTrackMatchRREC_mini = elecTrackMatchRREC;
 
          myEvent.vertex_mini[0] = vertex[0];
          myEvent.vertex_mini[1] = vertex[1];
