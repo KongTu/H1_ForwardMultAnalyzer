@@ -63,11 +63,9 @@ struct MyEvent {
    // general information
    Int_t run_mini,evno_mini; // run and event number
    Float_t w_mini; // event weight
-
    // event quality .. not complete yet
    Float_t vertex_mini[3];
    // Monte Carlo information
-   Float_t xGKI_mini,yGKI_mini,Q2GKI_mini;
    Float_t xMC_es_mini,yMC_es_mini,Q2MC_es_mini;
 
    enum {
@@ -91,11 +89,9 @@ struct MyEvent {
 
    // reconstructed quantities
    Float_t xREC_es_mini,yREC_es_mini,Q2REC_es_mini;
-   
    enum {
       nRECtrack_MAX=200
    };
- 
    Int_t eventpass_mini;
    Int_t eventpassTight_mini;
    Int_t eventpassLoose_mini;
@@ -108,13 +104,8 @@ struct MyEvent {
    Float_t hfsEREC_mini, hfsPtREC_mini, hfsPzREC_mini;
    Float_t elecEREC_mini, elecPtREC_mini, elecPzREC_mini;
    Int_t elecChargeREC_mini;
-   Float_t elec0EREC_mini, elec0PtREC_mini, elec0PzREC_mini;
-   Float_t neutEREC_mini, neutPtREC_mini, neutPzREC_mini;
 
    Int_t totalMultREC_mini;
-   Float_t elecTrackMatchPhiREC_mini;
-   Float_t elecTrackMatchRREC_mini;
-
    Float_t pxREC_mini[nRECtrack_MAX];
    Float_t pyREC_mini[nRECtrack_MAX];
    Float_t pzREC_mini[nRECtrack_MAX];
@@ -126,7 +117,6 @@ struct MyEvent {
    Float_t ptStarREC_mini[nRECtrack_MAX];
    Float_t etaStarREC_mini[nRECtrack_MAX];
    Float_t phiStarREC_mini[nRECtrack_MAX];
-   Int_t   bestMatchBSTrack_mini[nRECtrack_MAX]; 
 
    Float_t nucliaREC_mini[nRECtrack_MAX];
    Float_t dmatchREC_mini[nRECtrack_MAX];
@@ -186,65 +176,54 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    else if( !doGen_ ){
       tree->Add("../batch/output/data_highE_06_scatElec/*.root");
       tree->Add("../batch/output/data_highE_07_scatElec/*.root");
-      // tree->Add("~/Desktop/ForwardMultAnalyzer.root");
    }
    else{ cout << "no files" << endl;}
   
    //start to define new miniTree:
    TTree *outtree =new TTree("miniTree","miniTree");
    MyEvent myEvent;
-   // outtree->Branch("run_mini",&myEvent.run_mini,"run_mini/I");
-   // outtree->Branch("evno_mini",&myEvent.evno_mini,"evno_mini/I");
+
    outtree->Branch("w_mini",&myEvent.w_mini,"w_mini/F");
    outtree->Branch("vertex_mini",myEvent.vertex_mini,"vertex_mini[3]/F");
-
-   // outtree->Branch("xGKI_mini",&myEvent.xGKI_mini,"xGKI_mini/F");
-   // outtree->Branch("yGKI_mini",&myEvent.yGKI_mini,"yGKI_mini/F");
-   // outtree->Branch("Q2GKI_mini",&myEvent.Q2GKI_mini,"Q2GKI_mini/F");
-   // outtree->Branch("xMC_es_mini",&myEvent.xMC_es_mini,"xMC_es_mini/F");
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
 
    outtree->Branch("nMCtrack_mini",&myEvent.nMCtrack_mini,"nMCtrack_mini/I");
-
    outtree->Branch("pxMC_mini",myEvent.pxMC_mini,"pxMC_mini[nMCtrack_mini]/F");
    outtree->Branch("pyMC_mini",myEvent.pyMC_mini,"pyMC_mini[nMCtrack_mini]/F");
    outtree->Branch("pzMC_mini",myEvent.pzMC_mini,"pzMC_mini[nMCtrack_mini]/F");
    outtree->Branch("etaMC_mini",myEvent.etaMC_mini,"etaMC_mini[nMCtrack_mini]/F");
-   // outtree->Branch("chargeMC_mini",myEvent.chargeMC_mini,"chargeMC_mini[nMCtrack_mini]/F");
    outtree->Branch("ptStarMC_mini",myEvent.ptStarMC_mini,"ptStarMC_mini[nMCtrack_mini]/F");
    outtree->Branch("etaStarMC_mini",myEvent.etaStarMC_mini,"etaStarMC_mini[nMCtrack_mini]/F");
-   // outtree->Branch("phiStarMC_mini",myEvent.phiStarMC_mini,"phiStarMC_mini[nMCtrack_mini]/F");
-   // outtree->Branch("imatchMC_mini",myEvent.imatchMC_mini,"imatchMC_mini[nMCtrack_mini]/I");
-   // outtree->Branch("etaAsymMC_mini",&myEvent.etaAsymMC_mini,"etaAsymMC_mini/F");
+
    outtree->Branch("totalMultMC_mini",&myEvent.totalMultMC_mini,"totalMultMC_mini/I");
 
-   outtree->Branch("hfsEREC_mini",&myEvent.hfsEREC_mini,"hfsEREC_mini/F");
-   outtree->Branch("hfsPtREC_mini",&myEvent.hfsPtREC_mini,"hfsPtREC_mini/F");
-   outtree->Branch("hfsPzREC_mini",&myEvent.hfsPzREC_mini,"hfsPzREC_mini/F");
-   outtree->Branch("elecEREC_mini",&myEvent.elecEREC_mini,"elecEREC_mini/F");
-   outtree->Branch("elecPtREC_mini",&myEvent.elecPtREC_mini,"elecPtREC_mini/F");
-   outtree->Branch("elecPzREC_mini",&myEvent.elecPzREC_mini,"elecPzREC_mini/F");
-   outtree->Branch("elecChargeREC_mini",&myEvent.elecChargeREC_mini,"elecChargeREC_mini/I");
+   /*
+   comment out for simple scatElec miniTree
+   */
+
+   // outtree->Branch("hfsEREC_mini",&myEvent.hfsEREC_mini,"hfsEREC_mini/F");
+   // outtree->Branch("hfsPtREC_mini",&myEvent.hfsPtREC_mini,"hfsPtREC_mini/F");
+   // outtree->Branch("hfsPzREC_mini",&myEvent.hfsPzREC_mini,"hfsPzREC_mini/F");
+   // outtree->Branch("elecEREC_mini",&myEvent.elecEREC_mini,"elecEREC_mini/F");
+   // outtree->Branch("elecPtREC_mini",&myEvent.elecPtREC_mini,"elecPtREC_mini/F");
+   // outtree->Branch("elecPzREC_mini",&myEvent.elecPzREC_mini,"elecPzREC_mini/F");
+   // outtree->Branch("elecChargeREC_mini",&myEvent.elecChargeREC_mini,"elecChargeREC_mini/I");
 
    outtree->Branch("xREC_es_mini",&myEvent.xREC_es_mini,"xREC_es_mini/F");
    outtree->Branch("yREC_es_mini",&myEvent.yREC_es_mini,"yREC_es_mini/F");
    outtree->Branch("Q2REC_es_mini",&myEvent.Q2REC_es_mini,"Q2REC_es_mini/F");
-
    outtree->Branch("eventpass_mini",&myEvent.eventpass_mini,"eventpass_mini/I");
    outtree->Branch("eventpassTight_mini",&myEvent.eventpassTight_mini,"eventpassTight_mini/I");
    outtree->Branch("eventpassLoose_mini",&myEvent.eventpassLoose_mini,"eventpassLoose_mini/I");
    outtree->Branch("nRECtrack_mini",&myEvent.nRECtrack_mini,"nRECtrack_mini/I");
-   // outtree->Branch("typeChgREC_mini",myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
-   // outtree->Branch("etaAsymREC_mini",&myEvent.etaAsymREC_mini,"etaAsymREC_mini/F");
    outtree->Branch("EpzREC_mini",&myEvent.EpzREC_mini,"EpzREC_mini/F");
    outtree->Branch("totalMultREC_mini",&myEvent.totalMultREC_mini,"totalMultREC_mini/I");
 
    outtree->Branch("pxREC_mini",myEvent.pxREC_mini,"pxREC_mini[nRECtrack_mini]/F");
    outtree->Branch("pyREC_mini",myEvent.pyREC_mini,"pyREC_mini[nRECtrack_mini]/F");
    outtree->Branch("pzREC_mini",myEvent.pzREC_mini,"pzREC_mini[nRECtrack_mini]/F");
-   // outtree->Branch("pREC_mini",myEvent.pREC_mini,"pREC_mini[nRECtrack_mini]/F");
-   // outtree->Branch("peREC_mini",myEvent.peREC_mini,"peREC_mini[nRECtrack_mini]/F");
+
    outtree->Branch("etaREC_mini",myEvent.etaREC_mini,"etaREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("phiREC_mini",myEvent.phiREC_mini,"phiREC_mini[nRECtrack_mini]/F");
    outtree->Branch("ptStarREC_mini",myEvent.ptStarREC_mini,"ptStarREC_mini[nRECtrack_mini]/F");
@@ -252,8 +231,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    // outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
 
    outtree->Branch("nucliaREC_mini",myEvent.nucliaREC_mini,"nucliaREC_mini[nRECtrack_mini]/F");
-   // outtree->Branch("dmatchREC_mini",myEvent.dmatchREC_mini,"dmatchREC_mini[nRECtrack_mini]/F");
-   // outtree->Branch("imatchREC_mini",myEvent.imatchREC_mini,"imatchREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passREC_mini",myEvent.passREC_mini,"passREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passTightREC_mini",myEvent.passTightREC_mini,"passTightREC_mini[nRECtrack_mini]/I");
    outtree->Branch("passLooseREC_mini",myEvent.passLooseREC_mini,"passLooseREC_mini[nRECtrack_mini]/I");
@@ -628,7 +605,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.pxREC_mini[j] = pxREC[j];
             myEvent.pyREC_mini[j] = pyREC[j];
             myEvent.pzREC_mini[j] = pzREC[j];
-            // myEvent.bestMatchBSTrack_mini[j] = bestMatchBSTrack[j];
 
             myEvent.pREC_mini[j] = pREC[j];
             myEvent.peREC_mini[j] = peREC[j];
@@ -637,7 +613,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.etaStarREC_mini[j] = etaStarREC[j];
             myEvent.ptStarREC_mini[j] = ptStarREC[j];
             myEvent.phiStarREC_mini[j] = phiStarREC[j];
-            myEvent.nucliaREC_mini[j] = nucliaREC[j];
+            double eff_error = 0.995;
+            if( type == 2 ) eff_error = 0.9;
+            myEvent.nucliaREC_mini[j] = nucliaREC[j]*eff_error;
             myEvent.dmatchREC_mini[j] = dmatchREC[j];
             myEvent.imatchREC_mini[j] = imatchREC[j];       
             myEvent.passREC_mini[j] = pass_default; 
