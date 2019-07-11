@@ -441,10 +441,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.w_mini = evt_weight;
          myEvent.totalMultREC_mini = -999;
 
-         myEvent.xGKI_mini = -999.;
-         myEvent.yGKI_mini = -999.;
-         myEvent.Q2GKI_mini = -999.;
-
          myEvent.xMC_es_mini = -999.;
          myEvent.yMC_es_mini = -999.;
          myEvent.Q2MC_es_mini = -999.;
@@ -466,10 +462,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          
          if( doGen_ ){
             //generator level event selections:
-            myEvent.xGKI_mini = xGKI;
-            myEvent.yGKI_mini = yGKI;
-            myEvent.Q2GKI_mini = Q2GKI;
-
             myEvent.xMC_es_mini = xMC_es;
             myEvent.yMC_es_mini = yMC_es;
             myEvent.Q2MC_es_mini = Q2MC_es;
