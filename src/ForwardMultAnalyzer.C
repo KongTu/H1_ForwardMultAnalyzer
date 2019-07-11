@@ -532,7 +532,7 @@ int main(int argc, char* argv[]) {
    Int_t eventCounter = 0;
 
    H1HadronicCalibration *hadronicCalibration=H1HadronicCalibration::Instance();
-   hadronicCalibration->ApplyHadronicCalibration(H1HadronicCalibration::eHighPtJet);
+   hadronicCalibration->ApplyHadronicCalibration(H1HadronicCalibration::eIterative);
    hadronicCalibration->ApplyHadronicCalibration(kTRUE);
 
    // Loop over events
