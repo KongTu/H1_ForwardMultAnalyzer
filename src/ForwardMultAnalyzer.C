@@ -1097,11 +1097,8 @@ int main(int argc, char* argv[]) {
          }
       }
 
-      double hfs_eta = hfs_count.Eta();
-      double hfs_phi = hfs_count.Phi();
-      double hfs_pt = hfs_count.Pt();
-      double hfs_E = 0.98*hfs_count.E();
-      hfs_count.SetPtEtaPhiE(hfs_pt,hfs_eta,hfs_phi,hfs_E);
+      //add energy scale by 2%
+      hfs_count.SetE(1.02*hfs_count.E());
 
       double sigma_REC = hfs_count.E()-hfs_count.Pz();//not use for Elec method
       
@@ -1147,7 +1144,8 @@ int main(int argc, char* argv[]) {
             // only particle candidates belong to the calibrated HFS
             hfs += p;
          }
-
+         //add energy scale by 2%
+         hfs.SetE( 1.02*hfs.E() );
 
          H1PartSelTrack const *track=0;
          if(cand) track=cand->GetIDTrack();
