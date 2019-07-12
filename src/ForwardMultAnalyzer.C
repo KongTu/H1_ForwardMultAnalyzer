@@ -1010,7 +1010,7 @@ int main(int argc, char* argv[]) {
       myEvent.elecChargeREC=scatteredElectronCharge;
       
       //add energy scale by 1%
-      escat0_REC_lab.SetE( 1.01*escat0_REC_lab.E() );
+      escat0_REC_lab.SetE( 0.98*escat0_REC_lab.E() );
 
       // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
