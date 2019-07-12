@@ -1100,7 +1100,7 @@ int main(int argc, char* argv[]) {
       double hfs_eta = hfs_count.Eta();
       double hfs_phi = hfs_count.Phi();
       double hfs_pt = hfs_count.Pt();
-      double hfs_E = 1.02*hfs_count.E();
+      double hfs_E = 0.98*hfs_count.E();
       hfs_count.SetPtEtaPhiE(hfs_pt,hfs_eta,hfs_phi,hfs_E);
 
       double sigma_REC = hfs_count.E()-hfs_count.Pz();//not use for Elec method
