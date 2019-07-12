@@ -1098,7 +1098,7 @@ int main(int argc, char* argv[]) {
       }
 
       //add energy scale by 2%
-      hfs_count.SetE(0.98*hfs_count.E());
+      hfs_count.SetE(1.02*hfs_count.E());
 
       double sigma_REC = hfs_count.E()-hfs_count.Pz();//not use for Elec method
       
@@ -1143,7 +1143,7 @@ int main(int argc, char* argv[]) {
          if(cand) {
             // only particle candidates belong to the calibrated HFS
             //add energy scale by 2%
-            p.SetE(0.98*p.E());
+            p.SetE(1.02*p.E());
             hfs += p;
          }
          
