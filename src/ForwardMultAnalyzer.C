@@ -1009,6 +1009,9 @@ int main(int argc, char* argv[]) {
       //adding a charge variable to later decide if it matched to a track with its charge
       myEvent.elecChargeREC=scatteredElectronCharge;
       
+      //add energy scale by 1%
+      escat0_REC_lab.SetE( 1.01*escat0_REC_lab.E() );
+
       // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
       set<int> isElectron;
@@ -1098,7 +1101,7 @@ int main(int argc, char* argv[]) {
       }
 
       //add energy scale by 2%
-      hfs_count.SetE(0.98*hfs_count.E());
+      // hfs_count.SetE(0.98*hfs_count.E());
 
       double sigma_REC = hfs_count.E()-hfs_count.Pz();//not use for Elec method
       
@@ -1143,7 +1146,7 @@ int main(int argc, char* argv[]) {
          if(cand) {
             // only particle candidates belong to the calibrated HFS
             //add energy scale by 2%
-            p.SetE(0.98*p.E());
+            // p.SetE(0.98*p.E());
             hfs += p;
          }
          
