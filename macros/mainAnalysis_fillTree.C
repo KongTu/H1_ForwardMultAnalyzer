@@ -174,8 +174,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->Add("../batch/output/mc_8927_scatElec/*.root");
    }
    else if( !doGen_ ){
-      tree->Add("../batch/output/data_highE_06_hadCali/*.root");
-      tree->Add("../batch/output/data_highE_07_hadCali/*.root");
+      tree->Add("../batch/output/data_highE_06_scatElec/*.root");
+      tree->Add("../batch/output/data_highE_07_scatElec/*.root");
    }
    else{ cout << "no files" << endl;}
   
@@ -202,13 +202,13 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    comment out for simple scatElec miniTree
    */
 
-   // outtree->Branch("hfsEREC_mini",&myEvent.hfsEREC_mini,"hfsEREC_mini/F");
-   // outtree->Branch("hfsPtREC_mini",&myEvent.hfsPtREC_mini,"hfsPtREC_mini/F");
-   // outtree->Branch("hfsPzREC_mini",&myEvent.hfsPzREC_mini,"hfsPzREC_mini/F");
-   // outtree->Branch("elecEREC_mini",&myEvent.elecEREC_mini,"elecEREC_mini/F");
-   // outtree->Branch("elecPtREC_mini",&myEvent.elecPtREC_mini,"elecPtREC_mini/F");
-   // outtree->Branch("elecPzREC_mini",&myEvent.elecPzREC_mini,"elecPzREC_mini/F");
-   // outtree->Branch("elecChargeREC_mini",&myEvent.elecChargeREC_mini,"elecChargeREC_mini/I");
+   outtree->Branch("hfsEREC_mini",&myEvent.hfsEREC_mini,"hfsEREC_mini/F");
+   outtree->Branch("hfsPtREC_mini",&myEvent.hfsPtREC_mini,"hfsPtREC_mini/F");
+   outtree->Branch("hfsPzREC_mini",&myEvent.hfsPzREC_mini,"hfsPzREC_mini/F");
+   outtree->Branch("elecEREC_mini",&myEvent.elecEREC_mini,"elecEREC_mini/F");
+   outtree->Branch("elecPtREC_mini",&myEvent.elecPtREC_mini,"elecPtREC_mini/F");
+   outtree->Branch("elecPzREC_mini",&myEvent.elecPzREC_mini,"elecPzREC_mini/F");
+   outtree->Branch("elecChargeREC_mini",&myEvent.elecChargeREC_mini,"elecChargeREC_mini/I");
 
    outtree->Branch("xREC_es_mini",&myEvent.xREC_es_mini,"xREC_es_mini/F");
    outtree->Branch("yREC_es_mini",&myEvent.yREC_es_mini,"yREC_es_mini/F");
@@ -605,9 +605,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.etaStarREC_mini[j] = etaStarREC[j];
             myEvent.ptStarREC_mini[j] = ptStarREC[j];
             myEvent.phiStarREC_mini[j] = phiStarREC[j];
-            double eff_error = 0.995;
-            if( type == 2 ) eff_error = 0.9;
-            myEvent.nucliaREC_mini[j] = nucliaREC[j]*eff_error;
+            // double eff_error = 0.995;
+            // if( type == 2 ) eff_error = 0.9;
+            // myEvent.nucliaREC_mini[j] = nucliaREC[j]*eff_error;
+            myEvent.nucliaREC_mini[j] = nucliaREC[j];
             myEvent.dmatchREC_mini[j] = dmatchREC[j];
             myEvent.imatchREC_mini[j] = imatchREC[j];       
             myEvent.passREC_mini[j] = pass_default; 
