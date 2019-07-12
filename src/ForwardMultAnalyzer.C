@@ -1142,10 +1142,11 @@ int main(int argc, char* argv[]) {
 
          if(cand) {
             // only particle candidates belong to the calibrated HFS
+            //add energy scale by 2%
+            p.SetE(1.02*p.E());
             hfs += p;
          }
-         //add energy scale by 2%
-         hfs.SetE( 1.02*hfs.E() );
+         
 
          H1PartSelTrack const *track=0;
          if(cand) track=cand->GetIDTrack();
