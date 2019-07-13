@@ -174,8 +174,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->Add("../batch/output/mc_8927_scatElec/*.root");
    }
    else if( !doGen_ ){
-      tree->Add("../batch/output/data_highE_06_hadEplus2/*.root");
-      tree->Add("../batch/output/data_highE_07_hadEplus2/*.root");
+      tree->Add("../batch/output/data_highE_06_hadEminus2/*.root");
+      tree->Add("../batch/output/data_highE_07_hadEminus2/*.root");
    }
    else{ cout << "no files" << endl;}
   
