@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE TUnfoldBinning SYSTEM "binning.dtd">
+<TUnfoldBinning>
+  <BinningNode name="genQ2">
+    <BinningNode name="Q2MC_es_mini:5" /> <!-- underflow bin -->
+    <BinningNode name="Q2MC_es_mini:10" />
+    <BinningNode name="Q2MC_es_mini:20" />
+    <BinningNode name="Q2MC_es_mini:40" />
+    <BinningNode name="Q2MC_es_mini:100" /> 
+  </BinningNode>
+  <BinningNode name="genY">
+    <BinningNode name="yMC_es_mini:0.0375" />
+    <BinningNode name="yMC_es_mini:0.075" />
+    <BinningNode name="yMC_es_mini:0.15" />
+    <BinningNode name="yMC_es_mini:0.3" />
+    <BinningNode name="yMC_es_mini:0.6" />
+  </BinningNode>
+  <BinningNode name="genNtrack">
+    <Axis name="ntrackMC" lowEdge="-0.5">
+      <Bin repeat="4" width="1"/> <!-- -0.5 .. 3.5 -->
+      <Bin repeat="2" width="2"/> <!-- 3.5 .. 7.5 -->
+      <Bin repeat="3" width="4"/> <!-- 7.5 .. 19.5 -->
+      <Bin repeat="1" width="6"/> <!-- 19.5 .. 25.5 -->
+      <Bin location="overflow" width="6"/> <!-- overflow -->
+    </Axis>
+  </BinningNode>
+  <BinningNode name="recQ2">
+    <BinningNode name="4:Q2REC_es_mini:5" /> <!-- underflow bin -->
+    <BinningNode name="Q2REC_es_mini:7" />
+    <BinningNode name="Q2REC_es_mini:10" />
+    <BinningNode name="Q2REC_es_mini:14" />
+    <BinningNode name="Q2REC_es_mini:20" />
+    <BinningNode name="Q2REC_es_mini:28" />
+    <BinningNode name="Q2REC_es_mini:40" />
+    <BinningNode name="Q2REC_es_mini:56" />
+    <BinningNode name="Q2REC_es_mini:100" />
+  </BinningNode>
+  <BinningNode name="recY">
+    <BinningNode name="yREC_es_mini:0.0375" />  <!-- underflow bin -->
+    <BinningNode name="yREC_es_mini:0.0525" />
+    <BinningNode name="yREC_es_mini:0.075" />
+    <BinningNode name="yREC_es_mini:0.105" />
+    <BinningNode name="yREC_es_mini:0.15" />
+    <BinningNode name="yREC_es_mini:0.21" />
+    <BinningNode name="yREC_es_mini:0.3" />
+    <BinningNode name="yREC_es_mini:0.42" />
+    <BinningNode name="yREC_es_mini:0.6" />
+  </BinningNode>
+  <BinningNode name="recNtrack">
+    <Axis name="ntrackREC" lowEdge="-0.5">
+      <Bin repeat="8" width="1"/> <!-- -0.5 .. 7.5 -->
+      <Bin repeat="6" width="2"/> <!-- 7.5 .. 19.5 -->
+      <Bin repeat="2" width="3"/> <!-- 19.5 .. 25.5 -->
+      <Bin location="overflow" width="32"/>
+    </Axis>
+  </BinningNode>
+  <BinningNode name="etaBins">
+    <BinningNode name="-1.2:eta:1.6" />
+  </BinningNode>
+  <UnfoldingInput dataluminosity="136">
+    unfoldingInput_yetalab.root
+  </UnfoldingInput>
+  <UnfoldingOutput>
+    unfoldingOutput_yetalab.root
+  </UnfoldingOutput>
+</TUnfoldBinning>
