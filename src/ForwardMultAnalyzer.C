@@ -306,24 +306,24 @@ int main(int argc, char* argv[]) {
    opts.Parse(&argc, argv);
 
    // open run selection and detector status file
-   TString goodRunFileName("SelectedRuns_HighE0607_BST_e+p_920.root");
-   TFile goodRunFile(goodRunFileName);
-   if(!goodRunFile.IsOpen()) {
-      cerr<<"Error: could not open file "<<goodRunFileName<<"\n";
-      return 2;
-   }
-   H1RunList* goodRunList
-      = (H1RunList*) goodRunFile.Get("H1RunList");
-   if(!goodRunList) {
-      cerr<<"Error: no runlist in file - return!\n";
-      return 2;
-   }
-   H1DetectorStatus *detectorStatus
-      = (H1DetectorStatus*)goodRunFile.Get("MyDetectorStatus");
-   if(!detectorStatus) {
-      cerr<<"Error: no detector status in file - return!\n";
-      return 3;
-   }
+   // TString goodRunFileName("SelectedRuns_HighE0607_BST_e+p_920.root");
+   // TFile goodRunFile(goodRunFileName);
+   // if(!goodRunFile.IsOpen()) {
+   //    cerr<<"Error: could not open file "<<goodRunFileName<<"\n";
+   //    return 2;
+   // }
+   // H1RunList* goodRunList
+   //    = (H1RunList*) goodRunFile.Get("H1RunList");
+   // if(!goodRunList) {
+   //    cerr<<"Error: no runlist in file - return!\n";
+   //    return 2;
+   // }
+   // H1DetectorStatus *detectorStatus
+   //    = (H1DetectorStatus*)goodRunFile.Get("MyDetectorStatus");
+   // if(!detectorStatus) {
+   //    cerr<<"Error: no detector status in file - return!\n";
+   //    return 3;
+   // }
 
    // Load mODS/HAT files
    H1Tree::Instance()->Open();            // this statement must be there!
@@ -540,10 +540,10 @@ int main(int argc, char* argv[]) {
    while (gH1Tree->Next() && !opts.IsMaxEvent(eventCounter)) {
       ++eventCounter;
 
-         // skip runs not in list of good runs
-         if(!goodRunList->FindRun(*run)) continue;
-         // skip data events with bad detector status
-         if(!detectorStatus->IsOn()) continue;
+         // // skip runs not in list of good runs
+         // if(!goodRunList->FindRun(*run)) continue;
+         // // skip data events with bad detector status
+         // if(!detectorStatus->IsOn()) continue;
 
       double w=*weight1 * *weight2;
       if(print || ((eventCounter %10000)==0))  { 
@@ -1010,7 +1010,7 @@ int main(int argc, char* argv[]) {
       myEvent.elecChargeREC=scatteredElectronCharge;
       
       //add energy scale by 1%
-      escat0_REC_lab.SetE( 0.98*escat0_REC_lab.E() );
+      // escat0_REC_lab.SetE( 0.98*escat0_REC_lab.E() );
 
       // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
@@ -1101,7 +1101,7 @@ int main(int argc, char* argv[]) {
       }
 
       //add energy scale by 2%
-      // hfs_count.SetE(0.98*hfs_count.E());
+      hfs_count.SetE(1.02*hfs_count.E());
 
       double sigma_REC = hfs_count.E()-hfs_count.Pz();//not use for Elec method
       
@@ -1146,7 +1146,7 @@ int main(int argc, char* argv[]) {
          if(cand) {
             // only particle candidates belong to the calibrated HFS
             //add energy scale by 2%
-            // p.SetE(0.98*p.E());
+            p.SetE(1.02*p.E());
             hfs += p;
          }
          
