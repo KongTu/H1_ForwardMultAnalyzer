@@ -158,7 +158,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
    //starting TChain;
    TChain* tree = new TChain("properties");
-   
+
    if( doRapgap_ && doGen_ ){
       tree->Add("../batch/output/mc_9299_scatElec/*.root");
       tree->Add("../batch/output/mc_9300_scatElec/*.root");
@@ -168,17 +168,26 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->Add("../batch/output/mc_9304_scatElec/*.root");
       tree->Add("../batch/output/mc_9305_scatElec/*.root");
       tree->Add("../batch/output/mc_9306_scatElec/*.root");
+
+      cout << "number of events ~ " << tree->GetEntries() << endl;
+
+      tree->Add("../batch/output/mc_9015/*.root");
+      
+      cout << "number of events ~ " << tree->GetEntries() << endl;
+
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadEminus2/*.root");
-      tree->Add("../batch/output/mc_8927_hadEminus2/*.root");
+      tree->Add("../batch/output/mc_8926_scatElec/*.root");
+      tree->Add("../batch/output/mc_8927_scatElec/*.root");
    }
    else if( !doGen_ ){
-      tree->Add("../batch/output/data_highE_06_hadEminus2/*.root");
-      tree->Add("../batch/output/data_highE_07_hadEminus2/*.root");
+      tree->Add("../batch/output/data_highE_06_scatElec/*.root");
+      tree->Add("../batch/output/data_highE_07_scatElec/*.root");
    }
    else{ cout << "no files" << endl;}
   
+
+
    //start to define new miniTree:
    TTree *outtree =new TTree("miniTree","miniTree");
    MyEvent myEvent;
