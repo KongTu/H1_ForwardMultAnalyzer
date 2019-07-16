@@ -158,6 +158,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
    //starting TChain;
    TChain* tree = new TChain("properties");
+   int dis_events = 0;
 
    if( doRapgap_ && doGen_ ){
       tree->Add("../batch/output/mc_9299_scatElec/*.root");
@@ -169,12 +170,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->Add("../batch/output/mc_9305_scatElec/*.root");
       tree->Add("../batch/output/mc_9306_scatElec/*.root");
 
-      cout << "number of events ~ " << tree->GetEntries() << endl;
-
+      //save the number of events that separate inclusive DIS to diffractive DIS
+         dis_events = tree->GetEntries();
       tree->Add("../batch/output/mc_9015/*.root");
-      
-      cout << "number of events ~ " << tree->GetEntries() << endl;
-
    }
    else if( !doRapgap_ && doGen_){
       tree->Add("../batch/output/mc_8926_scatElec/*.root");
@@ -303,7 +301,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t nucliaREC[400];
 
       Int_t imatchREC[400];
-      Int_t dmatchREC[400];
+      Float_t dmatchREC[400];
       Int_t imatchMC[400];
 
       Float_t startHitsRadiusREC[400];
@@ -433,12 +431,35 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             if( Q2x_weight == 0. ) Q2x_weight = 1.0;
             double vtxZ_weight = DATA_vtxZ->GetBinContent( DATA_vtxZ->FindBin( simvertex[2]) );
             if( vtxZ_weight == 0. ) vtxZ_weight = 1.0;
-            
-            evt_weight = w*Q2x_weight*vtxZ_weight;
+            if( doRapgap_ ){//rapgap has diffractive MCs
+               if( i < dis_events ){
+                  evt_weight = w*Q2x_weight*vtxZ_weight*(136./68.);//data/mc Lumi
+               }
+               else if( i >= dis_events && i < tree->GetEntries() ){
+                  evt_weight = w*Q2x_weight*vtxZ_weight*(136./219.35);//data/mc Lumi
+               }
+            }
+            else{
+               evt_weight = w*Q2x_weight*vtxZ_weight;
+            }
          }
          else if( doGen_ && !doReweight_ ) {
             //this is MC without anyreweighting
-            evt_weight = w;
+            if( doRapgap_ ){ //rapgap has diffractive MCs
+               if( i < dis_events ){
+                  evt_weight = w*(136./68.);//data/mc Lumi
+               }
+               else if( i >= dis_events && i < tree->GetEntries() ){
+                  evt_weight = w*(136./219.35);//data/mc Lumi
+               }
+               else{
+                  cout << "overflow in events! " << endl;
+               }
+            }
+            else{
+               evt_weight = w;
+            }
+            
          }
          else{
             cout << "Error in config! " << endl;
