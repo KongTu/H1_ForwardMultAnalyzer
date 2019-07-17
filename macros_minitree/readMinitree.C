@@ -29,8 +29,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 			else file = new TFile("/Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_DJANGOH_fullReweight_Tree_scatElec.root");
 		}
 		else if(ifile_ == 2){
-			if(!isReweigh) file = new TFile("/Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_RAPGAP_noReweight_Tree_diffractive.root");
-			else file = new TFile("/Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_RAPGAP_fullReweight_Tree_diffractive.root");
+			if(!isReweigh) file = new TFile("/afs/desy.de/user/z/ztudesy/nfs/h1_analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_RAPGAP_noReweight_Tree_diffractive.root");
+			else file = new TFile("/afs/desy.de/user/z/ztudesy/nfs/h1_analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_RAPGAP_fullReweight_Tree_diffractive.root");
 		}
 	}
 	TTree* tree = (TTree*) file->Get("miniTree");
