@@ -161,26 +161,26 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    int dis_events = 0;
 
    if( doRapgap_ && doGen_ ){
-      tree->Add("../batch/output/mc_9299_scatElec/*.root");
-      tree->Add("../batch/output/mc_9300_scatElec/*.root");
-      tree->Add("../batch/output/mc_9301_scatElec/*.root");
-      tree->Add("../batch/output/mc_9302_scatElec/*.root");
-      tree->Add("../batch/output/mc_9303_scatElec/*.root");
-      tree->Add("../batch/output/mc_9304_scatElec/*.root");
-      tree->Add("../batch/output/mc_9305_scatElec/*.root");
-      tree->Add("../batch/output/mc_9306_scatElec/*.root");
+      tree->Add("../batch/output/mc_9299_hadCali/*.root");
+      tree->Add("../batch/output/mc_9300_hadCali/*.root");
+      tree->Add("../batch/output/mc_9301_hadCali/*.root");
+      tree->Add("../batch/output/mc_9302_hadCali/*.root");
+      tree->Add("../batch/output/mc_9303_hadCali/*.root");
+      tree->Add("../batch/output/mc_9304_hadCali/*.root");
+      tree->Add("../batch/output/mc_9305_hadCali/*.root");
+      tree->Add("../batch/output/mc_9306_hadCali/*.root");
 
       //save the number of events that separate inclusive DIS to diffractive DIS
          dis_events = tree->GetEntries();
-      tree->Add("../batch/output/mc_9015/*.root");
+      // tree->Add("../batch/output/mc_9015/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_scatElec/*.root");
-      tree->Add("../batch/output/mc_8927_scatElec/*.root");
+      tree->Add("../batch/output/mc_8926_hadCali/*.root");
+      tree->Add("../batch/output/mc_8927_hadCali/*.root");
    }
    else if( !doGen_ ){
-      tree->Add("../batch/output/data_highE_06_scatElec/*.root");
-      tree->Add("../batch/output/data_highE_07_scatElec/*.root");
+      tree->Add("../batch/output/data_highE_06_hadCali/*.root");
+      tree->Add("../batch/output/data_highE_07_hadCali/*.root");
    }
    else{ cout << "no files" << endl;}
   
@@ -447,7 +447,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             //this is MC without anyreweighting
             if( doRapgap_ ){ //rapgap has diffractive MCs
                if( i < dis_events ){
-                  evt_weight = w*(136./68.);//data/mc Lumi
+                  // evt_weight = w*(136./68.);//data/mc Lumi
+                  evt_weight = w;
                }
                else if( i >= dis_events && i < tree->GetEntries() ){
                   evt_weight = w*(136./219.35);//data/mc Lumi
