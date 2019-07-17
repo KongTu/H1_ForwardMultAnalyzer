@@ -1,6 +1,7 @@
-#include "RiceStyle.h"
+#include "../header/mainAnalysis.h"
+
 using namespace std;
-void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool isScatElec_ = false, const bool doEnergyShift_ = false){
+void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool isScatElec_ = false){
 
 	TFile* file = 0;
 
@@ -326,15 +327,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 
 		if( Q2REC_es_mini > Q2max || Q2REC_es_mini < Q2min ) continue;
 		if( yREC_es_mini > ymax || yREC_es_mini < ymin ) continue;
-		if( !doEnergyShift_) {if( eventpass_mini != 1 ) continue; }
-		else{
-			if( eventpassLoose_mini != 1 ) continue;
-			if( TMath::Abs(vertex_mini[2]) > 35 ) continue;
-			hfsEREC_mini = 1.02*hfsEREC_mini;
-			hfsPzREC_mini = 1.02*hfsPzREC_mini;
-			double EpzCut = (hfsEREC_mini + elecEREC_mini) - ( hfsPzREC_mini + elecPzREC_mini); 
-			if( EpzCut > 70 || EpzCut < 35 ) continue;
-		}
+		if( eventpass_mini != 1 ) continue; 
+	
 		h_Q2vsX_1->Fill( xREC_es_mini, Q2REC_es_mini, w_mini);
 		h_y_1->Fill( yREC_es_mini, w_mini);
 		h_vtxZ_1->Fill( vertex_mini[2], w_mini );
