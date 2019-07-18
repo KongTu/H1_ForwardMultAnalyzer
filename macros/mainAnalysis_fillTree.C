@@ -172,7 +172,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
       //save the number of events that separate inclusive DIS to diffractive DIS
          dis_events = tree->GetEntries();
-      // tree->Add("../batch/output/mc_9015/*.root");
+      tree->Add("../batch/output/mc_9015/*.root");
    }
    else if( !doRapgap_ && doGen_){
       tree->Add("../batch/output/mc_8926_hadCali/*.root");
@@ -447,8 +447,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             //this is MC without anyreweighting
             if( doRapgap_ ){ //rapgap has diffractive MCs
                if( i < dis_events ){
-                  // evt_weight = w*(136./68.);//data/mc Lumi
-                  evt_weight = w;
+                  evt_weight = w*(136./68.);//data/mc Lumi
+                  // evt_weight = w;
                }
                else if( i >= dis_events && i < tree->GetEntries() ){
                   evt_weight = w*(136./219.35);//data/mc Lumi
