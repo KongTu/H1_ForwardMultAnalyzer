@@ -414,7 +414,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       if(end == -1 || end >= tree->GetEntries()) {end = tree->GetEntries();}
       cout << "starting events = " << start << endl;
       cout << "ending events = " << end << endl;
-      
+      cout << "total events now ~ " << 0.9*(tree->GetEntries()-dis_events)+dis_events << endl;
+
       int totalEvents = 0;
       for(int i=start;i<end;i++) {
          tree->GetEntry(i);
@@ -436,7 +437,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                   evt_weight = w*Q2x_weight*vtxZ_weight*(136./68.);//data/mc Lumi
                }
                else if( i >= dis_events && i < 0.9*(tree->GetEntries()-dis_events)+dis_events ){
-                  cout << "total events ~ " << 0.9*(tree->GetEntries()-dis_events)+dis_events << endl;
                   evt_weight = w*Q2x_weight*vtxZ_weight*(136./(0.9*219.35));//data/mc Lumi
                }
             }
@@ -452,7 +452,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                   // evt_weight = w;
                }
                else if( i >= dis_events && i < 0.9*(tree->GetEntries()-dis_events)+dis_events ){
-                  cout << "total events ~ " << 0.9*(tree->GetEntries()-dis_events)+dis_events << endl;
                   evt_weight = w*(136./(0.9*219.35) );//data/mc Lumi
                }
                else{
