@@ -435,8 +435,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                if( i < dis_events ){
                   evt_weight = w*Q2x_weight*vtxZ_weight*(136./68.);//data/mc Lumi
                }
-               else if( i >= dis_events && i < tree->GetEntries() ){
-                  evt_weight = w*Q2x_weight*vtxZ_weight*(136./219.35);//data/mc Lumi
+               else if( i >= dis_events && i < 0.9*(tree->GetEntries()-dis_events)+dis_events ){
+                  cout << "total events ~ " << 0.9*(tree->GetEntries()-dis_events)+dis_events << endl;
+                  evt_weight = w*Q2x_weight*vtxZ_weight*(136./(0.9*219.35));//data/mc Lumi
                }
             }
             else{
@@ -450,8 +451,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                   evt_weight = w*(136./68.);//data/mc Lumi
                   // evt_weight = w;
                }
-               else if( i >= dis_events && i < tree->GetEntries() ){
-                  evt_weight = w*(136./219.35);//data/mc Lumi
+               else if( i >= dis_events && i < 0.9*(tree->GetEntries()-dis_events)+dis_events ){
+                  cout << "total events ~ " << 0.9*(tree->GetEntries()-dis_events)+dis_events << endl;
+                  evt_weight = w*(136./(0.9*219.35) );//data/mc Lumi
                }
                else{
                   cout << "overflow in events! " << endl;
