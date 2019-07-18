@@ -133,24 +133,24 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    TH1D* DATA_vtxZ = new TH1D("h_vtxZ_1","h_vtxZ_1", 100,-50,50);
    if( doRapgap_ ){
       for(int i = 0; i < DATA_vtxZ->GetNbinsX(); i++){
-         DATA_vtxZ->SetBinContent(i+1,vtxz_weight_rapgap[i]);
+         DATA_vtxZ->SetBinContent(i+1,vtxz_weight_hadCali_rapgap[i]);
       }
       int count = 0;
       for(int i = 0; i < DATA_Q2vsX->GetNbinsX(); i++){
          for(int j = 0; j < DATA_Q2vsX->GetNbinsY(); j++){
-            DATA_Q2vsX->SetBinContent(i+1,j+1,Q2vsX_weight_rapgap[count]);
+            DATA_Q2vsX->SetBinContent(i+1,j+1,Q2vsX_weight_hadCali_rapgap[count]);
             count++;
          }
       }
    }
    else{
       for(int i = 0; i < DATA_vtxZ->GetNbinsX(); i++){
-         DATA_vtxZ->SetBinContent(i+1,vtxz_weight_django[i]);
+         DATA_vtxZ->SetBinContent(i+1,vtxz_weight_hadCali_django[i]);
       }
       int count = 0;
       for(int i = 0; i < DATA_Q2vsX->GetNbinsX(); i++){
          for(int j = 0; j < DATA_Q2vsX->GetNbinsY(); j++){
-            DATA_Q2vsX->SetBinContent(i+1,j+1,Q2vsX_weight_django[count]);
+            DATA_Q2vsX->SetBinContent(i+1,j+1,Q2vsX_weight_hadCali_django[count]);
             count++;
          }
       }
