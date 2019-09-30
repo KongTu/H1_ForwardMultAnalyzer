@@ -379,7 +379,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		}
 
 		double eBeamEnergy = eElectronBeam_mini;
-		if( ifile_ != 0 ) eBeamEnergy = 27.5;
+		if( ifile_ != 0 ) eBeamEnergy = 27.6;
 
 		h_etamax_all->Fill( etamax, w_mini);
 		h_PtBal_all->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
@@ -390,9 +390,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		h_elecPt_all->Fill( elecPtREC_mini, w_mini);
 		h_elecPz_all->Fill( elecPzREC_mini, w_mini);
 		h_hfsEpz_all->Fill( hfsEREC_mini - hfsPzREC_mini, w_mini);
-		h_elecEpz_all->Fill( (27.6/eBeamEnergy)*(elecEREC_mini - elecPzREC_mini), w_mini);
+		h_elecEpz_all->Fill( (27.5/eBeamEnergy)*(elecEREC_mini - elecPzREC_mini), w_mini);
 		double Epz = (elecEREC_mini+hfsEREC_mini) - (hfsPzREC_mini+elecPzREC_mini);
-		Epz = (27.6/eBeamEnergy)*Epz;
+		Epz = (27.5/eBeamEnergy)*Epz;
 		h_hfsElecEpz_all->Fill( Epz, w_mini );
 
 
