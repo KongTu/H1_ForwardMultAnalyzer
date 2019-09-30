@@ -187,7 +187,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	/*
 	Elec and hfs kinematic variables
 	*/
-
+	TH1D* h_etamax_all = new TH1D("h_etamax_all","h_etamax_all",200,-3,3);
 	TH1D* h_PtBal_all = new TH1D("h_PtBal","h_PtBal",200,-5,5);
 	TH1D* h_hfsEnergy_all = new TH1D("h_hfsEnergy","h_hfsEnergy",500,0,300);
 	TH1D* h_hfsPt_all = new TH1D("h_hfsPt","h_hfsPt",200,0,25);
@@ -381,6 +381,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		double eBeamEnergy = eElectronBeam_mini;
 		if( ifile_ != 0 ) eBeamEnergy = 27.5;
 
+		h_etamax_all->Fill( etamax, w_mini);
 		h_PtBal_all->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
 		h_hfsEnergy_all->Fill( hfsEREC_mini, w_mini);
 		h_hfsPt_all->Fill( hfsPtREC_mini, w_mini);
@@ -579,6 +580,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	h_Q2vsX_1->Write();
 	h_y_1->Write();
 	h_vtxZ_1->Write();
+	h_etamax_all->Write();
 
 	h_PtBal_all->Write();
 	h_hfsEnergy_all->Write();
