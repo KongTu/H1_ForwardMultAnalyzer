@@ -179,7 +179,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	TH2D* h_Q2vsX_1 = new TH2D("h_Q2vsX_1","h_Q2vsX_1",1000,0.00001,0.01,50,1,100);
 	TH1D* h_vtxZ_1  = new TH1D("h_vtxZ_1","h_vtxZ_1", 100,-50,50);
 	TH1D* h_y_1  = new TH1D("h_y_1","h_y_1", 200,0,1);
-	TH1D* h_etamax_1 = new TH1D("h_etamax_1","h_etamax_1",200,-4,4);
 
 	TH2D* h_Q2vsX_2 = new TH2D("h_Q2vsX_2","h_Q2vsX_2",1000,0.00001,0.01,50,1,100);
 	TH1D* h_vtxZ_2  = new TH1D("h_vtxZ_2","h_vtxZ_2", 100,-50,50);
@@ -220,6 +219,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 
 	TH1D* h_trackEpz_all = new TH1D("h_trackEpz","h_trackEpz",500,0,100);
 
+	TH1D* h_etamax[4][4][2];
 	TH1D* h_PtBal[4][4][2];
 	TH1D* h_hfsEnergy[4][4][2];
 	TH1D* h_hfsPt[4][4][2];
@@ -380,7 +380,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		double eBeamEnergy = eElectronBeam_mini;
 		if( ifile_ != 0 ) eBeamEnergy = 27.5;
 
-		h_etamax_1->Fill( etamax, w_mini);
 		h_PtBal_all->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
 		h_hfsEnergy_all->Fill( hfsEREC_mini, w_mini);
 		h_hfsPt_all->Fill( hfsPtREC_mini, w_mini);
@@ -433,6 +432,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 				h_Epz[Q2_INDEX][y_INDEX][0]->Fill( (hfsEREC_mini+elecEREC_mini) - (hfsPzREC_mini+elecPzREC_mini) , w_mini );
 				h_zvertex[Q2_INDEX][y_INDEX][0]->Fill( vertex_mini[2],w_mini );
 
+				h_etamax[Q2_INDEX][y_INDEX][0]->Fill( etamax, w_mini);
 				h_PtBal[Q2_INDEX][y_INDEX][0]->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
 				h_hfsEnergy[Q2_INDEX][y_INDEX][0]->Fill( hfsEREC_mini, w_mini);
 				h_hfsPt[Q2_INDEX][y_INDEX][0]->Fill( hfsPtREC_mini, w_mini);
@@ -479,6 +479,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 				h_Epz[Q2_INDEX][y_INDEX][1]->Fill( (hfsEREC_mini+elecEREC_mini) - (hfsPzREC_mini+elecPzREC_mini), w_mini  );
 				h_zvertex[Q2_INDEX][y_INDEX][1]->Fill( vertex_mini[2],w_mini );
 
+				h_etamax[Q2_INDEX][y_INDEX][1]->Fill( etamax, w_mini);
 				h_PtBal[Q2_INDEX][y_INDEX][1]->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
 				h_hfsEnergy[Q2_INDEX][y_INDEX][1]->Fill( hfsEREC_mini, w_mini);
 				h_hfsPt[Q2_INDEX][y_INDEX][1]->Fill( hfsPtREC_mini, w_mini);
@@ -577,7 +578,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	h_Q2vsX_1->Write();
 	h_y_1->Write();
 	h_vtxZ_1->Write();
-	h_etamax_1->Write();
 
 	h_PtBal_all->Write();
 	h_hfsEnergy_all->Write();
@@ -616,6 +616,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
 			for(int k=0;k<2;k++){
+				h_etamax[i][j][k]->Write();
 				h_PtBal[i][j][k]->Write();
 				h_hfsEnergy[i][j][k]->Write();
 				h_hfsPt[i][j][k]->Write();
