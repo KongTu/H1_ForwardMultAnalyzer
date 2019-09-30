@@ -255,6 +255,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		for(int j = 0; j < 4; j++){
 			for(int k = 0; k < 2; k++){
 
+				h_etamax[i][j][k] = new TH1D(Form("h_etamax_%d_%d_%d",i,j,k),"h_etamax",200,-3,3);
 				h_PtBal[i][j][k] = new TH1D(Form("h_PtBal_%d_%d_%d",i,j,k),"h_PtBal",200,-5,5);
 				h_hfsEnergy[i][j][k] = new TH1D(Form("h_hfsEnergy_%d_%d_%d",i,j,k),"h_hfsEnergy",500,0,300);
 				h_hfsPt[i][j][k] = new TH1D(Form("h_hfsPt_%d_%d_%d",i,j,k),"h_hfsPt",200,0,25);
