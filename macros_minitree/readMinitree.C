@@ -378,7 +378,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		}
 
 		double eBeamEnergy = eElectronBeam_mini;
-		if( ifile_ != 0 ) eBeamEnergy = 27.6;
+		if( ifile_ != 0 ) eBeamEnergy = 27.5;
 
 		h_etamax_1->Fill( etamax, w_mini);
 		h_PtBal_all->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
