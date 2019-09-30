@@ -7,30 +7,30 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 
 	if( !isScatElec_ ){
 		if(ifile_ == 0){
-			file = new TFile("/Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/data_highE_0607_noReweight_Tree_new.root");
+			file = new TFile("../new_output/data_highE_0607_noReweight_Tree_hadCali.root");
 		}
 		else if(ifile_ == 1) {
 
-			if(!isReweigh) file = new TFile("/Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_DJANGOH_noReweight_Tree_new.root");
-			else file = new TFile("/Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_DJANGOH_fullReweight_Tree_new.root");
+			if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCali.root");
+			else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCali.root");
 		}
 		else if(ifile_ == 2){
-			if(!isReweigh) file = new TFile("/Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_RAPGAP_noReweight_Tree_new.root");
-			else file = new TFile("/Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_RAPGAP_fullReweight_Tree_new.root");
+			if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCali.root");
+			else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCali.root");
 		}
 	}
 	else{
 		if(ifile_ == 0){
-			file = new TFile("/Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/data_highE_0607_noReweight_Tree_scatElec.root");
+			file = new TFile("../new_output/data_highE_0607_noReweight_Tree_scatElec.root");
 		}
 		else if(ifile_ == 1) {
 
-			if(!isReweigh) file = new TFile("/Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_DJANGOH_noReweight_Tree_scatElec.root");
-			else file = new TFile("/Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_DJANGOH_fullReweight_Tree_scatElec.root");
+			if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_scatElec.root");
+			else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_scatElec.root");
 		}
 		else if(ifile_ == 2){
-			if(!isReweigh) file = new TFile("/afs/desy.de/user/z/ztudesy/nfs/h1_analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_RAPGAP_noReweight_Tree_diffractive.root");
-			else file = new TFile("/afs/desy.de/user/z/ztudesy/nfs/h1_analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_RAPGAP_fullReweight_Tree_diffractive.root");
+			if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_scatElec.root");
+			else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_scatElec.root");
 		}
 	}
 	TTree* tree = (TTree*) file->Get("miniTree");
@@ -83,8 +83,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
  	Float_t elecEREC_mini, elecPtREC_mini, elecPzREC_mini;
 
 	Int_t elecChargeREC_mini;
-	Float_t elec0EREC_mini, elec0PtREC_mini, elec0PzREC_mini;
-	Float_t neutEREC_mini, neutPtREC_mini, neutPzREC_mini;
 
 	Float_t elecTrackMatchPhiREC_mini;
   	Float_t elecTrackMatchThetaREC_mini;
@@ -514,15 +512,15 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	TString outname;
 	if( !isScatElec_ ){
 		if( ifile_ == 0 ){
-			outname = "../minitree_output/Pn_hist_data_new.root";
+			outname = "../minitree_output/Pn_hist_data_hadCali.root";
 		}
 		else if( ifile_ == 1 ){
-			if(!isReweigh) outname = "../minitree_output/Pn_hist_django_new.root";
-			else outname = "../minitree_output/Pn_hist_django_new_reweigh.root";
+			if(!isReweigh) outname = "../minitree_output/Pn_hist_django_hadCali.root";
+			else outname = "../minitree_output/Pn_hist_django_hadCali_reweigh.root";
 		}
 		else if( ifile_ == 2 ){
-			if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_new.root";
-			else outname = "../minitree_output/Pn_hist_rapgap_new_reweigh.root";
+			if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_hadCali.root";
+			else outname = "../minitree_output/Pn_hist_rapgap_hadCali_reweigh.root";
 		}
 	}
 	else{
