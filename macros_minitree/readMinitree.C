@@ -157,11 +157,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	*/
 	TH1D* h_Pn[4][4][4];
 	TH1D* h_Pn_GEN[4][4][4];
+	TH2D* h_Pn_cor[4][4][4];
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
 			for(int k=0;k<4;k++){
 				h_Pn[i][j][k] = new TH1D(Form("h_Pn_%d_%d_%d",i,j,k),Form("h_Pn_%d_%d_%d",i,j,k),30,0,30);
 				h_Pn_GEN[i][j][k] = new TH1D(Form("h_Pn_GEN_%d_%d_%d",i,j,k),Form("h_Pn_GEN_%d_%d_%d",i,j,k),30,0,30);
+				h_Pn_cor[i][j][k] = new TH2D(Form("h_Pn_cor_%d_%d_%d",i,j,k),Form("h_Pn_cor_%d_%d_%d",i,j,k),30,0,30,30,0,30);
 			}
 		}
 	}
@@ -170,10 +172,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	*/
 	TH1D* h_Pn_HCM[4][4];
 	TH1D* h_Pn_GEN_HCM[4][4];
+	TH2D* h_Pn_cor_HCM[4][4];
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
 			h_Pn_HCM[i][j] = new TH1D(Form("h_Pn_HCM_%d_%d",i,j),Form("h_Pn_HCM_%d_%d",i,j),30,0,30);
 			h_Pn_GEN_HCM[i][j] = new TH1D(Form("h_Pn_GEN_HCM_%d_%d",i,j),Form("h_Pn_GEN_HCM_%d_%d",i,j),30,0,30);
+			h_Pn_cor_HCM[i][j] = new TH2D(Form("h_Pn_cor_HCM_%d_%d",i,j),Form("h_Pn_cor_HCM_%d_%d",i,j),30,0,30,30,0,30);
 		}
 	}
 	/*
@@ -233,6 +237,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 
 	TH1D* h_trackEpz_all = new TH1D("h_trackEpz","h_trackEpz",500,0,100);
 
+	TH1D* h_ptVsMult[30];
+	for(int i=0;i<30;i++){
+		h_ptVsMult[i] = new TH1D(Form("h_ptVsMult_%d",i),Form("h_ptVsMult_%d",i),100,0,5);
+	}
 	TH1D* h_etamax[4][4][2];
 	TH1D* h_PtBal[4][4][2];
 	TH1D* h_hfsEnergy[4][4][2];
@@ -309,6 +317,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 
 		tree->GetEntry(ievent);
 		
+		int n_particle_eta[4] = {0,0,0,0};
+		int n_particle_HCM = 0;
 		if( ifile_ != 0 ){
 			int Q2_INDEX = -1;
 			for(int iQ2 = 0; iQ2 < 4; iQ2++){
@@ -322,8 +332,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 					y_INDEX = iy;
 				}
 			}
-			int n_particle_eta[4] = {0,0,0,0};
-			int n_particle_HCM = 0;
 			for(int itrk = 0; itrk < nMCtrack_mini; itrk++){
 				if( TMath::Hypot(pxMC_mini[itrk],pyMC_mini[itrk]) < 0.15 ) continue;
 				if( etaStarMC_mini[itrk] > 0 && etaStarMC_mini[itrk] < 4.0 ){
@@ -369,8 +377,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 				y_INDEX = iy;
 			}
 		}
-		int n_particle_eta[4] = {0,0,0,0};
-		int n_particle_HCM = 0;
+		int n_particle_eta_rec[4] = {0,0,0,0};
+		int n_particle_HCM_rec = 0;
 		double trk_E = 0.;
 		double trk_pz = 0.;
 		double etamax = -99.;
@@ -381,15 +389,15 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 				etamax = etaREC_mini[itrk];
 			}
 			if( etaStarREC_mini[itrk] > 0 && etaStarREC_mini[itrk] < 4.0 ){
-				n_particle_HCM++;
+				n_particle_HCM_rec++;
 			}
 			for(int ieta = 0; ieta < 3; ieta++){
 				if( etaREC_mini[itrk] > eta_bins[2*ieta] && etaREC_mini[itrk] < eta_bins[2*ieta+1] ){
-					n_particle_eta[ieta]++;
+					n_particle_eta_rec[ieta]++;
 				}
 			}
 			if( etaREC_mini[itrk] > -1.2 && etaREC_mini[itrk] < 1.6 ) {
-				n_particle_eta[3]++;
+				n_particle_eta_rec[3]++;
 				trk_E += sqrt(pxREC_mini[itrk]*pxREC_mini[itrk] + pyREC_mini[itrk]*pyREC_mini[itrk] + pzREC_mini[itrk]*pzREC_mini[itrk] + 0.134*0.134);
 				trk_pz += pzREC_mini[itrk];
 			}
@@ -401,6 +409,17 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 				}
 			}
 		}
+
+		for(int im=0;im<30;im++){
+			if( im != n_particle_eta_rec[3]) continue;
+			for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
+				if(passREC_mini[itrk]!=1) continue;
+				if( etaREC_mini[itrk] > -1.2 && etaREC_mini[itrk] < 1.6 ) {
+					h_ptVsMult[im]->Fill(TMath::Hypot(pxREC_mini[itrk],pyREC_mini[itrk]), w_mini);
+				}
+			}
+		}
+		
 
 		double eBeamEnergy = eElectronBeam_mini;
 		if( ifile_ != 0 ) eBeamEnergy = 27.6;
@@ -418,7 +437,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		double Epz = (elecEREC_mini+hfsEREC_mini) - (hfsPzREC_mini+elecPzREC_mini);
 		Epz = (27.6/eBeamEnergy)*Epz;
 		h_hfsElecEpz_all->Fill( Epz, w_mini );
-
 
 		if( isScatElec_ ){
 			if( elecChargeREC_mini == +1 ){
@@ -450,12 +468,21 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 
 		if(Q2_INDEX >=0 && y_INDEX >= 0){
 
-			h_Pn_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, w_mini );
+			if( ifile_ != 0 ){
 
-			h_Pn[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta[0], w_mini );
-			h_Pn[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta[1], w_mini );
-			h_Pn[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta[2], w_mini );
-			h_Pn[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta[3], w_mini );
+				h_Pn_cor_HCM[Q2_INDEX][y_INDEX]->Fill(n_particle_HCM_rec,n_particle_HCM,w_mini);
+				h_Pn_cor[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta_rec[0], n_particle_eta[0], w_mini );
+				h_Pn_cor[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta_rec[1], n_particle_eta[1], w_mini );
+				h_Pn_cor[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta_rec[2], n_particle_eta[2], w_mini );
+				h_Pn_cor[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta_rec[3], n_particle_eta[3], w_mini );
+			}
+
+			h_Pn_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
+
+			h_Pn[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta_rec[0], w_mini );
+			h_Pn[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta_rec[1], w_mini );
+			h_Pn[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta_rec[2], w_mini );
+			h_Pn[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta_rec[3], w_mini );
 			
 			if( totalMultREC_mini < 15 && totalMultREC_mini >= 0 ){
 				h_Epz[Q2_INDEX][y_INDEX][0]->Fill( (hfsEREC_mini+elecEREC_mini) - (hfsPzREC_mini+elecPzREC_mini) , w_mini );
@@ -592,6 +619,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 			for(int k=0;k<4;k++){
 				h_Pn[i][j][k]->Write();
 				h_Pn_GEN[i][j][k]->Write();
+				h_Pn_cor[i][j][k]->Write();
 			}
 		}
 	}
@@ -599,6 +627,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		for(int j=0;j<4;j++){
 			h_Pn_HCM[i][j]->Write();
 			h_Pn_GEN_HCM[i][j]->Write();
+			h_Pn_cor_HCM[i][j]->Write();
 			
 		}
 	}
@@ -690,7 +719,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		}
 	}
 	
-	
+	for(int i=0;i<30;i++){
+		h_ptVsMult[i]->Write();
+	}
 
 
 }
