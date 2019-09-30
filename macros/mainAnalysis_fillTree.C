@@ -99,6 +99,7 @@ struct MyEvent {
    Int_t typeChgREC_mini[nRECtrack_MAX];
    Float_t etaAsymREC_mini;
    Float_t EpzREC_mini;
+   Float_t eElectronBeam_mini;
 
    //hfs and elec kinematics
    Float_t hfsEREC_mini, hfsPtREC_mini, hfsPzREC_mini;
@@ -226,6 +227,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("nRECtrack_mini",&myEvent.nRECtrack_mini,"nRECtrack_mini/I");
    outtree->Branch("EpzREC_mini",&myEvent.EpzREC_mini,"EpzREC_mini/F");
    outtree->Branch("totalMultREC_mini",&myEvent.totalMultREC_mini,"totalMultREC_mini/I");
+   outtree->Branch("eElectronBeam_mini",&myEvent.eElectronBeam_mini,"eElectronBeam_mini/F");
 
    outtree->Branch("pxREC_mini",myEvent.pxREC_mini,"pxREC_mini[nRECtrack_mini]/F");
    outtree->Branch("pyREC_mini",myEvent.pyREC_mini,"pyREC_mini[nRECtrack_mini]/F");
@@ -255,6 +257,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
       Float_t elecEradREC,elecEcraREC;
       Int_t elecChargeREC;
+      Float_t eElectronBeam;
      
       Int_t ibgREC;
 
@@ -323,6 +326,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("Q2GKI",&Q2GKI);
       tree->SetBranchAddress("simvertex",&simvertex);
       
+      tree->SetBranchAddress("eElectronBeam",&eElectronBeam);
+
       tree->SetBranchAddress("nMCtrack",&nMCtrack);
       tree->SetBranchAddress("etaStar2MC",etaStarMC);
       tree->SetBranchAddress("ptStar2MC",ptStarMC);
@@ -471,6 +476,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.run_mini = run;
          myEvent.evno_mini = evno;
          myEvent.w_mini = evt_weight;
+         myEvent.eElectronBeam_mini = eElectronBeam;
          myEvent.totalMultREC_mini = -999;
 
          myEvent.xMC_es_mini = -999.;
