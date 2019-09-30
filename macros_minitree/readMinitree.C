@@ -57,6 +57,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	Float_t pyMC_mini[nMCtrack_MAX];
 	Float_t pzMC_mini[nMCtrack_MAX];
 	Float_t etaMC_mini[nMCtrack_MAX];
+	Float_t etaStarMC_mini[nMCtrack_MAX];
 	Float_t chargeMC_mini[nMCtrack_MAX];
    	
 	tree->SetBranchAddress("yMC_es_mini",&yMC_es_mini);
@@ -67,6 +68,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	tree->SetBranchAddress("pyMC_mini",&pyMC_mini);
 	tree->SetBranchAddress("pzMC_mini",&pzMC_mini);
 	tree->SetBranchAddress("etaMC_mini",&etaMC_mini);
+	tree->SetBranchAddress("etaStarMC_mini",&etaStarMC_mini);
 
 	Float_t xREC_es_mini,yREC_es_mini,Q2REC_es_mini;
 	const int nRECtrack_MAX = 200;
@@ -134,6 +136,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	tree->SetBranchAddress("pzREC_mini",&pzREC_mini);
 
 	tree->SetBranchAddress("etaREC_mini",&etaREC_mini);
+	tree->SetBranchAddress("etaStarREC_mini",&etaStarREC_mini);
 	tree->SetBranchAddress("passREC_mini",passREC_mini);
 	tree->SetBranchAddress("passTightREC_mini",passTightREC_mini);
 	tree->SetBranchAddress("passLooseREC_mini",passLooseREC_mini);
@@ -160,6 +163,17 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 				h_Pn[i][j][k] = new TH1D(Form("h_Pn_%d_%d_%d",i,j,k),Form("h_Pn_%d_%d_%d",i,j,k),30,0,30);
 				h_Pn_GEN[i][j][k] = new TH1D(Form("h_Pn_GEN_%d_%d_%d",i,j,k),Form("h_Pn_GEN_%d_%d_%d",i,j,k),30,0,30);
 			}
+		}
+	}
+	/*
+	P(n) distribution in different Q2, y bins within 0<eta*<4.
+	*/
+	TH1D* h_Pn_HCM[4][4];
+	TH1D* h_Pn_GEN_HCM[4][4];
+	for(int i=0;i<4;i++){
+		for(int j=0;j<4;j++){
+			h_Pn_HCM[i][j] = new TH1D(Form("h_Pn_HCM_%d_%d",i,j),Form("h_Pn_HCM_%d_%d",i,j),30,0,30);
+			h_Pn_GEN_HCM[i][j] = new TH1D(Form("h_Pn_GEN_HCM_%d_%d",i,j),Form("h_Pn_GEN_HCM_%d_%d",i,j),30,0,30);
 		}
 	}
 	/*
@@ -309,8 +323,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 				}
 			}
 			int n_particle_eta[4] = {0,0,0,0};
+			int n_particle_HCM = 0;
 			for(int itrk = 0; itrk < nMCtrack_mini; itrk++){
 				if( TMath::Hypot(pxMC_mini[itrk],pyMC_mini[itrk]) < 0.15 ) continue;
+				if( etaStarMC_mini[itrk] > 0 && etaStarMC_mini[itrk] < 4.0 ){
+					n_particle_HCM++;
+				}
 				for(int ieta = 0; ieta < 3; ieta++){
 					if( etaMC_mini[itrk] > eta_bins[2*ieta] && etaMC_mini[itrk] < eta_bins[2*ieta+1] ){
 						n_particle_eta[ieta]++;
@@ -321,6 +339,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 				}
 			}
 			if(Q2_INDEX >=0 && y_INDEX >= 0){
+				h_Pn_GEN_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, w_mini );
+				
 				h_Pn_GEN[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta[0], w_mini );
 				h_Pn_GEN[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta[1], w_mini );
 				h_Pn_GEN[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta[2], w_mini );
@@ -350,6 +370,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 			}
 		}
 		int n_particle_eta[4] = {0,0,0,0};
+		int n_particle_HCM = 0;
 		double trk_E = 0.;
 		double trk_pz = 0.;
 		double etamax = -99.;
@@ -358,6 +379,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 			if(passREC_mini[itrk]!=1) continue;
 			if( etaREC_mini[itrk] > etamax ){
 				etamax = etaREC_mini[itrk];
+			}
+			if( etaStarREC_mini[itrk] > 0 && etaStarREC_mini[itrk] < 4.0 ){
+				n_particle_HCM++;
 			}
 			for(int ieta = 0; ieta < 3; ieta++){
 				if( etaREC_mini[itrk] > eta_bins[2*ieta] && etaREC_mini[itrk] < eta_bins[2*ieta+1] ){
@@ -390,9 +414,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		h_elecPt_all->Fill( elecPtREC_mini, w_mini);
 		h_elecPz_all->Fill( elecPzREC_mini, w_mini);
 		h_hfsEpz_all->Fill( hfsEREC_mini - hfsPzREC_mini, w_mini);
-		h_elecEpz_all->Fill( (27.5/eBeamEnergy)*(elecEREC_mini - elecPzREC_mini), w_mini);
+		h_elecEpz_all->Fill( (27.6/eBeamEnergy)*(elecEREC_mini - elecPzREC_mini), w_mini);
 		double Epz = (elecEREC_mini+hfsEREC_mini) - (hfsPzREC_mini+elecPzREC_mini);
-		Epz = (27.5/eBeamEnergy)*Epz;
+		Epz = (27.6/eBeamEnergy)*Epz;
 		h_hfsElecEpz_all->Fill( Epz, w_mini );
 
 
@@ -425,6 +449,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		h_trackEpz_all->Fill(trk_E-trk_pz, w_mini);
 
 		if(Q2_INDEX >=0 && y_INDEX >= 0){
+
+			h_Pn_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, w_mini );
+
 			h_Pn[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta[0], w_mini );
 			h_Pn[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta[1], w_mini );
 			h_Pn[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta[2], w_mini );
@@ -566,6 +593,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 				h_Pn[i][j][k]->Write();
 				h_Pn_GEN[i][j][k]->Write();
 			}
+		}
+	}
+	for(int i=0;i<4;i++){
+		for(int j=0;j<4;j++){
+			h_Pn_HCM[i][j]->Write();
+			h_Pn_GEN_HCM[i][j]->Write();
+			
 		}
 	}
 	for(int i=0;i<4;i++){
