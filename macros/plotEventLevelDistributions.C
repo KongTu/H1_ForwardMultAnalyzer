@@ -1,5 +1,6 @@
 #include "RiceStyle.h"
 #include "mainAnalysis_fillTree.C"
+#include "TLorentzVector.h"
 
 using namespace std;
 
@@ -186,7 +187,8 @@ void plotEventLevelDistributions(const int start = 0, int end = -1, const bool d
       tree->SetBranchAddress("rZeroREC",rZeroREC);
     //end   
 
-      TLorentzVector elec(elecPxREC,elecPyREC,elecPzREC,elecEREC);
+      TLorentzVector elec;
+      elec.SetPxPyPzE(elecPxREC,elecPyREC,elecPzREC,elecEREC);
       cout << "total number of events ~ " << tree->GetEntries() << endl;
       int totalEvents = 0;
       if( end == -1 ) end = tree->GetEntries();
