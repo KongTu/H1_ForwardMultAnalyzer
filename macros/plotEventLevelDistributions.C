@@ -187,8 +187,7 @@ void plotEventLevelDistributions(const int start = 0, int end = -1, const bool d
       tree->SetBranchAddress("rZeroREC",rZeroREC);
     //end   
 
-      TLorentzVector elec;
-      elec.SetPxPyPzE(elecPxREC,elecPyREC,elecPzREC,elecEREC);
+      
       cout << "total number of events ~ " << tree->GetEntries() << endl;
       int totalEvents = 0;
       if( end == -1 ) end = tree->GetEntries();
@@ -242,6 +241,8 @@ void plotEventLevelDistributions(const int start = 0, int end = -1, const bool d
          if( Q2REC_es < 5 || Q2REC_es > 100. ) continue;
          if( yREC_es < 0.075 || yREC_es > 0.6 ) continue;
 
+         TLorentzVector elec;
+         elec.SetPxPyPzE(elecPxREC,elecPyREC,elecPzREC,elecEREC);
 
          //after all event selection cuts:
          h_SpaCalXY->Fill( elecXclusREC, elecYclusREC, evt_weight*pow(Q2REC_es,2) );
