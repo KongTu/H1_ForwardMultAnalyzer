@@ -130,7 +130,7 @@ struct MyEvent {
 void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ = true, const bool doRapgap_ = true, const bool doReweight_ = false, const bool doComb_=true, const bool doFwd_= false) {
 
    //dirty hack of the problem of using TFile with TTree here. 
-   TH2D* DATA_y = new TH2D("h_y_1","h_y_1",200,0,1);
+   TH1D* DATA_y = new TH1D("h_y_1","h_y_1",200,0,1);
    TH1D* DATA_vtxZ = new TH1D("h_vtxZ_1","h_vtxZ_1", 100,-50,50);
    if( doRapgap_ ){
       for(int i = 0; i < DATA_vtxZ->GetNbinsX(); i++){
