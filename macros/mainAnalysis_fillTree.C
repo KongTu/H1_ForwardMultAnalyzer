@@ -130,31 +130,16 @@ struct MyEvent {
 void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ = true, const bool doRapgap_ = true, const bool doReweight_ = false, const bool doComb_=true, const bool doFwd_= false) {
 
    //dirty hack of the problem of using TFile with TTree here. 
-   TH2D* DATA_Q2vsX = new TH2D("h_Q2vsX_1","h_Q2vsX_1",1000,0.00001,0.01,50,1,100);
-   TH1D* DATA_vtxZ = new TH1D("h_vtxZ_1","h_vtxZ_1", 100,-50,50);
+   TH1D* DATA_y;
+   TH1D* DATA_vtxZ;
+   TFile* file_reweight = new TFile("MCweight_hadCali.root");
    if( doRapgap_ ){
-      for(int i = 0; i < DATA_vtxZ->GetNbinsX(); i++){
-         DATA_vtxZ->SetBinContent(i+1,vtxz_weight_hadCali_rapgap[i]);
-      }
-      int count = 0;
-      for(int i = 0; i < DATA_Q2vsX->GetNbinsX(); i++){
-         for(int j = 0; j < DATA_Q2vsX->GetNbinsY(); j++){
-            DATA_Q2vsX->SetBinContent(i+1,j+1,Q2vsX_weight_hadCali_rapgap[count]);
-            count++;
-         }
-      }
+      DATA_y = (TH1D*) file_reweight->Get("h_y_1");
+      DATA_vtxZ = (TH1D*) file_reweight->Get("h_vtxZ_1");
    }
    else{
-      for(int i = 0; i < DATA_vtxZ->GetNbinsX(); i++){
-         DATA_vtxZ->SetBinContent(i+1,vtxz_weight_hadCali_django[i]);
-      }
-      int count = 0;
-      for(int i = 0; i < DATA_Q2vsX->GetNbinsX(); i++){
-         for(int j = 0; j < DATA_Q2vsX->GetNbinsY(); j++){
-            DATA_Q2vsX->SetBinContent(i+1,j+1,Q2vsX_weight_hadCali_django[count]);
-            count++;
-         }
-      }
+      DATA_y = (TH1D*) file_reweight->Get("h_y_2");
+      DATA_vtxZ = (TH1D*) file_reweight->Get("h_vtxZ_2");
    }
 
    //starting TChain;
@@ -433,20 +418,20 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          }
          else if( doGen_ && doReweight_ ) {
             //reweighting MC to DATA distribution in phase space variables
-            double Q2x_weight = DATA_Q2vsX->GetBinContent( DATA_Q2vsX->FindBin(xMC_es,Q2MC_es) );
-            if( Q2x_weight == 0. ) Q2x_weight = 1.0;
+            double y_weight = DATA_y->GetBinContent( DATA_y->FindBin(yMC_es) );
+            if( y_weight == 0. ) y_weight = 1.0;
             double vtxZ_weight = DATA_vtxZ->GetBinContent( DATA_vtxZ->FindBin( simvertex[2]) );
             if( vtxZ_weight == 0. ) vtxZ_weight = 1.0;
             if( doRapgap_ ){//rapgap has diffractive MCs
                if( i < dis_events ){
-                  evt_weight = w*Q2x_weight*vtxZ_weight*(136./68.);//data/mc Lumi
+                  evt_weight = w*y_weight*vtxZ_weight*(136./68.);//data/mc Lumi
                }
                else if( i >= dis_events && i < 0.9*(tree->GetEntries()-dis_events)+dis_events ){
-                  evt_weight = w*Q2x_weight*vtxZ_weight*(136./(0.9*219.35));//data/mc Lumi
+                  evt_weight = w*y_weight*vtxZ_weight*(136./(0.9*219.35));//data/mc Lumi
                }
             }
             else{
-               evt_weight = w*Q2x_weight*vtxZ_weight;
+               evt_weight = w*y_weight*vtxZ_weight;
             }
          }
          else if( doGen_ && !doReweight_ ) {
