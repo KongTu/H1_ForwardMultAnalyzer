@@ -129,18 +129,6 @@ struct MyEvent {
 
 void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ = true, const bool doRapgap_ = true, const bool doReweight_ = false, const bool doComb_=true, const bool doFwd_= false) {
 
-   //dirty hack of the problem of using TFile with TTree here. 
-   TH1D* DATA_y;
-   TH1D* DATA_vtxZ;
-   TFile* file_reweight = new TFile("MCweight_hadCali.root");
-   if( doRapgap_ ){
-      DATA_y = (TH1D*) file_reweight->Get("h_y_1");
-      DATA_vtxZ = (TH1D*) file_reweight->Get("h_vtxZ_1");
-   }
-   else{
-      DATA_y = (TH1D*) file_reweight->Get("h_y_2");
-      DATA_vtxZ = (TH1D*) file_reweight->Get("h_vtxZ_2");
-   }
 
    //starting TChain;
    TChain* tree = new TChain("properties");
@@ -405,6 +393,19 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       cout << "starting events = " << start << endl;
       cout << "ending events = " << end << endl;
       cout << "total events now ~ " << 0.9*(tree->GetEntries()-dis_events)+dis_events << endl;
+
+      //dirty hack of the problem of using TFile with TTree here. 
+      TH1D* DATA_y;
+      TH1D* DATA_vtxZ;
+      TFile* file_reweight = new TFile("MCweight_hadCali.root");
+      if( doRapgap_ ){
+         DATA_y = (TH1D*) file_reweight->Get("h_y_1");
+         DATA_vtxZ = (TH1D*) file_reweight->Get("h_vtxZ_1");
+      }
+      else{
+         DATA_y = (TH1D*) file_reweight->Get("h_y_2");
+         DATA_vtxZ = (TH1D*) file_reweight->Get("h_vtxZ_2");
+      }
 
       int totalEvents = 0;
       for(int i=start;i<end;i++) {
