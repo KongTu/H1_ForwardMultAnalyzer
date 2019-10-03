@@ -592,7 +592,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		}
 		else if( ifile_ == 2 ){
 			if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_hadCali.root";
-			else outname = "../minitree_output/Pn_hist_rapgap_hadCali_reweigh_diffractive10per.root";
+			else outname = "../minitree_output/Pn_hist_rapgap_hadCali_reweigh_diffractive.root";
 		}
 	}
 	else{
