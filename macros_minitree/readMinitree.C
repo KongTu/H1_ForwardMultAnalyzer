@@ -197,7 +197,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	TH2D* h_Q2vsX_1 = new TH2D("h_Q2vsX_1","h_Q2vsX_1",1000,0.00001,0.01,50,1,100);
 	TH1D* h_vtxZ_1  = new TH1D("h_vtxZ_1","h_vtxZ_1", 100,-50,50);
 	TH1D* h_y_1  = new TH1D("h_y_1","h_y_1", 200,0,1);
-	TH2D* h_SpaCal_1 = new TH2D("h_SpaCal_1","h_SpaCal_1",)
 
 	TH2D* h_Q2vsX_2 = new TH2D("h_Q2vsX_2","h_Q2vsX_2",1000,0.00001,0.01,50,1,100);
 	TH1D* h_vtxZ_2  = new TH1D("h_vtxZ_2","h_vtxZ_2", 100,-50,50);
