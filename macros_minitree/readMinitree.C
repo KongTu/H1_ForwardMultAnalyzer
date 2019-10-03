@@ -16,7 +16,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		}
 		else if(ifile_ == 2){
 			if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCali.root");
-			else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCali_diffractive10per.root");
+			else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCali_diffractive.root");
 		}
 	}
 	else{
