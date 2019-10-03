@@ -165,7 +165,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
       //save the number of events that separate inclusive DIS to diffractive DIS
          dis_events = tree->GetEntries();
-      // tree->Add("../batch/output/mc_9015/*.root");
+      tree->Add("../batch/output/mc_9015/*.root");
    }
    else if( !doRapgap_ && doGen_){
       tree->Add("../batch/output/mc_8926_hadCali/*.root");
@@ -411,7 +411,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       if(end == -1 || end >= tree->GetEntries()) {end = tree->GetEntries();}
       cout << "starting events = " << start << endl;
       cout << "ending events = " << end << endl;
-      cout << "total events now ~ " << 0.9*(tree->GetEntries()-dis_events)+dis_events << endl;
+      cout << "total events now ~ " << 1.0*(tree->GetEntries()-dis_events)+dis_events << endl;
 
       int totalEvents = 0;
       for(int i=start;i<end;i++) {
@@ -433,7 +433,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                if( i < dis_events ){
                   evt_weight = w*y_weight*vtxZ_weight*(136./68.);//data/mc Lumi
                }
-               else if( i >= dis_events && i < 0.9*(tree->GetEntries()-dis_events)+dis_events ){
+               else if( i >= dis_events && i < 1.0*(tree->GetEntries()-dis_events)+dis_events ){
                   evt_weight = w*y_weight*vtxZ_weight*(136./(0.9*219.35));//data/mc Lumi
                }
             }
@@ -448,8 +448,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                   evt_weight = w*(136./68.);//data/mc Lumi
                   // evt_weight = w;
                }
-               else if( i >= dis_events && i < 0.9*(tree->GetEntries()-dis_events)+dis_events ){
-                  evt_weight = w*(136./(0.9*219.35) );//data/mc Lumi
+               else if( i >= dis_events && i < 1.0*(tree->GetEntries()-dis_events)+dis_events ){
+                  evt_weight = w*(136./(1.0*219.35) );//data/mc Lumi
                }
                else{
                   cout << "overflow in events! " << endl;
