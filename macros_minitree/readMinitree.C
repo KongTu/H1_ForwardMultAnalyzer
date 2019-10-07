@@ -12,11 +12,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		else if(ifile_ == 1) {
 
 			if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCali.root");
-			else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCali.root");
+			else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCali_ptStar.root");
 		}
 		else if(ifile_ == 2){
 			if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCali.root");
-			else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCali_diffractive.root");
+			else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCali_ptStar_diffractive.root");
 		}
 	}
 	else{
@@ -58,6 +58,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	Float_t pzMC_mini[nMCtrack_MAX];
 	Float_t etaMC_mini[nMCtrack_MAX];
 	Float_t etaStarMC_mini[nMCtrack_MAX];
+	Float_t ptStarMC_mini[nMCtrack_MAX];
 	Float_t chargeMC_mini[nMCtrack_MAX];
    	
 	tree->SetBranchAddress("yMC_es_mini",&yMC_es_mini);
@@ -69,6 +70,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	tree->SetBranchAddress("pzMC_mini",&pzMC_mini);
 	tree->SetBranchAddress("etaMC_mini",&etaMC_mini);
 	tree->SetBranchAddress("etaStarMC_mini",&etaStarMC_mini);
+	tree->SetBranchAddress("ptStarMC_mini",&ptStarMC_mini);
 
 	Float_t xREC_es_mini,yREC_es_mini,Q2REC_es_mini;
 	const int nRECtrack_MAX = 200;
@@ -333,10 +335,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 				}
 			}
 			for(int itrk = 0; itrk < nMCtrack_mini; itrk++){
-				if( TMath::Hypot(pxMC_mini[itrk],pyMC_mini[itrk]) < 0.15 ) continue;
-				if( etaStarMC_mini[itrk] > 0 && etaStarMC_mini[itrk] < 4.0 ){
-					n_particle_HCM++;
+				
+				if( ptStarMC_mini[itrk] > 0.15 ){
+					if( etaStarMC_mini[itrk] > 0 && etaStarMC_mini[itrk] < 4.0 ){
+						n_particle_HCM++;
+					}
 				}
+				if( TMath::Hypot(pxMC_mini[itrk],pyMC_mini[itrk]) < 0.15 ) continue;
 				for(int ieta = 0; ieta < 3; ieta++){
 					if( etaMC_mini[itrk] > eta_bins[2*ieta] && etaMC_mini[itrk] < eta_bins[2*ieta+1] ){
 						n_particle_eta[ieta]++;
@@ -588,11 +593,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		}
 		else if( ifile_ == 1 ){
 			if(!isReweigh) outname = "../minitree_output/Pn_hist_django_hadCali.root";
-			else outname = "../minitree_output/Pn_hist_django_hadCali_reweigh.root";
+			else outname = "../minitree_output/Pn_hist_django_hadCali_ptStar_reweigh.root";
 		}
 		else if( ifile_ == 2 ){
 			if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_hadCali.root";
-			else outname = "../minitree_output/Pn_hist_rapgap_hadCali_reweigh_diffractive.root";
+			else outname = "../minitree_output/Pn_hist_rapgap_hadCali_ptStar_reweigh_diffractive.root";
 		}
 	}
 	else{
