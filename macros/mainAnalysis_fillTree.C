@@ -600,7 +600,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             */
             double ptREC = TMath::Hypot(pxREC[j],pyREC[j]);
             //pay attention if it is pt or ptStar
-            cutVar.push_back(ptStarREC[j]); cutVar.push_back(dcaPrimeREC[j]); cutVar.push_back(trkThetaREC[j]);
+            cutVar.push_back(ptREC); cutVar.push_back(dcaPrimeREC[j]); cutVar.push_back(trkThetaREC[j]);
             cutVar.push_back(startHitsRadiusREC[j]); cutVar.push_back(endHitsRadiusREC[j]); cutVar.push_back((double)vtxNHitsREC[j]);
             cutVar.push_back(elecThetaREC); cutVar.push_back(nucliaREC[j]); cutVar.push_back(pREC[j]);
             cutVar.push_back(peREC[j]); cutVar.push_back(chi2vtxREC[j]); cutVar.push_back(chi2LinkREC[j]);
