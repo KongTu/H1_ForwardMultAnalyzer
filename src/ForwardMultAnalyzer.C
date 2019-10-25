@@ -1146,7 +1146,7 @@ int main(int argc, char* argv[]) {
          if(cand) {
             // only particle candidates belong to the calibrated HFS
             //add energy scale by 1%
-            p.SetE(1.01*p.E());
+            // p.SetE(1.01*p.E());
             hfs += p;
          }
          
@@ -1520,7 +1520,7 @@ int main(int argc, char* argv[]) {
       myEvent.hfsPxREC=hfs.X();
       myEvent.hfsPyREC=hfs.Y();
       myEvent.hfsPzREC=hfs.Z();
-      myEvent.hfsEREC=hfs.E();
+      myEvent.hfsEREC=1.01*hfs.E();
 
       if(haveScatteredElectron && print) {
          cout<<"reconstructed electron w/o photons in lab: ";
