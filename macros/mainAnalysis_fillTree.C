@@ -168,8 +168,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->Add("../batch/output/mc_9015/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadEPlus0p5/*.root");
-      tree->Add("../batch/output/mc_8927_hadEPlus0p5/*.root");
+      tree->Add("../batch/output/mc_8926_hadEPlus1p0/*.root");
+      tree->Add("../batch/output/mc_8927_hadEPlus1p0/*.root");
    }
    else if( !doGen_ ){
       tree->Add("../batch/output/data_highE_06_hadCali/*.root");
