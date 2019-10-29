@@ -1099,19 +1099,7 @@ int main(int argc, char* argv[]) {
       }
 
       //add energy scale by 1%
-      double hfsPt_tmp = hfs_count.Pt();
-      double hfsEta_tmp = hfs_count.Eta();
-      double hfsPhi_tmp = hfs_count.Phi();
-      double hfsMass_tmp = hfs_count.M();
-      TLorentzVector hfs_new;
-      hfs_new.SetPtEtaPhiM(1.01*hfsPt_tmp, hfsEta_tmp, hfsPhi_tmp, hfsMass_tmp);
-      cout << "old E " <<  hfs_count.E() << endl;
-      cout << "old Pz " <<  hfs_count.Pz() << endl;
-      cout << "old Pt " <<  hfs_count.Pt() << endl;
-      cout << "new E " <<  hfs_new.E() << endl;
-      cout << "new Pz " <<  hfs_new.Pz() << endl;
-      cout << "new Pt " <<  hfs_new.Pt() << endl;
-
+      hfs_count.SetPtEtaPhiM(1.01*hfs_count.Pt(), hfs_count.Eta(), hfs_count.Phi(), hfs_count.M());
 
       double sigma_REC = hfs_count.E()-hfs_count.Pz();//not use for Elec method
       
@@ -1155,8 +1143,6 @@ int main(int argc, char* argv[]) {
 
          if(cand) {
             // only particle candidates belong to the calibrated HFS
-            //add energy scale by 1%
-            // p.SetE(0.99*p.E());
             hfs += p;
          }
          
@@ -1526,6 +1512,9 @@ int main(int argc, char* argv[]) {
             }
          }
       }
+
+    //add energy scale by 1%
+      hfs.SetPtEtaPhiM(1.01*hfs.Pt(), hfs.Eta(), hfs.Phi(), hfs.M());
 
       myEvent.hfsPxREC=hfs.X();
       myEvent.hfsPyREC=hfs.Y();
