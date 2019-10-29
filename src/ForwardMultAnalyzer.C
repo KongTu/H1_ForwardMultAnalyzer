@@ -305,25 +305,25 @@ int main(int argc, char* argv[]) {
    H1StdCmdLine opts;
    opts.Parse(&argc, argv);
 
-   // open run selection and detector status file
-   TString goodRunFileName("SelectedRuns_HighE0607_BST_e+p_920.root");
-   TFile goodRunFile(goodRunFileName);
-   if(!goodRunFile.IsOpen()) {
-      cerr<<"Error: could not open file "<<goodRunFileName<<"\n";
-      return 2;
-   }
-   H1RunList* goodRunList
-      = (H1RunList*) goodRunFile.Get("H1RunList");
-   if(!goodRunList) {
-      cerr<<"Error: no runlist in file - return!\n";
-      return 2;
-   }
-   H1DetectorStatus *detectorStatus
-      = (H1DetectorStatus*)goodRunFile.Get("MyDetectorStatus");
-   if(!detectorStatus) {
-      cerr<<"Error: no detector status in file - return!\n";
-      return 3;
-   }
+   // // open run selection and detector status file
+   // TString goodRunFileName("SelectedRuns_HighE0607_BST_e+p_920.root");
+   // TFile goodRunFile(goodRunFileName);
+   // if(!goodRunFile.IsOpen()) {
+   //    cerr<<"Error: could not open file "<<goodRunFileName<<"\n";
+   //    return 2;
+   // }
+   // H1RunList* goodRunList
+   //    = (H1RunList*) goodRunFile.Get("H1RunList");
+   // if(!goodRunList) {
+   //    cerr<<"Error: no runlist in file - return!\n";
+   //    return 2;
+   // }
+   // H1DetectorStatus *detectorStatus
+   //    = (H1DetectorStatus*)goodRunFile.Get("MyDetectorStatus");
+   // if(!detectorStatus) {
+   //    cerr<<"Error: no detector status in file - return!\n";
+   //    return 3;
+   // }
 
    // Load mODS/HAT files
    H1Tree::Instance()->Open();            // this statement must be there!
@@ -538,10 +538,10 @@ int main(int argc, char* argv[]) {
    while (gH1Tree->Next() && !opts.IsMaxEvent(eventCounter)) {
       ++eventCounter;
 
-         // skip runs not in list of good runs
-         if(!goodRunList->FindRun(*run)) continue;
-         // skip data events with bad detector status
-         if(!detectorStatus->IsOn()) continue;
+         // // skip runs not in list of good runs
+         // if(!goodRunList->FindRun(*run)) continue;
+         // // skip data events with bad detector status
+         // if(!detectorStatus->IsOn()) continue;
 
       double w=*weight1 * *weight2;
       if(print || ((eventCounter %10000)==0))  { 
@@ -1099,7 +1099,19 @@ int main(int argc, char* argv[]) {
       }
 
       //add energy scale by 1%
-      // hfs_count.SetE(0.99*hfs_count.E());
+      double hfsPt_tmp = hfs_count.Pt();
+      double hfsEta_tmp = hfs_count.Eta();
+      double hfsPhi_tmp = hfs_count.Phi();
+      double hfsMass_tmp = hfs_count.M();
+      TLorentzVector hfs_new;
+      hfs_new.SetPtEtaPhiM(1.01*hfsPt_tmp, hfsEta_tmp, hfsPhi_tmp, hfsMass_tmp);
+      cout << "old E " <<  hfs_count.E() << endl;
+      cout << "old Pz " <<  hfs_count.Pz() << endl;
+      cout << "old Pt " <<  hfs_count.Pt() << endl;
+      cout << "new E " <<  hfs_new.E() << endl;
+      cout << "new Pz " <<  hfs_new.Pz() << endl;
+      cout << "new Pt " <<  hfs_new.Pt() << endl;
+
 
       double sigma_REC = hfs_count.E()-hfs_count.Pz();//not use for Elec method
       
