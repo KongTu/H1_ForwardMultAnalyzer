@@ -7,16 +7,16 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 
 	if( !isScatElec_ ){
 		if(ifile_ == 0){
-			file = new TFile("../new_output/data_highE_0607_noReweight_Tree_hadCali.root");
+			file = new TFile("../new_output/data_highE_0607_noReweight_Tree_hadCaliNew.root");
 		}
 		else if(ifile_ == 1) {
 
-			if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCali.root");
-			else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCali_ptStar.root");
+			if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCaliNew.root");
+			else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNew.root");
 		}
 		else if(ifile_ == 2){
-			if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCali.root");
-			else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCali_ptStar_diffractive.root");
+			if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNew.root");
+			else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNew.root");
 		}
 	}
 	else{
@@ -336,9 +336,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 			}
 			for(int itrk = 0; itrk < nMCtrack_mini; itrk++){
 				
-				if( ptStarMC_mini[itrk] > 0.15 ){
-					if( etaStarMC_mini[itrk] > 0 && etaStarMC_mini[itrk] < 4.0 ){
-						n_particle_HCM++;
+				if( TMath::Hypot(pxMC_mini[itrk],pyMC_mini[itrk]) > 0.15 ){
+					if( fabs(etaMC_mini[itrk]) < 1.6 ){
+						if( etaStarMC_mini[itrk] > 0 && etaStarMC_mini[itrk] < 4.0 ){
+							n_particle_HCM++;
+						}
 					}
 				}
 				if( TMath::Hypot(pxMC_mini[itrk],pyMC_mini[itrk]) < 0.15 ) continue;
@@ -394,7 +396,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 				etamax = etaREC_mini[itrk];
 			}
 			if( etaStarREC_mini[itrk] > 0 && etaStarREC_mini[itrk] < 4.0 ){
-				n_particle_HCM_rec++;
+				if( fabs(etaREC_mini[itrk]) < 1.6 ){
+					n_particle_HCM_rec++;
+				}
 			}
 			for(int ieta = 0; ieta < 3; ieta++){
 				if( etaREC_mini[itrk] > eta_bins[2*ieta] && etaREC_mini[itrk] < eta_bins[2*ieta+1] ){
@@ -589,15 +593,15 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	TString outname;
 	if( !isScatElec_ ){
 		if( ifile_ == 0 ){
-			outname = "../minitree_output/Pn_hist_data_hadCali.root";
+			outname = "../minitree_output/Pn_hist_data_hadCaliNew.root";
 		}
 		else if( ifile_ == 1 ){
-			if(!isReweigh) outname = "../minitree_output/Pn_hist_django_hadCali.root";
-			else outname = "../minitree_output/Pn_hist_django_hadCali_ptStar_reweigh.root";
+			if(!isReweigh) outname = "../minitree_output/Pn_hist_django_hadCaliNew.root";
+			else outname = "../minitree_output/Pn_hist_django_hadCaliNew_reweigh.root";
 		}
 		else if( ifile_ == 2 ){
-			if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_hadCali.root";
-			else outname = "../minitree_output/Pn_hist_rapgap_hadCali_ptStar_reweigh_diffractive.root";
+			if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_hadCaliNew.root";
+			else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNew_reweigh.root";
 		}
 	}
 	else{
