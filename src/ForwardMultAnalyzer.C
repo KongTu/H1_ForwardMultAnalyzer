@@ -1009,7 +1009,7 @@ int main(int argc, char* argv[]) {
       
       //add energy scale by 0.5%
       // escat0_REC_lab.SetE( 1.005*escat0_REC_lab.E() );
-      escat0_REC_lab.SetPtEtaPhiM(0.995*escat0_REC_lab.Pt(), escat0_REC_lab.Eta(), escat0_REC_lab.Phi(), escat0_REC_lab.M());
+      // escat0_REC_lab.SetPtEtaPhiM(0.995*escat0_REC_lab.Pt(), escat0_REC_lab.Eta(), escat0_REC_lab.Phi(), escat0_REC_lab.M());
 
       // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
