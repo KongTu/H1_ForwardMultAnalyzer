@@ -1009,6 +1009,7 @@ int main(int argc, char* argv[]) {
       
       //add energy scale by 0.5%
       // escat0_REC_lab.SetE( 1.005*escat0_REC_lab.E() );
+      escat0_REC_lab.SetPtEtaPhiM(1.005*escat0_REC_lab.Pt(), escat0_REC_lab.Eta(), escat0_REC_lab.Phi(), escat0_REC_lab.M());
 
       // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
@@ -1099,7 +1100,7 @@ int main(int argc, char* argv[]) {
       }
 
       //add energy scale by 1%
-      hfs_count.SetPtEtaPhiM(1.01*hfs_count.Pt(), hfs_count.Eta(), hfs_count.Phi(), hfs_count.M());
+      // hfs_count.SetPtEtaPhiM(1.01*hfs_count.Pt(), hfs_count.Eta(), hfs_count.Phi(), hfs_count.M());
 
       double sigma_REC = hfs_count.E()-hfs_count.Pz();//not use for Elec method
       
@@ -1514,7 +1515,7 @@ int main(int argc, char* argv[]) {
       }
 
     //add energy scale by 1%
-      hfs.SetPtEtaPhiM(1.01*hfs.Pt(), hfs.Eta(), hfs.Phi(), hfs.M());
+      // hfs.SetPtEtaPhiM(1.01*hfs.Pt(), hfs.Eta(), hfs.Phi(), hfs.M());
 
       myEvent.hfsPxREC=hfs.X();
       myEvent.hfsPyREC=hfs.Y();
