@@ -14,7 +14,7 @@ void makeMCWeight(){
 	TH1D* DJANGO_y = 0;
 	TH1D* DJANGO_vtxZ = 0;
 
-	TFile* file_data = new TFile("../minitree_output/Pn_hist_data_hadCali.root");
+	TFile* file_data = new TFile("../minitree_output/Pn_hist_data_hadCaliNew.root");
 	DATA_y = (TH1D*) file_data->Get("h_y_1");
 	DATA_y->Scale( 1.0/DATA_y->Integral() );
 	DATA2_y = (TH1D*) DATA_y->Clone("h_y_2");
@@ -25,8 +25,8 @@ void makeMCWeight(){
 
 	TFile* file_mc_rapgap = 0;
 	TFile* file_mc_django = 0;
-	file_mc_rapgap = new TFile("../minitree_output/Pn_hist_rapgap_hadCali.root");
-	file_mc_django = new TFile("../minitree_output/Pn_hist_django_hadCali.root");
+	file_mc_rapgap = new TFile("../minitree_output/Pn_hist_rapgap_hadCaliNew.root");
+	file_mc_django = new TFile("../minitree_output/Pn_hist_django_hadCaliNew.root");
 
 	RAPGAP_y = (TH1D*) file_mc_rapgap->Get("h_y_1");
 	RAPGAP_y->Scale( 1.0/RAPGAP_y->Integral() );
