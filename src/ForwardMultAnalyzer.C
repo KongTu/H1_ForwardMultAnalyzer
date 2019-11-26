@@ -1064,6 +1064,9 @@ int main(int argc, char* argv[]) {
          cout << "gen rad photon Px: " << radPhot_MC_lab.Px() << endl;
          cout << "gen rad photon Py: " << radPhot_MC_lab.Py() << endl;
          cout << "gen rad photon Pz: " << radPhot_MC_lab.Pz() << endl;
+
+         cout << "Rec scattered electron E " << escat0_REC_lab.E() << " px " << escat0_REC_lab.Px() << " py " << escat0_REC_lab.Py() << " pz " << escat0_REC_lab.Pz() << endl;
+         cout << "Gen scattered electron E " << escat0_MC_lab.E() << " px " << escat0_MC_lab.Px() << " py " << escat0_MC_lab.Py() << " pz " << escat0_MC_lab.Pz() << endl;
       }
 
       //adding a charge variable to later decide if it matched to a track with its charge
