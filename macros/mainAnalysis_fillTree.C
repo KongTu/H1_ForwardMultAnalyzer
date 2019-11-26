@@ -553,6 +553,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             TLorentzVector eMC, gammaMC;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
             gammaMC.SetPxPyPzE(radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC);
+            if( gammaMC.Pt() < 2 ) continue;
             double eGammaPhiMC = eMC.DeltaPhi(gammaMC);
             myEvent.eGammaPhiMC_mini = eGammaPhiMC;
             myEvent.isQEDComptonMC_mini = 0;
@@ -613,6 +614,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          TLorentzVector eREC, gammaREC;
          eREC.SetPxPyPzE(elecPxREC,elecPyREC,elecPzREC,elecEREC);
          gammaREC.SetPxPyPzE(radPhoPxREC,radPhoPyREC,radPhoPzREC,radPhoEREC);
+         if( gammaREC.Pt() < 2 ) continue;
          double eGammaPhiREC = eREC.DeltaPhi(gammaREC);
          myEvent.eGammaPhiREC_mini = eGammaPhiREC;
          myEvent.isQEDComptonREC_mini = 0;
