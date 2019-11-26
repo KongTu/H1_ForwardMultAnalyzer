@@ -763,10 +763,16 @@ int main(int argc, char* argv[]) {
          //bool haveElectron=false;
          myEvent.nMCtrackAll=0;
          myEvent.nMCtrack=0;
+
+         bool printPho = false;
+         for(int i=0;i<mcpart.GetEntries();i++){
+            if( i>10 ) break;
+            if( mcpart[i]->GetPDG() == 22 && mcPartId.GetIdxRadPhoton() < 0 ) printPho = true;
+         }
          for(int i=0;i<mcpart.GetEntries();i++) {
             
             H1PartMC *part=mcpart[i];
-            if(1) {
+            if(printPho) {
                cout << i << " " ; part->Print();
             }
             // skip particles counted as electron
