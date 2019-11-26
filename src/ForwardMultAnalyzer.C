@@ -560,7 +560,7 @@ int main(int argc, char* argv[]) {
       if(print || ((eventCounter %10000)==0))  { 
          cout<<eventCounter
              <<" event "<<*run<<" "<<*evno<<" type="<<*runtype<<" weight="<<w<<"\n";
-         if(!print) print=1; //print this event
+         if(!print) print=0; //print this event
       }
       myEvent.run=*run;
       myEvent.evno=*evno;
@@ -1016,11 +1016,11 @@ int main(int argc, char* argv[]) {
       for(int i=0;i<partCandArray.GetEntries();i++) {
         H1PartCand *cand=partCandArray[i];
         H1PartEm const *elec=cand->GetIDElec();
+        if(elec && cand->IsPhoton() ) elecCandiate.push_back( elec->GetFourVector() );
         if(elec && cand->IsScatElec()) {
          if (myElecCut.goodElec(elec,*run)!=1) continue;
             H1Track const *scatElecTrk=cand->GetTrack();//to match a track
             TLorentzVector p= elec->GetFourVector();
-            elecCandiate.push_back( p );
             if(p.Pt()>ptMax) {
                escat0_REC_lab = p;
                scatteredElectron=i;
@@ -1032,7 +1032,6 @@ int main(int argc, char* argv[]) {
       }
       //find the second largest pt
       for(unsigned j=0;j<elecCandiate.size();j++){
-         if( elecCandiate[j].Pt() == escat0_REC_lab.Pt() ) continue;//largest pt
          if( elecCandiate[j].Pt() < 2.0 ) continue; //minimum pt of the photon
          if( elecCandiate[j].Pt()>ptSubMax ){
             radPhot_REC_lab = elecCandiate[j];
