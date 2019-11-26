@@ -767,7 +767,7 @@ int main(int argc, char* argv[]) {
             
             H1PartMC *part=mcpart[i];
             if(print) {
-               //cout << i << " " ; part->Print();
+               cout << i << " " ; part->Print();
             }
             // skip particles counted as electron
             if(isElectron.find(i)!=isElectron.end()) continue;
