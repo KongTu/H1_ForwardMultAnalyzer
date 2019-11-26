@@ -469,6 +469,7 @@ int elecCut::goodElec( H1PartEm const *elec, Int_t RunNumber_) {
   //check if cuts are still ok: 
   initElecCut(RunNumber_); 
 
+
  
   //elec whether h1oo finder found it: 
   if(!elec->IsScatElec() ) { 
