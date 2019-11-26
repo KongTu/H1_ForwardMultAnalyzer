@@ -628,7 +628,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.gammaPtREC_mini = gammaREC.Pt();
          myEvent.gammaEpzREC_mini = gammaREC.E() - gammaREC.Pz();
 
-         if( gammaREC.E() > 2. ) {
+         if( gammaREC.E() > 2. && nRECtrack < 3 && (hfsEREC-gammaREC.E()) < 1. ) {
             myEvent.gammaEtaREC_mini = gammaREC.Eta();
             double eGammaPhiREC = eREC.DeltaPhi(gammaREC);
             myEvent.eGammaPhiREC_mini = eGammaPhiREC;
