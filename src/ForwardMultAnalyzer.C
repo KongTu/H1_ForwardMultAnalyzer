@@ -1069,6 +1069,11 @@ int main(int argc, char* argv[]) {
 
          cout << "Rec scattered electron E " << escat0_REC_lab.E() << " px " << escat0_REC_lab.Px() << " py " << escat0_REC_lab.Py() << " pz " << escat0_REC_lab.Pz() << endl;
          cout << "Gen scattered electron E " << escat0_MC_lab.E() << " px " << escat0_MC_lab.Px() << " py " << escat0_MC_lab.Py() << " pz " << escat0_MC_lab.Pz() << endl;
+      
+         for(int i=0;i<mcpart.GetEntries();i++) {
+            H1PartMC *part=mcpart[i];
+            cout << i << " " ; part->Print();
+         }
       }
 
       //adding a charge variable to later decide if it matched to a track with its charge
