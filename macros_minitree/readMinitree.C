@@ -11,12 +11,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		}
 		else if(ifile_ == 1) {
 
-			if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCaliNew.root");
-			else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNew.root");
+			if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCaliNewRadPho.root");
+			else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewRadPho.root");
 		}
 		else if(ifile_ == 2){
-			if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNew.root");
-			else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNew.root");
+			if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNewRadPho.root");
+			else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewRadPho.root");
 		}
 	}
 	else{
@@ -37,7 +37,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 
 	double Q2min = 5.;
 	double Q2max = 100.;
-	double ymin = 0.075;
+	double ymin = 0.0375;
 	double ymax = 0.6;
 	double ybins[] = {0.0375,0.075,0.15,0.3,0.6};
 	double eta_bins[] = {-1.2,0.2,-0.5,0.9,0.2,1.6};
@@ -53,6 +53,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	const int nMCtrack_MAX=400;
 	// if there is no MC info, nMCtrack is set to zero
 	Int_t nMCtrack_mini;
+	Float_t eGammaPhiMC_mini;
+	Int_t isQEDComptonMC_mini;
+
 	Float_t pxMC_mini[nMCtrack_MAX];
 	Float_t pyMC_mini[nMCtrack_MAX];
 	Float_t pzMC_mini[nMCtrack_MAX];
@@ -63,6 +66,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
    	
 	tree->SetBranchAddress("yMC_es_mini",&yMC_es_mini);
 	tree->SetBranchAddress("Q2MC_es_mini",&Q2MC_es_mini);
+	tree->SetBranchAddress("eGammaPhiMC_mini",&eGammaPhiMC_mini);
+	tree->SetBranchAddress("isQEDComptonMC_mini",&isQEDComptonMC_mini);
 
 	tree->SetBranchAddress("nMCtrack_mini",&nMCtrack_mini);
 	tree->SetBranchAddress("pxMC_mini",&pxMC_mini);
@@ -158,12 +163,14 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	P(n) distribution in different Q2, y, and eta bins.
 	*/
 	TH1D* h_Pn[4][4][4];
+	TH1D* h_Pn_QEDc[4][4][4];
 	TH1D* h_Pn_GEN[4][4][4];
 	TH2D* h_Pn_cor[4][4][4];
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
 			for(int k=0;k<4;k++){
 				h_Pn[i][j][k] = new TH1D(Form("h_Pn_%d_%d_%d",i,j,k),Form("h_Pn_%d_%d_%d",i,j,k),30,0,30);
+				h_Pn_QEDc[i][j][k] = new TH1D(Form("h_Pn_QEDc_%d_%d_%d",i,j,k),Form("h_Pn_QEDc_%d_%d_%d",i,j,k),30,0,30);
 				h_Pn_GEN[i][j][k] = new TH1D(Form("h_Pn_GEN_%d_%d_%d",i,j,k),Form("h_Pn_GEN_%d_%d_%d",i,j,k),30,0,30);
 				h_Pn_cor[i][j][k] = new TH2D(Form("h_Pn_cor_%d_%d_%d",i,j,k),Form("h_Pn_cor_%d_%d_%d",i,j,k),30,0,30,30,0,30);
 			}
@@ -173,11 +180,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	P(n) distribution in different Q2, y bins within 0<eta*<4.
 	*/
 	TH1D* h_Pn_HCM[4][4];
+	TH1D* h_Pn_QEDc_HCM[4][4];	
 	TH1D* h_Pn_GEN_HCM[4][4];
 	TH2D* h_Pn_cor_HCM[4][4];
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
 			h_Pn_HCM[i][j] = new TH1D(Form("h_Pn_HCM_%d_%d",i,j),Form("h_Pn_HCM_%d_%d",i,j),30,0,30);
+			h_Pn_QEDc_HCM[i][j] = new TH1D(Form("h_Pn_QEDc_HCM_%d_%d",i,j),Form("h_Pn_QEDc_HCM_%d_%d",i,j),30,0,30);
 			h_Pn_GEN_HCM[i][j] = new TH1D(Form("h_Pn_GEN_HCM_%d_%d",i,j),Form("h_Pn_GEN_HCM_%d_%d",i,j),30,0,30);
 			h_Pn_cor_HCM[i][j] = new TH2D(Form("h_Pn_cor_HCM_%d_%d",i,j),Form("h_Pn_cor_HCM_%d_%d",i,j),30,0,30,30,0,30);
 		}
@@ -203,6 +212,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	TH2D* h_Q2vsX_2 = new TH2D("h_Q2vsX_2","h_Q2vsX_2",1000,0.00001,0.01,50,1,100);
 	TH1D* h_vtxZ_2  = new TH1D("h_vtxZ_2","h_vtxZ_2", 100,-50,50);
 	TH1D* h_y_2  = new TH1D("h_y_2","h_y_2", 200,0,1);
+
+
+	//QED Compton event
+	TH1D* h_eGammaPhiMC = new TH1D("h_eGammaPhiMC",";#Delta#phi",100,-3.15,3.15);
 
 	/*
 	Elec and hfs kinematic variables
@@ -334,6 +347,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 					y_INDEX = iy;
 				}
 			}
+
 			for(int itrk = 0; itrk < nMCtrack_mini; itrk++){
 				
 				if( TMath::Hypot(pxMC_mini[itrk],pyMC_mini[itrk]) > 0.15 ){
@@ -353,7 +367,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 					n_particle_eta[3]++;
 				}
 			}
-			if(Q2_INDEX >=0 && y_INDEX >= 0){
+			//filling QED Compton delta phi
+			if(Q2_INDEX >=0 && y_INDEX >= 0 ) h_eGammaPhiMC->Fill( eGammaPhiMC_mini );
+			if(Q2_INDEX >=0 && y_INDEX >= 0 && !isQEDComptonMC_mini ){//no QEDc event counted as radiative Gen
 				h_Pn_GEN_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, w_mini );
 				
 				h_Pn_GEN[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta[0], w_mini );
@@ -478,12 +494,21 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		if(Q2_INDEX >=0 && y_INDEX >= 0){
 
 			if( ifile_ != 0 ){
-
+				//2D correlation between gen and rec mult
 				h_Pn_cor_HCM[Q2_INDEX][y_INDEX]->Fill(n_particle_HCM_rec,n_particle_HCM,w_mini);
 				h_Pn_cor[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta_rec[0], n_particle_eta[0], w_mini );
 				h_Pn_cor[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta_rec[1], n_particle_eta[1], w_mini );
 				h_Pn_cor[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta_rec[2], n_particle_eta[2], w_mini );
 				h_Pn_cor[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta_rec[3], n_particle_eta[3], w_mini );
+				
+				//filling with QED Compton event only.
+				if( isQEDComptonMC_mini ){
+					h_Pn_QEDc_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
+					h_Pn_QEDc[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta_rec[0], w_mini );
+					h_Pn_QEDc[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta_rec[1], w_mini );
+					h_Pn_QEDc[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta_rec[2], w_mini );
+					h_Pn_QEDc[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta_rec[3], w_mini );
+				}
 			}
 
 			h_Pn_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
@@ -596,12 +621,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 			outname = "../minitree_output/Pn_hist_data_hadCaliNew.root";
 		}
 		else if( ifile_ == 1 ){
-			if(!isReweigh) outname = "../minitree_output/Pn_hist_django_hadCaliNew.root";
-			else outname = "../minitree_output/Pn_hist_django_hadCaliNew_reweigh.root";
+			if(!isReweigh) outname = "../minitree_output/Pn_hist_django_hadCaliNewRadPho.root";
+			else outname = "../minitree_output/Pn_hist_django_hadCaliNewRadPho_reweigh.root";
 		}
 		else if( ifile_ == 2 ){
-			if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_hadCaliNew.root";
-			else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNew_reweigh.root";
+			if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewRadPho.root";
+			else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewRadPho_reweigh.root";
 		}
 	}
 	else{
@@ -653,6 +678,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	h_y_1->Write();
 	h_vtxZ_1->Write();
 	h_etamax_all->Write();
+	h_eGammaPhiMC->Write();
 
 	h_PtBal_all->Write();
 	h_hfsEnergy_all->Write();
