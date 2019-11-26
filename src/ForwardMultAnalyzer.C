@@ -566,9 +566,6 @@ int main(int argc, char* argv[]) {
       myEvent.evno=*evno;
       myEvent.w=w;
 
-      TLorentzVector radPhot_MC_lab;
-      TLorentzVector escat0_MC_lab;
-
       if(*runtype==1) {
          // handle MC information
          if(print) {
@@ -602,11 +599,11 @@ int main(int argc, char* argv[]) {
          myEvent.eProtonBeamMC=pbeam_MC_lab.E();
          myEvent.eElectronBeamMC=ebeam_MC_lab.E();
 
-         // TLorentzVector 
-         escat0_MC_lab = (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
+         TLorentzVector escat0_MC_lab
+            (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
 
          /*begin scattered electron and radiative photons*/
-         // TLorentzVector radPhot_MC_lab;
+         TLorentzVector radPhot_MC_lab;
          myEvent.radPhoPxMC = 0.;
          myEvent.radPhoPyMC = 0.;
          myEvent.radPhoPzMC = 0.;
@@ -766,17 +763,11 @@ int main(int argc, char* argv[]) {
          //bool haveElectron=false;
          myEvent.nMCtrackAll=0;
          myEvent.nMCtrack=0;
-
-         bool printPho = false;
-         for(int i=0;i<mcpart.GetEntries();i++){
-            if( i>10 ) break;
-            if( mcpart[i]->GetPDG() == 22 && mcPartId.GetIdxRadPhoton() < 0 && mcpart[i]->GetStatus() >= 0) printPho = true;
-         }
          for(int i=0;i<mcpart.GetEntries();i++) {
             
             H1PartMC *part=mcpart[i];
-            if(printPho) {
-               cout << i << " " ; part->Print();
+            if(print) {
+               //cout << i << " " ; part->Print();
             }
             // skip particles counted as electron
             if(isElectron.find(i)!=isElectron.end()) continue;
@@ -1055,26 +1046,6 @@ int main(int argc, char* argv[]) {
       myEvent.radPhoPyREC = radPhot_REC_lab.Py();
       myEvent.radPhoPzREC = radPhot_REC_lab.Pz();
       myEvent.radPhoEREC = radPhot_REC_lab.E();
-
-      if( radPhot_REC_lab.E() > 2 && radPhot_REC_lab.DeltaPhi(escat0_REC_lab) > 2.9 && escat0_REC_lab.Pt() > 2 ){
-
-         cout << "rec rad photon E: " << radPhot_REC_lab.E() << endl;
-         cout << "rec rad photon Px: " << radPhot_REC_lab.Px() << endl;
-         cout << "rec rad photon Py: " << radPhot_REC_lab.Py() << endl;
-         cout << "rec rad photon Pz: " << radPhot_REC_lab.Pz() << endl;
-         cout << "gen rad photon E: " << radPhot_MC_lab.E() << endl;
-         cout << "gen rad photon Px: " << radPhot_MC_lab.Px() << endl;
-         cout << "gen rad photon Py: " << radPhot_MC_lab.Py() << endl;
-         cout << "gen rad photon Pz: " << radPhot_MC_lab.Pz() << endl;
-
-         cout << "Rec scattered electron E " << escat0_REC_lab.E() << " px " << escat0_REC_lab.Px() << " py " << escat0_REC_lab.Py() << " pz " << escat0_REC_lab.Pz() << endl;
-         cout << "Gen scattered electron E " << escat0_MC_lab.E() << " px " << escat0_MC_lab.Px() << " py " << escat0_MC_lab.Py() << " pz " << escat0_MC_lab.Pz() << endl;
-      
-         for(int i=0;i<mcpart.GetEntries();i++) {
-            H1PartMC *part=mcpart[i];
-            cout << i << " " ; part->Print();
-         }
-      }
 
       //adding a charge variable to later decide if it matched to a track with its charge
       myEvent.elecChargeREC=scatteredElectronCharge;
