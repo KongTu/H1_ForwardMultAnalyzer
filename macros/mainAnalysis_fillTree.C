@@ -157,18 +157,18 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    int dis_events = 0;
 
    if( doRapgap_ && doGen_ ){
-      tree->Add("../batch/output/mc_9299_hadCaliNew/*.root");
-      tree->Add("../batch/output/mc_9300_hadCaliNew/*.root");
-      tree->Add("../batch/output/mc_9301_hadCaliNew/*.root");
-      tree->Add("../batch/output/mc_9302_hadCaliNew/*.root");
-      tree->Add("../batch/output/mc_9303_hadCaliNew/*.root");
-      tree->Add("../batch/output/mc_9304_hadCaliNew/*.root");
-      tree->Add("../batch/output/mc_9305_hadCaliNew/*.root");
-      tree->Add("../batch/output/mc_9306_hadCaliNew/*.root");
+      tree->Add("../batch/output/mc_9299_hadCaliNewRadPho/*.root");
+      tree->Add("../batch/output/mc_9300_hadCaliNewRadPho/*.root");
+      tree->Add("../batch/output/mc_9301_hadCaliNewRadPho/*.root");
+      tree->Add("../batch/output/mc_9302_hadCaliNewRadPho/*.root");
+      tree->Add("../batch/output/mc_9303_hadCaliNewRadPho/*.root");
+      tree->Add("../batch/output/mc_9304_hadCaliNewRadPho/*.root");
+      tree->Add("../batch/output/mc_9305_hadCaliNewRadPho/*.root");
+      tree->Add("../batch/output/mc_9306_hadCaliNewRadPho/*.root");
 
       //save the number of events that separate inclusive DIS to diffractive DIS
          dis_events = tree->GetEntries();
-      tree->Add("../batch/output/mc_9015_hadCaliNew/*.root");
+      tree->Add("../batch/output/mc_9015_hadCaliNewRadPho/*.root");
 
       //nonradiative MCs
       // tree->Add("../batch/output/mc_5878_NRAD/*.root");
