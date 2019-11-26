@@ -369,7 +369,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 			}
 			//filling QED Compton delta phi
 			if(Q2_INDEX >=0 && y_INDEX >= 0 ) h_eGammaPhiMC->Fill( eGammaPhiMC_mini );
-			if(Q2_INDEX >=0 && y_INDEX >= 0 && !isQEDComptonMC_mini ){//no QEDc event counted as radiative Gen
+			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDComptonMC_mini == 0 ){//no QEDc event counted as radiative Gen
 				h_Pn_GEN_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, w_mini );
 				
 				h_Pn_GEN[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta[0], w_mini );
@@ -502,7 +502,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 				h_Pn_cor[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta_rec[3], n_particle_eta[3], w_mini );
 				
 				//filling with QED Compton event only.
-				if( isQEDComptonMC_mini ){
+				if( isQEDComptonMC_mini == 1 ){
 					h_Pn_QEDc_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
 					h_Pn_QEDc[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta_rec[0], w_mini );
 					h_Pn_QEDc[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta_rec[1], w_mini );
