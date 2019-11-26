@@ -1053,6 +1053,18 @@ int main(int argc, char* argv[]) {
       myEvent.radPhoPzREC = radPhot_REC_lab.Pz();
       myEvent.radPhoEREC = radPhot_REC_lab.E();
 
+      if( radPhot_REC_lab.E() > 2 && radPhoPxREC.DeltaPhi(escat0_REC_lab) > 2.9 && escat0_REC_lab.Pt() > 2 ){
+
+         cout << "rec rad photon E: " << radPhoPxREC.E() << endl;
+         cout << "rec rad photon Px: " << radPhoPxREC.Px() << endl;
+         cout << "rec rad photon Py: " << radPhoPxREC.Py() << endl;
+         cout << "rec rad photon Pz: " << radPhoPxREC.Pz() << endl;
+         cout << "gen rad photon E: " << radPhot_MC_lab.E() << endl;
+         cout << "gen rad photon Px: " << radPhot_MC_lab.Px() << endl;
+         cout << "gen rad photon Py: " << radPhot_MC_lab.Py() << endl;
+         cout << "gen rad photon Pz: " << radPhot_MC_lab.Pz() << endl;
+      }
+
       //adding a charge variable to later decide if it matched to a track with its charge
       myEvent.elecChargeREC=scatteredElectronCharge;
       
