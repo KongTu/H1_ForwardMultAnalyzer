@@ -198,6 +198,8 @@ struct MyEvent {
    Float_t xGKI,yGKI,Q2GKI;
 
    Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC,elecEradMC; // scattered electron
+   Float_t radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC; // radiative photon
+  
    Float_t elecEcraREC;
    Float_t xMC,yMC,Q2MC;
    Float_t xMC_es,yMC_es,Q2MC_es;
@@ -232,6 +234,8 @@ struct MyEvent {
    Float_t elecPxREC,elecPyREC,elecPzREC,elecEREC,elecEradREC; // scattered electron + neutrals
    Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
    Int_t elecTypeREC;
+
+   Float_t radPhoPxREC,radPhoPyREC,radPhoPzREC,radPhoEREC;//radiative photon
 
    Float_t xREC,yREC,Q2REC;
    Float_t xREC_es,yREC_es,Q2REC_es;
@@ -384,6 +388,10 @@ int main(int argc, char* argv[]) {
    output->Branch("elecPyMC",&myEvent.elecPyMC,"elecPyMC/F");
    output->Branch("elecPzMC",&myEvent.elecPzMC,"elecPzMC/F");
    output->Branch("elecEMC",&myEvent.elecEMC,"elecEMC/F");
+   output->Branch("radPhoPxMC",&myEvent.radPhoPxMC,"radPhoPxMC/F");
+   output->Branch("radPhoPyMC",&myEvent.radPhoPyMC,"radPhoPyMC/F");
+   output->Branch("radPhoPzMC",&myEvent.radPhoPzMC,"radPhoPzMC/F");
+   output->Branch("radPhoEMC",&myEvent.radPhoEMC,"radPhoEMC/F");
    output->Branch("xGKI",&myEvent.xGKI,"xGKI/F");
    output->Branch("yGKI",&myEvent.yGKI,"yGKI/F");
    output->Branch("Q2GKI",&myEvent.Q2GKI,"Q2GKI/F");
@@ -428,6 +436,11 @@ int main(int argc, char* argv[]) {
    output->Branch("elecEnergyREC",&myEvent.elecEnergyREC,"elecEnergyREC/F");
    output->Branch("elecEfracREC",&myEvent.elecEfracREC,"elecEfracREC/F");
    output->Branch("elecHfracREC",&myEvent.elecHfracREC,"elecHfracREC/F");
+
+   output->Branch("radPhoPxREC",&myEvent.radPhoPxREC,"radPhoPxREC/F");
+   output->Branch("radPhoPyREC",&myEvent.radPhoPyREC,"radPhoPyREC/F");
+   output->Branch("radPhoPzREC",&myEvent.radPhoPzREC,"radPhoPzREC/F");
+   output->Branch("radPhoEREC",&myEvent.radPhoEREC,"radPhoEREC/F");
 
    output->Branch("xREC",&myEvent.xREC,"xREC/F");
    output->Branch("yREC",&myEvent.yREC,"yREC/F");
@@ -608,7 +621,15 @@ int main(int argc, char* argv[]) {
             else{
                cout << "something is wrong!" << endl;
             }
+            //radiative photons
+            if( radPhot_MC_lab.Pt() > 2. ){
+               myEvent.radPhoPxMC = radPhot_MC_lab.Px();
+               myEvent.radPhoPyMC = radPhot_MC_lab.Py();
+               myEvent.radPhoPzMC = radPhot_MC_lab.Pz();
+               myEvent.radPhoEMC = radPhot_MC_lab.E();
+            }
          }
+
 
          //HFS 4-vectors
          //TLorentzVector hfs_MC_lab = ebeam_MC_lab+pbeam_MC_lab-escat0_MC_lab;
@@ -704,6 +725,7 @@ int main(int argc, char* argv[]) {
             int status=part->GetStatus();
             if((status==0 )&&(part->GetPDG()==22)) {
                TLorentzVector p(part->GetFourVector());
+
                if(p.DeltaR(escat0_MC_lab)<ELEC_ISOLATION_CONE) {
                   // this photon counts with the electron
                   isElectron.insert(i);
@@ -985,9 +1007,12 @@ int main(int argc, char* argv[]) {
       // find scattered electron as identified EM particle with highest PT in SpaCal
       bool haveScatteredElectron=false;
       TLorentzVector escat0_REC_lab;
+      TLorentzVector radPhot_REC_lab;
       int scatteredElectron=-1;
       int scatteredElectronCharge=9;// 9 is default to not be confused with 0
       double ptMax=0;
+      double ptSubMax=0;
+      vector< TLorentzVector> elecCandiate;
       for(int i=0;i<partCandArray.GetEntries();i++) {
         H1PartCand *cand=partCandArray[i];
         H1PartEm const *elec=cand->GetIDElec();
@@ -995,6 +1020,7 @@ int main(int argc, char* argv[]) {
          if (myElecCut.goodElec(elec,*run)!=1) continue;
             H1Track const *scatElecTrk=cand->GetTrack();//to match a track
             TLorentzVector p= elec->GetFourVector();
+            elecCandiate.push_back( p );
             if(p.Pt()>ptMax) {
                escat0_REC_lab = p;
                scatteredElectron=i;
@@ -1004,6 +1030,21 @@ int main(int argc, char* argv[]) {
             }   
          }
       }
+      //find the second largest pt
+      for(unsigned j=0;j<elecCandiate.size();j++){
+         if( elecCandiate[j].Pt() = escat0_REC_lab.Pt() ) continue;//largest pt
+         if( elecCandiate[j].Pt() < 2.0 ) continue; //minimum pt of the photon
+         if( elecCandiate[j].Pt()>ptSubMax ){
+            radPhot_REC_lab = elecCandiate[j];
+            ptSubMax = elecCandiate[j].Pt();
+         }
+      }
+
+      myEvent.radPhoPxREC = radPhot_REC_lab.Px();
+      myEvent.radPhoPyREC = radPhot_REC_lab.Py();
+      myEvent.radPhoPzREC = radPhot_REC_lab.Pz();
+      myEvent.radPhoEREC = radPhot_REC_lab.E();
+
       //adding a charge variable to later decide if it matched to a track with its charge
       myEvent.elecChargeREC=scatteredElectronCharge;
       
