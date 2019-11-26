@@ -618,7 +618,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          double eGammaPhiREC = eREC.DeltaPhi(gammaREC);
          myEvent.eGammaPhiREC_mini = eGammaPhiREC;
          myEvent.isQEDComptonREC_mini = 0;
-         if( TMath::Abs(eGammaPhiREC) < TMath::DegToRad()*170. ){
+         if( TMath::Abs(eGammaPhiREC) > TMath::DegToRad()*170. ){
             myEvent.isQEDComptonREC_mini = 1;
          }
          else{
