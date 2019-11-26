@@ -1016,7 +1016,7 @@ int main(int argc, char* argv[]) {
       for(int i=0;i<partCandArray.GetEntries();i++) {
         H1PartCand *cand=partCandArray[i];
         H1PartEm const *elec=cand->GetIDElec();
-        if(elec && cand->IsPhoton() ) elecCandiate.push_back( elec->GetFourVector() );
+        if(elec) elecCandiate.push_back( elec->GetFourVector() );
         if(elec && cand->IsScatElec()) {
          if (myElecCut.goodElec(elec,*run)!=1) continue;
             H1Track const *scatElecTrk=cand->GetTrack();//to match a track
@@ -1032,6 +1032,7 @@ int main(int argc, char* argv[]) {
       }
       //find the second largest pt
       for(unsigned j=0;j<elecCandiate.size();j++){
+         if( elecCandiate[j].Pt() == escat0_REC_lab.Pt() ) continue; //scattered electron
          if( elecCandiate[j].Pt() < 2.0 ) continue; //minimum pt of the photon
          if( elecCandiate[j].Pt()>ptSubMax ){
             radPhot_REC_lab = elecCandiate[j];
