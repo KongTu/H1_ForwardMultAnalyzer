@@ -110,6 +110,8 @@ struct MyEvent {
    Int_t elecChargeREC_mini;
    Float_t eGammaPhiREC_mini;
    Float_t gammaEtaREC_mini;
+   Float_t gammaPtREC_mini;
+   Float_t gammaEpzREC_mini;
    Int_t isQEDComptonREC_mini;
 
    Int_t totalMultREC_mini;
@@ -225,6 +227,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("elecChargeREC_mini",&myEvent.elecChargeREC_mini,"elecChargeREC_mini/I");
    outtree->Branch("eGammaPhiREC_mini",&myEvent.eGammaPhiREC_mini,"eGammaPhiREC_mini/F");
    outtree->Branch("gammaEtaREC_mini",&myEvent.gammaEtaREC_mini,"gammaEtaREC_mini/F");
+   outtree->Branch("gammaPtREC_mini",&myEvent.gammaPtREC_mini,"gammaPtREC_mini/F");
+   outtree->Branch("gammaEpzREC_mini",&myEvent.gammaEpzREC_mini,"gammaEpzREC_mini/F");
    outtree->Branch("isQEDComptonREC_mini",&myEvent.isQEDComptonREC_mini,"isQEDComptonREC_mini/I");
 
    outtree->Branch("xREC_es_mini",&myEvent.xREC_es_mini,"xREC_es_mini/F");
@@ -621,6 +625,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          TLorentzVector eREC, gammaREC;
          eREC.SetPxPyPzE(elecPxREC,elecPyREC,elecPzREC,elecEREC);
          gammaREC.SetPxPyPzE(radPhoPxREC,radPhoPyREC,radPhoPzREC,radPhoEREC);
+         myEvent.gammaPtREC_mini = gammaREC.Pt();
+         myEvent.gammaEpzREC_mini = gammaREC.E() - gammaREC.Pz();
 
          if( gammaREC.Pt() > 2. ) {
             myEvent.gammaEtaREC_mini = gammaREC.Eta();
