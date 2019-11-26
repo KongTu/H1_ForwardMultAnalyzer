@@ -652,6 +652,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 		for(int j=0;j<4;j++){
 			for(int k=0;k<4;k++){
 				h_Pn[i][j][k]->Write();
+				h_Pn_QEDc[i][j][k]->Write();
 				h_Pn_GEN[i][j][k]->Write();
 				h_Pn_cor[i][j][k]->Write();
 			}
@@ -660,6 +661,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false, const bool
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
 			h_Pn_HCM[i][j]->Write();
+			h_Pn_QEDc_HCM[i][j]->Write();
 			h_Pn_GEN_HCM[i][j]->Write();
 			h_Pn_cor_HCM[i][j]->Write();
 			
