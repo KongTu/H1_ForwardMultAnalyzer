@@ -567,6 +567,8 @@ int main(int argc, char* argv[]) {
       myEvent.w=w;
 
       TLorentzVector radPhot_MC_lab;
+      TLorentzVector escat0_MC_lab
+
       if(*runtype==1) {
          // handle MC information
          if(print) {
@@ -600,7 +602,7 @@ int main(int argc, char* argv[]) {
          myEvent.eProtonBeamMC=pbeam_MC_lab.E();
          myEvent.eElectronBeamMC=ebeam_MC_lab.E();
 
-         TLorentzVector escat0_MC_lab
+         // TLorentzVector escat0_MC_lab
             (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
 
          /*begin scattered electron and radiative photons*/
