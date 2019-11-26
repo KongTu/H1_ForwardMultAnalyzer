@@ -567,7 +567,7 @@ int main(int argc, char* argv[]) {
       myEvent.w=w;
 
       TLorentzVector radPhot_MC_lab;
-      TLorentzVector escat0_MC_lab
+      TLorentzVector escat0_MC_lab;
 
       if(*runtype==1) {
          // handle MC information
