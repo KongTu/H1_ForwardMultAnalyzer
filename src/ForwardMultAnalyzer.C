@@ -766,7 +766,7 @@ int main(int argc, char* argv[]) {
          for(int i=0;i<mcpart.GetEntries();i++) {
             
             H1PartMC *part=mcpart[i];
-            if(print) {
+            if(1) {
                cout << i << " " ; part->Print();
             }
             // skip particles counted as electron
