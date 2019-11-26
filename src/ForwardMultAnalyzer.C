@@ -604,6 +604,10 @@ int main(int argc, char* argv[]) {
 
          /*begin scattered electron and radiative photons*/
          TLorentzVector radPhot_MC_lab;
+         myEvent.radPhoPxMC = 0.;
+         myEvent.radPhoPyMC = 0.;
+         myEvent.radPhoPzMC = 0.;
+         myEvent.radPhoEMC = 0.;
          if( mcPartId.GetIdxRadPhoton() >= 0 ){
             radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
       
@@ -622,12 +626,11 @@ int main(int argc, char* argv[]) {
                cout << "something is wrong!" << endl;
             }
             //radiative photons
-            if( radPhot_MC_lab.Pt() > 2. ){
-               myEvent.radPhoPxMC = radPhot_MC_lab.Px();
-               myEvent.radPhoPyMC = radPhot_MC_lab.Py();
-               myEvent.radPhoPzMC = radPhot_MC_lab.Pz();
-               myEvent.radPhoEMC = radPhot_MC_lab.E();
-            }
+            myEvent.radPhoPxMC = radPhot_MC_lab.Px();
+            myEvent.radPhoPyMC = radPhot_MC_lab.Py();
+            myEvent.radPhoPzMC = radPhot_MC_lab.Pz();
+            myEvent.radPhoEMC = radPhot_MC_lab.E();
+            
          }
 
 
@@ -1016,7 +1019,7 @@ int main(int argc, char* argv[]) {
       for(int i=0;i<partCandArray.GetEntries();i++) {
         H1PartCand *cand=partCandArray[i];
         H1PartEm const *elec=cand->GetIDElec();
-        if(elec) elecCandiate.push_back( elec->GetFourVector() );
+        if(elec && elec->GetType()==4 ) elecCandiate.push_back( elec->GetFourVector() );//only SpaCal photons
         if(elec && cand->IsScatElec()) {
          if (myElecCut.goodElec(elec,*run)!=1) continue;
             H1Track const *scatElecTrk=cand->GetTrack();//to match a track
@@ -1033,7 +1036,6 @@ int main(int argc, char* argv[]) {
       //find the second largest pt
       for(unsigned j=0;j<elecCandiate.size();j++){
          if( elecCandiate[j].Pt() == escat0_REC_lab.Pt() ) continue; //scattered electron
-         if( elecCandiate[j].Pt() < 2.0 ) continue; //minimum pt of the photon
          if( elecCandiate[j].Pt()>ptSubMax ){
             radPhot_REC_lab = elecCandiate[j];
             ptSubMax = elecCandiate[j].Pt();
