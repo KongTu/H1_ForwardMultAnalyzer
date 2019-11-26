@@ -1053,12 +1053,12 @@ int main(int argc, char* argv[]) {
       myEvent.radPhoPzREC = radPhot_REC_lab.Pz();
       myEvent.radPhoEREC = radPhot_REC_lab.E();
 
-      if( radPhot_REC_lab.E() > 2 && radPhoPxREC.DeltaPhi(escat0_REC_lab) > 2.9 && escat0_REC_lab.Pt() > 2 ){
+      if( radPhot_REC_lab.E() > 2 && radPhot_REC_lab.DeltaPhi(escat0_REC_lab) > 2.9 && escat0_REC_lab.Pt() > 2 ){
 
-         cout << "rec rad photon E: " << radPhoPxREC.E() << endl;
-         cout << "rec rad photon Px: " << radPhoPxREC.Px() << endl;
-         cout << "rec rad photon Py: " << radPhoPxREC.Py() << endl;
-         cout << "rec rad photon Pz: " << radPhoPxREC.Pz() << endl;
+         cout << "rec rad photon E: " << radPhot_REC_lab.E() << endl;
+         cout << "rec rad photon Px: " << radPhot_REC_lab.Px() << endl;
+         cout << "rec rad photon Py: " << radPhot_REC_lab.Py() << endl;
+         cout << "rec rad photon Pz: " << radPhot_REC_lab.Pz() << endl;
          cout << "gen rad photon E: " << radPhot_MC_lab.E() << endl;
          cout << "gen rad photon Px: " << radPhot_MC_lab.Px() << endl;
          cout << "gen rad photon Py: " << radPhot_MC_lab.Py() << endl;
