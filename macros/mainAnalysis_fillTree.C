@@ -108,11 +108,6 @@ struct MyEvent {
    Float_t hfsEREC_mini, hfsPtREC_mini, hfsPzREC_mini;
    Float_t elecEREC_mini, elecPtREC_mini, elecPzREC_mini;
    Int_t elecChargeREC_mini;
-   Float_t eGammaPhiREC_mini;
-   Float_t gammaEtaREC_mini;
-   Float_t gammaPtREC_mini;
-   Float_t gammaEpzREC_mini;
-   Int_t isQEDComptonREC_mini;
 
    Int_t totalMultREC_mini;
    Float_t pxREC_mini[nRECtrack_MAX];
@@ -225,11 +220,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("elecPtREC_mini",&myEvent.elecPtREC_mini,"elecPtREC_mini/F");
    outtree->Branch("elecPzREC_mini",&myEvent.elecPzREC_mini,"elecPzREC_mini/F");
    outtree->Branch("elecChargeREC_mini",&myEvent.elecChargeREC_mini,"elecChargeREC_mini/I");
-   outtree->Branch("eGammaPhiREC_mini",&myEvent.eGammaPhiREC_mini,"eGammaPhiREC_mini/F");
-   outtree->Branch("gammaEtaREC_mini",&myEvent.gammaEtaREC_mini,"gammaEtaREC_mini/F");
-   outtree->Branch("gammaPtREC_mini",&myEvent.gammaPtREC_mini,"gammaPtREC_mini/F");
-   outtree->Branch("gammaEpzREC_mini",&myEvent.gammaEpzREC_mini,"gammaEpzREC_mini/F");
-   outtree->Branch("isQEDComptonREC_mini",&myEvent.isQEDComptonREC_mini,"isQEDComptonREC_mini/I");
 
    outtree->Branch("xREC_es_mini",&myEvent.xREC_es_mini,"xREC_es_mini/F");
    outtree->Branch("yREC_es_mini",&myEvent.yREC_es_mini,"yREC_es_mini/F");
@@ -622,31 +612,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          if(TMath::Abs(vertex[2]+zvtxOffset)>50.) event_pass_loose = 0;
 
          //rec level QED Compton
-         TLorentzVector eREC, gammaREC;
-         eREC.SetPxPyPzE(elecPxREC,elecPyREC,elecPzREC,elecEREC);
-         gammaREC.SetPxPyPzE(radPhoPxREC,radPhoPyREC,radPhoPzREC,radPhoEREC);
-         myEvent.gammaPtREC_mini = gammaREC.Pt();
-         myEvent.gammaEpzREC_mini = gammaREC.E() - gammaREC.Pz();
-
-         if( gammaREC.E() > 2. && nRECtrack < 3 && (hfsEREC-gammaREC.E()) < 1. ) {
-            myEvent.gammaEtaREC_mini = gammaREC.Eta();
-            double eGammaPhiREC = eREC.DeltaPhi(gammaREC);
-            myEvent.eGammaPhiREC_mini = eGammaPhiREC;
-            myEvent.isQEDComptonREC_mini = 0;
-            if( TMath::Abs(eGammaPhiREC) > TMath::DegToRad()*170. ){
-               myEvent.isQEDComptonREC_mini = 1;
-            }
-            else{
-               myEvent.isQEDComptonREC_mini = 0;
-            }
-         }
-         else{
-            myEvent.gammaEtaREC_mini = -99.;
-            myEvent.isQEDComptonREC_mini = -1;
-            myEvent.eGammaPhiREC_mini = -99.;
-         }
+         // we don't do anything at rec level
          //end QED Compton
-
 
          //after all event selection cuts:
          myEvent.xREC_es_mini = xREC_es;
