@@ -767,7 +767,7 @@ int main(int argc, char* argv[]) {
          bool printPho = false;
          for(int i=0;i<mcpart.GetEntries();i++){
             if( i>10 ) break;
-            if( mcpart[i]->GetPDG() == 22 && mcPartId.GetIdxRadPhoton() < 0 ) printPho = true;
+            if( mcpart[i]->GetPDG() == 22 && mcPartId.GetIdxRadPhoton() < 0 && mcpart[i]->GetStatus() >= 0) printPho = true;
          }
          for(int i=0;i<mcpart.GetEntries();i++) {
             
