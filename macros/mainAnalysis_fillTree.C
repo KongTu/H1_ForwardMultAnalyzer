@@ -549,11 +549,11 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             TLorentzVector eMC, gammaMC;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
             gammaMC.SetPxPyPzE(radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC);
-            if( gammaMC.E() > 2. ){
+            if( gammaMC.E() > 4. && eMC.E() > 4. && (gammaMC.E()+eMC.E())>20. ){
                double eGammaPhiMC = eMC.DeltaPhi(gammaMC);
                myEvent.eGammaPhiMC_mini = eGammaPhiMC;
                myEvent.isQEDComptonMC_mini = 0;
-               if( TMath::Abs(eGammaPhiMC) > TMath::DegToRad()*170. ){
+               if( (TMath::DegToRad()*180. - TMath::Abs(eGammaPhiMC)) < TMath::DegToRad()*45.  ){
                   myEvent.isQEDComptonMC_mini = 1;
                }
                else{
