@@ -88,6 +88,7 @@ struct MyEvent {
    Float_t etaAsymMC_mini;
    Int_t totalMultMC_mini;
    Float_t eGammaPhiMC_mini;
+   Float_t phoEpzMC_mini;
    Int_t isQEDComptonMC_mini;
 
    // reconstructed quantities
@@ -197,6 +198,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
    outtree->Branch("eGammaPhiMC_mini",&myEvent.eGammaPhiMC_mini,"eGammaPhiMC_mini/F");
+   outtree->Branch("phoEpzMC_mini",&myEvent.phoEpzMC_mini,"phoEpzMC_mini/F");
    outtree->Branch("isQEDComptonMC_mini",&myEvent.isQEDComptonMC_mini,"isQEDComptonMC_mini/I");
 
    outtree->Branch("nMCtrack_mini",&myEvent.nMCtrack_mini,"nMCtrack_mini/I");
@@ -544,7 +546,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             TLorentzVector eMC, gammaMC;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
             gammaMC.SetPxPyPzE(radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC);
-            if( (gammaMC.Pt() + eMC.Pt()) < 1. && (eMC.E()+gammaMC.E()-eMC.Pz()-gammaMC.Pz()) > 45. ){
+            myEvent.phoEpzMC_mini = eMC.E()+gammaMC.E()-eMC.Pz()-gammaMC.Pz();
+            if( (gammaMC.Pt() + eMC.Pt()) < 1. && (eMC.E()+gammaMC.E()-eMC.Pz()-gammaMC.Pz()) > 50. ){
                double eGammaPhiMC = eMC.DeltaPhi(gammaMC);
                myEvent.eGammaPhiMC_mini = eGammaPhiMC;
                myEvent.isQEDComptonMC_mini = 0;
