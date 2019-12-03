@@ -550,7 +550,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             gammaMC.SetPxPyPzE(radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC);
             myEvent.phoEpzMC_mini = eMC.E()+gammaMC.E()-eMC.Pz()-gammaMC.Pz();
             myEvent.sumPtMC_mini = eMC.Pt()+gammaMC.Pt();
-            if( (gammaMC.Pt() + eMC.Pt()) < 1. && (eMC.E()+gammaMC.E()-eMC.Pz()-gammaMC.Pz()) > 45. ){
+            if( (gammaMC.Pt() + eMC.Pt()) < 10. && (eMC.E()+gammaMC.E()-eMC.Pz()-gammaMC.Pz()) > 40. ){
                double eGammaPhiMC = eMC.DeltaPhi(gammaMC);
                myEvent.eGammaPhiMC_mini = eGammaPhiMC;
                myEvent.isQEDComptonMC_mini = 0;
