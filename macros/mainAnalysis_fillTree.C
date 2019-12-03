@@ -555,8 +555,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                double eGammaPhiMC = eMC.DeltaPhi(gammaMC);
                myEvent.eGammaPhiMC_mini = eGammaPhiMC;
                myEvent.isQEDComptonMC_mini = 0;
-               if( TMath::Abs(3.1415-eGammaPhiMC) > TMath::DegToRad()*2. 
-               && TMath::Abs(3.1415-eGammaPhiMC) < TMath::DegToRad()*45. ){
+               if( (3.1415-TMath::Abs(eGammaPhiMC)) > TMath::DegToRad()*2. 
+               && (3.1415-TMath::Abs(eGammaPhiMC)) < TMath::DegToRad()*45. ){
                   
                   myEvent.isQEDComptonMC_mini = 1;
                }
