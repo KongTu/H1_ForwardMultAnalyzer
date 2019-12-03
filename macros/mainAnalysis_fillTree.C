@@ -256,7 +256,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t trigWeightAC;
       Float_t trigWeightRW;
       Float_t elecPxREC,elecPyREC,elecEREC,elecPzREC;
-      Float_t radPhoPxREC,radPhoPyREC,radPhoPzREC,radPhoEREC;//radiative photon
       Float_t hfsEREC,hfsPxREC, hfsPyREC, hfsPzREC;
       Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
       Float_t elecEradREC,elecEcraREC;
@@ -384,10 +383,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("elecPyREC",&elecPyREC);
       tree->SetBranchAddress("elecPzREC",&elecPzREC);
       tree->SetBranchAddress("elecEREC",&elecEREC);
-      tree->SetBranchAddress("radPhoPxREC",&radPhoPxREC);
-      tree->SetBranchAddress("radPhoPyREC",&radPhoPyREC);
-      tree->SetBranchAddress("radPhoPzREC",&radPhoPzREC);
-      tree->SetBranchAddress("radPhoEREC",&radPhoEREC);
       tree->SetBranchAddress("elecEradREC",&elecEradREC);
       tree->SetBranchAddress("elecEcraREC",&elecEcraREC);
 
@@ -549,11 +544,11 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             TLorentzVector eMC, gammaMC;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
             gammaMC.SetPxPyPzE(radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC);
-            if( gammaMC.E() > 2. ){
+            if( (gammaMC.Pt() + eMC.Pt()) < 1. && (eMC.E()+gammaMC.E()-eMC.Pz()-gammaMC.Pz()) > 45. ){
                double eGammaPhiMC = eMC.DeltaPhi(gammaMC);
                myEvent.eGammaPhiMC_mini = eGammaPhiMC;
                myEvent.isQEDComptonMC_mini = 0;
-               if( (TMath::DegToRad()*180. - TMath::Abs(eGammaPhiMC)) < TMath::DegToRad()*45.  ){
+               if( TMath::Abs(eGammaPhiMC) > TMath::DegToRad()*170.   ){
                   myEvent.isQEDComptonMC_mini = 1;
                }
                else{
