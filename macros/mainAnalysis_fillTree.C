@@ -545,18 +545,17 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.totalMultMC_mini = (int) (Ntracks_eta_p_MC+Ntracks_eta_m_MC);
 
             //gen level QED Compton
-            TLorentzVector eMC, gammaMC;
+            TLorentzVector eMC, gammaMC, sumEgamma;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
             gammaMC.SetPxPyPzE(radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC);
+            sumEgamma=eMC+gammaMC;
             myEvent.phoEpzMC_mini = eMC.E()+gammaMC.E()-eMC.Pz()-gammaMC.Pz();
-            myEvent.sumPtMC_mini = eMC.Pt()+gammaMC.Pt();
-            if( gammaMC.E() > 4. && eMC.E() > 4.
-               && (gammaMC.E()+eMC.E()) > 20. && (gammaMC.E()+eMC.E()) < 30. ){
+            myEvent.sumPtMC_mini = sumEgamma.Pt();
+            if( sumEgamma.Pt() < 1. ){
                double eGammaPhiMC = eMC.DeltaPhi(gammaMC);
                myEvent.eGammaPhiMC_mini = eGammaPhiMC;
                myEvent.isQEDComptonMC_mini = 0;
-               if( TMath::Abs(3.1415-eGammaPhiMC) > TMath::DegToRad()*2. 
-                  && TMath::Abs(3.1415-eGammaPhiMC) < TMath::DegToRad()*45.  ){
+               if( TMath::Abs(eGammaPhiMC) > TMath::DegToRad()*170. ){
                   
                   myEvent.isQEDComptonMC_mini = 1;
                }
