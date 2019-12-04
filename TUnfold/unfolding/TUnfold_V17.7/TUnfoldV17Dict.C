@@ -547,8 +547,8 @@ namespace {
     static const char* headers[] = {
 0    };
     static const char* includePaths[] = {
-"/cvmfs/sft.cern.ch/lcg/releases/ROOT/6.14.04-0d8dc/x86_64-slc6-gcc62-opt/include",
-"/nfs/dust/h1/group/sschmitt/h1_analysis/unfold_mini/TUnfold_V17.7/",
+"/Users/kong/Software/root6/include",
+"/Users/kong/Google Drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/TUnfold/unfolding/TUnfold_V17.7/",
 0
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(

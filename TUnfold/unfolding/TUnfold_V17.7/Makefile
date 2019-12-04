@@ -67,15 +67,15 @@ SRCNEW:=$(subst TUnfold,$(DIRNEW)/TUnfold,$(SRCNEW))
 
 LIB=unfold
 
-ifeq ($(OSTYPE),Linux)
-	MAKELIBRARY = $(CXX) $(CXXFLAGS) -shared -o $(2) $(1)
+#ifeq ($(OSTYPE),Linux)
+	MAKELIBRARY = $(CXX) $(CXXFLAGS) $(ROOTLIBS) -shared -o $(2) $(1)
 	LB=lib$(LIB).so
 #	LB0=lib$(LIB)0.so
-else
-	MAKELIBRARY = rm $(2) ; ar rv $(2) $(1) ; ranlib $(2)
-	LB=lib$(LIB).a
+#else
+#	MAKELIBRARY = rm $(2) ; ar rv $(2) $(1) ; ranlib $(2)
+#	LB=lib$(LIB).a
 #	LB0=lib$(LIB)0.a
-endif
+#endif
 
 DICT=TUnfold$(TUNFOLDCODEVER)Dict.C
 COBJC=$(SRC:%.cxx=%.o) $(DICT:%.C=%.o)

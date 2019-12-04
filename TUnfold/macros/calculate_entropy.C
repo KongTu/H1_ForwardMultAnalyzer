@@ -177,7 +177,7 @@ void calculate_entropy(){
 	}
 
 	TH1D* base2 = makeHist("base2", "", "x", "S_{EE}", 1000000,0.000005,1,kBlack);
-	base2->GetYaxis()->SetRangeUser(0.5, 5);
+	base2->GetYaxis()->SetRangeUser(1.5,3.5);
 	base2->GetXaxis()->SetRangeUser(0.000020, 0.05);
 	base2->GetXaxis()->SetTitleColor(kBlack);
 	
@@ -231,9 +231,9 @@ void calculate_entropy(){
 
 	base2->Draw();
 	gr_mstw_Q2_2_lnXG->Draw("P e3 same");
-	gr_hadron_Q2_2->Draw("PEL same");
+	// gr_hadron_Q2_2->Draw("PEL same");
 
-	TLatex* r41 = new TLatex(0.65, 0.68, "S_{hadron}");
+	TLatex* r41 = new TLatex(0.65, 0.68, "S_{hadron} (#eta_{lab})");
 	r41->SetNDC();
 	r41->SetTextSize(22);
 	r41->SetTextFont(43);
@@ -298,9 +298,9 @@ void calculate_entropy(){
 	gPad->SetLogx(1);
 	base2->Draw();
 	gr_mstw_Q2_10_lnXG->Draw("P e3 same");
-	gr_hadron_Q2_10->Draw("PEL same");
+	// gr_hadron_Q2_10->Draw("PEL same");
 
-	TLatex* r43 = new TLatex(0.63,0.95, "PYTHIA 6");
+	TLatex* r43 = new TLatex(0.6,0.95, "H1 Internal");
 	r43->SetNDC();
 	r43->SetTextSize(0.06);
 	r43->Draw("same");
@@ -314,25 +314,52 @@ void calculate_entropy(){
 
 
 	//adding H1 data
+	//HCM data
+	double x_h1[]={0.0023,0.0013,0.00066,0.00034};
+	double y_h1[]={2.60068,2.72764,2.78861,2.7936};
 
-	double x_h1[]={0.0013,0.00066,0.00034};
-	double y_h1[]={2.09517,2.08562,2.09947};
+	double x_rapgap[]={0.0023,0.0013,0.00066,0.00034};
+	double y_rapgap[]={2.49303,2.60737,2.70471,2.78289};
 
-	TGraphErrors* h1 = new TGraphErrors(3,x_h1,y_h1);
+	double x_h1_lab[]={0.0013,0.00066,0.00034};
+	double y_h1_lab[]={2.0953,2.08428,2.09411};
+
+
+	TGraphErrors* h1 = new TGraphErrors(4,x_h1,y_h1);
 	h1->SetMarkerColor(kRed);
 	h1->SetLineColor(kRed);
 	h1->SetMarkerStyle(21);
 	h1->Draw("PLsame");
 
+	TGraphErrors* rapgap = new TGraphErrors(4,x_rapgap,y_rapgap);
+	rapgap->SetMarkerColor(kBlue);
+	rapgap->SetLineColor(kBlue);
+	rapgap->SetMarkerStyle(25);
+	rapgap->Draw("PLsame");
+
+	TGraphErrors* h1_lab = new TGraphErrors(3,x_h1_lab,y_h1_lab);
+	h1_lab->SetMarkerColor(kBlue);
+	h1_lab->SetLineColor(kBlue);
+	h1_lab->SetMarkerStyle(20);
+	h1_lab->Draw("PLsame");
+
 	c1->cd(2);
-	TLegend *w6 = new TLegend(0.1,0.2,0.5,0.3);
+	TLegend *w6 = new TLegend(0.1,0.17,0.5,0.32);
 	w6->SetLineColor(kWhite);
 	w6->SetFillColor(0);
-	w6->SetTextSize(20);
+	w6->SetTextSize(18);
 	w6->SetTextFont(45);
 	w6->AddEntry(h1, "H1 data #sum #minusP(N)#upointln[P(N)] ","P");
+	w6->AddEntry(rapgap, "Rapgap #sum #minusP(N)#upointln[P(N)] ","P");
 	w6->Draw("same");
 
-	c1->Print("../figures/S_hadron-Q2_10.pdf");
+	TLatex* r412 = new TLatex(0.05, 0.32, "HCM #eta*(0,4)");
+	r412->SetNDC();
+	r412->SetTextSize(22);
+	r412->SetTextFont(43);
+	r412->SetTextColor(kBlack);
+	r412->Draw("same");
+
+	// c1->Print("../figures/S_hadron-Q2_10.pdf");
 
 }

@@ -58,9 +58,9 @@
     <BinningNode name="-1.2:eta:1.6" />
   </BinningNode>
   <UnfoldingInput dataluminosity="136">
-    unfoldingInput_yetalab.root
+    unfoldingInput_yetalab_large.root
   </UnfoldingInput>
   <UnfoldingOutput>
-    unfoldingOutput_yetalab.root
+    unfoldingOutput_yetalab_large.root
   </UnfoldingOutput>
 </TUnfoldBinning>

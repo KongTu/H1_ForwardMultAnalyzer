@@ -2,12 +2,12 @@
 <!DOCTYPE Minitree SYSTEM "minitree.dtd">
 <Minitree>
   <InputFile name="data" type="data" luminosity="136" treename="miniTree">
-    /nfs/dust/h1/group/ztudesy/h1_analysis/H1_ForwardMultAnalyzer/new_output/data_highE_0607_noReweight_Tree_forStefan_new.root
+    /Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/data_highE_0607_noReweight_Tree_hadCaliNew.root
   </InputFile>
   <InputFile name="djangoh" type="signal" luminosity="363" treename="miniTree">
-    /nfs/dust/h1/group/ztudesy/h1_analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_DJANGOH_noReweight_Tree_forStefan_new.root
+    /Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNew.root
   </InputFile>
-  <InputFile name="rapgap" type="signal" luminosity="68" treename="miniTree">
-    /nfs/dust/h1/group/ztudesy/h1_analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_RAPGAP_noReweight_Tree_forStefan_new.root
+  <InputFile name="rapgap" type="signal" luminosity="287" treename="miniTree">
+    /Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNew.root
   </InputFile>
 </Minitree>

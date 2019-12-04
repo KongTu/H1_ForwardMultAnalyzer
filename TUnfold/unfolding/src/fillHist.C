@@ -453,8 +453,7 @@ int main(int argc, char * const argv[]) {
            VarData const *eventpass_mini=recVariables.FindVar("eventpass_mini");
            VarData const *nRECtrack_mini=recVariables.FindVar("nRECtrack_mini");
            VarData const *etaREC_mini=recVariables.FindVar("etaREC_mini");
-           VarData const *nucliaREC_mini=
-              recVariables.FindVar("nucliaREC_mini");
+           VarData const *nucliaREC_mini=recVariables.FindVar("nucliaREC_mini");
            VarData const *passREC_mini=recVariables.FindVar("passREC_mini");
 
            VarData const *nMCtrack_mini=genVariables.FindVar("nMCtrack_mini");

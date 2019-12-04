@@ -6,7 +6,9 @@ ROOTGLIBS    := $(shell $(ROOTCONFIG) --glibs)
 ROOTVERSION  := $(shell $(ROOTCONFIG) --version)
 ROOTMAJORVERSION := $(word 1,$(subst ., ,$(ROOTVERSION)))
 
-CXXFLAGS=-isystem $(shell $(ROOTCONFIG) --incdir) -I$(ROOTSYS)/htmldoc -O2 -g -Wall -Wshadow -W -Woverloaded-virtual -fPIC $(ROOTCFLAGS) -I$(SRC)
+#CXXFLAGS=-isystem $(shell $(ROOTCONFIG) --incdir) -I$(ROOTSYS)/htmldoc -O2 -g -Wall -Wshadow -W -Woverloaded-virtual -fPIC $(ROOTCFLAGS) -I$(SRC)
+CXXFLAGS=-isystem -g -fPIC $(ROOTCFLAGS) -I$(SRC)
+
 
 TUNFOLDDIR=TUnfold_V17.7
 
@@ -32,15 +34,15 @@ UNFOLDLIBRARY=libmyunfold.so
 UNFOLDLIB=-L. -lmyunfold
 
 LIBOBJECTS=Correlations.o UnfoldingResult.o UnfoldingAverage.o UnfoldingAlgorithm.o UnfoldingTUnfoldDensity.o UnfoldingIterative.o VarList.o ClassifierBinning.o
-MAKELIBRARY = $(CXX) $(CXXFLAGS) -shared -o $(2) $(1)
+MAKELIBRARY = $(CXX) $(CXXFLAGS) $(LDFLAGS) $(TUNFOLD_LIBS) $(ROOTLIBS) -shared  -o $(2) $(1)
 
-all: Makefile fillHist unfoldHist drawResults
+all: Makefile fillHist unfoldHist drawResults fillHistHCM
 
 $(TUNFOLD_LIBRARY): $(TUNFOLD_SOURCE)
 	cd $(TUNFOLDDIR) && make lib
 
 clean:
-	rm -f fillHist unfoldHist drawResults unfoldHistmaker $(UNFOLDLIBRARY) \
+	rm -f fillHist unfoldHist drawResults fillHistHCM unfoldHistmaker $(UNFOLDLIBRARY) \
 		fillMerged unfoldMerged drawMerged
 
 %.o: $(SRC)/%.cxx
@@ -60,6 +62,11 @@ unfoldHist: $(SRC)/unfoldHist.C $(UNFOLDLIBRARY) $(TUNFOLD_LIBRARY)
 	$(UNFOLDLIB) $(TUNFOLD_LIBS) $(ROOTLIBS)
 
 drawResults: $(SRC)/drawResults.C $(UNFOLDLIBRARY) $(TUNFOLD_LIBRARY)
+	rm -f $@
+	$(CXX) $(CXXFLAGS) $(USE_PRIVATE_TUNFOLD) $< -o $@ $(LDFLAGS) \
+	$(UNFOLDLIB) $(TUNFOLD_LIBS) $(ROOTLIBS)
+
+fillHistHCM: $(SRC)/fillHistHCM.C $(UNFOLDLIBRARY) $(TUNFOLD_LIBRARY)
 	rm -f $@
 	$(CXX) $(CXXFLAGS) $(USE_PRIVATE_TUNFOLD) $< -o $@ $(LDFLAGS) \
 	$(UNFOLDLIB) $(TUNFOLD_LIBS) $(ROOTLIBS)
