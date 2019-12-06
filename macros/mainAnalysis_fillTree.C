@@ -551,12 +551,11 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             sumEgamma=eMC+gammaMC;
             myEvent.phoEpzMC_mini = sumEgamma.E()-sumEgamma.Pz();
             myEvent.sumPtMC_mini = sumEgamma.Pt();
-            if( sumEgamma.Pt() < 1. && (sumEgamma.E()-sumEgamma.Pz()) > 45. ){
+            if( sumEgamma.Pt() < 10. && (sumEgamma.E()-sumEgamma.Pz()) > 45. ){
                double eGammaPhiMC = eMC.DeltaPhi(gammaMC);
                myEvent.eGammaPhiMC_mini = eGammaPhiMC;
                myEvent.isQEDComptonMC_mini = 0;
-               if( (3.1415-TMath::Abs(eGammaPhiMC)) > TMath::DegToRad()*2. 
-               && (3.1415-TMath::Abs(eGammaPhiMC)) < TMath::DegToRad()*45. ){
+               if( (3.1415-TMath::Abs(eGammaPhiMC)) < TMath::DegToRad()*45. ){
                   
                   myEvent.isQEDComptonMC_mini = 1;
                }
