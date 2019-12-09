@@ -596,7 +596,7 @@ int main(int argc, char* argv[]) {
          }
 
          TDetectQedc detectQedc(mcpart);
-         if( detectQedc.IsQedcEvent() ) myEvent.isQEDc = 1;
+         if( TDetectQedc::detectQedc.IsQedcEvent() ) myEvent.isQEDc = 1;
          else myEvent.isQEDc = 0;
 
          TLorentzVector ebeam_MC_lab
