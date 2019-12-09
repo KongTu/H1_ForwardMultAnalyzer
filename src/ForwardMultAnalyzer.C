@@ -73,6 +73,8 @@
 #include "elecCut.C"
 #include "elecCut.h"
 
+#include "TDetectQedc.C"
+
 using namespace std;
 
 #define PI 3.1415926
@@ -236,6 +238,7 @@ struct MyEvent {
    Int_t elecTypeREC;
 
    Float_t radPhoPxREC,radPhoPyREC,radPhoPzREC,radPhoEREC;//radiative photon
+   Int_t isQEDc;
 
    Float_t xREC,yREC,Q2REC;
    Float_t xREC_es,yREC_es,Q2REC_es;
@@ -392,6 +395,7 @@ int main(int argc, char* argv[]) {
    output->Branch("radPhoPyMC",&myEvent.radPhoPyMC,"radPhoPyMC/F");
    output->Branch("radPhoPzMC",&myEvent.radPhoPzMC,"radPhoPzMC/F");
    output->Branch("radPhoEMC",&myEvent.radPhoEMC,"radPhoEMC/F");
+   output->Branch("isQEDc",&myEvent.isQEDc,"isQEDc/I");
    output->Branch("xGKI",&myEvent.xGKI,"xGKI/F");
    output->Branch("yGKI",&myEvent.yGKI,"yGKI/F");
    output->Branch("Q2GKI",&myEvent.Q2GKI,"Q2GKI/F");
@@ -590,6 +594,10 @@ int main(int argc, char* argv[]) {
             cout << "empty events!"; 
             continue;
          }
+
+         TDetectQedc detectQedc(&*mcpart);
+         if( detectQedc.IsQedcEvent() ) myEvent.isQEDc = 1;
+         else myEvent.isQEDc = 0;
 
          TLorentzVector ebeam_MC_lab
             (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
