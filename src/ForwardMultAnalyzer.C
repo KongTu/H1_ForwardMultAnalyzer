@@ -595,7 +595,7 @@ int main(int argc, char* argv[]) {
             continue;
          }
 
-         TDetectQedc detectQedc(&*mcpart);
+         TDetectQedc detectQedc(mcpart);
          if( detectQedc.IsQedcEvent() ) myEvent.isQEDc = 1;
          else myEvent.isQEDc = 0;
 
