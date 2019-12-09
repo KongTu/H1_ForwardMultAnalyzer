@@ -72,8 +72,6 @@
 
 #include "elecCut.C"
 #include "elecCut.h"
-
-#include "TDetectQedc.C"
 #include "TDetectQedc.h"
 
 using namespace std;
