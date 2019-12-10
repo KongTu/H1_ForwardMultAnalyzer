@@ -598,7 +598,7 @@ int main(int argc, char* argv[]) {
          if( detectQedc.IsQedcEvent() ) {myEvent.isQEDc = 1;}
          else {myEvent.isQEDc = 0;}
          if( detectQedc.IsQedcEvent() ){
-            TLorentzVector eMC = detectQedc.GetElectron();
+            TLorentzVector eMC = detectQedc.GetElectronNoFSR();
             TLorentzVector gammaMC = detectQedc.GetPhoton(TDetectQedc::PHOTON_QEDC);
             h_dPhi_theta_noR->Fill( eMC.Theta(), eMC.DeltaPhi( gammaMC ) );
             cout << "delta phi ~ " << eMC.DeltaPhi( gammaMC ) << endl;
