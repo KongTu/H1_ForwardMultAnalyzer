@@ -628,7 +628,7 @@ int main(int argc, char* argv[]) {
             // if( mcPartId.GetRadType() == 0 ){
             //    h_dPhi_theta_noR->Fill(escat0_MC_lab.Theta(), delta_phi );
             // }
-            else if( mcPartId.GetRadType() == 1 ){
+            if( mcPartId.GetRadType() == 1 ){
                h_dPhi_theta_ISR->Fill(escat0_MC_lab.Theta(), delta_phi );
             }
             else if( mcPartId.GetRadType() == 2 ){
