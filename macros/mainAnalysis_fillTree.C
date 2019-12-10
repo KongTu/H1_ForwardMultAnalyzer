@@ -88,6 +88,7 @@ struct MyEvent {
    Float_t etaAsymMC_mini;
    Int_t totalMultMC_mini;
    Float_t eGammaPhiMC_mini;
+   Float_t sumPtMC_mini;
    Float_t elecPxMC_mini;
    Float_t elecPyMC_mini;
    Float_t elecPzMC_mini;
@@ -205,6 +206,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
    outtree->Branch("eGammaPhiMC_mini",&myEvent.eGammaPhiMC_mini,"eGammaPhiMC_mini/F");
+   outtree->Branch("sumPtMC_mini",&myEvent.sumPtMC_mini,"sumPtMC_mini/F");
    outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
    outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
    outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
@@ -563,6 +565,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             TLorentzVector eMC, gammaMC, sumEgamma;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
             gammaMC.SetPxPyPzE(radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC);
+            sumEgamma = eMC+gammaMC;
+            myEvent.sumPtMC_mini = sumEgamma.Pt();
             myEvent.eGammaPhiMC_mini = eMC.DeltaPhi( gammaMC );
             myEvent.elecPxMC_mini = eMC.Px();
             myEvent.elecPyMC_mini = eMC.Py();
