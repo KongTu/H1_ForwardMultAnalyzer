@@ -597,7 +597,7 @@ int main(int argc, char* argv[]) {
          TDetectQedc detectQedc(mcpart);
          if( detectQedc.IsQedcEvent() ) {myEvent.isQEDc = 1;}
          else {myEvent.isQEDc = 0;}
-         if( detectQedc.IsPhotonQedcFound() && detectQedc.IsElectronFound() ){
+         if( detectQedc.IsQedcEvent() ){
             TLorentzVector eMC = detectQedc.GetElectron();
             TLorentzVector gammaMC = detectQedc.GetPhoton(TDetectQedc::PHOTON_QEDC);
             h_dPhi_theta_noR->Fill( eMC.Theta(), eMC.DeltaPhi( gammaMC ) );
