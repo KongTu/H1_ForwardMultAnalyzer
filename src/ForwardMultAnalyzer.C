@@ -595,8 +595,8 @@ int main(int argc, char* argv[]) {
          }
 
          TDetectQedc detectQedc(mcpart);
-         if( detectQedc.IsQedcEvent() ) myEvent.isQEDc = 1;
-         else myEvent.isQEDc = 0;
+         if( detectQedc.IsQedcEvent() ) {myEvent.isQEDc = 1;}
+         else {myEvent.isQEDc = 0;}
          if( detectQedc.IsPhotonQedcFound() && detectQedc.IsElectronFound() ){
             TLorentzVector eMC = detectQedc.GetElectron();
             TLorentzVector gammaMC = detectQedc.GetPhoton(0);
