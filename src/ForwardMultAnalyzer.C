@@ -72,7 +72,7 @@
 
 #include "elecCut.C"
 #include "elecCut.h"
-#include "TDetectQedc.h"
+#include "TDetectQedc.C"
 
 using namespace std;
 
@@ -594,7 +594,7 @@ int main(int argc, char* argv[]) {
             continue;
          }
 
-         TDetectQedc::Print(mcpart);
+         TDetectQedc detectQedc(mcpart);
          // if( detectQedc.IsQedcEvent() ) myEvent.isQEDc = 1;
          // else myEvent.isQEDc = 0;
 
