@@ -600,7 +600,7 @@ int main(int argc, char* argv[]) {
          if( detectQedc.IsPhotonQedcFound() && detectQedc.IsElectronFound() ){
             TLorentzVector eMC = detectQedc.GetElectron();
             TLorentzVector gammaMC = detectQedc.GetPhoton(0);
-            h_dPhi_theta_noR->Fill( eMC.DeltaPhi( gammaMC ) );
+            h_dPhi_theta_noR->Fill( eMC.Theta(), eMC.DeltaPhi( gammaMC ) );
          } 
 
          TLorentzVector ebeam_MC_lab
