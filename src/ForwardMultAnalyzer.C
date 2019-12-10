@@ -597,6 +597,11 @@ int main(int argc, char* argv[]) {
          TDetectQedc detectQedc(mcpart);
          if( detectQedc.IsQedcEvent() ) myEvent.isQEDc = 1;
          else myEvent.isQEDc = 0;
+         if( detectQedc.IsPhotonQedcFound() && detectQedc.IsElectronFound() ){
+            TLorentzVector eMC = detectQedc.GetElectron();
+            TLorentzVector gammaMC = detectQedc.GetPhoton(0);
+            h_dPhi_theta_noR->Fill( eMC.DeltaPhi( gammaMC ) );
+         } 
 
          TLorentzVector ebeam_MC_lab
             (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
@@ -620,9 +625,9 @@ int main(int argc, char* argv[]) {
       
             double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
          
-            if( mcPartId.GetRadType() == 0 ){
-               h_dPhi_theta_noR->Fill(escat0_MC_lab.Theta(), delta_phi );
-            }
+            // if( mcPartId.GetRadType() == 0 ){
+            //    h_dPhi_theta_noR->Fill(escat0_MC_lab.Theta(), delta_phi );
+            // }
             else if( mcPartId.GetRadType() == 1 ){
                h_dPhi_theta_ISR->Fill(escat0_MC_lab.Theta(), delta_phi );
             }
