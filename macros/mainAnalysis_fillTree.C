@@ -91,6 +91,7 @@ struct MyEvent {
    Float_t phoEpzMC_mini;
    Float_t sumPtMC_mini;
    Int_t isQEDComptonMC_mini;
+   Int_t isQEDcStefan_mini;
 
    // reconstructed quantities
    Float_t xREC_es_mini,yREC_es_mini,Q2REC_es_mini;
@@ -202,6 +203,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("phoEpzMC_mini",&myEvent.phoEpzMC_mini,"phoEpzMC_mini/F");
    outtree->Branch("sumPtMC_mini",&myEvent.sumPtMC_mini,"sumPtMC_mini/F");
    outtree->Branch("isQEDComptonMC_mini",&myEvent.isQEDComptonMC_mini,"isQEDComptonMC_mini/I");
+   outtree->Branch("isQEDcStefan_mini",&myEvent.isQEDcStefan_mini,"isQEDcStefan_mini/I");
 
    outtree->Branch("nMCtrack_mini",&myEvent.nMCtrack_mini,"nMCtrack_mini/I");
    outtree->Branch("pxMC_mini",myEvent.pxMC_mini,"pxMC_mini[nMCtrack_mini]/F");
@@ -265,6 +267,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t elecEradREC,elecEcraREC;
       Int_t elecChargeREC;
       Float_t eElectronBeam;
+      Int_t isQEDc;
      
       Int_t ibgREC;
 
@@ -335,6 +338,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("Q2GKI",&Q2GKI);
       tree->SetBranchAddress("simvertex",&simvertex);
       tree->SetBranchAddress("eElectronBeam",&eElectronBeam);
+      tree->SetBranchAddress("isQEDc",&isQEDc);
 
       tree->SetBranchAddress("nMCtrack",&nMCtrack);
       tree->SetBranchAddress("etaStar2MC",etaStarMC);
@@ -520,6 +524,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.yMC_es_mini = yMC_es;
             myEvent.Q2MC_es_mini = Q2MC_es;
             myEvent.nMCtrack_mini = nMCtrack;
+            myEvent.isQEDcStefan_mini = isQEDc;
 
             double Ntracks_eta_p_MC=0.;
             double Ntracks_eta_m_MC=0.;
