@@ -563,6 +563,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             TLorentzVector eMC, gammaMC, sumEgamma;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
             gammaMC.SetPxPyPzE(radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC);
+            myEvent.eGammaPhiMC_mini = eMC.DeltaPhi( gammaMC );
             myEvent.elecPxMC_mini = eMC.Px();
             myEvent.elecPyMC_mini = eMC.Py();
             myEvent.elecPzMC_mini = eMC.Pz();
