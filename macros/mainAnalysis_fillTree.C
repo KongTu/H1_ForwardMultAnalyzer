@@ -88,10 +88,15 @@ struct MyEvent {
    Float_t etaAsymMC_mini;
    Int_t totalMultMC_mini;
    Float_t eGammaPhiMC_mini;
-   Float_t phoEpzMC_mini;
-   Float_t sumPtMC_mini;
-   Int_t isQEDComptonMC_mini;
-   Int_t isQEDcStefan_mini;
+   Float_t elecPxMC_mini;
+   Float_t elecPyMC_mini;
+   Float_t elecPzMC_mini;
+   Float_t elecEMC_mini;
+   Float_t phoPxMC_mini;
+   Float_t phoPyMC_mini;
+   Float_t phoPzMC_mini;
+   Float_t phoEMC_mini;
+   Int_t isQEDcMC_mini;
 
    // reconstructed quantities
    Float_t xREC_es_mini,yREC_es_mini,Q2REC_es_mini;
@@ -200,10 +205,15 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
    outtree->Branch("eGammaPhiMC_mini",&myEvent.eGammaPhiMC_mini,"eGammaPhiMC_mini/F");
-   outtree->Branch("phoEpzMC_mini",&myEvent.phoEpzMC_mini,"phoEpzMC_mini/F");
-   outtree->Branch("sumPtMC_mini",&myEvent.sumPtMC_mini,"sumPtMC_mini/F");
-   outtree->Branch("isQEDComptonMC_mini",&myEvent.isQEDComptonMC_mini,"isQEDComptonMC_mini/I");
-   outtree->Branch("isQEDcStefan_mini",&myEvent.isQEDcStefan_mini,"isQEDcStefan_mini/I");
+   outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
+   outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
+   outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
+   outtree->Branch("elecEMC_mini",&myEvent.elecEMC_mini,"elecEMC_mini/F");
+   outtree->Branch("phoPxMC_mini",&myEvent.phoPxMC_mini,"phoPxMC_mini/F");
+   outtree->Branch("phoPyMC_mini",&myEvent.phoPyMC_mini,"phoPyMC_mini/F");
+   outtree->Branch("phoPzMC_mini",&myEvent.phoPzMC_mini,"phoPzMC_mini/F");
+   outtree->Branch("phoEMC_mini",&myEvent.phoEMC_mini,"phoEMC_mini/F");
+   outtree->Branch("isQEDcMC_mini",&myEvent.isQEDcMC_mini,"isQEDcMC_mini/I");
 
    outtree->Branch("nMCtrack_mini",&myEvent.nMCtrack_mini,"nMCtrack_mini/I");
    outtree->Branch("pxMC_mini",myEvent.pxMC_mini,"pxMC_mini[nMCtrack_mini]/F");
@@ -524,7 +534,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.yMC_es_mini = yMC_es;
             myEvent.Q2MC_es_mini = Q2MC_es;
             myEvent.nMCtrack_mini = nMCtrack;
-            myEvent.isQEDcStefan_mini = isQEDc;
 
             double Ntracks_eta_p_MC=0.;
             double Ntracks_eta_m_MC=0.;
@@ -550,28 +559,18 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.totalMultMC_mini = (int) (Ntracks_eta_p_MC+Ntracks_eta_m_MC);
 
             //gen level QED Compton
+            myEvent.isQEDcMC_mini = isQEDc;
             TLorentzVector eMC, gammaMC, sumEgamma;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
             gammaMC.SetPxPyPzE(radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC);
-            sumEgamma=eMC+gammaMC;
-            myEvent.phoEpzMC_mini = sumEgamma.E()-sumEgamma.Pz();
-            myEvent.sumPtMC_mini = sumEgamma.Pt();
-            if( sumEgamma.Pt() < 1.4 && (sumEgamma.E()-sumEgamma.Pz()) > 45. ){
-               double eGammaPhiMC = eMC.DeltaPhi(gammaMC);
-               myEvent.eGammaPhiMC_mini = eGammaPhiMC;
-               myEvent.isQEDComptonMC_mini = 0;
-               if( (3.1415-TMath::Abs(eGammaPhiMC)) < TMath::DegToRad()*45. ){
-                  
-                  myEvent.isQEDComptonMC_mini = 1;
-               }
-               else{
-                  myEvent.isQEDComptonMC_mini = 0;
-               }
-            }
-            else{
-               myEvent.eGammaPhiMC_mini = -99;
-               myEvent.isQEDComptonMC_mini = -1;
-            }
+            myEvent.elecPxMC_mini = eMC.Px();
+            myEvent.elecPyMC_mini = eMC.Py();
+            myEvent.elecPzMC_mini = eMC.Pz();
+            myEvent.elecEMC_mini = eMC.E();
+            myEvent.phoPxMC_mini = gammaMC.Px();
+            myEvent.phoPyMC_mini = gammaMC.Py();
+            myEvent.phoPzMC_mini = gammaMC.Pz();
+            myEvent.phoEMC_mini = gammaMC.E();
             //end QED Compton
 
           }//end doGen_
