@@ -199,7 +199,7 @@ struct MyEvent {
    Float_t xGKI,yGKI,Q2GKI;
 
    Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC,elecEradMC; // scattered electron
-   Float_t radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC; // radiative photon
+   Float_t radPhoPxMC[4],radPhoPyMC[4],radPhoPzMC[4],radPhoEMC[4]; // radiative photon
   
    Float_t elecEcraREC;
    Float_t xMC,yMC,Q2MC;
@@ -341,7 +341,8 @@ int main(int argc, char* argv[]) {
    */
    TH2D* h_dPhi_theta_ISR=new TH2D("h_dPhi_theta_ISR",";#theta;#Delta#phi",150,0,7,300,-7,7);
    TH2D* h_dPhi_theta_FSR=new TH2D("h_dPhi_theta_FSR",";#theta;#Delta#phi",150,0,7,300,-7,7);
-   TH2D* h_dPhi_theta_noR=new TH2D("h_dPhi_theta_noR",";#theta;#Delta#phi",150,0,7,300,-7,7);
+   TH2D* h_dPhi_theta_qedc=new TH2D("h_dPhi_theta_qedc",";#theta;#Delta#phi",150,0,7,300,-7,7);
+   TH2D* h_dPhi_sumPt_qedc=new TH2D("h_dPhi_sumPt_qedc",";sumPt;#Delta#phi",300,0,30,300,-7,7);
 
    //All kinematics diffs are with respect to GKI values
    TH1D* h_Q2diff = new TH1D("h_Q2diff",";#DeltaQ2",1000,-100,100);
@@ -390,10 +391,10 @@ int main(int argc, char* argv[]) {
    output->Branch("elecPyMC",&myEvent.elecPyMC,"elecPyMC/F");
    output->Branch("elecPzMC",&myEvent.elecPzMC,"elecPzMC/F");
    output->Branch("elecEMC",&myEvent.elecEMC,"elecEMC/F");
-   output->Branch("radPhoPxMC",&myEvent.radPhoPxMC,"radPhoPxMC/F");
-   output->Branch("radPhoPyMC",&myEvent.radPhoPyMC,"radPhoPyMC/F");
-   output->Branch("radPhoPzMC",&myEvent.radPhoPzMC,"radPhoPzMC/F");
-   output->Branch("radPhoEMC",&myEvent.radPhoEMC,"radPhoEMC/F");
+   output->Branch("radPhoPxMC",myEvent.radPhoPxMC,"radPhoPxMC[4]/F");
+   output->Branch("radPhoPyMC",&myEvent.radPhoPyMC,"radPhoPyMC[4]/F");
+   output->Branch("radPhoPzMC",&myEvent.radPhoPzMC,"radPhoPzMC[4]/F");
+   output->Branch("radPhoEMC",&myEvent.radPhoEMC,"radPhoEMC[4]/F");
    output->Branch("isQEDc",&myEvent.isQEDc,"isQEDc/I");
    output->Branch("xGKI",&myEvent.xGKI,"xGKI/F");
    output->Branch("yGKI",&myEvent.yGKI,"yGKI/F");
@@ -594,6 +595,13 @@ int main(int argc, char* argv[]) {
             continue;
          }
 
+         //begin to store radiative photon and QEDc events.
+         for(int i=0;i<4;i++){
+            myEvent.radPhoPxMC[i] = 0.;
+            myEvent.radPhoPyMC[i] = 0.;
+            myEvent.radPhoPzMC[i] = 0.;
+            myEvent.radPhoEMC[i] = 0.;
+         }
          TDetectQedc detectQedc(mcpart);
          if( detectQedc.IsQedcEvent() ) {myEvent.isQEDc = 1;}
          else {myEvent.isQEDc = 0;}
@@ -602,11 +610,16 @@ int main(int argc, char* argv[]) {
             TLorentzVector gammaMC;
             for(int i=0;i<4;i++){
                gammaMC = detectQedc.GetPhoton(i);
-               h_dPhi_theta_noR->Fill( eMC.Theta(), eMC.DeltaPhi( gammaMC ) );
-               cout << "delta phi ~ " << eMC.DeltaPhi( gammaMC ) << endl;
+               TLorentzVector eGamma=eMC+gammaMC;
+               h_dPhi_theta_qedc->Fill( eMC.Theta(), eMC.DeltaPhi( gammaMC ) );
+               h_dPhi_sumPt_qedc->Fill( eGamma.Pt(), eMC.DeltaPhi( gammaMC ) );
+               myEvent.radPhoPxMC[i] = gammaMC.Px();
+               myEvent.radPhoPyMC[i] = gammaMC.Py();
+               myEvent.radPhoPzMC[i] = gammaMC.Pz();
+               myEvent.radPhoEMC[i] = gammaMC.E();
             }
-         } 
-
+         } //end qedc
+     
          TLorentzVector ebeam_MC_lab
             (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
          TLorentzVector pbeam_MC_lab
@@ -620,17 +633,14 @@ int main(int argc, char* argv[]) {
 
          /*begin scattered electron and radiative photons*/
          TLorentzVector radPhot_MC_lab;
-         myEvent.radPhoPxMC = 0.;
-         myEvent.radPhoPyMC = 0.;
-         myEvent.radPhoPzMC = 0.;
-         myEvent.radPhoEMC = 0.;
+         
          if( mcPartId.GetIdxRadPhoton() >= 0 ){
             radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
       
             double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
          
             // if( mcPartId.GetRadType() == 0 ){
-            //    h_dPhi_theta_noR->Fill(escat0_MC_lab.Theta(), delta_phi );
+            //    h_dPhi_theta_qedc->Fill(escat0_MC_lab.Theta(), delta_phi );
             // }
             if( mcPartId.GetRadType() == 1 ){
                h_dPhi_theta_ISR->Fill(escat0_MC_lab.Theta(), delta_phi );
@@ -641,12 +651,7 @@ int main(int argc, char* argv[]) {
             else{
                cout << "something is wrong!" << endl;
             }
-            //radiative photons
-            myEvent.radPhoPxMC = radPhot_MC_lab.Px();
-            myEvent.radPhoPyMC = radPhot_MC_lab.Py();
-            myEvent.radPhoPzMC = radPhot_MC_lab.Pz();
-            myEvent.radPhoEMC = radPhot_MC_lab.E();
-            
+         
          }
 
 
@@ -1611,7 +1616,8 @@ int main(int argc, char* argv[]) {
     // Write histogram to file
     output->Write();
 
-    h_dPhi_theta_noR->Write();
+    h_dPhi_theta_qedc->Write();
+    h_dPhi_sumPt_qedc->Write();
     h_dPhi_theta_ISR->Write();
     h_dPhi_theta_FSR->Write();
 
