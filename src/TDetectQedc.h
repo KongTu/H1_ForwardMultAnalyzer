@@ -2,7 +2,7 @@
 
 class H1PartMCArrayPtr;
 
-class TDetectQedc : public TObject {
+class TDetectQedc {
  public:
    // create this class to detect QEDC events
    TDetectQedc(H1PartMCArrayPtr &mcpart);
@@ -63,5 +63,4 @@ class TDetectQedc : public TObject {
    Int_t fCutsQedc[PHOTON_NTYPE];
    // incoming particle 4-vector
    TLorentzVector fEbeam,fEPbeam,fW,fInvis;
-   ClassDef(TDetectQedc,0)
 };

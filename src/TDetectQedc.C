@@ -6,8 +6,6 @@
 
 using namespace std;
 
-ClassImp(TDetectQedc)
-
 TDetectQedc::TDetectQedc(H1PartMCArrayPtr &mcpart) {
    fIelectron=-2;
    fIelectronNoFSR=-2;
