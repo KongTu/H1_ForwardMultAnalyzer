@@ -9,7 +9,7 @@
 
 #include "RiceStyle.h"
 
-void plotEtaNoFST(const bool doComb_=true, const bool doFwd_= false) {
+void plotEtaNoFST(const int iq2=0, const int iy=0, const bool doComb_=true, const bool doFwd_= false) {
    
    TChain* tree = new TChain("properties");
    //tree->Add("../run/mc_9xxx_rapgap31/*.root");
@@ -31,10 +31,16 @@ void plotEtaNoFST(const bool doComb_=true, const bool doFwd_= false) {
    TH1D *h_recMatchCombCentEtaStar=new TH1D("h_recMatchCombCentEtaStar",";eta*",nEta,etaMin,etaMax);
    TH1D *h_recMatchFwdCombCentEtaStar=new TH1D("h_recMatchFwdCombCentEtaStar",";eta*",nEta,etaMin,etaMax);
    
-   float Q2min=20.;
-   float Q2max=40.;
-   float ymin=0.3;
-   float ymax=0.6;
+   double Q2_bins[5]={5,10,20,40,100};
+   double y_bins[5]={0.0375,0.075,0.15,0.3,0.6};
+
+   TString Q2BINS[4]={"(5-10)","(10,20)","(20,40)","(40,100)"};
+   TString YBINS[4]={"(0.0375-0.075)","(0.075,0.15)","(0.15,0.3)","(0.3,0.6)"};
+
+   float Q2min=Q2_bins[iq2];
+   float Q2max=Q2_bins[iq2+1];
+   float ymin=y_bins[iy];
+   float ymax=y_bins[iy+1];
 
    double zvtxOffset=0.;
    double ptcut=0.15;
@@ -381,7 +387,7 @@ void plotEtaNoFST(const bool doComb_=true, const bool doFwd_= false) {
    TString zvtxShift;
    zvtxShift=TString::Format("|v_{z}+%.f|<35 cm", zvtxOffset);
    
-   TLegend *legend1=new TLegend(0.50,0.73,0.8,0.86,Form("H1 tracks Q2>%.2f, %.2f<y<%.2f",Q2min,ymin,ymax));
+   TLegend *legend1=new TLegend(0.45,0.73,0.8,0.86,Form("H1 tracks %.1f>Q2>%.1f, %.4f<y<%.4f",Q2max,Q2min,ymin,ymax));
    legend1->SetBorderSize(0);
    legend1->SetFillStyle(0);
    legend1->SetTextSize(0.025);
@@ -474,7 +480,7 @@ void plotEtaNoFST(const bool doComb_=true, const bool doFwd_= false) {
    fak[3]->Draw("PSAME");
 
    
-   TLegend *legend=new TLegend(0.50,0.73,0.8,0.86,Form("H1 tracks Q2>%.2f, %.2f<y<%.2f",Q2min,ymin,ymax));
+   TLegend *legend=new TLegend(0.45,0.73,0.8,0.86,Form("H1 tracks %.1f>Q2>%.1f, %.4f<y<%.4f",Q2max,Q2min,ymin,ymax));
    legend->SetBorderSize(0);
    legend->SetFillStyle(0);
    legend->SetTextSize(0.025);
@@ -502,7 +508,7 @@ void plotEtaNoFST(const bool doComb_=true, const bool doFwd_= false) {
 
    // cout << "factor " << ff << endl;
   
-   // c1->Print("../figures/DESY-13-012-Eff/eff_vtx0_fullcut.pdf");
-   // c2->Print("../figures/DESY-13-012-Eff/fak_vtx0_fullcut.pdf");
+   c1->Print("./eff_final_Q2_"+Q2BINS[iq2]+"_y_"+YBINS[iy]+".pdf");
+   c2->Print("./fak_final_Q2_"+Q2BINS[iq2]+"_y_"+YBINS[iy]+".pdf");
 
 }
