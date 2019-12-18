@@ -55,7 +55,7 @@
     </Axis>
   </BinningNode>
   <BinningNode name="etaBins">
-    <BinningNode name="-1.2:eta:1.6" />
+    <BinningNode name="-1.6:eta:1.6" />
   </BinningNode>
   <UnfoldingInput dataluminosity="136">
     unfoldingInput_yetalab_large.root

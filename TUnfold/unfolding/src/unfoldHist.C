@@ -173,9 +173,11 @@ int main(int argc, char const *argv[]) {
         TH2 * hist_genRec1=0;
         //TH1 * hist_genMC1=0;
         TH1 * hist_fake1=0;
+        TH1 * hist_QEDc1=0;
         source[src1]->GetObject("hist_genRec_"+etaName,hist_genRec1);
         source[src1]->GetObject("hist_fake_"+etaName,hist_fake1);
         //source[src1]->GetObject("hist_gen_"+etaName,hist_genMC1);
+        source[src1]->GetObject("hist_QEDc_"+etaName,hist_QEDc1);
 
         if(hist_genRec1) {
            TUnfoldDensity *unfold1=
@@ -186,8 +188,8 @@ int main(int argc, char const *argv[]) {
                TUnfoldDensity::kDensityModeNone,
                genBinning,recBinning);
            unfolding.push_back(unfold1);
-           if(hist_fake1)
-              unfold1->SubtractBackground(hist_fake1,"fakes",1.0,0.2);
+           if(hist_fake1) unfold1->SubtractBackground(hist_fake1,"fakes",1.0,0.2);
+            // if(hist_QEDc1) unfold1->SubtractBackground(hist_QEDc1, "QEDc",0.33,0.2);
         }
      }
 
