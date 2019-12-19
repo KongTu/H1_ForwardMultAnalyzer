@@ -46,10 +46,10 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 	file[2] = new TFile("../rootfiles/results_unfoldingOutput_yetalab_"+filename_2+".root");	
 	
 	TFile* file_allEta[10];
-	file_allEta[0] = new TFile("../rootfiles/results_unfoldingOutput_yetalab_default_singleEtaBin_hadCaliNew.root");
+	file_allEta[0] = new TFile("../rootfiles/results_unfoldingOutput_yetalab_default_singleEtaBin_ExtendedEta_hadCaliNew.root");
 
 	//radiative corrections
-	TFile* file_RadCorr_rapgap = new TFile("./RadCorr_RAPGAP.root");
+	TFile* file_RadCorr_rapgap = new TFile("./RadCorr_RAPGAP_extendEtalab.root");
 	TH1D* hCorr_Pn_GEN[4][4][4];
 	TH1D* hCorr_Pn_GEN_HCM[4][4];
 	for(int iQ2=0;iQ2<4;iQ2++){
@@ -62,7 +62,7 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			}
 		}
 	}
-	TFile* file_RadCorr_django = new TFile("./RadCorr_DJANGO.root");
+	TFile* file_RadCorr_django = new TFile("./RadCorr_DJANGO_extendEtalab.root");
 	TH1D* django_hCorr_Pn_GEN[4][4][4];
 	TH1D* django_hCorr_Pn_GEN_HCM[4][4];
 	for(int iQ2=0;iQ2<4;iQ2++){
@@ -98,7 +98,7 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 				y_bins[k+1]+")";
 
 				hist_unfolded_from_django[i][j][k] = (TH1D*) file[ifile]->Get( histo_name );
-				hist_unfolded_from_django[i][j][k]->SetMarkerStyle(24);
+				hist_unfolded_from_django[i][j][k]->SetMarkerStyle(20);
 				hist_unfolded_from_django[i][j][k]->SetMarkerColor(kBlack);
 				hist_unfolded_from_django[i][j][k]->SetLineColor(kBlack);
 
@@ -144,7 +144,7 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 	for(int j = 0; j < 4; j++){
 		for(int k = 0; k < 4; k++){
 
-			histo_name= "data_from_djangoh/hist_unfolded_(-1.2<=eta<1.6)("+Q2_bins[j]+"<=Q2MC_es_mini<"+Q2_bins[j+1]+")("+y_bins[k]+"<=yMC_es_mini<"+
+			histo_name= "data_from_djangoh/hist_unfolded_(-1.6<=eta<1.6)("+Q2_bins[j]+"<=Q2MC_es_mini<"+Q2_bins[j+1]+")("+y_bins[k]+"<=yMC_es_mini<"+
 			y_bins[k+1]+")";
 
 			hist_unfolded_from_django_allEta[j][k] = (TH1D*) file_allEta[0]->Get( histo_name );
@@ -152,7 +152,7 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			hist_unfolded_from_django_allEta[j][k]->SetMarkerColor(kBlack);
 			hist_unfolded_from_django_allEta[j][k]->SetLineColor(kBlack);
 
-			histo_name = "data_from_rapgap/hist_unfolded_(-1.2<=eta<1.6)("+Q2_bins[j]+"<=Q2MC_es_mini<"+Q2_bins[j+1]+")("+y_bins[k]+"<=yMC_es_mini<"+
+			histo_name = "data_from_rapgap/hist_unfolded_(-1.6<=eta<1.6)("+Q2_bins[j]+"<=Q2MC_es_mini<"+Q2_bins[j+1]+")("+y_bins[k]+"<=yMC_es_mini<"+
 			y_bins[k+1]+")";
 
 			hist_unfolded_from_rapgap_allEta[j][k] = (TH1D*) file_allEta[0]->Get( histo_name );
@@ -171,7 +171,7 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 					hist_unfolded_from_rapgap_allEta[j][k]->SetBinError(ibin+1, error*corr);
 				}
 			}
-			//radiative correction to Django based on Rapgap
+			//radiative correction to Django based on Django
 			for(int ibin=0;ibin<hist_unfolded_from_django_allEta[j][k]->GetNbinsX();ibin++){
 				double value = hist_unfolded_from_django_allEta[j][k]->GetBinContent(ibin+1);
 				double error = hist_unfolded_from_django_allEta[j][k]->GetBinError(ibin+1);
@@ -186,9 +186,9 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 	}
 	
 	
-	TFile* file_MC_django = new TFile("../../minitree_output/Pn_hist_django_new.root");
-	TFile* file_MC_rapgap = new TFile("../../minitree_output/Pn_hist_rapgap_new.root");
-	TFile* file_MC_pythia = new TFile("./Pythia8235_H1paper.root");
+	TFile* file_MC_django = new TFile("../../minitree_output/Pn_hist_django_hadCaliNew_extendEtalab_reweigh.root");
+	TFile* file_MC_rapgap = new TFile("../../minitree_output/Pn_hist_rapgap_hadCaliNew_extendEtalab_reweigh.root");
+	TFile* file_MC_pythia = new TFile("./Pythia8235_H1paper_extendEtalab.root");
 	TH1D* hist_mc_django[4][4][4];
 	TH1D* hist_mc_rapgap[4][4][4];
 	TH1D* hist_mc_pythia[4][4][4];
@@ -262,18 +262,32 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 
 	
 	TF1 *tf2[4][4];
+	TF1 *tf1[4][4];
 	double latex_starting_eta[]={0.56,0.54,0.54,0.54,0.56,0.54,0.54,0.54,0.56,0.54,0.54,0.54};
 	double latex_starting_y[]={0.48,0.49,0.525,0.56,0.48,0.49,0.525,0.56,0.46,0.47,0.51,0.55};
 
 	int sub_panels = 1;
 	for(int ieta = 0; ieta < 3; ieta++){
 		for(int iy = 0; iy < 4; iy++){
+			tf1[ieta][iy] = new TF1(Form("tf1_%d_%d",ieta,iy),"[0]*([1]/[1]+1)*ROOT::Math::negative_binomial_pdf(x[0],[1],[2])",0,15);
+			tf1[ieta][iy]->SetParameter(0,0.4);
+			tf1[ieta][iy]->SetParameter(1,0.071);
+			tf1[ieta][iy]->SetParameter(2,0.65);
 
 			tf2[ieta][iy] = new TF1(Form("tf2_%d_%d",ieta,iy),"[0]*([1]/[1]+1)*ROOT::Math::negative_binomial_pdf(x[0],[1],[2])",0,15);
-			tf2[ieta][iy]->SetParameter(0,0.5);
-			tf2[ieta][iy]->SetParameter(1,0.08);
-			tf2[ieta][iy]->SetParameter(2,0.7);
-			tf2[ieta][iy]->SetLineWidth(2);
+			tf2[ieta][iy]->SetParameter(0,0.4);
+			tf2[ieta][iy]->SetParameter(1,0.071);
+			tf2[ieta][iy]->SetParameter(2,0.65);
+
+			//Double NBD
+			// tf2[ieta][iy] = new TF1(Form("tf2_%d_%d",ieta,iy),"[0]*([1]/[1]+1)*ROOT::Math::negative_binomial_pdf(x[0],[1],[2])+[3]*([4]/[4]+1)*ROOT::Math::negative_binomial_pdf(x[0],[4],[5])",0,15);
+			// tf2[ieta][iy]->SetParameter(0,0.5);
+			// tf2[ieta][iy]->SetParameter(1,0.081);
+			// tf2[ieta][iy]->SetParameter(2,0.7);
+			// tf2[ieta][iy]->SetParameter(3,1.0);
+			// tf2[ieta][iy]->SetParameter(4,0.3);
+			// tf2[ieta][iy]->SetParameter(5,1.6);
+			// tf2[ieta][iy]->SetLineWidth(2);
 
 			c1->cd(sub_panels);
 			
@@ -307,6 +321,20 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			hist_mc_django[Q2_BIN][iy][ieta]->DrawNormalized("E3 Psame");
 			hist_mc_rapgap[Q2_BIN][iy][ieta]->DrawNormalized("E3 Psame");
 			hist_mc_pythia[Q2_BIN][iy][ieta]->DrawNormalized("E3 Psame");
+
+			if( sub_panels == 1 || sub_panels == 2 || sub_panels == 5 ){
+
+				hist_unfolded_from_rapgap[ieta][Q2_BIN][iy]->Fit(Form("tf1_%d_%d",ieta,iy),"RME0","",1,7);
+				hist_unfolded_from_rapgap[ieta][Q2_BIN][iy]->Fit(Form("tf1_%d_%d",ieta,iy),"RME0","",1,7);
+				hist_unfolded_from_rapgap[ieta][Q2_BIN][iy]->Fit(Form("tf1_%d_%d",ieta,iy),"RME0","",1,7);
+
+			}
+			else{
+				hist_unfolded_from_rapgap[ieta][Q2_BIN][iy]->Fit(Form("tf1_%d_%d",ieta,iy),"RME0","",4,15);
+				hist_unfolded_from_rapgap[ieta][Q2_BIN][iy]->Fit(Form("tf1_%d_%d",ieta,iy),"RME0","",4,15);
+				hist_unfolded_from_rapgap[ieta][Q2_BIN][iy]->Fit(Form("tf1_%d_%d",ieta,iy),"RME0","",4,15);
+
+			}
 
 			if( sub_panels < 5 ){
 				TLatex* r46 = new TLatex(latex_starting_eta[sub_panels-1],0.76, eta_bins[2*ieta]+"<#eta<"+eta_bins[2*ieta+1]);
@@ -374,22 +402,22 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 
 			if(Q2_BIN==0){
 				if(sub_panels==3||sub_panels==6||sub_panels==9){
-					hist_unfolded_from_django[ieta][Q2_BIN][iy]->Fit(Form("tf2_%d_%d",ieta,iy),"RME0");
+					hist_unfolded_from_rapgap[ieta][Q2_BIN][iy]->Fit(Form("tf1_%d_%d",ieta,iy),"RME0","",0,15);
 				}
 			}
 			if(Q2_BIN==1){
 				if(sub_panels==4||sub_panels==7||sub_panels==10){
-					hist_unfolded_from_django[ieta][Q2_BIN][iy]->Fit(Form("tf2_%d_%d",ieta,iy),"RME0");
+					hist_unfolded_from_rapgap[ieta][Q2_BIN][iy]->Fit(Form("tf1_%d_%d",ieta,iy),"RME0","",0,15);
 				}
 			}
 			if(Q2_BIN==2){
 				if(sub_panels==8||sub_panels==11){
-					hist_unfolded_from_django[ieta][Q2_BIN][iy]->Fit(Form("tf2_%d_%d",ieta,iy),"RME0");
+					hist_unfolded_from_rapgap[ieta][Q2_BIN][iy]->Fit(Form("tf1_%d_%d",ieta,iy),"RME0","",0,15);
 				}
 			}
 			if(Q2_BIN==3){
 				if(sub_panels==12){
-					hist_unfolded_from_django[ieta][Q2_BIN][iy]->Fit(Form("tf2_%d_%d",ieta,iy),"RME0");
+					hist_unfolded_from_rapgap[ieta][Q2_BIN][iy]->Fit(Form("tf1_%d_%d",ieta,iy),"RME0","",0,15);
 				}
 			}
 			
@@ -451,7 +479,833 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 	cout << S_hadron_x[iy] << endl;
 	}
 
+	TCanvas* c1_2 = new TCanvas("c1_2","c1_2",1,1,600,600);
+	gPad->SetTicks();
+	gPad->SetLeftMargin(0.1);
+	gPad->SetRightMargin(0.1);
+	gPad->SetBottomMargin(0.15);
+	gPad->SetTopMargin(0.1);
+	gPad->SetLogx(0);
 
+	double xmin_axis = 35.; double xmax_axis=250.;
+	TH1D* base1_2 = makeHist("base1_2", "", "W (GeV)", "#LT N_{ch} #GT", 100,xmin_axis,xmax_axis,kBlack);
+	base1_2->GetYaxis()->SetRangeUser(-3, 7);
+	base1_2->GetXaxis()->SetTitleColor(kBlack);
+
+	fixedFontHist1D(base1_2,1.2,1.0);
+
+	base1_2->GetYaxis()->SetTitleSize(base1_2->GetYaxis()->GetTitleSize()*1.3);
+	base1_2->GetXaxis()->SetTitleSize(base1_2->GetXaxis()->GetTitleSize()*1.3);
+	base1_2->GetYaxis()->SetLabelSize(base1_2->GetYaxis()->GetLabelSize()*1.3);
+	base1_2->GetXaxis()->SetLabelSize(base1_2->GetXaxis()->GetLabelSize()*1.3);
+	base1_2->GetXaxis()->SetNdivisions(4,6,0);
+	base1_2->GetYaxis()->SetNdivisions(4,6,0);
+
+	TGraphErrors* gr_eta_data[3];
+	TGraphErrors* gr_eta_django[3];
+	TGraphErrors* gr_eta_rapgap[3];
+	TGraphErrors* gr_eta_pythia[3];
+
+	TGraphErrors* gr_eta_data_variance[3];
+	TGraphErrors* gr_eta_django_variance[3];
+	TGraphErrors* gr_eta_rapgap_variance[3];
+	TGraphErrors* gr_eta_pythia_variance[3];
+
+	TGraphErrors* gr_logx_eta_data[3];
+	TGraphErrors* gr_logx_eta_django[3];
+	TGraphErrors* gr_logx_eta_rapgap[3];
+	TGraphErrors* gr_logx_eta_pythia[3];
+
+	TGraphErrors* gr_logx_eta_data_variance[3];
+	TGraphErrors* gr_logx_eta_django_variance[3];
+	TGraphErrors* gr_logx_eta_rapgap_variance[3];
+	TGraphErrors* gr_logx_eta_pythia_variance[3];
+
+	double yREC_es_ave[] = {0.05464,0.1095,0.2179,0.4121};
+	double W_es_ave[] = {72,101,147,205};
+	double x_ave_Q2_5_10[]={0.0014,0.0007,0.00033,0.00017};
+	double x_ave_Q2_10_20[]={0.0023,0.0013,0.00066,0.00034};
+	double x_ave_Q2_20_40[]={0.0052,0.0026,0.0013,0.00068};
+	double x_ave_Q2_40_100[]={0.011,0.0056,0.0028,0.0013};
+	double x_ave_Q2[4][4];
+	for(int i=0;i<4;i++){
+		for(int j=0;j<4;j++){
+			if( i==0) x_ave_Q2[i][j] = x_ave_Q2_5_10[j];
+			if( i==1) x_ave_Q2[i][j] = x_ave_Q2_10_20[j];
+			if( i==2) x_ave_Q2[i][j] = x_ave_Q2_20_40[j];
+			if( i==3) x_ave_Q2[i][j] = x_ave_Q2_40_100[j];
+		}
+	}
+
+	for(int ieta=0;ieta<3;ieta++){
+		gr_eta_data[ieta] = new TGraphErrors();
+		gr_eta_django[ieta] = new TGraphErrors();
+		gr_eta_rapgap[ieta] = new TGraphErrors();
+		gr_eta_pythia[ieta] = new TGraphErrors();
+
+		gr_eta_data_variance[ieta] = new TGraphErrors();
+		gr_eta_django_variance[ieta] = new TGraphErrors();
+		gr_eta_rapgap_variance[ieta] = new TGraphErrors();
+		gr_eta_pythia_variance[ieta] = new TGraphErrors();
+
+		gr_logx_eta_data[ieta] = new TGraphErrors();
+		gr_logx_eta_django[ieta] = new TGraphErrors();
+		gr_logx_eta_rapgap[ieta] = new TGraphErrors();
+		gr_logx_eta_pythia[ieta] = new TGraphErrors();
+
+		gr_logx_eta_data_variance[ieta] = new TGraphErrors();
+		gr_logx_eta_django_variance[ieta] = new TGraphErrors();
+		gr_logx_eta_rapgap_variance[ieta] = new TGraphErrors();
+		gr_logx_eta_pythia_variance[ieta] = new TGraphErrors();
+
+		//problem with the data is not unit bin width
+		for(int iy=0;iy<4;iy++){
+			//data
+			TH1D* histForMultiplicity = (TH1D*) hist_unfolded_from_rapgap[ieta][Q2_BIN][iy]->Clone(Form("histForMultiplicity_%d_%d",ieta,iy));
+			double sum = 0.;
+			double sum_pn = 0.;
+			double err2 = 0.;
+			double bin_to_stop = histForMultiplicity->GetBinCenter(histForMultiplicity->FindLastBinAbove(0.,1));
+			
+			//use the first 4 bins in data and after N > 3, use NBD extrapolations.
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+				double N = ibin;
+				double Pn = 0.;
+				double Pn_err = 0;
+				if( ibin < 4 ){
+					N = histForMultiplicity->GetBinCenter(ibin+1);
+					Pn = histForMultiplicity->GetBinContent(ibin+1);
+					Pn_err = histForMultiplicity->GetBinError(ibin+1);
+					sum += N*Pn;
+					sum_pn += Pn;
+					err2 += (N*Pn_err)*(N*Pn_err);
+				}
+				else{
+					Pn = tf1[ieta][iy]->Eval(N);
+					int nbin = histForMultiplicity->FindBin(N);
+					Pn_err = histForMultiplicity->GetBinError(nbin);
+					sum += N*Pn;
+					sum_pn += Pn;
+					err2 += (N*Pn_err)*(N*Pn_err);
+				}
+			
+			}
+			gr_eta_data[ieta]->SetPoint(iy, W_es_ave[iy], sum/sum_pn );
+			gr_eta_data[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			gr_logx_eta_data[ieta]->SetPoint(iy, x_ave_Q2[Q2_BIN][iy], sum/sum_pn );
+			gr_logx_eta_data[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+			double first_moment = sum/sum_pn;
+
+			//test of systematics:
+			gr_eta_data[ieta]->SetPointError(iy, 0., sqrt(first_moment*first_moment*sys_Nch*sys_Nch+(sqrt(err2)/sum_pn)*(sqrt(err2)/sum_pn)) );
+			gr_logx_eta_data[ieta]->SetPointError(iy, 0., sqrt(first_moment*first_moment*sys_Nch*sys_Nch+(sqrt(err2)/sum_pn)*(sqrt(err2)/sum_pn)) );
+			
+			//use mean to compute variance
+			sum = 0.;
+			sum_pn = 0.;
+			err2 = 0.;
+			for(int ibin=0; ibin<(int)bin_to_stop+1;ibin++){
+				double N = ibin;
+				double Pn = 0.;
+				double Pn_err = 0;
+				if( ibin < 4 ){
+					N = histForMultiplicity->GetBinCenter(ibin+1);
+					Pn = histForMultiplicity->GetBinContent(ibin+1);
+					Pn_err = histForMultiplicity->GetBinError(ibin+1);
+					sum += TMath::Power((N-first_moment),2)*Pn;
+					sum_pn += Pn;
+					err2 += (TMath::Power((N-first_moment),2)*Pn_err)*(TMath::Power((N-first_moment),2)*Pn_err);
+				}
+				else {
+					Pn = tf1[ieta][iy]->Eval(N);
+					int nbin = histForMultiplicity->FindBin(N);
+					Pn_err = histForMultiplicity->GetBinError(nbin);
+					sum += TMath::Power((N-first_moment),2)*Pn;
+					sum_pn += Pn;
+					err2 += (TMath::Power((N-first_moment),2)*Pn_err)*(TMath::Power((N-first_moment),2)*Pn_err);
+				}
+		
+			}
+			gr_eta_data_variance[ieta]->SetPoint(iy, W_es_ave[iy], sum/sum_pn );
+			gr_eta_data_variance[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			gr_logx_eta_data_variance[ieta]->SetPoint(iy, x_ave_Q2[Q2_BIN][iy], sum/sum_pn );
+			gr_logx_eta_data_variance[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+			double second_moment = sum/sum_pn;
+			//test of systematics:
+			gr_eta_data_variance[ieta]->SetPointError(iy, 0., sqrt(second_moment*second_moment*sys_Var*sys_Var+(sqrt(err2)/sum_pn)*(sqrt(err2)/sum_pn)) );
+			gr_logx_eta_data_variance[ieta]->SetPointError(iy, 0., sqrt(second_moment*second_moment*sys_Var*sys_Var+(sqrt(err2)/sum_pn)*(sqrt(err2)/sum_pn)) );
+			
+			//django
+			TH1D* histForMultiplicity_django = (TH1D*) hist_mc_django[Q2_BIN][iy][ieta]->Clone(Form("histForMultiplicity_django_%d_%d",ieta,iy));
+			sum = 0.;
+			sum_pn = 0.;
+			err2 = 0.;
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_django->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_django->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_django->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_django->GetBinError(ibin+1);
+
+				sum_pn += Pn*weight;
+				sum += N*Pn*weight;
+				err2 += (N*Pn_err*weight)*(N*Pn_err*weight);
+			}
+			gr_eta_django[ieta]->SetPoint(iy, W_es_ave[iy], sum/sum_pn );
+			gr_eta_django[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			gr_logx_eta_django[ieta]->SetPoint(iy, x_ave_Q2[Q2_BIN][iy], sum/sum_pn );
+			gr_logx_eta_django[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			first_moment = sum/sum_pn;
+			//from mean to variance
+			sum = 0.;
+			sum_pn = 0.;
+			err2 = 0.;
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_django->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_django->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_django->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_django->GetBinError(ibin+1);
+				
+				sum += TMath::Power((N-first_moment),2)*Pn*weight;
+				sum_pn += Pn*weight;
+				err2 += (TMath::Power((N-first_moment),2)*Pn_err*weight)*(TMath::Power((N-first_moment),2)*Pn_err*weight);
+			}
+			gr_eta_django_variance[ieta]->SetPoint(iy, W_es_ave[iy], sum/sum_pn );
+			gr_eta_django_variance[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			gr_logx_eta_django_variance[ieta]->SetPoint(iy, x_ave_Q2[Q2_BIN][iy], sum/sum_pn );
+			gr_logx_eta_django_variance[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			//rapgap
+			TH1D* histForMultiplicity_rapgap = (TH1D*) hist_mc_rapgap[Q2_BIN][iy][ieta]->Clone(Form("histForMultiplicity_rapgap_%d_%d",ieta,iy));
+			sum = 0.;
+			sum_pn = 0.;
+			err2 = 0.;
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_rapgap->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_rapgap->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_rapgap->GetBinError(ibin+1);
+
+				sum_pn += Pn*weight;
+				sum += N*Pn*weight;
+				err2 += (N*Pn_err*weight)*(N*Pn_err*weight);
+			}
+			gr_eta_rapgap[ieta]->SetPoint(iy, W_es_ave[iy], sum/sum_pn );
+			gr_eta_rapgap[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			gr_logx_eta_rapgap[ieta]->SetPoint(iy, x_ave_Q2[Q2_BIN][iy], sum/sum_pn );
+			gr_logx_eta_rapgap[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			first_moment = sum/sum_pn;
+
+			//from mean to variance
+			sum = 0.;
+			sum_pn = 0.;
+			err2 = 0.;
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_rapgap->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_rapgap->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_rapgap->GetBinError(ibin+1);
+
+				sum_pn += Pn*weight;
+				sum += TMath::Power((N-first_moment),2)*Pn*weight;
+				err2 += (TMath::Power((N-first_moment),2)*Pn_err*weight)*(TMath::Power((N-first_moment),2)*Pn_err*weight);
+			}
+			gr_eta_rapgap_variance[ieta]->SetPoint(iy, W_es_ave[iy], sum/sum_pn );
+			gr_eta_rapgap_variance[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			gr_logx_eta_rapgap_variance[ieta]->SetPoint(iy, x_ave_Q2[Q2_BIN][iy], sum/sum_pn );
+			gr_logx_eta_rapgap_variance[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			//pythia
+			TH1D* histForMultiplicity_pythia = (TH1D*) hist_mc_pythia[Q2_BIN][iy][ieta]->Clone(Form("histForMultiplicity_pythia_%d_%d",ieta,iy));
+			sum = 0.;
+			sum_pn = 0.;
+			err2 = 0.;
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_pythia->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_pythia->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_pythia->GetBinError(ibin+1);
+
+				sum_pn += Pn*weight;
+				sum += N*Pn*weight;
+				err2 += (N*Pn_err*weight)*(N*Pn_err*weight);
+			}
+			gr_eta_pythia[ieta]->SetPoint(iy, W_es_ave[iy], sum/sum_pn );
+			gr_eta_pythia[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			gr_logx_eta_pythia[ieta]->SetPoint(iy, x_ave_Q2[Q2_BIN][iy], sum/sum_pn );
+			gr_logx_eta_pythia[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			first_moment = sum/sum_pn;
+
+			//from mean to variance
+			sum = 0.;
+			sum_pn = 0.;
+			err2 = 0.;
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_pythia->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_pythia->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_pythia->GetBinError(ibin+1);
+
+				sum_pn += Pn*weight;
+				sum += TMath::Power((N-first_moment),2)*Pn*weight;
+				err2 += (TMath::Power((N-first_moment),2)*Pn_err*weight)*(TMath::Power((N-first_moment),2)*Pn_err*weight);
+			}
+			gr_eta_pythia_variance[ieta]->SetPoint(iy, W_es_ave[iy], sum/sum_pn );
+			gr_eta_pythia_variance[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			gr_logx_eta_pythia_variance[ieta]->SetPoint(iy, x_ave_Q2[Q2_BIN][iy], sum/sum_pn );
+			gr_logx_eta_pythia_variance[ieta]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+		}
+	}
+
+
+	base1_2->GetXaxis()->SetLabelOffset(999);
+	base1_2->GetXaxis()->SetTickLength(0);
+	
+	TGaxis *newaxis1_2 = new TGaxis(xmin_axis,
+	                            -3,
+	                            xmax_axis,
+	                            -3,
+	                            0.0,
+	                            xmax_axis,
+	                            510,"");
+	newaxis1_2->SetLabelOffset(0.01);
+	newaxis1_2->SetLabelFont(42);
+	newaxis1_2->SetLabelSize( 0.035 );
+
+	base1_2->Draw();
+	newaxis1_2->Draw("SS");
+	gPad->Update();
+
+	TLine* l11[10];
+    l11[0] = new TLine(W_es_ave[0],9.8, W_es_ave[0], 10);
+    l11[0]->SetLineWidth(2);
+    l11[0]->Draw("Lsame");
+
+    l11[1] = new TLine(W_es_ave[1],9.8, W_es_ave[1], 10);
+    l11[1]->SetLineWidth(2);
+    l11[1]->Draw("Lsame");
+
+    l11[2] = new TLine(W_es_ave[2],9.8, W_es_ave[2], 10);
+    l11[2]->SetLineWidth(2);
+    l11[2]->Draw("Lsame");
+
+    l11[2] = new TLine(W_es_ave[3],9.8, W_es_ave[3], 10);
+    l11[2]->SetLineWidth(2);
+    l11[2]->Draw("Lsame");
+
+	gr_eta_data[0]->SetMarkerStyle(20);
+	gr_eta_data[0]->SetMarkerSize(1.4);
+	gr_eta_data[0]->SetMarkerColor(kBlack);
+
+	gr_eta_data[1]->SetMarkerStyle(30);
+	gr_eta_data[1]->SetMarkerSize(1.4);
+	gr_eta_data[1]->SetMarkerColor(kBlue);
+
+	gr_eta_data[2]->SetMarkerStyle(24);
+	gr_eta_data[2]->SetMarkerSize(1.4);
+	gr_eta_data[2]->SetMarkerColor(kRed);
+
+	gr_eta_data[0]->Draw("Psame");
+	gr_eta_data[1]->Draw("Psame");
+	gr_eta_data[2]->Draw("Psame");
+
+	gr_eta_django[0]->SetLineStyle(2);
+	gr_eta_django[0]->SetLineWidth(4);
+	gr_eta_django[0]->SetMarkerSize(1.4);
+	gr_eta_django[0]->SetLineColor(kBlack);
+
+	gr_eta_django[1]->SetLineStyle(2);
+	gr_eta_django[1]->SetLineWidth(4);
+	gr_eta_django[1]->SetMarkerSize(1.4);
+	gr_eta_django[1]->SetLineColor(kBlue);
+
+	gr_eta_django[2]->SetLineStyle(2);
+	gr_eta_django[2]->SetLineWidth(4);
+	gr_eta_django[2]->SetMarkerSize(1.4);
+	gr_eta_django[2]->SetLineColor(kRed);
+
+	gr_eta_rapgap[0]->SetLineStyle(2);
+	gr_eta_rapgap[0]->SetLineWidth(4);
+	gr_eta_rapgap[0]->SetMarkerSize(1.4);
+	gr_eta_rapgap[0]->SetLineColor(kBlack);
+
+	gr_eta_rapgap[1]->SetLineStyle(3);
+	gr_eta_rapgap[1]->SetLineWidth(4);
+	gr_eta_rapgap[1]->SetMarkerSize(1.4);
+	gr_eta_rapgap[1]->SetLineColor(kBlue);
+
+	gr_eta_rapgap[2]->SetLineStyle(4);
+	gr_eta_rapgap[2]->SetLineWidth(4);
+	gr_eta_rapgap[2]->SetMarkerSize(1.4);
+	gr_eta_rapgap[2]->SetLineColor(kRed);
+
+	gr_eta_pythia[0]->SetLineStyle(2);
+	gr_eta_pythia[0]->SetLineWidth(4);
+	gr_eta_pythia[0]->SetMarkerSize(1.4);
+	gr_eta_pythia[0]->SetLineColor(kBlack);
+
+	gr_eta_pythia[1]->SetLineStyle(3);
+	gr_eta_pythia[1]->SetLineWidth(4);
+	gr_eta_pythia[1]->SetMarkerSize(1.4);
+	gr_eta_pythia[1]->SetLineColor(kBlue);
+
+	gr_eta_pythia[2]->SetLineStyle(4);
+	gr_eta_pythia[2]->SetLineWidth(4);
+	gr_eta_pythia[2]->SetMarkerSize(1.4);
+	gr_eta_pythia[2]->SetLineColor(kRed);
+
+
+	if( pickMCEG_ == 0 ){
+		gr_eta_rapgap[0]->Draw("L same");
+		gr_eta_rapgap[1]->Draw("L same");
+		gr_eta_rapgap[2]->Draw("L same");
+	}
+	else if( pickMCEG_ == 1 ){
+		gr_eta_django[0]->Draw("Lsame");
+		gr_eta_django[1]->Draw("Lsame");
+		gr_eta_django[2]->Draw("Lsame");
+	}
+	else if( pickMCEG_ == 2 ){
+		gr_eta_pythia[0]->Draw("Lsame");
+		gr_eta_pythia[1]->Draw("Lsame");
+		gr_eta_pythia[2]->Draw("Lsame");
+	}
+
+	TLatex* r44 = new TLatex(0.8,0.84, "H1");
+	r44->SetNDC();
+	r44->SetTextSize(0.04);
+
+	TLatex* r48 = new TLatex(0.13, 0.84, "ep 27.5#times920 GeV");
+	r48->SetNDC();
+	r48->SetTextSize(23);
+	r48->SetTextFont(43);
+	r48->SetTextColor(kBlack);
+
+	TString Q2_text[4];
+	Q2_text[0] = "5 < Q^{2} < 10 GeV^{2}";
+	Q2_text[1] = "10 < Q^{2} < 20 GeV^{2}";
+	Q2_text[2] = "20 < Q^{2} < 40 GeV^{2}";
+	Q2_text[3] = "40 < Q^{2} < 100 GeV^{2}";
+
+	TLatex* r491 = new TLatex(0.13, 0.79, Q2_text[Q2_BIN]);
+	r491->SetNDC();
+	r491->SetTextSize(23);
+	r491->SetTextFont(43);
+	r491->SetTextColor(kBlack);
+
+	TLatex* r441 = new TLatex(0.45,0.95, "#LT y #GT");
+	r441->SetNDC();
+	r441->SetTextSize(20);
+	r441->SetTextFont(43);
+	r441->SetTextColor(kBlack);
+
+	r44->Draw("same");
+	r48->Draw("same");
+	r491->Draw("same");
+	r441->Draw("same");
+
+	TLatex* r6301 = new TLatex(0.48,0.34, "#eta_{lab} (data)");
+	r6301->SetNDC();
+	r6301->SetTextSize(0.03);
+	r6301->Draw("same");
+
+	TLegend *w6312 = new TLegend(0.48,0.18,0.65,0.32);
+	w6312->SetLineColor(kWhite);
+	w6312->SetFillColor(0);
+	w6312->SetTextSize(14);
+	w6312->SetTextFont(45);
+	w6312->SetTextColor(kBlack);
+	w6312->AddEntry(gr_eta_data[0], "(-1.2,0.2) ","P");
+	w6312->AddEntry(gr_eta_data[1], "(-0.5,0.9) ","P");
+	w6312->AddEntry(gr_eta_data[2], "(0.2,1.6)", "P");
+	w6312->Draw("same");
+
+	TString mc_generator_etalab = "#eta_{lab} (rapgap)";
+	if( pickMCEG_ == 1 ) mc_generator_etalab = "#eta_{lab} (django)";
+	if( pickMCEG_ == 2 ) mc_generator_etalab = "#eta_{lab} (pythia)";
+	TLatex* r6311 = new TLatex(0.65,0.34, mc_generator_etalab);
+	r6311->SetNDC();
+	r6311->SetTextSize(0.03);
+	r6311->Draw("same");
+
+	TLegend *w6311 = new TLegend(0.65,0.18,0.87,0.32);
+	w6311->SetLineColor(kWhite);
+	w6311->SetFillColor(0);
+	w6311->SetTextSize(14);
+	w6311->SetTextFont(45);
+	w6311->SetTextColor(kBlack);
+	w6311->AddEntry(gr_eta_rapgap[0], "(-1.2,0.2) ","L");
+	w6311->AddEntry(gr_eta_rapgap[1], "(-0.5,0.9) ","L");
+	w6311->AddEntry(gr_eta_rapgap[2], "(0.2,1.6)", "L");
+	w6311->Draw("same");
+
+	// yREC_es_ave[] = {0.05464,0.1095,0.2179,0.4121};
+	TLatex* W1[10];
+  	W1[0] = new TLatex(0.22, 0.91, "0.05");
+    W1[1] = new TLatex(0.32, 0.91, "0.11");
+    W1[2] = new TLatex(0.49, 0.91, "0.22");
+    W1[3] = new TLatex(0.71, 0.91, "0.41");
+    for(int i=0;i<4;i++){
+    	W1[i]->SetNDC();
+		W1[i]->SetTextSize(17);
+		W1[i]->SetTextFont(43);
+	}
+    W1[0]->Draw("same");
+    W1[1]->Draw("same");
+    W1[2]->Draw("same");
+    W1[3]->Draw("same");
+
+	TCanvas* c1_3 = new TCanvas("c1_3","c1_3",1,1,600,600);
+	gPad->SetTicks();
+	gPad->SetLeftMargin(0.1);
+	gPad->SetRightMargin(0.1);
+	gPad->SetBottomMargin(0.15);
+	gPad->SetTopMargin(0.1);
+	gPad->SetLogx(0); 
+	TH1D* base1_3 = (TH1D*) base1_2->Clone("base1_3");
+	base1_3->GetYaxis()->SetRangeUser(-3,10);
+	base1_3->GetYaxis()->SetTitle("Var(N_{ch})");
+	base1_3->Draw();
+    newaxis1_2->Draw("SS");
+	gPad->Update();
+	r44->Draw("same");
+	r48->Draw("same");
+	r491->Draw("same");
+	r441->Draw("same");
+
+	W1[0]->Draw("same");
+    W1[1]->Draw("same");
+    W1[2]->Draw("same");
+    W1[3]->Draw("same");
+
+    r6301->Draw("same");
+	w6312->Draw("same");
+	w6311->Draw("same");
+    r6311->Draw("same");
+
+    l11[0] = new TLine(W_es_ave[0],17.75, W_es_ave[0], 18);
+    l11[0]->SetLineWidth(2);
+    l11[0]->Draw("Lsame");
+
+    l11[1] = new TLine(W_es_ave[1],17.75, W_es_ave[1], 18);
+    l11[1]->SetLineWidth(2);
+    l11[1]->Draw("Lsame");
+
+    l11[2] = new TLine(W_es_ave[2],17.75, W_es_ave[2], 18);
+    l11[2]->SetLineWidth(2);
+    l11[2]->Draw("Lsame");
+
+    l11[2] = new TLine(W_es_ave[3],17.75, W_es_ave[3], 18);
+    l11[2]->SetLineWidth(2);
+    l11[2]->Draw("Lsame");
+
+    gr_eta_data_variance[0]->SetMarkerStyle(20);
+	gr_eta_data_variance[0]->SetMarkerSize(1.4);
+	gr_eta_data_variance[0]->SetMarkerColor(kBlack);
+
+	gr_eta_data_variance[1]->SetMarkerStyle(30);
+	gr_eta_data_variance[1]->SetMarkerSize(1.4);
+	gr_eta_data_variance[1]->SetMarkerColor(kBlue);
+
+	gr_eta_data_variance[2]->SetMarkerStyle(24);
+	gr_eta_data_variance[2]->SetMarkerSize(1.4);
+	gr_eta_data_variance[2]->SetMarkerColor(kRed);
+
+	gr_eta_data_variance[0]->Draw("Psame");
+	gr_eta_data_variance[1]->Draw("Psame");
+	gr_eta_data_variance[2]->Draw("Psame");
+
+	gr_eta_django_variance[0]->SetLineStyle(2);
+	gr_eta_django_variance[0]->SetLineWidth(4);
+	gr_eta_django_variance[0]->SetMarkerSize(1.4);
+	gr_eta_django_variance[0]->SetLineColor(kBlack);
+
+	gr_eta_django_variance[1]->SetLineStyle(2);
+	gr_eta_django_variance[1]->SetLineWidth(4);
+	gr_eta_django_variance[1]->SetMarkerSize(1.4);
+	gr_eta_django_variance[1]->SetLineColor(kBlue);
+
+	gr_eta_django_variance[2]->SetLineStyle(2);
+	gr_eta_django_variance[2]->SetLineWidth(4);
+	gr_eta_django_variance[2]->SetMarkerSize(1.4);
+	gr_eta_django_variance[2]->SetLineColor(kRed);
+
+	gr_eta_rapgap_variance[0]->SetLineStyle(2);
+	gr_eta_rapgap_variance[0]->SetLineWidth(4);
+	gr_eta_rapgap_variance[0]->SetMarkerSize(1.4);
+	gr_eta_rapgap_variance[0]->SetLineColor(kBlack);
+
+	gr_eta_rapgap_variance[1]->SetLineStyle(3);
+	gr_eta_rapgap_variance[1]->SetLineWidth(4);
+	gr_eta_rapgap_variance[1]->SetMarkerSize(1.4);
+	gr_eta_rapgap_variance[1]->SetLineColor(kBlue);
+
+	gr_eta_rapgap_variance[2]->SetLineStyle(4);
+	gr_eta_rapgap_variance[2]->SetLineWidth(4);
+	gr_eta_rapgap_variance[2]->SetMarkerSize(1.4);
+	gr_eta_rapgap_variance[2]->SetLineColor(kRed);
+
+	gr_eta_pythia_variance[0]->SetLineStyle(2);
+	gr_eta_pythia_variance[0]->SetLineWidth(4);
+	gr_eta_pythia_variance[0]->SetMarkerSize(1.4);
+	gr_eta_pythia_variance[0]->SetLineColor(kBlack);
+
+	gr_eta_pythia_variance[1]->SetLineStyle(3);
+	gr_eta_pythia_variance[1]->SetLineWidth(4);
+	gr_eta_pythia_variance[1]->SetMarkerSize(1.4);
+	gr_eta_pythia_variance[1]->SetLineColor(kBlue);
+
+	gr_eta_pythia_variance[2]->SetLineStyle(4);
+	gr_eta_pythia_variance[2]->SetLineWidth(4);
+	gr_eta_pythia_variance[2]->SetMarkerSize(1.4);
+	gr_eta_pythia_variance[2]->SetLineColor(kRed);
+
+	if( pickMCEG_ == 0 ){
+		gr_eta_rapgap_variance[0]->Draw("L same");
+		gr_eta_rapgap_variance[1]->Draw("L same");
+		gr_eta_rapgap_variance[2]->Draw("L same");
+	}
+	else if( pickMCEG_ == 1 ){
+		gr_eta_django_variance[0]->Draw("Lsame");
+		gr_eta_django_variance[1]->Draw("Lsame");
+		gr_eta_django_variance[2]->Draw("Lsame");
+	}
+	else if( pickMCEG_ == 2 ){
+		gr_eta_pythia_variance[0]->Draw("Lsame");
+		gr_eta_pythia_variance[1]->Draw("Lsame");
+		gr_eta_pythia_variance[2]->Draw("Lsame");
+	}
+
+
+	TCanvas* c1_4 = new TCanvas("c1_4","c1_4",1,1,600,600);
+	gPad->SetTicks();
+	gPad->SetLeftMargin(0.1);
+	gPad->SetRightMargin(0.1);
+	gPad->SetBottomMargin(0.15);
+	gPad->SetTopMargin(0.1);
+	gPad->SetLogx(1);
+
+	TH1D* base1_4 = makeHist("base1_4", "", "#LT x #GT", "#LT N_{ch} #GT", 10000,0.0001,0.02,kBlack);
+	base1_4->GetYaxis()->SetRangeUser(-3, 6);
+	base1_4->GetXaxis()->SetTitleColor(kBlack);
+
+	fixedFontHist1D(base1_4,1.2,1.0);
+
+	base1_4->GetYaxis()->SetTitleSize(base1_4->GetYaxis()->GetTitleSize()*1.3);
+	base1_4->GetXaxis()->SetTitleSize(base1_4->GetXaxis()->GetTitleSize()*1.3);
+	base1_4->GetYaxis()->SetLabelSize(base1_4->GetYaxis()->GetLabelSize()*1.3);
+	base1_4->GetXaxis()->SetLabelSize(base1_4->GetXaxis()->GetLabelSize()*1.3);
+	base1_4->GetXaxis()->SetNdivisions(4,6,0);
+	base1_4->GetYaxis()->SetNdivisions(4,6,0);
+
+	base1_4->Draw();
+
+	gr_logx_eta_data[0]->SetMarkerStyle(20);
+	gr_logx_eta_data[0]->SetMarkerSize(1.4);
+	gr_logx_eta_data[0]->SetMarkerColor(kBlack);
+
+	gr_logx_eta_data[1]->SetMarkerStyle(30);
+	gr_logx_eta_data[1]->SetMarkerSize(1.4);
+	gr_logx_eta_data[1]->SetMarkerColor(kBlue);
+
+	gr_logx_eta_data[2]->SetMarkerStyle(24);
+	gr_logx_eta_data[2]->SetMarkerSize(1.4);
+	gr_logx_eta_data[2]->SetMarkerColor(kRed);
+
+	gr_logx_eta_data[0]->Draw("Psame");
+	gr_logx_eta_data[1]->Draw("Psame");
+	gr_logx_eta_data[2]->Draw("Psame");
+
+	gr_logx_eta_django[0]->SetLineStyle(2);
+	gr_logx_eta_django[0]->SetLineWidth(4);
+	gr_logx_eta_django[0]->SetMarkerSize(1.4);
+	gr_logx_eta_django[0]->SetLineColor(kBlack);
+
+	gr_logx_eta_django[1]->SetLineStyle(2);
+	gr_logx_eta_django[1]->SetLineWidth(4);
+	gr_logx_eta_django[1]->SetMarkerSize(1.4);
+	gr_logx_eta_django[1]->SetLineColor(kBlue);
+
+	gr_logx_eta_django[2]->SetLineStyle(2);
+	gr_logx_eta_django[2]->SetLineWidth(4);
+	gr_logx_eta_django[2]->SetMarkerSize(1.4);
+	gr_logx_eta_django[2]->SetLineColor(kRed);
+
+	gr_logx_eta_rapgap[0]->SetLineStyle(2);
+	gr_logx_eta_rapgap[0]->SetLineWidth(4);
+	gr_logx_eta_rapgap[0]->SetMarkerSize(1.4);
+	gr_logx_eta_rapgap[0]->SetLineColor(kBlack);
+
+	gr_logx_eta_rapgap[1]->SetLineStyle(3);
+	gr_logx_eta_rapgap[1]->SetLineWidth(4);
+	gr_logx_eta_rapgap[1]->SetMarkerSize(1.4);
+	gr_logx_eta_rapgap[1]->SetLineColor(kBlue);
+
+	gr_logx_eta_rapgap[2]->SetLineStyle(4);
+	gr_logx_eta_rapgap[2]->SetLineWidth(4);
+	gr_logx_eta_rapgap[2]->SetMarkerSize(1.4);
+	gr_logx_eta_rapgap[2]->SetLineColor(kRed);
+
+	gr_logx_eta_pythia[0]->SetLineStyle(2);
+	gr_logx_eta_pythia[0]->SetLineWidth(4);
+	gr_logx_eta_pythia[0]->SetMarkerSize(1.4);
+	gr_logx_eta_pythia[0]->SetLineColor(kBlack);
+
+	gr_logx_eta_pythia[1]->SetLineStyle(3);
+	gr_logx_eta_pythia[1]->SetLineWidth(4);
+	gr_logx_eta_pythia[1]->SetMarkerSize(1.4);
+	gr_logx_eta_pythia[1]->SetLineColor(kBlue);
+
+	gr_logx_eta_pythia[2]->SetLineStyle(4);
+	gr_logx_eta_pythia[2]->SetLineWidth(4);
+	gr_logx_eta_pythia[2]->SetMarkerSize(1.4);
+	gr_logx_eta_pythia[2]->SetLineColor(kRed);
+
+
+	if( pickMCEG_ == 0 ){
+		gr_logx_eta_rapgap[0]->Draw("L same");
+		gr_logx_eta_rapgap[1]->Draw("L same");
+		gr_logx_eta_rapgap[2]->Draw("L same");
+	}
+	else if( pickMCEG_ == 1 ){
+		gr_logx_eta_django[0]->Draw("Lsame");
+		gr_logx_eta_django[1]->Draw("Lsame");
+		gr_logx_eta_django[2]->Draw("Lsame");
+	}
+	else if( pickMCEG_ == 2 ){
+		gr_logx_eta_pythia[0]->Draw("Lsame");
+		gr_logx_eta_pythia[1]->Draw("Lsame");
+		gr_logx_eta_pythia[2]->Draw("Lsame");
+	}
+
+
+	r44->Draw("same");
+	r48->Draw("same");
+	r491->Draw("same");
+	// r441->Draw("same");
+
+	r6301->Draw("same");
+	w6312->Draw("same");
+	w6311->Draw("same");
+    r6311->Draw("same");
+
+    TCanvas* c1_5 = new TCanvas("c1_5","c1_5",1,1,600,600);
+	gPad->SetTicks();
+	gPad->SetLeftMargin(0.1);
+	gPad->SetRightMargin(0.1);
+	gPad->SetBottomMargin(0.15);
+	gPad->SetTopMargin(0.1);
+	gPad->SetLogx(1);
+
+	TH1D* base1_5 = (TH1D*) base1_4->Clone("base1_5");
+	base1_5->GetYaxis()->SetRangeUser(-5,11.5);
+	base1_5->GetYaxis()->SetTitle("Var(N_{ch})");
+	base1_5->Draw();
+
+	gr_logx_eta_data_variance[0]->SetMarkerStyle(20);
+	gr_logx_eta_data_variance[0]->SetMarkerSize(1.4);
+	gr_logx_eta_data_variance[0]->SetMarkerColor(kBlack);
+
+	gr_logx_eta_data_variance[1]->SetMarkerStyle(30);
+	gr_logx_eta_data_variance[1]->SetMarkerSize(1.4);
+	gr_logx_eta_data_variance[1]->SetMarkerColor(kBlue);
+
+	gr_logx_eta_data_variance[2]->SetMarkerStyle(24);
+	gr_logx_eta_data_variance[2]->SetMarkerSize(1.4);
+	gr_logx_eta_data_variance[2]->SetMarkerColor(kRed);
+
+	gr_logx_eta_data_variance[0]->Draw("Psame");
+	gr_logx_eta_data_variance[1]->Draw("Psame");
+	gr_logx_eta_data_variance[2]->Draw("Psame");
+
+	gr_logx_eta_django_variance[0]->SetLineStyle(2);
+	gr_logx_eta_django_variance[0]->SetLineWidth(4);
+	gr_logx_eta_django_variance[0]->SetMarkerSize(1.4);
+	gr_logx_eta_django_variance[0]->SetLineColor(kBlack);
+
+	gr_logx_eta_django_variance[1]->SetLineStyle(2);
+	gr_logx_eta_django_variance[1]->SetLineWidth(4);
+	gr_logx_eta_django_variance[1]->SetMarkerSize(1.4);
+	gr_logx_eta_django_variance[1]->SetLineColor(kBlue);
+
+	gr_logx_eta_django_variance[2]->SetLineStyle(2);
+	gr_logx_eta_django_variance[2]->SetLineWidth(4);
+	gr_logx_eta_django_variance[2]->SetMarkerSize(1.4);
+	gr_logx_eta_django_variance[2]->SetLineColor(kRed);
+
+	gr_logx_eta_rapgap_variance[0]->SetLineStyle(2);
+	gr_logx_eta_rapgap_variance[0]->SetLineWidth(4);
+	gr_logx_eta_rapgap_variance[0]->SetMarkerSize(1.4);
+	gr_logx_eta_rapgap_variance[0]->SetLineColor(kBlack);
+
+	gr_logx_eta_rapgap_variance[1]->SetLineStyle(3);
+	gr_logx_eta_rapgap_variance[1]->SetLineWidth(4);
+	gr_logx_eta_rapgap_variance[1]->SetMarkerSize(1.4);
+	gr_logx_eta_rapgap_variance[1]->SetLineColor(kBlue);
+
+	gr_logx_eta_rapgap_variance[2]->SetLineStyle(4);
+	gr_logx_eta_rapgap_variance[2]->SetLineWidth(4);
+	gr_logx_eta_rapgap_variance[2]->SetMarkerSize(1.4);
+	gr_logx_eta_rapgap_variance[2]->SetLineColor(kRed);
+
+	gr_logx_eta_pythia_variance[0]->SetLineStyle(2);
+	gr_logx_eta_pythia_variance[0]->SetLineWidth(4);
+	gr_logx_eta_pythia_variance[0]->SetMarkerSize(1.4);
+	gr_logx_eta_pythia_variance[0]->SetLineColor(kBlack);
+
+	gr_logx_eta_pythia_variance[1]->SetLineStyle(3);
+	gr_logx_eta_pythia_variance[1]->SetLineWidth(4);
+	gr_logx_eta_pythia_variance[1]->SetMarkerSize(1.4);
+	gr_logx_eta_pythia_variance[1]->SetLineColor(kBlue);
+
+	gr_logx_eta_pythia_variance[2]->SetLineStyle(4);
+	gr_logx_eta_pythia_variance[2]->SetLineWidth(4);
+	gr_logx_eta_pythia_variance[2]->SetMarkerSize(1.4);
+	gr_logx_eta_pythia_variance[2]->SetLineColor(kRed);
+
+	if( pickMCEG_ == 0 ){
+		gr_logx_eta_rapgap_variance[0]->Draw("L same");
+		gr_logx_eta_rapgap_variance[1]->Draw("L same");
+		gr_logx_eta_rapgap_variance[2]->Draw("L same");
+	}
+	else if( pickMCEG_ == 1 ){
+		gr_logx_eta_django_variance[0]->Draw("Lsame");
+		gr_logx_eta_django_variance[1]->Draw("Lsame");
+		gr_logx_eta_django_variance[2]->Draw("Lsame");
+	}
+	else if( pickMCEG_ == 2 ){
+		gr_logx_eta_pythia_variance[0]->Draw("Lsame");
+		gr_logx_eta_pythia_variance[1]->Draw("Lsame");
+		gr_logx_eta_pythia_variance[2]->Draw("Lsame");
+	}
+
+	r44->Draw("same");
+	r48->Draw("same");
+	r491->Draw("same");
+	// r441->Draw("same");
+
+	r6301->Draw("same");
+	w6312->Draw("same");
+	w6311->Draw("same");
+    r6311->Draw("same");
+
+	//c2 starts here with allEta multiplicity distributions, -1.2<Eta<1.6
 
 	TCanvas* c2 = new TCanvas("c2","c2",1,1,1000,1000);
 	c2->Divide(4,4,0,0);
@@ -469,9 +1323,8 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 	base2->GetXaxis()->SetNdivisions(4,6,0);
 	base2->GetYaxis()->SetNdivisions(4,6,0);
 
-	double latex_starting_eta_1[]={0.56,0.54,0.54,0.54,0.56,0.54,0.54,0.54,0.56,0.54,0.54,0.54};
+	double latex_starting_eta_1[]={0.56,0.54,0.54,0.54,0.56,0.54,0.54,0.54,0.56,0.54,0.54,0.54,0.56,0.54,0.54,0.54};
 	double latex_starting_y_1[]={0.48,0.49,0.48,0.48,0.49,0.53,0.53,0.53,0.51,0.525,0.56,0.53,0.52,0.51,0.5,0.55};
-
 	TF1 *tf3[4][4];
 	sub_panels = 1;
 	for(int iy = 0; iy < 4; iy++){
@@ -487,7 +1340,8 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			base2->Draw("");
 			// hist_unfolded_from_django_allEta[iQ2][iy]->Draw("PE0X0same");
 			hist_unfolded_from_rapgap_allEta[iQ2][iy]->Draw("PE0X0same");
-
+			
+			
 			TH1D* hist_unfolded_from_rapgap_systematics = (TH1D*) hist_unfolded_from_rapgap_allEta[iQ2][iy]->Clone("hsys");
 			for(int isys=0;isys<hist_unfolded_from_rapgap_systematics->GetNbinsX();isys++){
 				double N = hist_unfolded_from_rapgap_systematics->GetBinCenter(isys+1);
@@ -614,7 +1468,7 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 	gPad->SetTopMargin(0.1);
 	gPad->SetLogx(0);
 
-	double xmin_axis = 35.; double xmax_axis=250.;
+	xmin_axis = 35.; xmax_axis=250.;
 	TH1D* base3 = makeHist("base3", "", "W (GeV)", "#LT N_{ch} #GT", 100,xmin_axis,xmax_axis,kBlack);
 	base3->GetYaxis()->SetRangeUser(0, 10);
 	base3->GetXaxis()->SetTitleColor(kBlack);
@@ -638,9 +1492,6 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 	TGraphErrors* gr_rapgap_variance[4];
 	TGraphErrors* gr_pythia_variance[4];
 
-	double yREC_es_ave[] = {0.05464,0.1095,0.2179,0.4121};
-	double W_es_ave[] = {72,101,147,205};
-	
 	for(int iQ2=0;iQ2<4;iQ2++){
 		gr_data[iQ2] = new TGraphErrors();
 		gr_django[iQ2] = new TGraphErrors();
@@ -659,14 +1510,8 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			double sum = 0.;
 			double sum_pn = 0.;
 			double err2 = 0.;
-			double bin_to_stop = 25;
-			//bin to stop
-			for(int ibin=0;ibin<histForMultiplicity->GetNbinsX();ibin++){
-				if( (histForMultiplicity->GetBinContent(ibin+1) < 1e-5 || ibin==histForMultiplicity->GetNbinsX()-1) && ibin > 0 ){
-					bin_to_stop = histForMultiplicity->GetBinCenter(ibin+1);
-					break;
-				}
-			}
+			double bin_to_stop = histForMultiplicity->GetBinCenter(histForMultiplicity->FindLastBinAbove(0.,1));
+			
 			//use the first 4 bins in data and after N > 3, use NBD extrapolations.
 			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 				double N = ibin;
@@ -732,11 +1577,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_django->GetBinWidth(ibin+1);
 				//shift bin center to integer.
-				double N = histForMultiplicity_django->GetBinCenter(ibin+1) - weight/2.;
+				double N = histForMultiplicity_django->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_django->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_django->GetBinError(ibin+1);
 
@@ -751,11 +1596,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_django->GetBinWidth(ibin+1);
 				//shift bin center to integer.
-				double N = histForMultiplicity_django->GetBinCenter(ibin+1) - weight/2.;
+				double N = histForMultiplicity_django->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_django->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_django->GetBinError(ibin+1);
 				
@@ -771,11 +1616,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_rapgap->GetBinWidth(ibin+1);
 				//shift bin center to integer.
-				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1) - weight/2.;
+				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_rapgap->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_rapgap->GetBinError(ibin+1);
 
@@ -791,11 +1636,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_rapgap->GetBinWidth(ibin+1);
 				//shift bin center to integer.
-				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1) - weight/2.;
+				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_rapgap->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_rapgap->GetBinError(ibin+1);
 
@@ -811,11 +1656,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_pythia->GetBinWidth(ibin+1);
 				//shift bin center to integer.
-				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1) - weight/2.;
+				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_pythia->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_pythia->GetBinError(ibin+1);
 
@@ -831,11 +1676,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_pythia->GetBinWidth(ibin+1);
 				//shift bin center to integer.
-				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1) - weight/2.;
+				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_pythia->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_pythia->GetBinError(ibin+1);
 
@@ -984,29 +1829,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 		gr_pythia[3]->Draw("Lsame");
 	}
 
-	TLatex* r44 = new TLatex(0.8,0.84, "H1");
-	r44->SetNDC();
-	r44->SetTextSize(0.04);
-
-
-	TLatex* r48 = new TLatex(0.13, 0.84, "ep 27.5#times920 GeV");
-	r48->SetNDC();
-	r48->SetTextSize(23);
-	r48->SetTextFont(43);
-	r48->SetTextColor(kBlack);
-
-
 	TLatex* r49 = new TLatex(0.13, 0.79, "-1.2 < #eta < 1.6");
 	r49->SetNDC();
 	r49->SetTextSize(23);
 	r49->SetTextFont(43);
 	r49->SetTextColor(kBlack);
-
-	TLatex* r441 = new TLatex(0.45,0.95, "#LT y #GT");
-	r441->SetNDC();
-	r441->SetTextSize(20);
-	r441->SetTextFont(43);
-	r441->SetTextColor(kBlack);
 
 	r44->Draw("same");
 	r48->Draw("same");
@@ -1244,20 +2071,6 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 	TGraphErrors* gr_logx_rapgap_variance[4];
 	TGraphErrors* gr_logx_pythia_variance[4];
 
-	double x_ave_Q2_5_10[]={0.0014,0.0007,0.00033,0.00017};
-	double x_ave_Q2_10_20[]={0.0023,0.0013,0.00066,0.00034};
-	double x_ave_Q2_20_40[]={0.0052,0.0026,0.0013,0.00068};
-	double x_ave_Q2_40_100[]={0.011,0.0056,0.0028,0.0013};
-	double x_ave_Q2[4][4];
-	for(int i=0;i<4;i++){
-		for(int j=0;j<4;j++){
-			if( i==0) x_ave_Q2[i][j] = x_ave_Q2_5_10[j];
-			if( i==1) x_ave_Q2[i][j] = x_ave_Q2_10_20[j];
-			if( i==2) x_ave_Q2[i][j] = x_ave_Q2_20_40[j];
-			if( i==3) x_ave_Q2[i][j] = x_ave_Q2_40_100[j];
-		}
-	}
-
 	for(int iQ2=0;iQ2<4;iQ2++){
 		gr_logx_data[iQ2] = new TGraphErrors();
 		gr_logx_django[iQ2] = new TGraphErrors();
@@ -1276,7 +2089,7 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			double sum = 0.;
 			double sum_pn = 0.;
 			double err2 = 0.;
-			double bin_to_stop = 25;
+			double bin_to_stop = histForMultiplicity->GetBinCenter(histForMultiplicity->FindLastBinAbove(0.,1));
 			//bin to stop
 			for(int ibin=0;ibin<histForMultiplicity->GetNbinsX();ibin++){
 				if( (histForMultiplicity->GetBinContent(ibin+1) < 1e-5 || ibin==histForMultiplicity->GetNbinsX()-1) && ibin > 0 ){
@@ -1349,11 +2162,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_django->GetBinWidth(ibin+1);
 				//shift bin center to integer.
-				double N = histForMultiplicity_django->GetBinCenter(ibin+1) - weight/2.;
+				double N = histForMultiplicity_django->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_django->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_django->GetBinError(ibin+1);
 
@@ -1368,11 +2181,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_django->GetBinWidth(ibin+1);
 				//shift bin center to integer.
-				double N = histForMultiplicity_django->GetBinCenter(ibin+1) - weight/2.;
+				double N = histForMultiplicity_django->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_django->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_django->GetBinError(ibin+1);
 				
@@ -1388,11 +2201,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_rapgap->GetBinWidth(ibin+1);
 				//shift bin center to integer.
-				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1) - weight/2.;
+				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_rapgap->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_rapgap->GetBinError(ibin+1);
 
@@ -1408,11 +2221,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_rapgap->GetBinWidth(ibin+1);
 				//shift bin center to integer.
-				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1) - weight/2.;
+				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_rapgap->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_rapgap->GetBinError(ibin+1);
 
@@ -1428,11 +2241,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_pythia->GetBinWidth(ibin+1);
 				//shift bin center to integer.
-				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1) - weight/2.;
+				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_pythia->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_pythia->GetBinError(ibin+1);
 
@@ -1448,11 +2261,11 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_pythia->GetBinWidth(ibin+1);
 				//shift bin center to integer.
-				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1) - weight/2.;
+				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_pythia->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_pythia->GetBinError(ibin+1);
 
@@ -1700,12 +2513,278 @@ void makeHisto_result(const int Q2_BIN = 0, const int ifile = 0, const int pickM
 		gr_logx_pythia_variance[2]->Draw("Lsame");
 		gr_logx_pythia_variance[3]->Draw("Lsame");
 	}
-	if(draw_) c1->Print(Form("../figures/results_finalv1/Pn_Q2-"+Q2_bins[Q2_BIN]+"_"+Q2_bins[Q2_BIN+1]+"_%d_"+radname+".pdf",ifile));
-	if(draw_) c2->Print(Form("../figures/results_finalv1/Pn_allEta_"+radname+".pdf"));
-    if(draw_) c3->Print(Form("../figures/results_finalv1/Mean_Nch_allEta_"+radname+"_MCEG_"+MCEGname+".pdf"));
-    if(draw_) c3_2->Print(Form("../figures/results_finalv1/Var_Nch_allEta_"+radname+"_MCEG_"+MCEGname+".pdf"));
-	if(draw_) c4->Print(Form("../figures/results_finalv1/Mean_Nch_allEta_logX_"+radname+"_MCEG_"+MCEGname+".pdf"));
-	if(draw_) c4_2->Print(Form("../figures/results_finalv1/Var_Nch_allEta_logX_"+radname+"_MCEG_"+MCEGname+".pdf"));
+
+	//entropy calculation.
+	TGraphErrors* gr_logx_data_entropy[3];
+	TGraphErrors* gr_logx_django_entropy[3];
+	TGraphErrors* gr_logx_rapgap_entropy[3];
+	TGraphErrors* gr_logx_pythia_entropy[3];
+
+	for(int ieta=0;ieta<3;ieta++){
+
+		gr_logx_data_entropy[ieta] = new TGraphErrors();
+		gr_logx_django_entropy[ieta] = new TGraphErrors();
+		gr_logx_rapgap_entropy[ieta] = new TGraphErrors();
+		gr_logx_pythia_entropy[ieta] = new TGraphErrors();
+		
+		//problem with the data is not unit bin width
+		for(int iy=0;iy<4;iy++){
+			//data
+			TH1D* histForMultiplicity = (TH1D*) hist_unfolded_from_rapgap[ieta][Q2_BIN][iy]->Clone(Form("histForMultiplicity_%d_%d",ieta,iy));
+			double sum = 0.;
+			double sum_pn = 0.;
+			double err2 = 0.;
+			double bin_to_stop = histForMultiplicity->GetBinCenter(histForMultiplicity->FindLastBinAbove(0.,1));
+			
+			//use Pn to compute entropy
+			sum = 0.;
+			err2 = 0.;
+			for(int ibin=0; ibin<(int)bin_to_stop+1; ibin++){
+				double N = ibin;
+				double Pn = 0.;
+				double Pn_err = 0;
+				if( ibin < 4 ){
+					N = histForMultiplicity->GetBinCenter(ibin+1);
+					Pn = histForMultiplicity->GetBinContent(ibin+1);
+					Pn_err = histForMultiplicity->GetBinError(ibin+1);
+					sum += -Pn*TMath::Log(Pn);
+					err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+				}
+				else{
+					Pn = tf1[ieta][iy]->Eval(N);
+					int nbin = histForMultiplicity->FindBin(N);
+					Pn_err = histForMultiplicity->GetBinError(nbin);
+					if( Pn < 1e-5 ) continue;
+					sum += -Pn*TMath::Log(Pn);
+					err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+				}
+			}
+			gr_logx_data_entropy[ieta]->SetPoint(iy, x_ave_Q2[Q2_BIN][iy], sum );
+			gr_logx_data_entropy[ieta]->SetPointError(iy, 0., sqrt(sys_Nch*sys_Nch+err2 ));
+
+
+			//django
+			TH1D* histForMultiplicity_django = (TH1D*) hist_mc_django[Q2_BIN][iy][ieta]->Clone(Form("histForMultiplicity_django_%d_%d",ieta,iy));	
+			//use Pn to compute entropy
+			sum = 0.;
+			err2 = 0.;
+			TH1D* histForMultiplicity_django_entropy = (TH1D*) histForMultiplicity_django->Clone("histForMultiplicity_django_entropy");
+			histForMultiplicity_django_entropy->Scale(1./(histForMultiplicity_django_entropy->Integral()));
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_django_entropy->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_django_entropy->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_django_entropy->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_django_entropy->GetBinError(ibin+1);
+				
+				if(Pn < 1e-5) continue;
+				sum += -Pn*TMath::Log(Pn);
+				err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+			}
+			gr_logx_django_entropy[ieta]->SetPoint(iy, x_ave_Q2[Q2_BIN][iy], sum );
+			gr_logx_django_entropy[ieta]->SetPointError(iy, 0., sqrt(err2) );
+
+			//rapgap
+			TH1D* histForMultiplicity_rapgap = (TH1D*) hist_mc_rapgap[Q2_BIN][iy][ieta]->Clone(Form("histForMultiplicity_rapgap_%d_%d",ieta,iy));		
+			//use Pn to compute entropy
+			sum = 0.;
+			err2 = 0.;
+			TH1D* histForMultiplicity_rapgap_entropy = (TH1D*) histForMultiplicity_rapgap->Clone("histForMultiplicity_rapgap_entropy");
+			histForMultiplicity_rapgap_entropy->Scale(1./(histForMultiplicity_rapgap_entropy->Integral()));
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_rapgap_entropy->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_rapgap_entropy->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_rapgap_entropy->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_rapgap_entropy->GetBinError(ibin+1);
+				if( Pn < 1e-5) continue;
+				sum += -Pn*TMath::Log(Pn);
+				err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+			}
+			gr_logx_rapgap_entropy[ieta]->SetPoint(iy, x_ave_Q2[Q2_BIN][iy], sum );
+			gr_logx_rapgap_entropy[ieta]->SetPointError(iy, 0., sqrt(err2) );
+
+			//pythia
+			TH1D* histForMultiplicity_pythia = (TH1D*) hist_mc_pythia[Q2_BIN][iy][ieta]->Clone(Form("histForMultiplicity_pythia_%d_%d",ieta,iy));
+			//use Pn to compute entropy
+			sum = 0.;
+			err2 = 0.;
+			TH1D* histForMultiplicity_pythia_entropy = (TH1D*) histForMultiplicity_pythia->Clone("histForMultiplicity_pythia_entropy");
+			histForMultiplicity_pythia_entropy->Scale(1./(histForMultiplicity_pythia_entropy->Integral()));
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_pythia_entropy->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_pythia_entropy->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_pythia_entropy->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_pythia_entropy->GetBinError(ibin+1);
+				
+				if(Pn < 1e-5) continue;
+				sum += -Pn*TMath::Log(Pn);
+				err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+			}
+			gr_logx_pythia_entropy[ieta]->SetPoint(iy, x_ave_Q2[Q2_BIN][iy], sum );
+			gr_logx_pythia_entropy[ieta]->SetPointError(iy, 0., sqrt(err2) );
+
+
+		}
+	}
+
+
+	TFile* PDF_TGraph = new TFile("PDF_TGraph.root");
+	TGraphErrors* mstw_Q2_2 = (TGraphErrors*) PDF_TGraph->Get("gr1");
+	TGraphErrors* mstw_Q2_10 = (TGraphErrors*) PDF_TGraph->Get("gr2");
+
+
+	TCanvas* c5 = new TCanvas("c5","c5",1,1,600,600);
+	gPad->SetTicks();
+	gPad->SetLeftMargin(0.1);
+	gPad->SetRightMargin(0.1);
+	gPad->SetBottomMargin(0.15);
+	gPad->SetTopMargin(0.1);
+	gPad->SetLogx(1);
+
+	TH1D* base5 = makeHist("base5", "", "#LT x #GT", "S_{_{EE}}", 10000,0.00001,0.02,kBlack);
+	base5->GetYaxis()->SetRangeUser(0, 5.3);
+	base5->GetXaxis()->SetTitleColor(kBlack);
+
+	fixedFontHist1D(base5,1.2,1.0);
+
+	base5->GetYaxis()->SetTitleSize(base5->GetYaxis()->GetTitleSize()*1.3);
+	base5->GetXaxis()->SetTitleSize(base5->GetXaxis()->GetTitleSize()*1.3);
+	base5->GetYaxis()->SetLabelSize(base5->GetYaxis()->GetLabelSize()*1.3);
+	base5->GetXaxis()->SetLabelSize(base5->GetXaxis()->GetLabelSize()*1.3);
+	base5->GetXaxis()->SetNdivisions(4,6,0);
+	base5->GetYaxis()->SetNdivisions(4,6,0);
+
+	base5->Draw();
+
+	mstw_Q2_2->SetFillStyle(1001);
+	mstw_Q2_2->SetFillColorAlpha(kGreen-2,0.4);
+	mstw_Q2_2->SetMarkerStyle(24);
+	mstw_Q2_2->SetLineColor(kWhite);
+
+	mstw_Q2_10->SetFillStyle(1001);
+	mstw_Q2_10->SetFillColorAlpha(kRed-2,0.4);
+	mstw_Q2_10->SetMarkerStyle(25);
+	mstw_Q2_10->SetLineColor(kWhite);
+
+	mstw_Q2_2->Draw("P e3 same");
+	mstw_Q2_10->Draw("P e3 same");
+
+	TGraphErrors* magic_entropy;
+	magic_entropy = new TGraphErrors();
+	double x1[3],y1[3];
+	double y1_err[3];
+	for(int i=0;i<3;i++){
+		x1[i] = 0.;
+		y1[i] = 0.;
+		y1_err[i] = 0.;
+
+	}
+	gr_logx_data_entropy[0]->GetPoint(Q2_BIN+2,x1[0],y1[0]);
+	gr_logx_data_entropy[1]->GetPoint(Q2_BIN+1,x1[1],y1[1]);
+	gr_logx_data_entropy[2]->GetPoint(Q2_BIN,x1[2],y1[2]);
+	
+	y1_err[0] = gr_logx_data_entropy[0]->GetErrorY(Q2_BIN+2);
+	y1_err[1] = gr_logx_data_entropy[1]->GetErrorY(Q2_BIN+1);
+	y1_err[2] = gr_logx_data_entropy[2]->GetErrorY(Q2_BIN);
+
+	for(int i=0;i<3;i++){
+		if( y1[i] == 0 ) continue;
+		magic_entropy->SetPoint(i,x1[i],y1[i]);
+		magic_entropy->SetPointError(i,0,y1_err[i]);
+	}
+
+	magic_entropy->SetMarkerStyle(20);
+	magic_entropy->SetMarkerSize(1.4);
+	magic_entropy->SetMarkerColor(kBlack);
+	magic_entropy->Draw("Psame");
+
+	TGraphErrors* magic_entropy_source[3];
+	if( pickMCEG_ == 0 ){
+		magic_entropy_source[0] = gr_logx_rapgap_entropy[0];
+		magic_entropy_source[1] = gr_logx_rapgap_entropy[1];
+		magic_entropy_source[2] = gr_logx_rapgap_entropy[2];
+	}
+	else if( pickMCEG_ == 1 ){
+		magic_entropy_source[0] = gr_logx_django_entropy[0];
+		magic_entropy_source[1] = gr_logx_django_entropy[1];
+		magic_entropy_source[2] = gr_logx_django_entropy[2];
+	}
+	else if( pickMCEG_ == 2 ){
+		magic_entropy_source[0] = gr_logx_pythia_entropy[0];
+		magic_entropy_source[1] = gr_logx_pythia_entropy[1];
+		magic_entropy_source[2] = gr_logx_pythia_entropy[2];
+	}
+	TGraphErrors* magic_entropy_MC;
+	magic_entropy_MC = new TGraphErrors();
+	for(int i=0;i<3;i++){
+		x1[i] = 0.;
+		y1[i] = 0.;
+		y1_err[i] = 0.;
+
+	}
+	magic_entropy_source[0]->GetPoint(Q2_BIN+2,x1[0],y1[0]);
+	magic_entropy_source[1]->GetPoint(Q2_BIN+1,x1[1],y1[1]);
+	magic_entropy_source[2]->GetPoint(Q2_BIN,x1[2],y1[2]);
+	
+	y1_err[0] = magic_entropy_source[0]->GetErrorY(Q2_BIN+2);
+	y1_err[1] = magic_entropy_source[1]->GetErrorY(Q2_BIN+1);
+	y1_err[2] = magic_entropy_source[2]->GetErrorY(Q2_BIN);
+
+	int j=0;
+	for(int i=0;i<3;i++){
+		if( y1[i] == 0 ) continue;
+		magic_entropy_MC->SetPoint(j,x1[i],y1[i]);
+		magic_entropy_MC->SetPointError(j,0,y1_err[i]);
+		j++;
+	}
+
+	magic_entropy_MC->SetLineStyle(2);
+	magic_entropy_MC->SetLineWidth(4);
+	magic_entropy_MC->SetMarkerSize(1.4);
+	magic_entropy_MC->SetLineColor(kBlack);
+	magic_entropy_MC->Draw("L same");
+
+
+	r44->Draw("same");
+	r48->Draw("same");
+	// r491->Draw("same");
+
+	TString Q2_range[4];
+	Q2_range[0] = "(5,10)";
+	Q2_range[1] = "(10,20)";
+	Q2_range[2] = "(20,40)";
+	Q2_range[3] = "(40,100)";
+	TString MC_model[3];
+	MC_model[0] = "rapgap";
+	MC_model[1] = "django";
+	MC_model[2] = "pythia";
+
+
+	TLegend *w73 = new TLegend(0.18,0.17,0.35,0.38);
+	w73->SetLineColor(kWhite);
+	w73->SetFillColor(0);
+	w73->SetTextSize(18);
+	w73->SetTextFont(45);
+	w73->SetTextColor(kBlack);
+	w73->AddEntry(magic_entropy, "S_{hadron,data} Q^{2} "+Q2_range[Q2_BIN]+" GeV^{2} ","P");
+	w73->AddEntry(magic_entropy_MC, "S_{hadron,"+MC_model[pickMCEG_]+"} Q^{2} "+Q2_range[Q2_BIN]+" GeV^{2} ","L");
+	w73->AddEntry(mstw_Q2_2, "ln(xG)  Q^{2} = 2 GeV^{2}","PF");
+	w73->AddEntry(mstw_Q2_10, "ln(xG)  Q^{2} = 10 GeV^{2}","PF");
+	w73->Draw("same");
+
+	if(draw_) c1->Print(Form("../figures/results_finalv3/Pn_Q2-"+Q2_bins[Q2_BIN]+"_"+Q2_bins[Q2_BIN+1]+"_%d_"+radname+".pdf",ifile));
+	if(draw_) c1_2->Print(Form("../figures/results_finalv3/Mean_Nch_Q2-"+Q2_bins[Q2_BIN]+"_"+Q2_bins[Q2_BIN+1]+"_%d_"+radname+"_MCEG_"+MCEGname+".pdf",ifile));
+	if(draw_) c1_3->Print(Form("../figures/results_finalv3/Var_Nch_Q2-"+Q2_bins[Q2_BIN]+"_"+Q2_bins[Q2_BIN+1]+"_%d_"+radname+"_MCEG_"+MCEGname+".pdf",ifile));
+	if(draw_) c1_4->Print(Form("../figures/results_finalv3/Mean_Nch_logX_Q2-"+Q2_bins[Q2_BIN]+"_"+Q2_bins[Q2_BIN+1]+"_%d_"+radname+"_MCEG_"+MCEGname+".pdf",ifile));
+	if(draw_) c1_5->Print(Form("../figures/results_finalv3/Var_Nch_logX_Q2-"+Q2_bins[Q2_BIN]+"_"+Q2_bins[Q2_BIN+1]+"_%d_"+radname+"_MCEG_"+MCEGname+".pdf",ifile));
+	if(draw_) c2->Print(Form("../figures/results_finalv3/Pn_allEta_"+radname+".pdf"));
+    if(draw_) c3->Print(Form("../figures/results_finalv3/Mean_Nch_allEta_"+radname+"_MCEG_"+MCEGname+".pdf"));
+    if(draw_) c3_2->Print(Form("../figures/results_finalv3/Var_Nch_allEta_"+radname+"_MCEG_"+MCEGname+".pdf"));
+	if(draw_) c4->Print(Form("../figures/results_finalv3/Mean_Nch_allEta_logX_"+radname+"_MCEG_"+MCEGname+".pdf"));
+	if(draw_) c4_2->Print(Form("../figures/results_finalv3/Var_Nch_allEta_logX_"+radname+"_MCEG_"+MCEGname+".pdf"));
+	if(draw_) c5->Print(Form("../figures/results_finalv3/EE_logX_Q2-"+Q2_bins[Q2_BIN]+"_"+Q2_bins[Q2_BIN+1]+"_%d_"+radname+"_MCEG_"+MCEGname+".pdf",ifile));
 
 
 }

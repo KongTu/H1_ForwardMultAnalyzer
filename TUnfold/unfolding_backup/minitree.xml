@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE Minitree SYSTEM "minitree.dtd">
+<Minitree>
+  <InputFile name="data" type="data" luminosity="136" treename="miniTree">
+    /Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/data_highE_0607_noReweight_Tree_new.root
+  </InputFile>
+  <InputFile name="djangoh" type="signal" luminosity="363" treename="miniTree">
+    /Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_DJANGOH_noReweight_Tree_new.root
+  </InputFile>
+  <InputFile name="rapgap" type="signal" luminosity="68" treename="miniTree">
+    /Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_RAPGAP_noReweight_Tree_new.root
+  </InputFile>
+</Minitree>

@@ -109,7 +109,7 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 					hist_unfolded_from_rapgap_allEta[j][k]->SetBinError(ibin+1, error*corr);
 				}
 			}
-			//radiative correction to Django based on Rapgap
+			//radiative correction to Django based on Django
 			for(int ibin=0;ibin<hist_unfolded_from_django_allEta[j][k]->GetNbinsX();ibin++){
 				double value = hist_unfolded_from_django_allEta[j][k]->GetBinContent(ibin+1);
 				double error = hist_unfolded_from_django_allEta[j][k]->GetBinError(ibin+1);
@@ -221,10 +221,10 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 				double N = hist_unfolded_from_rapgap_systematics->GetBinCenter(isys+1);
 				double Pn = hist_unfolded_from_rapgap_systematics->GetBinContent(isys+1);
 				double error = 0.;
-				if( N<2 ) error = 0.094*Pn;
-				if( N>=2 && N<5 ) error = 0.034*Pn;
-				if( N>=5 && N<15 ) error = 0.034*Pn;
-				if( N>=15 ) error = 0.21*Pn;
+				if( N<2 ) error = 0.221*Pn;
+				if( N>=2 && N<5 ) error = 0.06*Pn;
+				if( N>=5 && N<15 ) error = 0.06*Pn;
+				if( N>=15 ) error = 0.233*Pn;
 
 				hist_unfolded_from_rapgap_systematics->SetBinError( isys+1, error );
 			}
@@ -292,43 +292,10 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 				r47->SetTextFont(44);
 				r47->Draw("same");
 			}
-
-			double S_hadron = 0.;
-			if( iQ2 == 1 ){
-				for(int n = 0; n < 30; n++){
-					double pn = tf3[iQ2][iy]->Eval(n);
-					S_hadron += -pn*TMath::Log(pn);
-				}		
-				S_hadron_x.push_back(S_hadron);
-			}
-			
-		
 			sub_panels++;
 		}
 
 	}
-
-	//entropy section
-
-	cout <<"{";
-	for(int iy=0;iy<4;iy++){
-		cout << S_hadron_x[iy] << endl;
-	}
-	cout <<"{";
-	for(int iy=0;iy<4;iy++){
-
-		double sum_pn = 0.;
-		TH1D* EE_rapgap = (TH1D*) hist_mc_rapgap[1][iy]->Clone(Form("EE_rapgap_%d_%d",1,iy));
-		EE_rapgap->Scale(1./EE_rapgap->Integral());
-		for(int ibin=0;ibin<30;ibin++){
-
-			double Pn = EE_rapgap->GetBinContent(ibin+1);
-			if(Pn<=0) continue;
-			sum_pn += -Pn*TMath::Log(Pn);
-		}
-		cout << sum_pn << endl;
-	}
-	//end 
 
 	TLatex* r50 = new TLatex(0.53,0.87, "0 < #eta* < 4");
 	c2->cd(4);
@@ -397,6 +364,11 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 	TGraphErrors* gr_rapgap_variance[4];
 	TGraphErrors* gr_pythia_variance[4];
 
+	TGraphErrors* gr_data_entropy[4];
+	TGraphErrors* gr_django_entropy[4];
+	TGraphErrors* gr_rapgap_entropy[4];
+	TGraphErrors* gr_pythia_entropy[4];
+
 	double yREC_es_ave[] = {0.05464,0.1095,0.2179,0.4121};
 	double W_es_ave[] = {72,101,147,205};
 
@@ -410,6 +382,11 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 		gr_django_variance[iQ2] = new TGraphErrors();
 		gr_rapgap_variance[iQ2] = new TGraphErrors();
 		gr_pythia_variance[iQ2] = new TGraphErrors();
+
+		gr_data_entropy[iQ2] = new TGraphErrors();
+		gr_django_entropy[iQ2] = new TGraphErrors();
+		gr_rapgap_entropy[iQ2] = new TGraphErrors();
+		gr_pythia_entropy[iQ2] = new TGraphErrors();
 		
 		//problem with the data is not unit bin width
 		for(int iy=0;iy<4;iy++){
@@ -418,14 +395,8 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			double sum = 0.;
 			double sum_pn = 0.;
 			double err2 = 0.;
-			double bin_to_stop = -1;
-			//bin to stop
-			for(int ibin=0;ibin<histForMultiplicity->GetNbinsX();ibin++){
-				if( histForMultiplicity->GetBinContent(ibin+1) < 1e-5 || ibin==histForMultiplicity->GetNbinsX()-1 ){
-					bin_to_stop = histForMultiplicity->GetBinCenter(ibin+1);
-					break;
-				}
-			}
+			double bin_to_stop = histForMultiplicity->GetBinCenter(histForMultiplicity->FindLastBinAbove(0.,1));
+			
 			//use the first 4 bins in data and after N > 3, use NBD extrapolations.
 			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 				double N = ibin;
@@ -483,12 +454,37 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			double second_moment = sum/sum_pn;
 			gr_data_variance[iQ2]->SetPointError(iy, 0., sqrt(second_moment*second_moment*sys_Var*sys_Var+(sqrt(err2)/sum_pn)*(sqrt(err2)/sum_pn)) );
 
+			//use Pn to compute entropy
+			sum = 0.;
+			err2 = 0.;
+			for(int ibin=0; ibin<(int)bin_to_stop+1; ibin++){
+				double N = ibin;
+				double Pn = 0.;
+				double Pn_err = 0;
+				if( ibin < 4 ){
+					N = histForMultiplicity->GetBinCenter(ibin+1);
+					Pn = histForMultiplicity->GetBinContent(ibin+1);
+					Pn_err = histForMultiplicity->GetBinError(ibin+1);
+					sum += -Pn*TMath::Log(Pn);
+					err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+				}
+				else{
+					Pn = tf3[iQ2][iy]->Eval(N);
+					int nbin = histForMultiplicity->FindBin(N);
+					Pn_err = histForMultiplicity->GetBinError(nbin);
+					sum += -Pn*TMath::Log(Pn);
+					err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+				}
+			}
+			gr_data_entropy[iQ2]->SetPoint(iy, W_es_ave[iy], sum );
+			gr_data_entropy[iQ2]->SetPointError(iy, 0., sqrt((1./first_moment)*(1./first_moment)*sys_Nch*sys_Nch+err2 ));
+
 			//django
 			TH1D* histForMultiplicity_django = (TH1D*) hist_mc_django[iQ2][iy]->Clone(Form("histForMultiplicity_django_%d_%d",iQ2,iy));
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_django->GetBinWidth(ibin+1);
 				//shift bin center to integer.
@@ -507,10 +503,9 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_django->GetBinWidth(ibin+1);
-				//shift bin center to integer.
 				double N = histForMultiplicity_django->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_django->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_django->GetBinError(ibin+1);
@@ -522,15 +517,31 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			gr_django_variance[iQ2]->SetPoint(iy, W_es_ave[iy], sum/sum_pn );
 			gr_django_variance[iQ2]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
 
+			//use Pn to compute entropy
+			sum = 0.;
+			err2 = 0.;
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_django->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_django->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_django->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_django->GetBinError(ibin+1);
+				
+				sum += -Pn*TMath::Log(Pn);
+				err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+			}
+			gr_django_entropy[iQ2]->SetPoint(iy, W_es_ave[iy], sum );
+			gr_django_entropy[iQ2]->SetPointError(iy, 0., sqrt(err2) );
+
+
 			//rapgap
 			TH1D* histForMultiplicity_rapgap = (TH1D*) hist_mc_rapgap[iQ2][iy]->Clone(Form("histForMultiplicity_rapgap_%d_%d",iQ2,iy));
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_rapgap->GetBinWidth(ibin+1);
-				//shift bin center to integer.
 				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_rapgap->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_rapgap->GetBinError(ibin+1);
@@ -547,10 +558,9 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_rapgap->GetBinWidth(ibin+1);
-				//shift bin center to integer.
 				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_rapgap->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_rapgap->GetBinError(ibin+1);
@@ -562,15 +572,30 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			gr_rapgap_variance[iQ2]->SetPoint(iy, W_es_ave[iy], sum/sum_pn );
 			gr_rapgap_variance[iQ2]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
 
+			//use Pn to compute entropy
+			sum = 0.;
+			err2 = 0.;
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_rapgap->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_rapgap->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_rapgap->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_rapgap->GetBinError(ibin+1);
+				
+				sum += -Pn*TMath::Log(Pn);
+				err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+			}
+			gr_rapgap_entropy[iQ2]->SetPoint(iy, W_es_ave[iy], sum );
+			gr_rapgap_entropy[iQ2]->SetPointError(iy, 0., sqrt(err2) );
+
 			//pythia
 			TH1D* histForMultiplicity_pythia = (TH1D*) hist_mc_pythia[iQ2][iy]->Clone(Form("histForMultiplicity_pythia_%d_%d",iQ2,iy));
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_pythia->GetBinWidth(ibin+1);
-				//shift bin center to integer.
 				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_pythia->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_pythia->GetBinError(ibin+1);
@@ -587,10 +612,9 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_pythia->GetBinWidth(ibin+1);
-				//shift bin center to integer.
 				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1);
 				double Pn = histForMultiplicity_pythia->GetBinContent(ibin+1);
 				double Pn_err = histForMultiplicity_pythia->GetBinError(ibin+1);
@@ -601,6 +625,22 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			}
 			gr_pythia_variance[iQ2]->SetPoint(iy, W_es_ave[iy], sum/sum_pn );
 			gr_pythia_variance[iQ2]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			//use Pn to compute entropy
+			sum = 0.;
+			err2 = 0.;
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_pythia->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_pythia->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_pythia->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_pythia->GetBinError(ibin+1);
+				
+				sum += -Pn*TMath::Log(Pn);
+				err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+			}
+			gr_pythia_entropy[iQ2]->SetPoint(iy, W_es_ave[iy], sum );
+			gr_pythia_entropy[iQ2]->SetPointError(iy, 0., sqrt(err2) );
 		}
 	}
 
@@ -975,8 +1015,9 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 	gPad->SetTopMargin(0.1);
 	gPad->SetLogx(1);
 
-	TH1D* base4 = makeHist("base4", "", "#LT x #GT", "#LT N_{ch} #GT", 10000,0.0001,0.02,kBlack);
+	TH1D* base4 = makeHist("base4", "", "#LT x #GT", "#LT N_{ch} #GT", 10000,0.00001,0.02,kBlack);
 	base4->GetYaxis()->SetRangeUser(0, 8.7);
+	base4->GetXaxis()->SetRangeUser(0.0001,0.02);
 	base4->GetXaxis()->SetTitleColor(kBlack);
 
 	fixedFontHist1D(base4,1.2,1.0);
@@ -999,6 +1040,11 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 	TGraphErrors* gr_logx_django_variance[4];
 	TGraphErrors* gr_logx_rapgap_variance[4];
 	TGraphErrors* gr_logx_pythia_variance[4];
+
+	TGraphErrors* gr_logx_data_entropy[4];
+	TGraphErrors* gr_logx_django_entropy[4];
+	TGraphErrors* gr_logx_rapgap_entropy[4];
+	TGraphErrors* gr_logx_pythia_entropy[4];
 
 	double x_ave_Q2_5_10[]={0.0014,0.0007,0.00033,0.00017};
 	double x_ave_Q2_10_20[]={0.0023,0.0013,0.00066,0.00034};
@@ -1024,6 +1070,11 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 		gr_logx_django_variance[iQ2] = new TGraphErrors();
 		gr_logx_rapgap_variance[iQ2] = new TGraphErrors();
 		gr_logx_pythia_variance[iQ2] = new TGraphErrors();
+
+		gr_logx_data_entropy[iQ2] = new TGraphErrors();
+		gr_logx_django_entropy[iQ2] = new TGraphErrors();
+		gr_logx_rapgap_entropy[iQ2] = new TGraphErrors();
+		gr_logx_pythia_entropy[iQ2] = new TGraphErrors();
 		
 		//problem with the data is not unit bin width
 		for(int iy=0;iy<4;iy++){
@@ -1032,14 +1083,8 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			double sum = 0.;
 			double sum_pn = 0.;
 			double err2 = 0.;
-			double bin_to_stop = -1;
-			//bin to stop
-			for(int ibin=0;ibin<histForMultiplicity->GetNbinsX();ibin++){
-				if( histForMultiplicity->GetBinContent(ibin+1) < 1e-5 || ibin==histForMultiplicity->GetNbinsX()-1 ){
-					bin_to_stop = histForMultiplicity->GetBinCenter(ibin+1);
-					break;
-				}
-			}
+			double bin_to_stop = histForMultiplicity->GetBinCenter(histForMultiplicity->FindLastBinAbove(0.,1));
+			
 			//use the first 4 bins in data and after N > 3, use NBD extrapolations.
 			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 				double N = ibin;
@@ -1097,12 +1142,39 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			double second_moment = sum/sum_pn;
 			gr_logx_data_variance[iQ2]->SetPointError(iy, 0., sqrt(second_moment*second_moment*sys_Var*sys_Var+(sqrt(err2)/sum_pn)*(sqrt(err2)/sum_pn)) );
 
+			//use Pn to compute entropy
+			sum = 0.;
+			err2 = 0.;
+			for(int ibin=0; ibin<(int)bin_to_stop+1; ibin++){
+				double N = ibin;
+				double Pn = 0.;
+				double Pn_err = 0;
+				if( ibin < 4 ){
+					N = histForMultiplicity->GetBinCenter(ibin+1);
+					Pn = histForMultiplicity->GetBinContent(ibin+1);
+					Pn_err = histForMultiplicity->GetBinError(ibin+1);
+					sum += -Pn*TMath::Log(Pn);
+					err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+				}
+				else{
+					Pn = tf3[iQ2][iy]->Eval(N);
+					int nbin = histForMultiplicity->FindBin(N);
+					Pn_err = histForMultiplicity->GetBinError(nbin);
+					if( Pn < 1e-5 ) continue;
+					sum += -Pn*TMath::Log(Pn);
+					err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+				}
+			}
+			gr_logx_data_entropy[iQ2]->SetPoint(iy, x_ave_Q2[iQ2][iy], sum );
+			gr_logx_data_entropy[iQ2]->SetPointError(iy, 0., sqrt(sys_Nch*sys_Nch+err2 ));
+
+
 			//django
 			TH1D* histForMultiplicity_django = (TH1D*) hist_mc_django[iQ2][iy]->Clone(Form("histForMultiplicity_django_%d_%d",iQ2,iy));
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_django->GetBinWidth(ibin+1);
 				//shift bin center to integer.
@@ -1121,7 +1193,7 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_django->GetBinWidth(ibin+1);
 				//shift bin center to integer.
@@ -1136,12 +1208,31 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			gr_logx_django_variance[iQ2]->SetPoint(iy, x_ave_Q2[iQ2][iy], sum/sum_pn );
 			gr_logx_django_variance[iQ2]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
 
+			//use Pn to compute entropy
+			sum = 0.;
+			err2 = 0.;
+			TH1D* histForMultiplicity_django_entropy = (TH1D*) histForMultiplicity_django->Clone("histForMultiplicity_django_entropy");
+			histForMultiplicity_django_entropy->Scale(1./(histForMultiplicity_django_entropy->Integral()));
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_django_entropy->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_django_entropy->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_django_entropy->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_django_entropy->GetBinError(ibin+1);
+				
+				if(Pn < 1e-5) continue;
+				sum += -Pn*TMath::Log(Pn);
+				err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+			}
+			gr_logx_django_entropy[iQ2]->SetPoint(iy, x_ave_Q2[iQ2][iy], sum );
+			gr_logx_django_entropy[iQ2]->SetPointError(iy, 0., sqrt(err2) );
+
 			//rapgap
 			TH1D* histForMultiplicity_rapgap = (TH1D*) hist_mc_rapgap[iQ2][iy]->Clone(Form("histForMultiplicity_rapgap_%d_%d",iQ2,iy));
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_rapgap->GetBinWidth(ibin+1);
 				//shift bin center to integer.
@@ -1161,7 +1252,7 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_rapgap->GetBinWidth(ibin+1);
 				//shift bin center to integer.
@@ -1176,12 +1267,30 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			gr_logx_rapgap_variance[iQ2]->SetPoint(iy, x_ave_Q2[iQ2][iy], sum/sum_pn );
 			gr_logx_rapgap_variance[iQ2]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
 
+			//use Pn to compute entropy
+			sum = 0.;
+			err2 = 0.;
+			TH1D* histForMultiplicity_rapgap_entropy = (TH1D*) histForMultiplicity_rapgap->Clone("histForMultiplicity_rapgap_entropy");
+			histForMultiplicity_rapgap_entropy->Scale(1./(histForMultiplicity_rapgap_entropy->Integral()));
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_rapgap_entropy->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_rapgap_entropy->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_rapgap_entropy->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_rapgap_entropy->GetBinError(ibin+1);
+				if( Pn < 1e-5) continue;
+				sum += -Pn*TMath::Log(Pn);
+				err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+			}
+			gr_logx_rapgap_entropy[iQ2]->SetPoint(iy, x_ave_Q2[iQ2][iy], sum );
+			gr_logx_rapgap_entropy[iQ2]->SetPointError(iy, 0., sqrt(err2) );
+
 			//pythia
 			TH1D* histForMultiplicity_pythia = (TH1D*) hist_mc_pythia[iQ2][iy]->Clone(Form("histForMultiplicity_pythia_%d_%d",iQ2,iy));
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_pythia->GetBinWidth(ibin+1);
 				//shift bin center to integer.
@@ -1201,7 +1310,7 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			sum = 0.;
 			sum_pn = 0.;
 			err2 = 0.;
-			for(int ibin=0;ibin<25;ibin++){
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
 
 				double weight = histForMultiplicity_pythia->GetBinWidth(ibin+1);
 				//shift bin center to integer.
@@ -1215,6 +1324,26 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 			}
 			gr_logx_pythia_variance[iQ2]->SetPoint(iy, x_ave_Q2[iQ2][iy], sum/sum_pn );
 			gr_logx_pythia_variance[iQ2]->SetPointError(iy, 0., sqrt(err2)/sum_pn );
+
+			//use Pn to compute entropy
+			sum = 0.;
+			err2 = 0.;
+			TH1D* histForMultiplicity_pythia_entropy = (TH1D*) histForMultiplicity_pythia->Clone("histForMultiplicity_pythia_entropy");
+			histForMultiplicity_pythia_entropy->Scale(1./(histForMultiplicity_pythia_entropy->Integral()));
+			for(int ibin=0;ibin<(int)bin_to_stop+1;ibin++){
+
+				double weight = histForMultiplicity_pythia_entropy->GetBinWidth(ibin+1);
+				double N = histForMultiplicity_pythia_entropy->GetBinCenter(ibin+1);
+				double Pn = histForMultiplicity_pythia_entropy->GetBinContent(ibin+1);
+				double Pn_err = histForMultiplicity_pythia_entropy->GetBinError(ibin+1);
+				
+				if(Pn < 1e-5) continue;
+				sum += -Pn*TMath::Log(Pn);
+				err2 += (Pn_err*Pn_err)*((1.+TMath::Log(Pn))*(1.+TMath::Log(Pn)) );
+			}
+			gr_logx_pythia_entropy[iQ2]->SetPoint(iy, x_ave_Q2[iQ2][iy], sum );
+			gr_logx_pythia_entropy[iQ2]->SetPointError(iy, 0., sqrt(err2) );
+
 
 		}
 	}
@@ -1454,7 +1583,187 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 		gr_logx_pythia_variance[3]->Draw("Lsame");
 	}
 
-		//KNO scaling
+	TCanvas* c4_3 = new TCanvas("c4_3","c4_3",1,1,600,600);
+	gPad->SetTicks();
+	gPad->SetLeftMargin(0.1);
+	gPad->SetRightMargin(0.1);
+	gPad->SetBottomMargin(0.15);
+	gPad->SetTopMargin(0.1);
+	gPad->SetLogx(1);
+
+	TH1D* base4_3 = (TH1D*) base4->Clone("base4_3");
+	base4_3->GetYaxis()->SetRangeUser(0,5.3);
+	base4_3->GetXaxis()->SetRangeUser(0.00001,0.02);
+	base4_3->GetYaxis()->SetTitle("S_{hadron}");
+	base4_3->Draw();
+	r44->Draw("same");
+	r48->Draw("same");
+	r49->Draw("same");
+	// r441->Draw("same");
+
+	TLatex* r6301 = new TLatex(0.17,0.34, "Q^{2} (data)");
+	r6301->SetNDC();
+	r6301->SetTextSize(0.03);
+	r6301->Draw("same");
+
+	TLegend *w6312 = new TLegend(0.17,0.18,0.35,0.32);
+	w6312->SetLineColor(kWhite);
+	w6312->SetFillColor(0);
+	w6312->SetTextSize(14);
+	w6312->SetTextFont(45);
+	w6312->SetTextColor(kBlack);
+	w6312->AddEntry(gr_data[0], "(5,10) ","P");
+	w6312->AddEntry(gr_data[1], "(10,20) ","P");
+	w6312->AddEntry(gr_data[2], "(20,40)", "P");
+	w6312->AddEntry(gr_data[3], "(40,100) ", "P");
+	w6312->Draw("same");
+
+
+	TLatex* r6311 = new TLatex(0.32,0.34, mc_generator);
+	r6311->SetNDC();
+	r6311->SetTextSize(0.03);
+	r6311->Draw("same");
+
+	TLegend *w6311 = new TLegend(0.33,0.18,0.53,0.32);
+	w6311->SetLineColor(kWhite);
+	w6311->SetFillColor(0);
+	w6311->SetTextSize(14);
+	w6311->SetTextFont(45);
+	w6311->SetTextColor(kBlack);
+	w6311->AddEntry(gr_rapgap[0], "(5,10) ","L");
+	w6311->AddEntry(gr_rapgap[1], "(10,20) ","L");
+	w6311->AddEntry(gr_rapgap[2], "(20,40)", "L");
+	w6311->AddEntry(gr_rapgap[3], "(40,100) ", "L");
+	w6311->Draw("same");
+
+	gr_logx_data_entropy[0]->SetMarkerStyle(20);
+	gr_logx_data_entropy[0]->SetMarkerSize(1.4);
+	gr_logx_data_entropy[0]->SetMarkerColor(kBlack);
+
+	gr_logx_data_entropy[1]->SetMarkerStyle(30);
+	gr_logx_data_entropy[1]->SetMarkerSize(1.4);
+	gr_logx_data_entropy[1]->SetMarkerColor(kBlue);
+
+	gr_logx_data_entropy[2]->SetMarkerStyle(24);
+	gr_logx_data_entropy[2]->SetMarkerSize(1.4);
+	gr_logx_data_entropy[2]->SetMarkerColor(kRed);
+
+	gr_logx_data_entropy[3]->SetMarkerStyle(29);
+	gr_logx_data_entropy[3]->SetMarkerSize(1.8);
+	gr_logx_data_entropy[3]->SetMarkerColor(kGreen-2);
+
+	gr_logx_data_entropy[0]->Draw("Psame");
+	gr_logx_data_entropy[1]->Draw("Psame");
+	gr_logx_data_entropy[2]->Draw("Psame");
+	gr_logx_data_entropy[3]->Draw("Psame");
+
+	gr_logx_django_entropy[0]->SetLineStyle(2);
+	gr_logx_django_entropy[0]->SetLineWidth(4);
+	gr_logx_django_entropy[0]->SetMarkerSize(1.4);
+	gr_logx_django_entropy[0]->SetLineColor(kBlack);
+
+	gr_logx_django_entropy[1]->SetLineStyle(2);
+	gr_logx_django_entropy[1]->SetLineWidth(4);
+	gr_logx_django_entropy[1]->SetMarkerSize(1.4);
+	gr_logx_django_entropy[1]->SetLineColor(kBlue);
+
+	gr_logx_django_entropy[2]->SetLineStyle(2);
+	gr_logx_django_entropy[2]->SetLineWidth(4);
+	gr_logx_django_entropy[2]->SetMarkerSize(1.4);
+	gr_logx_django_entropy[2]->SetLineColor(kRed);
+
+	gr_logx_django_entropy[3]->SetLineStyle(2);
+	gr_logx_django_entropy[3]->SetLineWidth(4);
+	gr_logx_django_entropy[3]->SetMarkerSize(1.6);
+	gr_logx_django_entropy[3]->SetLineColor(kGreen-2);
+
+	gr_logx_rapgap_entropy[0]->SetLineStyle(2);
+	gr_logx_rapgap_entropy[0]->SetLineWidth(4);
+	gr_logx_rapgap_entropy[0]->SetMarkerSize(1.4);
+	gr_logx_rapgap_entropy[0]->SetLineColor(kBlack);
+
+	gr_logx_rapgap_entropy[1]->SetLineStyle(3);
+	gr_logx_rapgap_entropy[1]->SetLineWidth(4);
+	gr_logx_rapgap_entropy[1]->SetMarkerSize(1.4);
+	gr_logx_rapgap_entropy[1]->SetLineColor(kBlue);
+
+	gr_logx_rapgap_entropy[2]->SetLineStyle(4);
+	gr_logx_rapgap_entropy[2]->SetLineWidth(4);
+	gr_logx_rapgap_entropy[2]->SetMarkerSize(1.4);
+	gr_logx_rapgap_entropy[2]->SetLineColor(kRed);
+
+	gr_logx_rapgap_entropy[3]->SetLineStyle(5);
+	gr_logx_rapgap_entropy[3]->SetLineWidth(4);
+	gr_logx_rapgap_entropy[3]->SetMarkerSize(1.6);
+	gr_logx_rapgap_entropy[3]->SetLineColor(kGreen-2);
+
+	gr_logx_pythia_entropy[0]->SetLineStyle(2);
+	gr_logx_pythia_entropy[0]->SetLineWidth(4);
+	gr_logx_pythia_entropy[0]->SetMarkerSize(1.4);
+	gr_logx_pythia_entropy[0]->SetLineColor(kBlack);
+
+	gr_logx_pythia_entropy[1]->SetLineStyle(3);
+	gr_logx_pythia_entropy[1]->SetLineWidth(4);
+	gr_logx_pythia_entropy[1]->SetMarkerSize(1.4);
+	gr_logx_pythia_entropy[1]->SetLineColor(kBlue);
+
+	gr_logx_pythia_entropy[2]->SetLineStyle(4);
+	gr_logx_pythia_entropy[2]->SetLineWidth(4);
+	gr_logx_pythia_entropy[2]->SetMarkerSize(1.4);
+	gr_logx_pythia_entropy[2]->SetLineColor(kRed);
+
+	gr_logx_pythia_entropy[3]->SetLineStyle(5);
+	gr_logx_pythia_entropy[3]->SetLineWidth(4);
+	gr_logx_pythia_entropy[3]->SetMarkerSize(1.6);
+	gr_logx_pythia_entropy[3]->SetLineColor(kGreen-2);
+
+	if( pickMCEG_ == 0 ){
+		gr_logx_rapgap_entropy[0]->Draw("L same");
+		gr_logx_rapgap_entropy[1]->Draw("L same");
+		gr_logx_rapgap_entropy[2]->Draw("L same");
+		gr_logx_rapgap_entropy[3]->Draw("L same");
+	}
+	else if( pickMCEG_ == 1 ){
+		gr_logx_django_entropy[0]->Draw("Lsame");
+		gr_logx_django_entropy[1]->Draw("Lsame");
+		gr_logx_django_entropy[2]->Draw("Lsame");
+		gr_logx_django_entropy[3]->Draw("Lsame");
+	}
+	else if( pickMCEG_ == 2 ){
+		gr_logx_pythia_entropy[0]->Draw("Lsame");
+		gr_logx_pythia_entropy[1]->Draw("Lsame");
+		gr_logx_pythia_entropy[2]->Draw("Lsame");
+		gr_logx_pythia_entropy[3]->Draw("Lsame");
+	}
+
+	TFile* PDF_TGraph = new TFile("PDF_TGraph.root");
+	TGraphErrors* mstw_Q2_2 = (TGraphErrors*) PDF_TGraph->Get("gr1");
+	TGraphErrors* mstw_Q2_10 = (TGraphErrors*) PDF_TGraph->Get("gr2");
+
+	mstw_Q2_2->SetFillStyle(1001);
+	mstw_Q2_2->SetFillColorAlpha(kGreen-2,0.4);
+	mstw_Q2_2->SetMarkerStyle(24);
+	mstw_Q2_2->SetLineColor(kWhite);
+
+	mstw_Q2_10->SetFillStyle(1001);
+	mstw_Q2_10->SetFillColorAlpha(kRed-2,0.4);
+	mstw_Q2_10->SetMarkerStyle(25);
+	mstw_Q2_10->SetLineColor(kWhite);
+
+	mstw_Q2_2->Draw("P e3 same");
+	mstw_Q2_10->Draw("P e3 same");
+
+	TLegend *w6313 = new TLegend(0.57,0.18,0.8,0.3);
+	w6313->SetLineColor(kWhite);
+	w6313->SetFillColor(0);
+	w6313->SetTextSize(18);
+	w6313->SetTextFont(45);
+	w6313->SetTextColor(kBlack);
+	w6313->AddEntry(mstw_Q2_2, "ln(xG)  Q^{2} = 2 GeV^{2} ","PF");
+	w6313->AddEntry(mstw_Q2_10, "ln(xG)  Q^{2} = 10 GeV^{2} ","PF");
+	w6313->Draw("same");
+
+	//KNO scaling
 	TCanvas* c2_1 = new TCanvas("c2_1","c2_1",1,1,1000,1000);
 	c2_1->Divide(4,4,0,0);
 
@@ -1472,6 +1781,7 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 	base2_1->GetYaxis()->SetNdivisions(4,6,0);
 
 	TGraphErrors* hist_KNO_scale[4][4];
+	TGraphErrors* hist_KNO_scale_systematics[4][4];
 	TGraphErrors* django_KNO_scale[4][4];
 	TGraphErrors* pythia_KNO_scale[4][4];
 	TGraphErrors* rapgap_KNO_scale[4][4];
@@ -1511,23 +1821,24 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 
 			}
 
-			TGraphErrors* hist_KNO_scale_systematics = (TGraphErrors*) hist_KNO_scale[iQ2][iy]->Clone("hsys_kno");
-			for(int isys=0;isys<hist_KNO_scale_systematics->GetN();isys++){
+
+			hist_KNO_scale_systematics[iQ2][iy] = (TGraphErrors*) hist_KNO_scale[iQ2][iy]->Clone("hsys_kno");
+			for(int isys=0;isys<hist_KNO_scale_systematics[iQ2][iy]->GetN();isys++){
 				double z,psi;
-				hist_KNO_scale_systematics->GetPoint(isys, z, psi);
+				hist_KNO_scale_systematics[iQ2][iy]->GetPoint(isys, z, psi);
 				double N = z*mean_multiplicity;
 				double error = 0.;
-				if( N<2 ) error = 0.094*psi;
-				if( N>=2 && N<5 ) error = 0.034*psi;
-				if( N>=5 && N<15 ) error = 0.034*psi;
-				if( N>=15 ) error = 0.21*psi;
+				if( N<2 ) error = 0.221*psi;
+				if( N>=2 && N<5 ) error = 0.06*psi;
+				if( N>=5 && N<15 ) error = 0.06*psi;
+				if( N>=15 ) error = 0.233*psi;
 
-				hist_KNO_scale_systematics->SetPoint(isys,z,psi);
-				hist_KNO_scale_systematics->SetPointError(isys,binwidth[isys]/2.,error);
+				hist_KNO_scale_systematics[iQ2][iy]->SetPoint(isys,z,psi);
+				hist_KNO_scale_systematics[iQ2][iy]->SetPointError(isys,binwidth[isys]/2.,error);
 			}
 			gStyle->SetErrorX( 0.5 );
-			hist_KNO_scale_systematics->SetFillColorAlpha(kGray+1,0.8);
-  			hist_KNO_scale_systematics->Draw("e2same");
+			hist_KNO_scale_systematics[iQ2][iy]->SetFillColorAlpha(kGray+1,0.8);
+  			hist_KNO_scale_systematics[iQ2][iy]->Draw("e2same");
 
   			hist_KNO_scale[iQ2][iy]->SetMarkerStyle(20);
 			hist_KNO_scale[iQ2][iy]->Draw("PE0Zsame");
@@ -1641,11 +1952,180 @@ void makeHisto_result_HCM(const int ifile = 0, const bool draw_ = false, const i
 	c2_1->cd(1);
 	r52->Draw("same");
 
-	if(draw_) c2->Print(Form("../figures/results_finalv1/Pn_allEtaStar_"+radname+".pdf"));
-	if(draw_) c2_1->Print(Form("../figures/results_finalv1/PsiZ_allEtaStar_"+radname+".pdf"));
-	if(draw_) c3->Print(Form("../figures/results_finalv1/Mean_Nch_allEtaStar_"+radname+"_MCEG_"+MCEGname+".pdf"));
-    if(draw_) c3_2->Print(Form("../figures/results_finalv1/Var_Nch_allEtaStar_"+radname+"_MCEG_"+MCEGname+".pdf"));
-	if(draw_) c4->Print(Form("../figures/results_finalv1/Mean_Nch_allEtaStar_logX_"+radname+"_MCEG_"+MCEGname+".pdf"));
-	if(draw_) c4_2->Print(Form("../figures/results_finalv1/Var_Nch_allEtaStar_logX_"+radname+"_MCEG_"+MCEGname+".pdf"));
+	//KNO scaling
+	TCanvas* c2_2 = new TCanvas("c2_2","c2_2",1,1,600,600);
+	c2_2->Divide(2,2,0,0);
+	TH1D* base2_2 = (TH1D*) base2_1->Clone("base2_2");
+	fixedFontHist1D(base2_2,2,2);
+	base2_2->GetYaxis()->SetNdivisions(3,2,0);
+
+	c2_2->cd(1);
+	gPad->SetLogy(1);
+	gPad->SetLeftMargin(0.15);
+
+	base2_2->Draw();
+	hist_KNO_scale[0][0]->SetMarkerStyle(20);
+	hist_KNO_scale[0][1]->SetMarkerStyle(21);
+	hist_KNO_scale[0][2]->SetMarkerStyle(24);
+	hist_KNO_scale[0][3]->SetMarkerStyle(25);
+
+	hist_KNO_scale[0][0]->Draw("Psame");
+	hist_KNO_scale[0][1]->Draw("Psame");
+	hist_KNO_scale[0][2]->Draw("Psame");
+	hist_KNO_scale[0][3]->Draw("Psame");
+
+	hist_KNO_scale_systematics[0][0]->Draw("e3same");
+	hist_KNO_scale_systematics[0][1]->Draw("e3same");
+	hist_KNO_scale_systematics[0][2]->Draw("e3same");
+	hist_KNO_scale_systematics[0][3]->Draw("e3same");
+
+
+	c2_2->cd(2);
+	gPad->SetLogy(1);
+	gPad->SetRightMargin(0.1);
+
+	base2_2->Draw();
+	hist_KNO_scale[1][0]->SetMarkerStyle(20);
+	hist_KNO_scale[1][1]->SetMarkerStyle(21);
+	hist_KNO_scale[1][2]->SetMarkerStyle(24);
+	hist_KNO_scale[1][3]->SetMarkerStyle(25);
+
+	hist_KNO_scale[1][0]->Draw("Psame");
+	hist_KNO_scale[1][1]->Draw("Psame");
+	hist_KNO_scale[1][2]->Draw("Psame");
+	hist_KNO_scale[1][3]->Draw("Psame");
+
+	hist_KNO_scale_systematics[1][0]->Draw("e3same");
+	hist_KNO_scale_systematics[1][1]->Draw("e3same");
+	hist_KNO_scale_systematics[1][2]->Draw("e3same");
+	hist_KNO_scale_systematics[1][3]->Draw("e3same");
+
+	c2_2->cd(3);
+	gPad->SetLogy(1);
+	gPad->SetLeftMargin(0.15);
+	gPad->SetBottomMargin(0.15);
+
+	base2_2->Draw();
+	hist_KNO_scale[2][0]->SetMarkerStyle(20);
+	hist_KNO_scale[2][1]->SetMarkerStyle(21);
+	hist_KNO_scale[2][2]->SetMarkerStyle(24);
+	hist_KNO_scale[2][3]->SetMarkerStyle(25);
+
+	hist_KNO_scale[2][0]->Draw("Psame");
+	hist_KNO_scale[2][1]->Draw("Psame");
+	hist_KNO_scale[2][2]->Draw("Psame");
+	hist_KNO_scale[2][3]->Draw("Psame");
+
+	hist_KNO_scale_systematics[2][0]->Draw("e3same");
+	hist_KNO_scale_systematics[2][1]->Draw("e3same");
+	hist_KNO_scale_systematics[2][2]->Draw("e3same");
+	hist_KNO_scale_systematics[2][3]->Draw("e3same");
+
+	c2_2->cd(4);
+	gPad->SetLogy(1);
+	gPad->SetRightMargin(0.1);
+	gPad->SetBottomMargin(0.15);
+
+	base2_2->Draw();
+	hist_KNO_scale[3][0]->SetMarkerStyle(20);
+	hist_KNO_scale[3][1]->SetMarkerStyle(21);
+	hist_KNO_scale[3][2]->SetMarkerStyle(24);
+	hist_KNO_scale[3][3]->SetMarkerStyle(25);
+
+	hist_KNO_scale[3][0]->Draw("Psame");
+	hist_KNO_scale[3][1]->Draw("Psame");
+	hist_KNO_scale[3][2]->Draw("Psame");
+	hist_KNO_scale[3][3]->Draw("Psame");
+
+	hist_KNO_scale_systematics[3][0]->Draw("e3same");
+	hist_KNO_scale_systematics[3][1]->Draw("e3same");
+	hist_KNO_scale_systematics[3][2]->Draw("e3same");
+	hist_KNO_scale_systematics[3][3]->Draw("e3same");
+
+	c2_2->cd(2);
+	TLatex* r444 = new TLatex(0.8,0.92, "H1");
+	r444->SetNDC();
+	r444->SetTextSize(20);
+	r444->SetTextFont(63);
+	r444->SetTextColor(kBlack);
+	r444->Draw("same");
+	c2_2->cd(1);
+	TLatex* r488 = new TLatex(0.18, 0.92, "ep 27.5#times920 GeV");
+	r488->SetNDC();
+	r488->SetTextSize(18);
+	r488->SetTextFont(43);
+	r488->SetTextColor(kBlack);
+	r488->Draw("same");
+	c2_2->cd(2);
+	TLatex* r499 = new TLatex(0.05, 0.92, "0 < #eta* < 4.0");
+	r499->SetNDC();
+	r499->SetTextSize(18);
+	r499->SetTextFont(43);
+	r499->SetTextColor(kBlack);
+	r499->Draw("same");
+
+	c2_2->cd(1);
+	TLatex* ry1 = new TLatex(0.18,0.05, "Q^{2} (5,10) GeV^{2}");
+	ry1->SetNDC();
+	ry1->SetTextSize(18);
+	ry1->SetTextFont(44);
+	ry1->SetTextColor(kBlack);
+	ry1->Draw("same");
+
+	c2_2->cd(2);
+	TLatex* ry2 = new TLatex(0.05,0.05, "Q^{2} (10,20) GeV^{2}");
+	ry2->SetNDC();
+	ry2->SetTextSize(18);
+	ry2->SetTextFont(44);
+	ry2->SetTextColor(kBlack);
+	ry2->Draw("same");
+
+	c2_2->cd(3);
+	TLatex* ry3 = new TLatex(0.18,0.2, "Q^{2} (20,40) GeV^{2}");
+	ry3->SetNDC();
+	ry3->SetTextSize(18);
+	ry3->SetTextFont(44);
+	ry3->SetTextColor(kBlack);
+	ry3->Draw("same");
+
+	c2_2->cd(4);
+	TLatex* ry4 = new TLatex(0.05,0.2, "Q^{2} (40,100) GeV^{2}");
+	ry4->SetNDC();
+	ry4->SetTextSize(18);
+	ry4->SetTextFont(44);
+	ry4->SetTextColor(kBlack);
+	ry4->Draw("same");
+
+	c2_2->cd(4);
+
+	TLatex* ry5 = new TLatex(0.53,0.9, "#LT W #GT in GeV");
+	ry5->SetNDC();
+	ry5->SetTextSize(18);
+	ry5->SetTextFont(44);
+	ry5->SetTextColor(kBlack);
+	ry5->Draw("same");
+	TLegend *w66 = new TLegend(0.57,0.63,0.89,0.85);
+	w66->SetLineColor(kWhite);
+	w66->SetFillColor(0);
+	w66->SetTextSize(17);
+	w66->SetTextFont(45);
+	w66->AddEntry(hist_KNO_scale[3][0], "72 ","P");
+	w66->AddEntry(hist_KNO_scale[3][1], "101 ","P");
+	w66->AddEntry(hist_KNO_scale[3][2], "141 ","P");
+	w66->AddEntry(hist_KNO_scale[3][3], "205 ", "P");//rapgap
+	w66->Draw("same");
+
+	if(draw_) c2->Print(Form("../figures/results_finalv3/Pn_allEtaStar_"+radname+".pdf"));
+	if(draw_) c2_1->Print(Form("../figures/results_finalv3/PsiZ_allEtaStar_"+radname+".pdf"));
+	if(draw_) c2_2->Print(Form("../figures/results_finalv3/PsiZ_combine_allEtaStar_"+radname+".pdf"));
+	if(draw_) c3->Print(Form("../figures/results_finalv3/Mean_Nch_allEtaStar_"+radname+"_MCEG_"+MCEGname+".pdf"));
+    if(draw_) c3_2->Print(Form("../figures/results_finalv3/Var_Nch_allEtaStar_"+radname+"_MCEG_"+MCEGname+".pdf"));
+	if(draw_) c4->Print(Form("../figures/results_finalv3/Mean_Nch_allEtaStar_logX_"+radname+"_MCEG_"+MCEGname+".pdf"));
+	if(draw_) c4_2->Print(Form("../figures/results_finalv3/Var_Nch_allEtaStar_logX_"+radname+"_MCEG_"+MCEGname+".pdf"));
+	if(draw_) c4_3->Print(Form("../figures/results_finalv3/EE_allEtaStar_logX_"+radname+"_MCEG_"+MCEGname+".pdf"));
+
+	// TFile outfile_temp("example_unfoldedHist.root","RECREATE");
+	// hist_unfolded_from_rapgap_allEta[3][3]->Write();
+	// outfile_temp.Write();
 
 }

@@ -18,19 +18,19 @@ void makeHisto_systematics(const int Q2_BIN = 0, const bool doDjango_ = true, co
 
 	gStyle->SetErrorX(0);
 
-	TString filename_1 = "default_hadCali_hadEplus1p0";
-	TString filename_2 = "default_hadCali_hadEminus1p0";
+	TString filename_1 = "default_hadCali_Eplus0p5";
+	TString filename_2 = "default_hadCali_Eminus0p5";
 	
 	TFile* file[10];
 	file[0] = new TFile("../rootfiles/results_unfoldingOutput_yetalab_default_hadCaliNew.root");
 	file[1] = new TFile("../rootfiles/results_unfoldingOutput_yetalab_"+filename_1+".root");
 	file[2] = new TFile("../rootfiles/results_unfoldingOutput_yetalab_"+filename_2+".root");
 
-	TString filename_allEta_1 = "hadCali_Eplus0p5";
-	TString filename_allEta_2 = "hadCali_Eminus0p5";
+	TString filename_allEta_1 = "hadCaliNewRadPho";
+	TString filename_allEta_2 = "hadCaliNewRadPho_2";
 
-	double yaxis_range_1 = 0.5;
-	double yaxis_range_2 = 2;
+	double yaxis_range_1 = 0.8;
+	double yaxis_range_2 = 1.3;
 
 	TFile* file_allEta[10];
 	file_allEta[0] = new TFile("../rootfiles/results_unfoldingOutput_yetalab_default_singleEtaBin_hadCaliNew.root");
@@ -473,6 +473,10 @@ void makeHisto_systematics(const int Q2_BIN = 0, const bool doDjango_ = true, co
 					temp_allEta_tight_django[sub_panels-1]->Fit("pol0","","",1,20.);
 					temp_allEta_loose_django[sub_panels-1]->Fit("pol0","","",1,20.);
 				}
+				else if( sub_panels == 6 ){
+					temp_allEta_tight_django[sub_panels-1]->Fit("pol0","","",2,20.);
+					temp_allEta_loose_django[sub_panels-1]->Fit("pol0","","",2,20.);
+				}
 				else{
 					temp_allEta_tight_django[sub_panels-1]->Fit("pol0");
 					temp_allEta_loose_django[sub_panels-1]->Fit("pol0");
@@ -605,12 +609,15 @@ void makeHisto_systematics(const int Q2_BIN = 0, const bool doDjango_ = true, co
 		}
 		w53->Draw("same");
 
+
+
+
 		if(doMCcomparison_){
 
 			TCanvas* c2 = new TCanvas("c2","c2",1,1,1000,800);
 			c2->Divide(4,3,0,0);
 			TH1D* base2 = (TH1D*) base1->Clone("base2");
-			base2->GetYaxis()->SetRangeUser(0,3);
+			base2->GetYaxis()->SetRangeUser(yaxis_range_1,yaxis_range_2);
 			TH1D* temp_django[16];
 
 			int sub_panels = 1;
@@ -705,6 +712,7 @@ void makeHisto_systematics(const int Q2_BIN = 0, const bool doDjango_ = true, co
 					}
 					
 				}
+
 				c2->cd(4);
 				r50->Draw("same");
 				c2->cd(1);
@@ -720,12 +728,11 @@ void makeHisto_systematics(const int Q2_BIN = 0, const bool doDjango_ = true, co
 				w6->AddEntry(temp_django[0], "rapgap/django ","P");
 				w6->Draw("same");
 
-				// c2->Print(Form("../figures/systematics/MCmodels/Pn_rapgapDiffractive_sys_fit_%d.pdf", Q2_BIN));
 
 				TCanvas* c4 = new TCanvas("c4","c4",1,1,1000,1000);
 				c4->Divide(4,4,0,0);
 				TH1D* base4 = (TH1D*) base3->Clone("base4");
-				base4->GetYaxis()->SetRangeUser(0,3);
+				base4->GetYaxis()->SetRangeUser(yaxis_range_1,yaxis_range_2);
 				TH1D* temp_allEta_django[16];
 
 				sub_panels = 1;
@@ -831,95 +838,99 @@ void makeHisto_systematics(const int Q2_BIN = 0, const bool doDjango_ = true, co
 				w64->SetTextFont(45);
 				w64->AddEntry(temp_allEta_django[0], "rapgap/django ","P");
 				w64->Draw("same");
-				
+
+				// c2->Print(Form("../figures/systematics/MCmodels/Pn_rapgapDiffractive_sys_fit_%d.pdf", Q2_BIN));
 				// c4->Print(Form("../figures/systematics/MCmodels/Pn_rapgapDiffractive_allEta_sys_fit.pdf"));
 
-				delete c4;
-				TCanvas* c7 = new TCanvas("c7","c7",1,1,600,600);
-				gPad->SetTicks();
-				gPad->SetLeftMargin(0.1);
-				gPad->SetRightMargin(0.1);
-				gPad->SetBottomMargin(0.15);
-				gPad->SetTopMargin(0.15);
+				return;
 
-				//testing radiative effect only
-				TFile* file_rapgap = new TFile("data_django_rad.root");
-				TFile* file_django = new TFile("data_rapgap_rad.root");
+				// delete c4;
+				// TCanvas* c7 = new TCanvas("c7","c7",1,1,600,600);
+				// gPad->SetTicks();
+				// gPad->SetLeftMargin(0.1);
+				// gPad->SetRightMargin(0.1);
+				// gPad->SetBottomMargin(0.15);
+				// gPad->SetTopMargin(0.15);
 
-				TGraphErrors* gr_Nch[4][2];
-				TGraphErrors* gr_Var[4][2];
+				// //testing radiative effect only
+				// TFile* file_rapgap = new TFile("data_django_rad.root");
+				// TFile* file_django = new TFile("data_rapgap_rad.root");
 
-				for(int i=0;i<4;i++){
-					gr_Nch[i][0] = (TGraphErrors*) file_rapgap->Get(Form(";%d",i+1));
-					gr_Nch[i][1] = (TGraphErrors*) file_django->Get(Form(";%d",i+1));
+				// TGraphErrors* gr_Nch[4][2];
+				// TGraphErrors* gr_Var[4][2];
 
-					gr_Var[i][0] = (TGraphErrors*) file_rapgap->Get(Form(";%d",i+5));
-					gr_Var[i][1] = (TGraphErrors*) file_django->Get(Form(";%d",i+5));
-				}
+				// for(int i=0;i<4;i++){
+				// 	gr_Nch[i][0] = (TGraphErrors*) file_rapgap->Get(Form(";%d",i+1));
+				// 	gr_Nch[i][1] = (TGraphErrors*) file_django->Get(Form(";%d",i+1));
 
-				TGraphErrors* gr_data_ratio[4][2];
-				TGraphErrors* gr_data_variance_ratio[4][2];
-				for(int iQ2=0;iQ2<4;iQ2++){
-					for(int j=0;j<2;j++){
-						gr_data_ratio[iQ2][j]=new TGraphErrors();
-						gr_data_variance_ratio[iQ2][j]=new TGraphErrors();
-					}
-				}
-				for(int iQ2=0;iQ2<4;iQ2++){
-					for(int iy=0;iy<4;iy++){
-						double x,y,x1,y1;
-						gr_Nch[iQ2][0]->GetPoint(iy,x,y);
-						gr_Nch[iQ2][1]->GetPoint(iy,x1,y1);
-						gr_data_ratio[iQ2][0]->SetPoint(iy, x, y1/y);
+				// 	gr_Var[i][0] = (TGraphErrors*) file_rapgap->Get(Form(";%d",i+5));
+				// 	gr_Var[i][1] = (TGraphErrors*) file_django->Get(Form(";%d",i+5));
+				// }
+
+				// TGraphErrors* gr_data_ratio[4][2];
+				// TGraphErrors* gr_data_variance_ratio[4][2];
+				// for(int iQ2=0;iQ2<4;iQ2++){
+				// 	for(int j=0;j<2;j++){
+				// 		gr_data_ratio[iQ2][j]=new TGraphErrors();
+				// 		gr_data_variance_ratio[iQ2][j]=new TGraphErrors();
+				// 	}
+				// }
+				// for(int iQ2=0;iQ2<4;iQ2++){
+				// 	for(int iy=0;iy<4;iy++){
+				// 		double x,y,x1,y1;
+				// 		gr_Nch[iQ2][0]->GetPoint(iy,x,y);
+				// 		gr_Nch[iQ2][1]->GetPoint(iy,x1,y1);
+				// 		gr_data_ratio[iQ2][0]->SetPoint(iy, x, y1/y);
 						
-						gr_Var[iQ2][0]->GetPoint(iy,x,y);
-						gr_Var[iQ2][1]->GetPoint(iy,x1,y1);
-						gr_data_variance_ratio[iQ2][0]->SetPoint(iy, x, y1/y);
+				// 		gr_Var[iQ2][0]->GetPoint(iy,x,y);
+				// 		gr_Var[iQ2][1]->GetPoint(iy,x1,y1);
+				// 		gr_data_variance_ratio[iQ2][0]->SetPoint(iy, x, y1/y);
 
-					}
-				}
+				// 	}
+				// }
 
-				TH1D* base7 = makeHist("base7", "", "y", "ratio #LT N_{ch} #GT", 100,0,0.6,kBlack);
-				base7->GetYaxis()->SetRangeUser(0.9, 1.1);
-				base7->GetXaxis()->SetTitleColor(kBlack);
-				fixedFontHist1D(base7,1.2,1.0);
+				// TH1D* base7 = makeHist("base7", "", "y", "ratio #LT N_{ch} #GT", 100,0,0.6,kBlack);
+				// base7->GetYaxis()->SetRangeUser(0.9, 1.1);
+				// base7->GetXaxis()->SetTitleColor(kBlack);
+				// fixedFontHist1D(base7,1.2,1.0);
 
-				base7->GetYaxis()->SetTitleSize(base7->GetYaxis()->GetTitleSize()*1.3);
-				base7->GetXaxis()->SetTitleSize(base7->GetXaxis()->GetTitleSize()*1.3);
-				base7->GetYaxis()->SetLabelSize(base7->GetYaxis()->GetLabelSize()*1.3);
-				base7->GetXaxis()->SetLabelSize(base7->GetXaxis()->GetLabelSize()*1.3);
-				base7->GetXaxis()->SetNdivisions(4,6,0);
-				base7->GetYaxis()->SetNdivisions(4,6,0);
-				base7->Draw();
+				// base7->GetYaxis()->SetTitleSize(base7->GetYaxis()->GetTitleSize()*1.3);
+				// base7->GetXaxis()->SetTitleSize(base7->GetXaxis()->GetTitleSize()*1.3);
+				// base7->GetYaxis()->SetLabelSize(base7->GetYaxis()->GetLabelSize()*1.3);
+				// base7->GetXaxis()->SetLabelSize(base7->GetXaxis()->GetLabelSize()*1.3);
+				// base7->GetXaxis()->SetNdivisions(4,6,0);
+				// base7->GetYaxis()->SetNdivisions(4,6,0);
+				// base7->Draw();
 
-				gr_data_ratio[0][0]->SetMarkerStyle(20);
-				gr_data_ratio[0][0]->SetMarkerSize(1.4);
-				gr_data_ratio[0][0]->SetMarkerColor(kBlack);
+				// gr_data_ratio[0][0]->SetMarkerStyle(20);
+				// gr_data_ratio[0][0]->SetMarkerSize(1.4);
+				// gr_data_ratio[0][0]->SetMarkerColor(kBlack);
 
-				gr_data_ratio[1][0]->SetMarkerStyle(20);
-				gr_data_ratio[1][0]->SetMarkerSize(1.4);
-				gr_data_ratio[1][0]->SetMarkerColor(kBlack);
+				// gr_data_ratio[1][0]->SetMarkerStyle(20);
+				// gr_data_ratio[1][0]->SetMarkerSize(1.4);
+				// gr_data_ratio[1][0]->SetMarkerColor(kBlack);
 
-				gr_data_ratio[2][0]->SetMarkerStyle(20);
-				gr_data_ratio[2][0]->SetMarkerSize(1.4);
-				gr_data_ratio[2][0]->SetMarkerColor(kBlack);
+				// gr_data_ratio[2][0]->SetMarkerStyle(20);
+				// gr_data_ratio[2][0]->SetMarkerSize(1.4);
+				// gr_data_ratio[2][0]->SetMarkerColor(kBlack);
 
-				gr_data_ratio[3][0]->SetMarkerStyle(24);
-				gr_data_ratio[3][0]->SetMarkerSize(1.4);
-				gr_data_ratio[3][0]->SetMarkerColor(kRed);
+				// gr_data_ratio[3][0]->SetMarkerStyle(24);
+				// gr_data_ratio[3][0]->SetMarkerSize(1.4);
+				// gr_data_ratio[3][0]->SetMarkerColor(kRed);
 		
-				gr_data_ratio[0][0]->Draw("PEsame");
-				gr_data_ratio[1][0]->Draw("PEsame");
-				gr_data_ratio[2][0]->Draw("PEsame");
-				gr_data_ratio[3][0]->Draw("PEsame");
+				// gr_data_ratio[0][0]->Draw("PEsame");
+				// gr_data_ratio[1][0]->Draw("PEsame");
+				// gr_data_ratio[2][0]->Draw("PEsame");
+				// gr_data_ratio[3][0]->Draw("PEsame");
 
 				// c7->Print(Form("../figures/systematics/radiation/Nch.pdf"));
 				// return;
 		}
 	
-		// c1->Print(Form("../figures/systematics/HadronEnergyScale/Pn_sys_fit_%d.pdf", Q2_BIN));
-		// c3->Print(Form("../figures/systematics/HadronEnergyScale/Pn_allEta_sys_fit.pdf"));
+		c1->Print(Form("../figures/systematics/ElectronEnergyScale/Pn_sys_fit_%d.pdf", Q2_BIN));
+		c3->Print(Form("../figures/systematics/ElectronEnergyScale/Pn_allEta_sys_fit.pdf"));
 
+		return;
 	//Nch 1st and 2nd moment.
 	TCanvas* temp[3][4][4]; 
 

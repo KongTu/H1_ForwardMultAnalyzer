@@ -177,7 +177,7 @@ void calculate_entropy(){
 	}
 
 	TH1D* base2 = makeHist("base2", "", "x", "S_{EE}", 1000000,0.000005,1,kBlack);
-	base2->GetYaxis()->SetRangeUser(1.5,3.5);
+	base2->GetYaxis()->SetRangeUser(0,5.5);
 	base2->GetXaxis()->SetRangeUser(0.000020, 0.05);
 	base2->GetXaxis()->SetTitleColor(kBlack);
 	
@@ -359,6 +359,13 @@ void calculate_entropy(){
 	r412->SetTextFont(43);
 	r412->SetTextColor(kBlack);
 	r412->Draw("same");
+
+	TFile *output = new TFile("PDF_TGraph.root", "RECREATE");
+	gr_mstw_Q2_2_lnXG->SetName("gr1");
+	gr_mstw_Q2_10_lnXG->SetName("gr2");
+
+	gr_mstw_Q2_2_lnXG->Write();
+	gr_mstw_Q2_10_lnXG->Write();
 
 	// c1->Print("../figures/S_hadron-Q2_10.pdf");
 
