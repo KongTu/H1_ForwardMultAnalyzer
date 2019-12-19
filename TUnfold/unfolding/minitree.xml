@@ -2,12 +2,12 @@
 <!DOCTYPE Minitree SYSTEM "minitree.dtd">
 <Minitree>
   <InputFile name="data" type="data" luminosity="136" treename="miniTree">
-    /Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/data_highE_0607_noReweight_Tree_hadCaliNew.root
+    ../../new_output/data_highE_0607_noReweight_Tree_hadCaliNewLooseTrack.root
   </InputFile>
   <InputFile name="djangoh" type="signal" luminosity="363" treename="miniTree">
-    /Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNew.root
+    ../../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCali.root
   </InputFile>
   <InputFile name="rapgap" type="signal" luminosity="287" treename="miniTree">
-    /Users/kong/google_drive/BNL_folder/Work/DESY/H1_Collaboration/Analysis/H1_ForwardMultAnalyzer/new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNew.root
+    ../../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewLooseTrack.root
   </InputFile>
 </Minitree>
