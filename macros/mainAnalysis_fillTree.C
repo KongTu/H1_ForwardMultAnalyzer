@@ -26,7 +26,7 @@ int getPassFlag(vector<int> trackType, vector<double> cuts, int trackQuality){
       if( cuts[3] > cuts_2_value[trackQuality] ) pass = 0;
       if( fabs(cuts[3] - cuts[4]) < cuts_3_value[trackQuality] ) pass = 0;
       if( cuts[5] < 0 ) pass = 0;
-      if( fabs(cuts[2] - cuts[6]) < 0.2 ) pass = 0;
+      if( fabs(cuts[2] - cuts[6]) < 0.1 ) pass = 0;
       if( randn->GetRandom() > cuts[7] && randn->GetRandom() < 1.0 ) pass = 0; 
    }      
    else if( trackType[1] && trackType[0] == 2 ){
