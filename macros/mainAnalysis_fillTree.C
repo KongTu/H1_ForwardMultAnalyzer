@@ -200,10 +200,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    //start to define new miniTree:
    TTree *outtree =new TTree("miniTree","miniTree");
    MyEvent myEvent;
-   TH1D* h_RstartPos[3];
-   TH1D* h_RstartNeg[3];
-   TH1D* h_dcaPos[3];
-   TH1D* h_dcaNeg[3];
+   TH1D* h_RstartPos[4];
+   TH1D* h_RstartNeg[4];
+   TH1D* h_dcaPos[4];
+   TH1D* h_dcaNeg[4];
 
    for(int i=0;i<4;i++){
       h_RstartPos[i] = new TH1D(Form("h_RstartPos_%d",i),";R_{start}",200,0,100);
