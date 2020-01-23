@@ -747,8 +747,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.etaAsymREC_mini = etaAsym;
          myEvent.totalMultREC_mini = (int) (Ntracks_eta_p + Ntracks_eta_m);
 
-         outtree->Fill();
-
+         // outtree->Fill();
 
          totalEvents++;
          if( totalEvents%100000 == 0 )cout << "Events ~ " << totalEvents << endl;
