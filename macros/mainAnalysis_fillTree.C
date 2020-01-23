@@ -200,6 +200,18 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    //start to define new miniTree:
    TTree *outtree =new TTree("miniTree","miniTree");
    MyEvent myEvent;
+   TH1D* h_RstartPos[3];
+   TH1D* h_RstartNeg[3];
+   TH1D* h_dcaPos[3];
+   TH1D* h_dcaNeg[3];
+
+   for(int i=0;i<3;i++){
+      h_RstartPos[i] = new TH1D(Form("h_RstartPos_%d",i),";R_{start}",200,0,100);
+      h_RstartNeg[i] = new TH1D(Form("h_RstartNeg_%d",i),";R_{start}",200,0,100);
+      h_dcaPos[i] = new TH1D(Form("h_dcaPos_%d",i),";dca",200,-15,15);
+      h_dcaNeg[i] = new TH1D(Form("h_dcaNeg_%d",i),";dca",200,-15,15);
+   }
+   
 
    outtree->Branch("w_mini",&myEvent.w_mini,"w_mini/F");
    outtree->Branch("vertex_mini",myEvent.vertex_mini,"vertex_mini[3]/F");
@@ -683,6 +695,28 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                if(etaREC[j] < 0.2 && etaREC[j] > -1.2) Ntracks_eta_m++;
             }
 
+            //filling 1D histogram for Rstart and DCA for + and - tracks
+            if( event_pass == 1 ){
+               if( pass_default == 1 ){
+                  if( typeChgREC[j] > 0 ) h_RstartPos[0]->Fill( startHitsRadiusREC[j], evt_weight );
+                  if( typeChgREC[j] < 0 ) h_RstartNeg[0]->Fill( startHitsRadiusREC[j], evt_weight );
+                  if( typeChgREC[j] > 0 ) h_dcaPos[0]->Fill( dcaPrimeREC[j], evt_weight );
+                  if( typeChgREC[j] < 0 ) h_dcaNeg[0]->Fill( dcaPrimeREC[j], evt_weight );
+               }
+               if( pass_tight == 1 ){
+                  if( typeChgREC[j] > 0 ) h_RstartPos[1]->Fill( startHitsRadiusREC[j], evt_weight );
+                  if( typeChgREC[j] < 0 ) h_RstartNeg[1]->Fill( startHitsRadiusREC[j], evt_weight );
+                  if( typeChgREC[j] > 0 ) h_dcaPos[1]->Fill( dcaPrimeREC[j], evt_weight );
+                  if( typeChgREC[j] < 0 ) h_dcaNeg[1]->Fill( dcaPrimeREC[j], evt_weight );
+               }
+               if( pass_loose == 1 ){
+                  if( typeChgREC[j] > 0 ) h_RstartPos[2]->Fill( startHitsRadiusREC[j], evt_weight );
+                  if( typeChgREC[j] < 0 ) h_RstartNeg[2]->Fill( startHitsRadiusREC[j], evt_weight );
+                  if( typeChgREC[j] > 0 ) h_dcaPos[2]->Fill( dcaPrimeREC[j], evt_weight );
+                  if( typeChgREC[j] < 0 ) h_dcaNeg[2]->Fill( dcaPrimeREC[j], evt_weight );
+               }
+            }
+
             //assign values to each branch on track levels:
             myEvent.typeChgREC_mini[j] = typeChgREC[j];
 
@@ -714,6 +748,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.totalMultREC_mini = (int) (Ntracks_eta_p + Ntracks_eta_m);
 
          outtree->Fill();
+
+
          totalEvents++;
          if( totalEvents%100000 == 0 )cout << "Events ~ " << totalEvents << endl;
 
@@ -751,5 +787,12 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    TFile outfile( outfile_name, "RECREATE");
    
    outtree->Write();
+   for(int i=0;i<3;i++){
+      h_RstartPos[i]->Write();
+      h_RstartNeg[i]->Write();
+      h_dcaPos[i]->Write();
+      h_dcaNeg[i]->Write();
+   }
+   
    
 }
