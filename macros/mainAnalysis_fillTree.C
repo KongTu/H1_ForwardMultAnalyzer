@@ -205,7 +205,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    TH1D* h_dcaPos[3];
    TH1D* h_dcaNeg[3];
 
-   for(int i=0;i<3;i++){
+   for(int i=0;i<4;i++){
       h_RstartPos[i] = new TH1D(Form("h_RstartPos_%d",i),";R_{start}",200,0,100);
       h_RstartNeg[i] = new TH1D(Form("h_RstartNeg_%d",i),";R_{start}",200,0,100);
       h_dcaPos[i] = new TH1D(Form("h_dcaPos_%d",i),";dca",200,-15,15);
@@ -715,6 +715,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                   if( typeChgREC[j] > 0 ) h_dcaPos[2]->Fill( dcaPrimeREC[j], evt_weight );
                   if( typeChgREC[j] < 0 ) h_dcaNeg[2]->Fill( dcaPrimeREC[j], evt_weight );
                }
+                  if( typeChgREC[j] > 0 ) h_RstartPos[3]->Fill( startHitsRadiusREC[j], evt_weight );
+                  if( typeChgREC[j] < 0 ) h_RstartNeg[3]->Fill( startHitsRadiusREC[j], evt_weight );
+                  if( typeChgREC[j] > 0 ) h_dcaPos[3]->Fill( dcaPrimeREC[j], evt_weight );
+                  if( typeChgREC[j] < 0 ) h_dcaNeg[3]->Fill( dcaPrimeREC[j], evt_weight );
             }
 
             //assign values to each branch on track levels:
@@ -786,7 +790,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    TFile outfile( outfile_name, "RECREATE");
    
    outtree->Write();
-   for(int i=0;i<3;i++){
+   for(int i=0;i<4;i++){
       h_RstartPos[i]->Write();
       h_RstartNeg[i]->Write();
       h_dcaPos[i]->Write();
