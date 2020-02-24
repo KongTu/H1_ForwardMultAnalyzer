@@ -19,8 +19,9 @@
     <Axis name="ntrackMC" lowEdge="-0.5">
       <Bin repeat="4" width="1"/> <!-- -0.5 .. 3.5 -->
       <Bin repeat="2" width="2"/> <!-- 3.5 .. 7.5 -->
-      <Bin repeat="1" width="4"/> <!-- 7.5 .. 11.5 -->
-      <Bin repeat="1" width="6"/> <!-- 11.5 .. 17.5 -->
+      <Bin repeat="3" width="4"/> <!-- 7.5 .. 19.5 -->
+      <!-- <Bin repeat="1" width="4"/> <! 7.5 .. 11.5 -->
+      <!-- <Bin repeat="1" width="6"/> <! 11.5 .. 17.5 --> 
       <Bin location="overflow" width="6"/> <!-- overflow -->
     </Axis>
   </BinningNode>
@@ -49,8 +50,9 @@
   <BinningNode name="recNtrack">
     <Axis name="ntrackREC" lowEdge="-0.5">
       <Bin repeat="8" width="1"/> <!-- -0.5 .. 7.5 -->
-      <Bin repeat="2" width="2"/> <!-- 7.5 .. 11.5 -->
-      <Bin repeat="2" width="3"/> <!-- 11.5 .. 14.5 -->
+      <Bin repeat="6" width="2"/> <!-- 7.5 .. 19.5 -->
+      <!-- <Bin repeat="2" width="2"/> <! 7.5 .. 11.5 --> 
+      <!-- <Bin repeat="2" width="3"/> <! 11.5 .. 14.5 --> 
       <Bin location="overflow" width="32"/>
     </Axis>
   </BinningNode>
