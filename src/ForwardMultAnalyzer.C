@@ -270,7 +270,13 @@ struct MyEvent {
    Float_t vtxTrackLengthREC[nRECtrack_MAX];
    Float_t dcaPrimeREC[nRECtrack_MAX];
    Float_t dz0PrimeREC[nRECtrack_MAX];
+
    Float_t dedxPionREC[nRECtrack_MAX];
+   Float_t dedxElectronREC[nRECtrack_MAX];
+   Float_t dedxProtonREC[nRECtrack_MAX];
+   Float_t dedxLikelihoodPionREC[nRECtrack_MAX];
+   Float_t dedxLikelihoodElectronREC[nRECtrack_MAX];
+   Float_t dedxLikelihoodProtonREC[nRECtrack_MAX];
 
    //non vertex fitted parameter not used
    Float_t chi2nvREC[nRECtrack_MAX]; 
@@ -468,8 +474,14 @@ int main(int argc, char* argv[]) {
    output->Branch("nvTrackLengthREC",myEvent.nvTrackLengthREC,"nvTrackLengthREC[nRECtrack]/F");
    output->Branch("dcaPrimeREC",myEvent.dcaPrimeREC,"dcaPrimeREC[nRECtrack]/F");
    output->Branch("dz0PrimeREC",myEvent.dz0PrimeREC,"dz0PrimeREC[nRECtrack]/F");
-   output->Branch("dedxPionREC",myEvent.dedxPionREC,"dedxPionREC[nRECtrack]/F");
    
+   output->Branch("dedxPionREC",myEvent.dedxPionREC,"dedxPionREC[nRECtrack]/F");
+   output->Branch("dedxElectronREC",myEvent.dedxElectronREC,"dedxElectronREC[nRECtrack]/F");
+   output->Branch("dedxProtonREC",myEvent.dedxProtonREC,"dedxProtonREC[nRECtrack]/F");
+   output->Branch("dedxLikelihoodPionREC",myEvent.dedxLikelihoodPionREC,"dedxLikelihoodPionREC[nRECtrack]/F");
+   output->Branch("dedxLikelihoodElectronREC",myEvent.dedxLikelihoodElectronREC,"dedxLikelihoodElectronREC[nRECtrack]/F");
+   output->Branch("dedxLikelihoodProtonREC",myEvent.dedxLikelihoodProtonREC,"dedxLikelihoodProtonREC[nRECtrack]/F");
+
    output->Branch("startHitsRadiusREC",myEvent.startHitsRadiusREC,"startHitsRadiusREC[nRECtrack]/F");
    output->Branch("endHitsRadiusREC",myEvent.endHitsRadiusREC,"endHitsRadiusREC[nRECtrack]/F");
    output->Branch("trkThetaREC",myEvent.trkThetaREC,"trkThetaREC[nRECtrack]/F");
@@ -1154,7 +1166,12 @@ int main(int argc, char* argv[]) {
                   trkTheta = track->GetTheta();
                   charge=track->GetCharge();
                   dedxPion = track->GetDedx(H1Dedx::kPion);
-                 
+                  dedxElectron = track->GetDedx(H1Dedx::kElectron);
+                  dedxProton = track->GetDedx(H1Dedx::kProton);
+                  dedxLikelihoodPion = track->GetDedxLikelihood(H1Dedx::kPion);
+                  dedxLikelihoodElectron = track->GetDedxLikelihood(H1Dedx::kElectron);
+                  dedxLikelihoodProton = track->GetDedxLikelihood(H1Dedx::kProton);
+
                   H1VertexFittedTrack const *h1track=
                      dynamic_cast<H1VertexFittedTrack const *>
                      (cand->GetTrack());
@@ -1315,6 +1332,11 @@ int main(int argc, char* argv[]) {
                   myEvent.dz0PrimeREC[k]=dz0Prime;
 
                   myEvent.dedxPionREC[k] = dedxPion;
+                  myEvent.dedxElectronREC[k] = dedxPion;
+                  myEvent.dedxProtonREC[k] = dedxPion;
+                  myEvent.dedxLikelihoodPionREC[k] = dedxLikelihoodPion;
+                  myEvent.dedxLikelihoodElectronREC[k] = dedxLikelihoodPion;
+                  myEvent.dedxLikelihoodProtonREC[k] = dedxLikelihoodPion;
 
                   myEvent.startHitsRadiusREC[k]=startHitsRadius;
                   myEvent.endHitsRadiusREC[k]=endHitsRadius;
