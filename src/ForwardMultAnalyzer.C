@@ -270,6 +270,7 @@ struct MyEvent {
    Float_t vtxTrackLengthREC[nRECtrack_MAX];
    Float_t dcaPrimeREC[nRECtrack_MAX];
    Float_t dz0PrimeREC[nRECtrack_MAX];
+   Float_t dedxPionREC[nRECtrack_MAX];
 
    //non vertex fitted parameter not used
    Float_t chi2nvREC[nRECtrack_MAX]; 
@@ -467,6 +468,7 @@ int main(int argc, char* argv[]) {
    output->Branch("nvTrackLengthREC",myEvent.nvTrackLengthREC,"nvTrackLengthREC[nRECtrack]/F");
    output->Branch("dcaPrimeREC",myEvent.dcaPrimeREC,"dcaPrimeREC[nRECtrack]/F");
    output->Branch("dz0PrimeREC",myEvent.dz0PrimeREC,"dz0PrimeREC[nRECtrack]/F");
+   output->Branch("dedxPionREC",myEvent.dedxPionREC,"dedxPionREC[nRECtrack]/F");
    
    output->Branch("startHitsRadiusREC",myEvent.startHitsRadiusREC,"startHitsRadiusREC[nRECtrack]/F");
    output->Branch("endHitsRadiusREC",myEvent.endHitsRadiusREC,"endHitsRadiusREC[nRECtrack]/F");
@@ -1121,7 +1123,14 @@ int main(int argc, char* argv[]) {
                double dz0Prime=-1.;
                float track_p = -1.; 
                float track_err_p = -1.;
-               
+
+               float dedxPion = -99.;
+               float dedxElectron = -99.;
+               float dedxProton = -99.;
+               float dedxLikelihoodPion = -99.;
+               float dedxLikelihoodElectron = -99.;
+               float dedxLikelihoodProton = -99.;
+
                float startHitsRadius = -1;
                float endHitsRadius = -1;
                float trkTheta = -1;
@@ -1144,6 +1153,7 @@ int main(int argc, char* argv[]) {
                   track_err_p = track->GetDp();
                   trkTheta = track->GetTheta();
                   charge=track->GetCharge();
+                  dedxPion = track->GetDedx(H1Dedx::kPion);
                  
                   H1VertexFittedTrack const *h1track=
                      dynamic_cast<H1VertexFittedTrack const *>
@@ -1303,6 +1313,8 @@ int main(int argc, char* argv[]) {
                   myEvent.nvTrackLengthREC[k]=nvTrackLength;
                   myEvent.dcaPrimeREC[k]=dcaPrime;
                   myEvent.dz0PrimeREC[k]=dz0Prime;
+
+                  myEvent.dedxPionREC[k] = dedxPion;
 
                   myEvent.startHitsRadiusREC[k]=startHitsRadius;
                   myEvent.endHitsRadiusREC[k]=endHitsRadius;
