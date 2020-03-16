@@ -1332,8 +1332,8 @@ int main(int argc, char* argv[]) {
                   myEvent.dz0PrimeREC[k]=dz0Prime;
 
                   myEvent.dedxPionREC[k] = dedxPion;
-                  myEvent.dedxElectronREC[k] = dedxPion;
-                  myEvent.dedxProtonREC[k] = dedxPion;
+                  myEvent.dedxElectronREC[k] = dedxElectron;
+                  myEvent.dedxProtonREC[k] = dedxProton;
                   myEvent.dedxLikelihoodPionREC[k] = dedxLikelihoodPion;
                   myEvent.dedxLikelihoodElectronREC[k] = dedxLikelihoodElectron;
                   myEvent.dedxLikelihoodProtonREC[k] = dedxLikelihoodProton;
