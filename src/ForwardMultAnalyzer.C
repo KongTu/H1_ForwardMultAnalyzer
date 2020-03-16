@@ -563,10 +563,6 @@ int main(int argc, char* argv[]) {
          myEvent.yGKI = *yGki;
          myEvent.Q2GKI = *Q2Gki;
 
-         double _Q2GKI = myEvent.Q2GKI;
-         double _yGKI = myEvent.yGKI;
-         double _xGKI = myEvent.xGKI;
-
          H1GetPartMCId mcPartId(&*mcpart);
          mcPartId.Fill();
 
