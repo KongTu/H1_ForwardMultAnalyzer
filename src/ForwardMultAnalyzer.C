@@ -311,25 +311,25 @@ int main(int argc, char* argv[]) {
    H1StdCmdLine opts;
    opts.Parse(&argc, argv);
 
-   // // open run selection and detector status file
-   // TString goodRunFileName("SelectedRuns_HighE0607_BST_e+p_920.root");
-   // TFile goodRunFile(goodRunFileName);
-   // if(!goodRunFile.IsOpen()) {
-   //    cerr<<"Error: could not open file "<<goodRunFileName<<"\n";
-   //    return 2;
-   // }
-   // H1RunList* goodRunList
-   //    = (H1RunList*) goodRunFile.Get("H1RunList");
-   // if(!goodRunList) {
-   //    cerr<<"Error: no runlist in file - return!\n";
-   //    return 2;
-   // }
-   // H1DetectorStatus *detectorStatus
-   //    = (H1DetectorStatus*)goodRunFile.Get("MyDetectorStatus");
-   // if(!detectorStatus) {
-   //    cerr<<"Error: no detector status in file - return!\n";
-   //    return 3;
-   // }
+   // open run selection and detector status file
+   TString goodRunFileName("SelectedRuns_HighE0607_BST_e+p_920.root");
+   TFile goodRunFile(goodRunFileName);
+   if(!goodRunFile.IsOpen()) {
+      cerr<<"Error: could not open file "<<goodRunFileName<<"\n";
+      return 2;
+   }
+   H1RunList* goodRunList
+      = (H1RunList*) goodRunFile.Get("H1RunList");
+   if(!goodRunList) {
+      cerr<<"Error: no runlist in file - return!\n";
+      return 2;
+   }
+   H1DetectorStatus *detectorStatus
+      = (H1DetectorStatus*)goodRunFile.Get("MyDetectorStatus");
+   if(!detectorStatus) {
+      cerr<<"Error: no detector status in file - return!\n";
+      return 3;
+   }
 
    // Load mODS/HAT files
    H1Tree::Instance()->Open();            // this statement must be there!
@@ -339,27 +339,8 @@ int main(int argc, char* argv[]) {
    /*
    Finding out more about ISR and FSR
    */
-   TH2D* h_dPhi_theta_ISR=new TH2D("h_dPhi_theta_ISR",";#theta;#Delta#phi",150,0,7,300,-7,7);
-   TH2D* h_dPhi_theta_FSR=new TH2D("h_dPhi_theta_FSR",";#theta;#Delta#phi",150,0,7,300,-7,7);
    TH2D* h_dPhi_theta_qedc=new TH2D("h_dPhi_theta_qedc",";#theta;#Delta#phi",150,0,7,300,-7,7);
    TH2D* h_dPhi_sumPt_qedc=new TH2D("h_dPhi_sumPt_qedc",";sumPt;#Delta#phi",300,0,30,300,-7,7);
-
-   //All kinematics diffs are with respect to GKI values
-   TH1D* h_Q2diff = new TH1D("h_Q2diff",";#DeltaQ2",1000,-100,100);
-   TH1D* h_Xdiff = new TH1D("h_Xdiff",";#DeltaX",1000,-1,1);
-   TH1D* h_Ydiff = new TH1D("h_Ydiff",";#DeltaY",1000,-1,1);
-
-   TH1D* h_ISR_Q2diff = new TH1D("h_ISR_Q2diff",";#DeltaQ2",1000,-100,100);
-   TH1D* h_ISR_Xdiff = new TH1D("h_ISR_Xdiff",";#DeltaX",1000,-1,1);
-   TH1D* h_ISR_Ydiff = new TH1D("h_ISR_Ydiff",";#DeltaY",1000,-1,1);
-
-   TH1D* h_FSR_Q2diff = new TH1D("h_FSR_Q2diff",";#DeltaQ2",1000,-100,100);
-   TH1D* h_FSR_Xdiff = new TH1D("h_FSR_Xdiff",";#DeltaX",1000,-1,1);
-   TH1D* h_FSR_Ydiff = new TH1D("h_FSR_Ydiff",";#DeltaY",1000,-1,1);
-
-   TH1D* h_noR_Q2diff = new TH1D("h_noR_Q2diff",";#DeltaQ2",1000,-100,100);
-   TH1D* h_noR_Xdiff = new TH1D("h_noR_Xdiff",";#DeltaX",1000,-1,1);
-   TH1D* h_noR_Ydiff = new TH1D("h_noR_Ydiff",";#DeltaY",1000,-1,1);
 
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
@@ -555,10 +536,10 @@ int main(int argc, char* argv[]) {
    while (gH1Tree->Next() && !opts.IsMaxEvent(eventCounter)) {
       ++eventCounter;
 
-         // // skip runs not in list of good runs
-         // if(!goodRunList->FindRun(*run)) continue;
-         // // skip data events with bad detector status
-         // if(!detectorStatus->IsOn()) continue;
+         // skip runs not in list of good runs
+         if(!goodRunList->FindRun(*run)) continue;
+         // skip data events with bad detector status
+         if(!detectorStatus->IsOn()) continue;
 
       double w=*weight1 * *weight2;
       if(print || ((eventCounter %10000)==0))  { 
@@ -631,115 +612,6 @@ int main(int argc, char* argv[]) {
          TLorentzVector escat0_MC_lab
             (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
 
-         /*begin scattered electron and radiative photons*/
-         TLorentzVector radPhot_MC_lab;
-         
-         if( mcPartId.GetIdxRadPhoton() >= 0 ){
-            radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
-      
-            double delta_phi = escat0_MC_lab.Phi() - radPhot_MC_lab.Phi();
-         
-            // if( mcPartId.GetRadType() == 0 ){
-            //    h_dPhi_theta_qedc->Fill(escat0_MC_lab.Theta(), delta_phi );
-            // }
-            if( mcPartId.GetRadType() == 1 ){
-               h_dPhi_theta_ISR->Fill(escat0_MC_lab.Theta(), delta_phi );
-            }
-            else if( mcPartId.GetRadType() == 2 ){
-               h_dPhi_theta_FSR->Fill(escat0_MC_lab.Theta(), delta_phi );
-            }
-            else{
-               cout << "something is wrong!" << endl;
-            }
-         
-         }
-
-
-         //HFS 4-vectors
-         //TLorentzVector hfs_MC_lab = ebeam_MC_lab+pbeam_MC_lab-escat0_MC_lab;
-         double hfs_MC_E_lab = 0.;
-         double hfs_MC_pz_lab = 0.;
-         for(int i=0;i<mcpart.GetEntries();i++) {
-            H1PartMC *part=mcpart[i];
-            int pdgid = part->GetPDG();
-            int status=part->GetStatus();
-            float charge=part->GetCharge();
-            int elec_id = mcPartId.GetIdxScatElectron();
-            if( status != 0 || i == elec_id ) continue;
-
-            hfs_MC_E_lab += part->GetE();
-            hfs_MC_pz_lab += part->GetPz();
-         }
-
-         double sigma = hfs_MC_E_lab - hfs_MC_pz_lab;
-
-         H1MakeKine makeKin_es;
-         makeKin_es.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(),sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
-         
-         double Q2_esigma = makeKin_es.GetQ2es();
-         double y_esigma = makeKin_es.GetYes();
-         double x_esigma = makeKin_es.GetXes();
-
-         myEvent.Q2MC_es = Q2_esigma;
-         myEvent.yMC_es = y_esigma;
-         myEvent.xMC_es = x_esigma;
-
-         H1MakeKine makeKin_ISR;
-         H1MakeKine makeKin_FSR;
-         H1MakeKine makeKin_noR;
-
-         double Q2_ISR=Q2_esigma;
-         double y_ISR=y_esigma;
-         double x_ISR=x_esigma;
-
-         double Q2_FSR=Q2_esigma;
-         double y_FSR=y_esigma;
-         double x_FSR=x_esigma;
-
-         double Q2_noR=Q2_esigma;
-         double y_noR=y_esigma;
-         double x_noR=x_esigma;
-
-         myEvent.idxRad = mcPartId.GetRadType();
-
-         if( mcPartId.GetIdxRadPhoton() >= 0 ){
-            
-            radPhot_MC_lab = mcpart[mcPartId.GetIdxRadPhoton()]->GetFourVector();
-            
-            if( mcPartId.GetRadType() == 1 ){
-               makeKin_ISR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(), sigma, (ebeam_MC_lab).E(), pbeam_MC_lab.E());
-               Q2_ISR=makeKin_ISR.GetQ2es();
-               y_ISR=makeKin_ISR.GetYes();
-               x_ISR=makeKin_ISR.GetXes();
-
-               h_ISR_Q2diff->Fill( Q2_ISR - _Q2GKI );
-               h_ISR_Ydiff->Fill( y_ISR - _yGKI );
-               h_ISR_Xdiff->Fill( x_ISR - _xGKI );
-
-            }
-            else if( mcPartId.GetRadType() == 2 ){
-               makeKin_FSR.MakeESig((escat0_MC_lab).E(), (escat0_MC_lab).Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
-               Q2_FSR=makeKin_FSR.GetQ2es();
-               y_FSR=makeKin_FSR.GetYes();
-               x_FSR=makeKin_FSR.GetXes();
-
-               h_FSR_Q2diff->Fill( Q2_FSR - _Q2GKI );
-               h_FSR_Ydiff->Fill( y_FSR - _yGKI );
-               h_FSR_Xdiff->Fill( x_FSR - _xGKI );
-            }
-         }
-         else{
-            makeKin_noR.MakeESig(escat0_MC_lab.E(), escat0_MC_lab.Theta(),sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
-            Q2_noR=makeKin_noR.GetQ2es();
-            y_noR=makeKin_noR.GetYes();
-            x_noR=makeKin_noR.GetXes();
-
-            h_noR_Q2diff->Fill( Q2_noR - _Q2GKI );
-            h_noR_Ydiff->Fill( y_noR - _yGKI );
-            h_noR_Xdiff->Fill( x_noR - _xGKI );         
-         }
-         //end test
-
          // add radiative photon(s) in a cone
          TLorentzVector escatPhot_MC_lab(escat0_MC_lab);
          set<int> isElectron;
@@ -766,19 +638,30 @@ int main(int argc, char* argv[]) {
          if(print) {
             cout<<"MC scattered electron is made of "<<isElectron.size()<<" particle(s)\n";
          }
+         
+         //HFS 4-vectors, calculate sigma with scatElec + radPhot
+         TLorentzVector hfs_MC_lab = ebeam_MC_lab+pbeam_MC_lab-escatPhot_MC_lab;
+         double sigma = hfs_MC_lab.E() - hfs_MC_lab.Pz();
 
-         //H1MakeKine maybe helpful
+         H1MakeKine makeKin_es;
+         makeKin_es.MakeESig(escatPhot_MC_lab.E(), escatPhot_MC_lab.Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
+         
+         double Q2_esigma = makeKin_es.GetQ2es();
+         double y_esigma = makeKin_es.GetYes();
+         double x_esigma = makeKin_es.GetXes();
+
+         //store MC kinematics using E-sigma method
+         myEvent.Q2MC_es = Q2_esigma;
+         myEvent.yMC_es = y_esigma;
+         myEvent.xMC_es = x_esigma;
+
+         //Kinematic reconstruction - electron method
          GetKinematics(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,
                        &myEvent.xMC,&myEvent.yMC,&myEvent.Q2MC);
          TLorentzRotation boost_MC_HCM = BoostToHCM(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab);
          TLorentzVector q_MC_lab(ebeam_MC_lab-escatPhot_MC_lab);
-         //New boost using the e-Sigma method, scattered electrons are without radiative photon
-         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escat0_MC_lab,Q2_esigma,y_esigma);
-
-         //difference with respect to GKI values:
-         h_Xdiff->Fill( x_esigma - _xGKI );
-         h_Q2diff->Fill( Q2_esigma - _Q2GKI );
-         h_Ydiff->Fill( y_esigma - _yGKI );
+         //New boost using the e-Sigma method, scattered electrons are with radiative photon
+         TLorentzRotation boost_MC_HCM_es = BoostToHCM_es(ebeam_MC_lab,pbeam_MC_lab,escatPhot_MC_lab,Q2_esigma,y_esigma);
 
          // final state particles
          //bool haveElectron=false;
@@ -1169,7 +1052,7 @@ int main(int argc, char* argv[]) {
       double sigma_REC = hfs_count.E()-hfs_count.Pz();//not use for Elec method
       
       H1MakeKine makeKin_esREC;
-      makeKin_esREC.MakeESig(escat0_REC_lab.E(), escat0_REC_lab.Theta(), sigma_REC, ebeam_REC_lab.E(), pbeam_REC_lab.E());
+      makeKin_esREC.MakeESig(escatPhot_REC_lab.E(), escatPhot_REC_lab.Theta(), sigma_REC, ebeam_REC_lab.E(), pbeam_REC_lab.E());
       
       double Q2_esigma_REC = makeKin_esREC.GetQ2es();
       double y_esigma_REC = makeKin_esREC.GetYes();
@@ -1180,7 +1063,7 @@ int main(int argc, char* argv[]) {
       myEvent.xREC_es = x_esigma_REC;
 
       //New boost using the e-Sigma method
-      TLorentzRotation boost_MC_HCM_esREC = BoostToHCM_es(ebeam_REC_lab,pbeam_REC_lab,escat0_REC_lab,Q2_esigma_REC,y_esigma_REC);
+      TLorentzRotation boost_MC_HCM_esREC = BoostToHCM_es(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,Q2_esigma_REC,y_esigma_REC);
       //end new boost
 
       for(int i=0;i<nPart;i++) {
@@ -1615,29 +1498,9 @@ int main(int argc, char* argv[]) {
 
     // Write histogram to file
     output->Write();
-
     h_dPhi_theta_qedc->Write();
     h_dPhi_sumPt_qedc->Write();
-    h_dPhi_theta_ISR->Write();
-    h_dPhi_theta_FSR->Write();
 
-    h_Q2diff->Write();
-    h_Xdiff->Write();
-    h_Ydiff->Write();
-
-    h_ISR_Q2diff->Write();
-    h_ISR_Xdiff->Write();
-    h_ISR_Ydiff->Write();
-
-    h_FSR_Q2diff->Write();
-    h_FSR_Xdiff->Write();
-    h_FSR_Ydiff->Write();
-
-    h_noR_Q2diff->Write();
-    h_noR_Xdiff->Write();
-    h_noR_Ydiff->Write();
-
-    //file.Close();
     delete file;
 
     cout << "Histograms written to " << opts.GetOutput() << endl;
