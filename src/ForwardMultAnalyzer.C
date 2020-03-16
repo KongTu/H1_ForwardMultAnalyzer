@@ -1335,8 +1335,8 @@ int main(int argc, char* argv[]) {
                   myEvent.dedxElectronREC[k] = dedxPion;
                   myEvent.dedxProtonREC[k] = dedxPion;
                   myEvent.dedxLikelihoodPionREC[k] = dedxLikelihoodPion;
-                  myEvent.dedxLikelihoodElectronREC[k] = dedxLikelihoodPion;
-                  myEvent.dedxLikelihoodProtonREC[k] = dedxLikelihoodPion;
+                  myEvent.dedxLikelihoodElectronREC[k] = dedxLikelihoodElectron;
+                  myEvent.dedxLikelihoodProtonREC[k] = dedxLikelihoodProton;
 
                   myEvent.startHitsRadiusREC[k]=startHitsRadius;
                   myEvent.endHitsRadiusREC[k]=endHitsRadius;
