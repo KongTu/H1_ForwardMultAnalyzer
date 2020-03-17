@@ -375,216 +375,216 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 		}
 
-		if( Q2REC_es_mini > Q2max || Q2REC_es_mini < Q2min ) continue;
-		if( yREC_es_mini > ymax || yREC_es_mini < ymin ) continue;
-		if( eventpass_mini != 1 ) continue; 
+		// if( Q2REC_es_mini > Q2max || Q2REC_es_mini < Q2min ) continue;
+		// if( yREC_es_mini > ymax || yREC_es_mini < ymin ) continue;
+		// if( eventpass_mini != 1 ) continue; 
 	
-		h_Q2vsX->Fill( xREC_es_mini, Q2REC_es_mini, w_mini);
-		h_y->Fill( yREC_es_mini, w_mini);
-		h_vtxZ->Fill( vertex_mini[2], w_mini );
+		// h_Q2vsX->Fill( xREC_es_mini, Q2REC_es_mini, w_mini);
+		// h_y->Fill( yREC_es_mini, w_mini);
+		// h_vtxZ->Fill( vertex_mini[2], w_mini );
 
-	   //setting event Q2 and y indices
-		int Q2_INDEX = -1;
-		for(int iQ2 = 0; iQ2 < 4; iQ2++){
-			if(Q2REC_es_mini > Q2_bins[iQ2] && Q2REC_es_mini < Q2_bins[iQ2+1] ){
-				Q2_INDEX = iQ2;
-			}
-		}
-		int y_INDEX = -1;
-		for(int iy = 0; iy < 4; iy++){
-			if(yREC_es_mini > ybins[iy] && yREC_es_mini < ybins[iy+1] ){
-				y_INDEX = iy;
-			}
-		}
-		int n_particle_eta_rec[4] = {0,0,0,0};
-		int n_particle_HCM_rec = 0;
-		double trk_E = 0.;
-		double trk_pz = 0.;
-		double etamax = -99.;
+	 //   //setting event Q2 and y indices
+		// int Q2_INDEX = -1;
+		// for(int iQ2 = 0; iQ2 < 4; iQ2++){
+		// 	if(Q2REC_es_mini > Q2_bins[iQ2] && Q2REC_es_mini < Q2_bins[iQ2+1] ){
+		// 		Q2_INDEX = iQ2;
+		// 	}
+		// }
+		// int y_INDEX = -1;
+		// for(int iy = 0; iy < 4; iy++){
+		// 	if(yREC_es_mini > ybins[iy] && yREC_es_mini < ybins[iy+1] ){
+		// 		y_INDEX = iy;
+		// 	}
+		// }
+		// int n_particle_eta_rec[4] = {0,0,0,0};
+		// int n_particle_HCM_rec = 0;
+		// double trk_E = 0.;
+		// double trk_pz = 0.;
+		// double etamax = -99.;
 
-		TLorentzVector k0s_candidate;
-		TLorentzVector photon_candidate;
-		TLorentzVector pip,pim;
-		TLorentzVector elecp,elecm;
-		for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
-	//double nested loops
-			for(int jtrk = itrk+1; jtrk < nRECtrack_mini; jtrk++){
+	// 	TLorentzVector k0s_candidate;
+	// 	TLorentzVector photon_candidate;
+	// 	TLorentzVector pip,pim;
+	// 	TLorentzVector elecp,elecm;
+	// 	for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
+	// //double nested loops
+	// 		for(int jtrk = itrk+1; jtrk < nRECtrack_mini; jtrk++){
 
-				if( itrk==jtrk ) continue;
-				if( passREC_mini[itrk] == 1 && passREC_mini[jtrk] == 1  ){
+	// 			if( itrk==jtrk ) continue;
+	// 			if( passREC_mini[itrk] == 1 && passREC_mini[jtrk] == 1  ){
 
-					double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
-					pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
-					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
-					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
+	// 				double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
+	// 				pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
+	// 				double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
+	// 				elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
 					
-					double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
-					pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
-					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
-					elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
+	// 				double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
+	// 				pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
+	// 				double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
+	// 				elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 
-					k0s_candidate = pip+pim;
-					photon_candidate = elecp+elecm;
+	// 				k0s_candidate = pip+pim;
+	// 				photon_candidate = elecp+elecm;
 
-					h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
-					h_PhotMass[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
-				}
-				if( passTightREC_mini[itrk] == 1 && passTightREC_mini[jtrk] == 1  ){
+	// 				h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
+	// 				h_PhotMass[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
+	// 			}
+	// 			if( passTightREC_mini[itrk] == 1 && passTightREC_mini[jtrk] == 1  ){
 
-					double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
-					pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
-					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
-					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
+	// 				double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
+	// 				pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
+	// 				double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
+	// 				elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
 					
-					double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
-					pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
-					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
-					elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
+	// 				double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
+	// 				pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
+	// 				double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
+	// 				elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 
-					k0s_candidate = pip+pim;
-					photon_candidate = elecp+elecm;
+	// 				k0s_candidate = pip+pim;
+	// 				photon_candidate = elecp+elecm;
 
-					h_K0sMassTight[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
-					h_PhotMassTight[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
-				}
-				if( passLooseREC_mini[itrk] == 1 && passLooseREC_mini[jtrk] == 1  ){
+	// 				h_K0sMassTight[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
+	// 				h_PhotMassTight[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
+	// 			}
+	// 			if( passLooseREC_mini[itrk] == 1 && passLooseREC_mini[jtrk] == 1  ){
 
-					double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
-					pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
-					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
-					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
+	// 				double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
+	// 				pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
+	// 				double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
+	// 				elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
 					
-					double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
-					pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
-					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
-					elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
+	// 				double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
+	// 				pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
+	// 				double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
+	// 				elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 
-					k0s_candidate = pip+pim;
-					photon_candidate = elecp+elecm;
+	// 				k0s_candidate = pip+pim;
+	// 				photon_candidate = elecp+elecm;
 
-					h_K0sMassLoose[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
-					h_PhotMassLoose[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
-				}
+	// 				h_K0sMassLoose[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
+	// 				h_PhotMassLoose[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
+	// 			}
 
-				k0s_candidate.SetPxPyPzE(0,0,0,0);
-				photon_candidate.SetPxPyPzE(0,0,0,0);
-			}
-	//end double loop
+	// 			k0s_candidate.SetPxPyPzE(0,0,0,0);
+	// 			photon_candidate.SetPxPyPzE(0,0,0,0);
+	// 		}
+	// //end double loop
 
-			if(passREC_mini[itrk]!=1) continue;
-			if( etaREC_mini[itrk] > etamax ){
-				etamax = etaREC_mini[itrk];
-			}
-			if( etaStarREC_mini[itrk] > 0 && etaStarREC_mini[itrk] < 4.0 ){
-				if( fabs(etaREC_mini[itrk]) < 1.6 ){
-					n_particle_HCM_rec++;
-				}
-			}
-			for(int ieta = 0; ieta < 3; ieta++){
-				if( etaREC_mini[itrk] > eta_bins[2*ieta] && etaREC_mini[itrk] < eta_bins[2*ieta+1] ){
-					n_particle_eta_rec[ieta]++;
-				}
-			}
-			if( etaREC_mini[itrk] > -1.6 && etaREC_mini[itrk] < 1.6 ) {
-				n_particle_eta_rec[3]++;
-				trk_E += sqrt(pxREC_mini[itrk]*pxREC_mini[itrk] + pyREC_mini[itrk]*pyREC_mini[itrk] + pzREC_mini[itrk]*pzREC_mini[itrk] + 0.134*0.134);
-				trk_pz += pzREC_mini[itrk];
+	// 		if(passREC_mini[itrk]!=1) continue;
+	// 		if( etaREC_mini[itrk] > etamax ){
+	// 			etamax = etaREC_mini[itrk];
+	// 		}
+	// 		if( etaStarREC_mini[itrk] > 0 && etaStarREC_mini[itrk] < 4.0 ){
+	// 			if( fabs(etaREC_mini[itrk]) < 1.6 ){
+	// 				n_particle_HCM_rec++;
+	// 			}
+	// 		}
+	// 		for(int ieta = 0; ieta < 3; ieta++){
+	// 			if( etaREC_mini[itrk] > eta_bins[2*ieta] && etaREC_mini[itrk] < eta_bins[2*ieta+1] ){
+	// 				n_particle_eta_rec[ieta]++;
+	// 			}
+	// 		}
+	// 		if( etaREC_mini[itrk] > -1.6 && etaREC_mini[itrk] < 1.6 ) {
+	// 			n_particle_eta_rec[3]++;
+	// 			trk_E += sqrt(pxREC_mini[itrk]*pxREC_mini[itrk] + pyREC_mini[itrk]*pyREC_mini[itrk] + pzREC_mini[itrk]*pzREC_mini[itrk] + 0.134*0.134);
+	// 			trk_pz += pzREC_mini[itrk];
 
-				// dE/dx
-				// double pREC = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]);
-				// h_dedxProtonVsp->Fill( pREC, dedxProtonREC_mini[itrk]);
+	// 			// dE/dx
+	// 			// double pREC = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]);
+	// 			// h_dedxProtonVsp->Fill( pREC, dedxProtonREC_mini[itrk]);
 
-			}
+	// 		}
 
-			for(int iy=0;iy<4;iy++){
-				if(yREC_es_mini>ybins[iy] && yREC_es_mini<ybins[iy+1]){
-					h_eta[iy]->Fill( etaREC_mini[itrk], w_mini );
-				}
-			}
-		}
+	// 		for(int iy=0;iy<4;iy++){
+	// 			if(yREC_es_mini>ybins[iy] && yREC_es_mini<ybins[iy+1]){
+	// 				h_eta[iy]->Fill( etaREC_mini[itrk], w_mini );
+	// 			}
+	// 		}
+	// 	}
 		
-		// event level distributions.
-		double eBeamEnergy = eElectronBeam_mini;
-		if( ifile_ != 0 ) eBeamEnergy = 27.6;
+	// 	// event level distributions.
+	// 	double eBeamEnergy = eElectronBeam_mini;
+	// 	if( ifile_ != 0 ) eBeamEnergy = 27.6;
 
-		h_etamax_all->Fill( etamax, w_mini);
-		h_PtBal_all->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
-		h_hfsEnergy_all->Fill( hfsEREC_mini, w_mini);
-		h_hfsPt_all->Fill( hfsPtREC_mini, w_mini);
-		h_hfsPz_all->Fill( hfsPzREC_mini, w_mini);
-		h_elecEnergy_all->Fill( elecEREC_mini, w_mini);
-		h_elecPt_all->Fill( elecPtREC_mini, w_mini);
-		h_elecPz_all->Fill( elecPzREC_mini, w_mini);
-		h_hfsEpz_all->Fill( hfsEREC_mini - hfsPzREC_mini, w_mini);
-		h_elecEpz_all->Fill( (27.6/eBeamEnergy)*(elecEREC_mini - elecPzREC_mini), w_mini);
-		double Epz = (elecEREC_mini+hfsEREC_mini) - (hfsPzREC_mini+elecPzREC_mini);
-		Epz = (27.6/eBeamEnergy)*Epz;
-		h_hfsElecEpz_all->Fill( Epz, w_mini );	
-		h_trackEpz_all->Fill(trk_E-trk_pz, w_mini);
+	// 	h_etamax_all->Fill( etamax, w_mini);
+	// 	h_PtBal_all->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
+	// 	h_hfsEnergy_all->Fill( hfsEREC_mini, w_mini);
+	// 	h_hfsPt_all->Fill( hfsPtREC_mini, w_mini);
+	// 	h_hfsPz_all->Fill( hfsPzREC_mini, w_mini);
+	// 	h_elecEnergy_all->Fill( elecEREC_mini, w_mini);
+	// 	h_elecPt_all->Fill( elecPtREC_mini, w_mini);
+	// 	h_elecPz_all->Fill( elecPzREC_mini, w_mini);
+	// 	h_hfsEpz_all->Fill( hfsEREC_mini - hfsPzREC_mini, w_mini);
+	// 	h_elecEpz_all->Fill( (27.6/eBeamEnergy)*(elecEREC_mini - elecPzREC_mini), w_mini);
+	// 	double Epz = (elecEREC_mini+hfsEREC_mini) - (hfsPzREC_mini+elecPzREC_mini);
+	// 	Epz = (27.6/eBeamEnergy)*Epz;
+	// 	h_hfsElecEpz_all->Fill( Epz, w_mini );	
+	// 	h_trackEpz_all->Fill(trk_E-trk_pz, w_mini);
 
-		if(Q2_INDEX >=0 && y_INDEX >= 0){
+	// 	if(Q2_INDEX >=0 && y_INDEX >= 0){
 
-			if( ifile_ != 0 ){
-				//2D correlation between gen and rec mult
-				h_Pn_cor_HCM[Q2_INDEX][y_INDEX]->Fill(n_particle_HCM_rec,n_particle_HCM,w_mini);
-				h_Pn_cor[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta_rec[0], n_particle_eta[0], w_mini );
-				h_Pn_cor[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta_rec[1], n_particle_eta[1], w_mini );
-				h_Pn_cor[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta_rec[2], n_particle_eta[2], w_mini );
-				h_Pn_cor[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta_rec[3], n_particle_eta[3], w_mini );
+	// 		if( ifile_ != 0 ){
+	// 			//2D correlation between gen and rec mult
+	// 			h_Pn_cor_HCM[Q2_INDEX][y_INDEX]->Fill(n_particle_HCM_rec,n_particle_HCM,w_mini);
+	// 			h_Pn_cor[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta_rec[0], n_particle_eta[0], w_mini );
+	// 			h_Pn_cor[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta_rec[1], n_particle_eta[1], w_mini );
+	// 			h_Pn_cor[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta_rec[2], n_particle_eta[2], w_mini );
+	// 			h_Pn_cor[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta_rec[3], n_particle_eta[3], w_mini );
 				
-				//filling with signal rec==gen.
-				if( n_particle_HCM_rec == n_particle_HCM ){
-					h_Pn_genREC_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
-				}
-				if( n_particle_HCM_rec != n_particle_HCM ){
-					h_Pn_genNotREC_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
-				}
-				if( n_particle_HCM_rec == n_particle_HCM+1 || n_particle_HCM_rec == n_particle_HCM-1 ){
-					h_Pn_genNextREC_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
-				}
-			}
+	// 			//filling with signal rec==gen.
+	// 			if( n_particle_HCM_rec == n_particle_HCM ){
+	// 				h_Pn_genREC_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
+	// 			}
+	// 			if( n_particle_HCM_rec != n_particle_HCM ){
+	// 				h_Pn_genNotREC_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
+	// 			}
+	// 			if( n_particle_HCM_rec == n_particle_HCM+1 || n_particle_HCM_rec == n_particle_HCM-1 ){
+	// 				h_Pn_genNextREC_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
+	// 			}
+	// 		}
 
-			h_Pn_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
+	// 		h_Pn_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
 
-			h_Pn[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta_rec[0], w_mini );
-			h_Pn[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta_rec[1], w_mini );
-			h_Pn[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta_rec[2], w_mini );
-			h_Pn[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta_rec[3], w_mini );
+	// 		h_Pn[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta_rec[0], w_mini );
+	// 		h_Pn[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta_rec[1], w_mini );
+	// 		h_Pn[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta_rec[2], w_mini );
+	// 		h_Pn[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta_rec[3], w_mini );
 			
-			if( totalMultREC_mini < 15 && totalMultREC_mini >= 0 ){
-				h_EpzQ2yBins[Q2_INDEX][y_INDEX][0]->Fill( (hfsEREC_mini+elecEREC_mini) - (hfsPzREC_mini+elecPzREC_mini) , w_mini );
-				h_zvertex[Q2_INDEX][y_INDEX][0]->Fill( vertex_mini[2],w_mini );
-				h_etamax[Q2_INDEX][y_INDEX][0]->Fill( etamax, w_mini);
-				h_PtBal[Q2_INDEX][y_INDEX][0]->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
-				h_hfsEnergy[Q2_INDEX][y_INDEX][0]->Fill( hfsEREC_mini, w_mini);
-				h_hfsPt[Q2_INDEX][y_INDEX][0]->Fill( hfsPtREC_mini, w_mini);
-				h_hfsPz[Q2_INDEX][y_INDEX][0]->Fill( hfsPzREC_mini, w_mini);
-				h_elecEnergy[Q2_INDEX][y_INDEX][0]->Fill( elecEREC_mini, w_mini);
-				h_elecPt[Q2_INDEX][y_INDEX][0]->Fill( elecPtREC_mini, w_mini);
-				h_elecPz[Q2_INDEX][y_INDEX][0]->Fill( elecPzREC_mini, w_mini);
-				h_hfsEpz[Q2_INDEX][y_INDEX][0]->Fill( hfsEREC_mini - hfsPzREC_mini, w_mini);
-				h_elecEpz[Q2_INDEX][y_INDEX][0]->Fill( elecEREC_mini - elecPzREC_mini, w_mini);
-				h_hfsElecEpz[Q2_INDEX][y_INDEX][0]->Fill( (elecEREC_mini+hfsEREC_mini) - (hfsPzREC_mini+elecPzREC_mini), w_mini );
-				h_trackEpz[Q2_INDEX][y_INDEX][0]->Fill(trk_E-trk_pz, w_mini);
-			}
-			if( totalMultREC_mini > 15 ){
-				h_EpzQ2yBins[Q2_INDEX][y_INDEX][1]->Fill( (hfsEREC_mini+elecEREC_mini) - (hfsPzREC_mini+elecPzREC_mini), w_mini  );
-				h_zvertex[Q2_INDEX][y_INDEX][1]->Fill( vertex_mini[2],w_mini );
-				h_etamax[Q2_INDEX][y_INDEX][1]->Fill( etamax, w_mini);
-				h_PtBal[Q2_INDEX][y_INDEX][1]->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
-				h_hfsEnergy[Q2_INDEX][y_INDEX][1]->Fill( hfsEREC_mini, w_mini);
-				h_hfsPt[Q2_INDEX][y_INDEX][1]->Fill( hfsPtREC_mini, w_mini);
-				h_hfsPz[Q2_INDEX][y_INDEX][1]->Fill( hfsPzREC_mini, w_mini);
-				h_elecEnergy[Q2_INDEX][y_INDEX][1]->Fill( elecEREC_mini, w_mini);
-				h_elecPt[Q2_INDEX][y_INDEX][1]->Fill( elecPtREC_mini, w_mini);
-				h_elecPz[Q2_INDEX][y_INDEX][1]->Fill( elecPzREC_mini, w_mini);
-				h_hfsEpz[Q2_INDEX][y_INDEX][1]->Fill( hfsEREC_mini - hfsPzREC_mini, w_mini);
-				h_elecEpz[Q2_INDEX][y_INDEX][1]->Fill( elecEREC_mini - elecPzREC_mini, w_mini);
-				h_hfsElecEpz[Q2_INDEX][y_INDEX][1]->Fill( (elecEREC_mini+hfsEREC_mini) - (hfsPzREC_mini+elecPzREC_mini), w_mini );
-				h_trackEpz[Q2_INDEX][y_INDEX][1]->Fill(trk_E-trk_pz, w_mini);
-			}
+	// 		if( totalMultREC_mini < 15 && totalMultREC_mini >= 0 ){
+	// 			h_EpzQ2yBins[Q2_INDEX][y_INDEX][0]->Fill( (hfsEREC_mini+elecEREC_mini) - (hfsPzREC_mini+elecPzREC_mini) , w_mini );
+	// 			h_zvertex[Q2_INDEX][y_INDEX][0]->Fill( vertex_mini[2],w_mini );
+	// 			h_etamax[Q2_INDEX][y_INDEX][0]->Fill( etamax, w_mini);
+	// 			h_PtBal[Q2_INDEX][y_INDEX][0]->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
+	// 			h_hfsEnergy[Q2_INDEX][y_INDEX][0]->Fill( hfsEREC_mini, w_mini);
+	// 			h_hfsPt[Q2_INDEX][y_INDEX][0]->Fill( hfsPtREC_mini, w_mini);
+	// 			h_hfsPz[Q2_INDEX][y_INDEX][0]->Fill( hfsPzREC_mini, w_mini);
+	// 			h_elecEnergy[Q2_INDEX][y_INDEX][0]->Fill( elecEREC_mini, w_mini);
+	// 			h_elecPt[Q2_INDEX][y_INDEX][0]->Fill( elecPtREC_mini, w_mini);
+	// 			h_elecPz[Q2_INDEX][y_INDEX][0]->Fill( elecPzREC_mini, w_mini);
+	// 			h_hfsEpz[Q2_INDEX][y_INDEX][0]->Fill( hfsEREC_mini - hfsPzREC_mini, w_mini);
+	// 			h_elecEpz[Q2_INDEX][y_INDEX][0]->Fill( elecEREC_mini - elecPzREC_mini, w_mini);
+	// 			h_hfsElecEpz[Q2_INDEX][y_INDEX][0]->Fill( (elecEREC_mini+hfsEREC_mini) - (hfsPzREC_mini+elecPzREC_mini), w_mini );
+	// 			h_trackEpz[Q2_INDEX][y_INDEX][0]->Fill(trk_E-trk_pz, w_mini);
+	// 		}
+	// 		if( totalMultREC_mini > 15 ){
+	// 			h_EpzQ2yBins[Q2_INDEX][y_INDEX][1]->Fill( (hfsEREC_mini+elecEREC_mini) - (hfsPzREC_mini+elecPzREC_mini), w_mini  );
+	// 			h_zvertex[Q2_INDEX][y_INDEX][1]->Fill( vertex_mini[2],w_mini );
+	// 			h_etamax[Q2_INDEX][y_INDEX][1]->Fill( etamax, w_mini);
+	// 			h_PtBal[Q2_INDEX][y_INDEX][1]->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
+	// 			h_hfsEnergy[Q2_INDEX][y_INDEX][1]->Fill( hfsEREC_mini, w_mini);
+	// 			h_hfsPt[Q2_INDEX][y_INDEX][1]->Fill( hfsPtREC_mini, w_mini);
+	// 			h_hfsPz[Q2_INDEX][y_INDEX][1]->Fill( hfsPzREC_mini, w_mini);
+	// 			h_elecEnergy[Q2_INDEX][y_INDEX][1]->Fill( elecEREC_mini, w_mini);
+	// 			h_elecPt[Q2_INDEX][y_INDEX][1]->Fill( elecPtREC_mini, w_mini);
+	// 			h_elecPz[Q2_INDEX][y_INDEX][1]->Fill( elecPzREC_mini, w_mini);
+	// 			h_hfsEpz[Q2_INDEX][y_INDEX][1]->Fill( hfsEREC_mini - hfsPzREC_mini, w_mini);
+	// 			h_elecEpz[Q2_INDEX][y_INDEX][1]->Fill( elecEREC_mini - elecPzREC_mini, w_mini);
+	// 			h_hfsElecEpz[Q2_INDEX][y_INDEX][1]->Fill( (elecEREC_mini+hfsEREC_mini) - (hfsPzREC_mini+elecPzREC_mini), w_mini );
+	// 			h_trackEpz[Q2_INDEX][y_INDEX][1]->Fill(trk_E-trk_pz, w_mini);
+	// 		}
 			
-		}
+	// 	}
 		
 	}
 
