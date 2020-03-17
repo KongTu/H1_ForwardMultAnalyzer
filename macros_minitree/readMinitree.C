@@ -402,74 +402,74 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		double trk_pz = 0.;
 		double etamax = -99.;
 
-	// 	TLorentzVector k0s_candidate;
-	// 	TLorentzVector photon_candidate;
-	// 	TLorentzVector pip,pim;
-	// 	TLorentzVector elecp,elecm;
-	// 	for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
-	// //double nested loops
-	// 		for(int jtrk = itrk+1; jtrk < nRECtrack_mini; jtrk++){
+		TLorentzVector k0s_candidate;
+		TLorentzVector photon_candidate;
+		TLorentzVector pip,pim;
+		TLorentzVector elecp,elecm;
+		for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
+	//double nested loops
+			for(int jtrk = itrk+1; jtrk < nRECtrack_mini; jtrk++){
 
-	// 			if( itrk==jtrk ) continue;
-	// 			if( passREC_mini[itrk] == 1 && passREC_mini[jtrk] == 1  ){
+				if( itrk==jtrk ) continue;
+				if( passREC_mini[itrk] == 1 && passREC_mini[jtrk] == 1  ){
 
-	// 				double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
-	// 				pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
-	// 				double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
-	// 				elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
+					double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
+					pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
+					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
+					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
 					
-	// 				double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
-	// 				pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
-	// 				double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
-	// 				elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
+					double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
+					pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
+					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
+					elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 
-	// 				k0s_candidate = pip+pim;
-	// 				photon_candidate = elecp+elecm;
+					k0s_candidate = pip+pim;
+					photon_candidate = elecp+elecm;
 
-	// 				h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
-	// 				h_PhotMass[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
-	// 			}
-	// 			if( passTightREC_mini[itrk] == 1 && passTightREC_mini[jtrk] == 1  ){
+					h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
+					h_PhotMass[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
+				}
+				if( passTightREC_mini[itrk] == 1 && passTightREC_mini[jtrk] == 1  ){
 
-	// 				double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
-	// 				pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
-	// 				double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
-	// 				elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
+					double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
+					pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
+					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
+					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
 					
-	// 				double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
-	// 				pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
-	// 				double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
-	// 				elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
+					double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
+					pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
+					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
+					elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 
-	// 				k0s_candidate = pip+pim;
-	// 				photon_candidate = elecp+elecm;
+					k0s_candidate = pip+pim;
+					photon_candidate = elecp+elecm;
 
-	// 				h_K0sMassTight[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
-	// 				h_PhotMassTight[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
-	// 			}
-	// 			if( passLooseREC_mini[itrk] == 1 && passLooseREC_mini[jtrk] == 1  ){
+					h_K0sMassTight[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
+					h_PhotMassTight[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
+				}
+				if( passLooseREC_mini[itrk] == 1 && passLooseREC_mini[jtrk] == 1  ){
 
-	// 				double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
-	// 				pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
-	// 				double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
-	// 				elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
+					double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
+					pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
+					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
+					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
 					
-	// 				double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
-	// 				pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
-	// 				double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
-	// 				elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
+					double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
+					pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
+					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
+					elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 
-	// 				k0s_candidate = pip+pim;
-	// 				photon_candidate = elecp+elecm;
+					k0s_candidate = pip+pim;
+					photon_candidate = elecp+elecm;
 
-	// 				h_K0sMassLoose[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
-	// 				h_PhotMassLoose[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
-	// 			}
+					h_K0sMassLoose[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
+					h_PhotMassLoose[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
+				}
 
-	// 			k0s_candidate.SetPxPyPzE(0,0,0,0);
-	// 			photon_candidate.SetPxPyPzE(0,0,0,0);
-	// 		}
-	// //end double loop
+				k0s_candidate.SetPxPyPzE(0,0,0,0);
+				photon_candidate.SetPxPyPzE(0,0,0,0);
+			}
+	//end double loop
 
 	// 		if(passREC_mini[itrk]!=1) continue;
 	// 		if( etaREC_mini[itrk] > etamax ){
@@ -501,7 +501,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	// 				h_eta[iy]->Fill( etaREC_mini[itrk], w_mini );
 	// 			}
 	// 		}
-	// 	}
+		}
 		
 	// 	// event level distributions.
 	// 	double eBeamEnergy = eElectronBeam_mini;
