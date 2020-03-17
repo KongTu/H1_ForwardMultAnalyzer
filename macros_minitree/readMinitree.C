@@ -375,32 +375,32 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 		}
 
-		// if( Q2REC_es_mini > Q2max || Q2REC_es_mini < Q2min ) continue;
-		// if( yREC_es_mini > ymax || yREC_es_mini < ymin ) continue;
-		// if( eventpass_mini != 1 ) continue; 
+		if( Q2REC_es_mini > Q2max || Q2REC_es_mini < Q2min ) continue;
+		if( yREC_es_mini > ymax || yREC_es_mini < ymin ) continue;
+		if( eventpass_mini != 1 ) continue; 
 	
-		// h_Q2vsX->Fill( xREC_es_mini, Q2REC_es_mini, w_mini);
-		// h_y->Fill( yREC_es_mini, w_mini);
-		// h_vtxZ->Fill( vertex_mini[2], w_mini );
+		h_Q2vsX->Fill( xREC_es_mini, Q2REC_es_mini, w_mini);
+		h_y->Fill( yREC_es_mini, w_mini);
+		h_vtxZ->Fill( vertex_mini[2], w_mini );
 
-	 //   //setting event Q2 and y indices
-		// int Q2_INDEX = -1;
-		// for(int iQ2 = 0; iQ2 < 4; iQ2++){
-		// 	if(Q2REC_es_mini > Q2_bins[iQ2] && Q2REC_es_mini < Q2_bins[iQ2+1] ){
-		// 		Q2_INDEX = iQ2;
-		// 	}
-		// }
-		// int y_INDEX = -1;
-		// for(int iy = 0; iy < 4; iy++){
-		// 	if(yREC_es_mini > ybins[iy] && yREC_es_mini < ybins[iy+1] ){
-		// 		y_INDEX = iy;
-		// 	}
-		// }
-		// int n_particle_eta_rec[4] = {0,0,0,0};
-		// int n_particle_HCM_rec = 0;
-		// double trk_E = 0.;
-		// double trk_pz = 0.;
-		// double etamax = -99.;
+	   //setting event Q2 and y indices
+		int Q2_INDEX = -1;
+		for(int iQ2 = 0; iQ2 < 4; iQ2++){
+			if(Q2REC_es_mini > Q2_bins[iQ2] && Q2REC_es_mini < Q2_bins[iQ2+1] ){
+				Q2_INDEX = iQ2;
+			}
+		}
+		int y_INDEX = -1;
+		for(int iy = 0; iy < 4; iy++){
+			if(yREC_es_mini > ybins[iy] && yREC_es_mini < ybins[iy+1] ){
+				y_INDEX = iy;
+			}
+		}
+		int n_particle_eta_rec[4] = {0,0,0,0};
+		int n_particle_HCM_rec = 0;
+		double trk_E = 0.;
+		double trk_pz = 0.;
+		double etamax = -99.;
 
 	// 	TLorentzVector k0s_candidate;
 	// 	TLorentzVector photon_candidate;
