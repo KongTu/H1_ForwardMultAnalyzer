@@ -418,23 +418,26 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
 					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
 					
-					double E_pim = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+PIMASS*PIMASS);
+					double E_pim = sqrt( pxREC_mini[jtrk]*pxREC_mini[jtrk]
+						+pyREC_mini[jtrk]*pyREC_mini[jtrk]
+						+pzREC_mini[jtrk]*pzREC_mini[jtrk]
+						+PIMASS*PIMASS );
 					pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
 					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+pyREC_mini[jtrk]*pyREC_mini[jtrk]+pzREC_mini[jtrk]*pzREC_mini[jtrk]+ELECTRON_MASS*ELECTRON_MASS);
 					elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 
-					k0s_candidate = pip+pim;
-					photon_candidate = elecp+elecm;
+					// k0s_candidate = pip+pim;
+					// photon_candidate = elecp+elecm;
 
-					h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
-					h_PhotMass[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
+					// h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M() );
+					// h_PhotMass[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M() );
 
-					k0s_candidate.SetPxPyPzE(0.,0.,0.,0.);
-					photon_candidate.SetPxPyPzE(0.,0.,0.,0.);
-					pip.SetPxPyPzE(0.,0.,0.,0.);
-					pim.SetPxPyPzE(0.,0.,0.,0.);
-					elecp.SetPxPyPzE(0.,0.,0.,0.);
-					elecm.SetPxPyPzE(0.,0.,0.,0.);
+					// k0s_candidate.SetPxPyPzE(0.,0.,0.,0.);
+					// photon_candidate.SetPxPyPzE(0.,0.,0.,0.);
+					// pip.SetPxPyPzE(0.,0.,0.,0.);
+					// pim.SetPxPyPzE(0.,0.,0.,0.);
+					// elecp.SetPxPyPzE(0.,0.,0.,0.);
+					// elecm.SetPxPyPzE(0.,0.,0.,0.);
 
 				}
 				// if( passTightREC_mini[itrk] == 1 && passTightREC_mini[jtrk] == 1  ){
