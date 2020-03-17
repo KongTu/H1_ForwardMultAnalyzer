@@ -24,7 +24,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	//input files
 	TFile* file = 0;
 	if(ifile_ == 0){
-		file = new TFile("../new_output/data_highE_0607_noReweight_Tree_hadCaliNewLooseTrack.root");
+		file = new TFile("../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine.root");
 	}else if(ifile_ == 1) {
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCaliNew.root");
 		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewLooseTrack.root");
@@ -35,7 +35,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	//output files
 	TString outname;
 	if( ifile_ == 0 ){
-		outname = "../minitree_output/Pn_hist_data_hadCaliNew_extendEtalabLooseTrack.root";
+		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine.root";
 	}else if( ifile_ == 1 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_django_extendEtalabLooseTrack.root";
 		else outname = "../minitree_output/Pn_hist_django_extendEtalabLooseTrack_reweigh.root";
