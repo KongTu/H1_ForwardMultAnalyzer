@@ -109,8 +109,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	Float_t xREC_es_mini,yREC_es_mini,Q2REC_es_mini;
 	const int nRECtrack_MAX = 200;
 	Int_t eventpass_mini;
-	Int_t eventpassTight_mini;
- 	Int_t eventpassLoose_mini;
 	Int_t nRECtrack_mini;
 	Float_t EpzREC_mini;
 	Int_t totalMultREC_mini;
@@ -153,8 +151,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	Float_t dedxLikelihoodElectronREC_mini[nRECtrack_MAX];
 	
 	tree->SetBranchAddress("eventpass_mini",&eventpass_mini);
-	tree->SetBranchAddress("eventpassTight_mini",&eventpassTight_mini);
-	tree->SetBranchAddress("eventpassLoose_mini",&eventpassLoose_mini);
 	tree->SetBranchAddress("nRECtrack_mini",&nRECtrack_mini);
 	tree->SetBranchAddress("w_mini",&w_mini);
 	tree->SetBranchAddress("EpzREC_mini",&EpzREC_mini);
@@ -284,7 +280,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	E-pz and vertex control plots for different multiplicities
 	*/
 	TH1D* h_EpzQ2yBins[4][4][2];
-	// TH1D* h_zvertex[4][4][2];
+	TH1D* h_zvertex[4][4][2];
 	// TH1D* h_etamax[4][4][2];
 	// TH1D* h_PtBal[4][4][2];
 	// TH1D* h_hfsEnergy[4][4][2];
@@ -303,7 +299,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			for(int k = 0; k < 2; k++){
 
 				h_EpzQ2yBins[i][j][k] = new TH1D(Form("h_EpzQ2yBins_%d_%d_%d",i,j,k),Form("h_EpzQ2yBins_%d_%d_%d",i,j,k),400,0,200);
-				// h_zvertex[i][j][k] = new TH1D(Form("h_zvertex_%d_%d_%d",i,j,k),Form("h_zvertex_%d_%d_%d",i,j,k),200,-40,40);
+				h_zvertex[i][j][k] = new TH1D(Form("h_zvertex_%d_%d_%d",i,j,k),Form("h_zvertex_%d_%d_%d",i,j,k),200,-40,40);
 				// h_etamax[i][j][k] = new TH1D(Form("h_etamax_%d_%d_%d",i,j,k),"h_etamax",200,-3,3);
 				// h_PtBal[i][j][k] = new TH1D(Form("h_PtBal_%d_%d_%d",i,j,k),"h_PtBal",200,-5,5);
 				// h_hfsEnergy[i][j][k] = new TH1D(Form("h_hfsEnergy_%d_%d_%d",i,j,k),"h_hfsEnergy",500,0,300);
@@ -495,7 +491,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				trk_pz += pzREC_mini[itrk];
 
 				// dE/dx
-				h_dedxProtonVsp->Fill( pREC_mini[itrk], dedxProtonREC_mini[itrk]);
+				// h_dedxProtonVsp->Fill( pREC_mini[itrk], dedxProtonREC_mini[itrk]);
 
 			}
 
@@ -556,7 +552,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			
 			if( totalMultREC_mini < 15 && totalMultREC_mini >= 0 ){
 				h_EpzQ2yBins[Q2_INDEX][y_INDEX][0]->Fill( (hfsEREC_mini+elecEREC_mini) - (hfsPzREC_mini+elecPzREC_mini) , w_mini );
-				// h_zvertex[Q2_INDEX][y_INDEX][0]->Fill( vertex_mini[2],w_mini );
+				h_zvertex[Q2_INDEX][y_INDEX][0]->Fill( vertex_mini[2],w_mini );
 				// h_etamax[Q2_INDEX][y_INDEX][0]->Fill( etamax, w_mini);
 				// h_PtBal[Q2_INDEX][y_INDEX][0]->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
 				// h_hfsEnergy[Q2_INDEX][y_INDEX][0]->Fill( hfsEREC_mini, w_mini);
@@ -572,7 +568,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 			if( totalMultREC_mini > 15 ){
 				h_EpzQ2yBins[Q2_INDEX][y_INDEX][1]->Fill( (hfsEREC_mini+elecEREC_mini) - (hfsPzREC_mini+elecPzREC_mini), w_mini  );
-				// h_zvertex[Q2_INDEX][y_INDEX][1]->Fill( vertex_mini[2],w_mini );
+				h_zvertex[Q2_INDEX][y_INDEX][1]->Fill( vertex_mini[2],w_mini );
 				// h_etamax[Q2_INDEX][y_INDEX][1]->Fill( etamax, w_mini);
 				// h_PtBal[Q2_INDEX][y_INDEX][1]->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
 				// h_hfsEnergy[Q2_INDEX][y_INDEX][1]->Fill( hfsEREC_mini, w_mini);
