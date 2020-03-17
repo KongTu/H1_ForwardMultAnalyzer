@@ -367,7 +367,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		double etamax = -99.;
 
 		TLorentzVector k0s_candidate(0,0,0,0);
-		TLorentzVector photon_candidate(0,0,0,0);
+		TLorentzVector photon_candidate(-99,-99,-99,-99);
 		TLorentzVector pip(0,0,0,0),pim(0,0,0,0);
 		TLorentzVector elecp(0,0,0,0),elecm(0,0,0,0);
 	//double nested loops
