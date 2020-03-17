@@ -233,6 +233,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_PhotMassLoose[4][4];
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
+			
 			h_Pn_HCM[i][j] = new TH1D(Form("h_Pn_HCM_%d_%d",i,j),Form("h_Pn_HCM_%d_%d",i,j),11,Pn_binning);
 			h_Pn_genREC_HCM[i][j] = new TH1D(Form("h_Pn_genREC_HCM_%d_%d",i,j),Form("h_Pn_genREC_HCM_%d_%d",i,j),11,Pn_binning);
 			h_Pn_genNextREC_HCM[i][j] = new TH1D(Form("h_Pn_genNextREC_HCM_%d_%d",i,j),Form("h_Pn_genNextREC_HCM_%d_%d",i,j),11,Pn_binning);
@@ -275,7 +276,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_trackEpz_all = new TH1D("h_trackEpz","h_trackEpz",500,0,100);
 
 	TH2D* h_dedxProtonVsp = new TH2D("h_dedxProtonVsp",";p(GeV);dE/dx",100,0,5,300,0,100);
+	TH2D* h_dedxProtonVspCut = new TH2D("h_dedxProtonVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
 	TH2D* h_dedxElectronVsp = new TH2D("h_dedxElectronVsp",";p(GeV);dE/dx",100,0,5,300,0,100);
+	TH2D* h_dedxElectronVspCut = new TH2D("h_dedxElectronVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
 
 	cout << "==== Total number of events ~ " << tree->GetEntries() << " ========" << endl;
 	for(int ievent = 0; ievent < tree->GetEntries(); ievent++){
@@ -493,6 +496,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				double pREC = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]);
 				h_dedxProtonVsp->Fill( pREC, dedxProtonREC_mini[itrk]);
 				h_dedxElectronVsp->Fill( pREC, dedxElectronREC_mini[itrk]);
+				if(dedxLikelihoodProtonREC_mini[itrk] > 0.003){
+					h_dedxProtonVspCut->Fill( pREC, dedxProtonREC_mini[itrk]);
+				}
+				if(dedxLikelihoodElectronREC_mini[itrk] > 0.003){
+					h_dedxElectronVspCut->Fill( pREC, dedxElectronREC_mini[itrk]);
+				}
 			}
 
 			for(int iy=0;iy<4;iy++){
