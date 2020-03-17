@@ -275,47 +275,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_trackEpz_all = new TH1D("h_trackEpz","h_trackEpz",500,0,100);
 
 	TH2D* h_dedxProtonVsp = new TH2D("h_dedxProtonVsp",";p(GeV);dE/dx",100,0,5,300,0,100);
+	TH2D* h_dedxElectronVsp = new TH2D("h_dedxElectronVsp",";p(GeV);dE/dx",100,0,5,300,0,100);
 
-	/*
-	E-pz and vertex control plots for different multiplicities
-	*/
-	TH1D* h_EpzQ2yBins[4][4][2];
-	TH1D* h_zvertex[4][4][2];
-	TH1D* h_etamax[4][4][2];
-	TH1D* h_PtBal[4][4][2];
-	TH1D* h_hfsEnergy[4][4][2];
-	TH1D* h_hfsPt[4][4][2];
-	TH1D* h_hfsPz[4][4][2];
-	TH1D* h_elecEnergy[4][4][2];
-	TH1D* h_elecPt[4][4][2];
-	TH1D* h_elecPz[4][4][2];
-	TH1D* h_elecEpz[4][4][2];
-	TH1D* h_hfsEpz[4][4][2];
-	TH1D* h_hfsElecEpz[4][4][2];
-	TH1D* h_trackEpz[4][4][2];
-
-	for(int i = 0; i < 4; i++){
-		for(int j = 0; j < 4; j++){
-			for(int k = 0; k < 2; k++){
-
-				h_EpzQ2yBins[i][j][k] = new TH1D(Form("h_EpzQ2yBins_%d_%d_%d",i,j,k),Form("h_EpzQ2yBins_%d_%d_%d",i,j,k),400,0,200);
-				h_zvertex[i][j][k] = new TH1D(Form("h_zvertex_%d_%d_%d",i,j,k),Form("h_zvertex_%d_%d_%d",i,j,k),200,-40,40);
-				h_etamax[i][j][k] = new TH1D(Form("h_etamax_%d_%d_%d",i,j,k),"h_etamax",200,-3,3);
-				h_PtBal[i][j][k] = new TH1D(Form("h_PtBal_%d_%d_%d",i,j,k),"h_PtBal",200,-5,5);
-				h_hfsEnergy[i][j][k] = new TH1D(Form("h_hfsEnergy_%d_%d_%d",i,j,k),"h_hfsEnergy",500,0,300);
-				h_hfsPt[i][j][k] = new TH1D(Form("h_hfsPt_%d_%d_%d",i,j,k),"h_hfsPt",200,0,25);
-				h_hfsPz[i][j][k] = new TH1D(Form("h_hfsPz_%d_%d_%d",i,j,k),"h_hfsPz",500,-50,300);
-				h_elecEnergy[i][j][k] = new TH1D(Form("h_elecEnergy_%d_%d_%d",i,j,k),"h_elecEnergy",200,0,100);
-				h_elecPt[i][j][k] = new TH1D(Form("h_elecPt_%d_%d_%d",i,j,k),"h_elecPt",200,0,25);
-				h_elecPz[i][j][k] = new TH1D(Form("h_elecPz_%d_%d_%d",i,j,k),"h_elecPz",200,-100,25);
-				h_elecEpz[i][j][k] = new TH1D(Form("h_elecEpz_%d_%d_%d",i,j,k),"h_elecEpz",500,0,100);
-				h_hfsEpz[i][j][k] = new TH1D(Form("h_hfsEpz_%d_%d_%d",i,j,k),"h_hfsEpz",500,0,100);
-				h_hfsElecEpz[i][j][k] = new TH1D(Form("h_hfsElecEpz_%d_%d_%d",i,j,k),"h_hfsElecEpz",500,0,100);
-				h_trackEpz[i][j][k] = new TH1D(Form("h_trackEpz_%d_%d_%d",i,j,k),"h_trackEpz",500,0,100);
-
-			}
-		}
-	}
 	cout << "==== Total number of events ~ " << tree->GetEntries() << " ========" << endl;
 	for(int ievent = 0; ievent < tree->GetEntries(); ievent++){
 
@@ -531,6 +492,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				// dE/dx
 				double pREC = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]);
 				h_dedxProtonVsp->Fill( pREC, dedxProtonREC_mini[itrk]);
+				h_dedxElectronVsp->Fill( pREC, dedxElectronREC_mini[itrk]);
 			}
 
 			for(int iy=0;iy<4;iy++){
@@ -560,7 +522,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		h_trackEpz_all->Fill(trk_E-trk_pz, w_mini);
 
 		if(Q2_INDEX >=0 && y_INDEX >= 0){
-
 			if( ifile_ != 0 ){
 				//2D correlation between gen and rec mult
 				h_Pn_cor_HCM[Q2_INDEX][y_INDEX]->Fill(n_particle_HCM_rec,n_particle_HCM,w_mini);
@@ -582,47 +543,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 
 			h_Pn_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_rec, w_mini );
-
 			h_Pn[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta_rec[0], w_mini );
 			h_Pn[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta_rec[1], w_mini );
 			h_Pn[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta_rec[2], w_mini );
 			h_Pn[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta_rec[3], w_mini );
 			
-	// 		if( totalMultREC_mini < 15 && totalMultREC_mini >= 0 ){
-	// 			h_EpzQ2yBins[Q2_INDEX][y_INDEX][0]->Fill( (hfsEREC_mini+elecEREC_mini) - (hfsPzREC_mini+elecPzREC_mini) , w_mini );
-	// 			h_zvertex[Q2_INDEX][y_INDEX][0]->Fill( vertex_mini[2],w_mini );
-	// 			h_etamax[Q2_INDEX][y_INDEX][0]->Fill( etamax, w_mini);
-	// 			h_PtBal[Q2_INDEX][y_INDEX][0]->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
-	// 			h_hfsEnergy[Q2_INDEX][y_INDEX][0]->Fill( hfsEREC_mini, w_mini);
-	// 			h_hfsPt[Q2_INDEX][y_INDEX][0]->Fill( hfsPtREC_mini, w_mini);
-	// 			h_hfsPz[Q2_INDEX][y_INDEX][0]->Fill( hfsPzREC_mini, w_mini);
-	// 			h_elecEnergy[Q2_INDEX][y_INDEX][0]->Fill( elecEREC_mini, w_mini);
-	// 			h_elecPt[Q2_INDEX][y_INDEX][0]->Fill( elecPtREC_mini, w_mini);
-	// 			h_elecPz[Q2_INDEX][y_INDEX][0]->Fill( elecPzREC_mini, w_mini);
-	// 			h_hfsEpz[Q2_INDEX][y_INDEX][0]->Fill( hfsEREC_mini - hfsPzREC_mini, w_mini);
-	// 			h_elecEpz[Q2_INDEX][y_INDEX][0]->Fill( elecEREC_mini - elecPzREC_mini, w_mini);
-	// 			h_hfsElecEpz[Q2_INDEX][y_INDEX][0]->Fill( (elecEREC_mini+hfsEREC_mini) - (hfsPzREC_mini+elecPzREC_mini), w_mini );
-	// 			h_trackEpz[Q2_INDEX][y_INDEX][0]->Fill(trk_E-trk_pz, w_mini);
-	// 		}
-	// 		if( totalMultREC_mini > 15 ){
-	// 			h_EpzQ2yBins[Q2_INDEX][y_INDEX][1]->Fill( (hfsEREC_mini+elecEREC_mini) - (hfsPzREC_mini+elecPzREC_mini), w_mini  );
-	// 			h_zvertex[Q2_INDEX][y_INDEX][1]->Fill( vertex_mini[2],w_mini );
-	// 			h_etamax[Q2_INDEX][y_INDEX][1]->Fill( etamax, w_mini);
-	// 			h_PtBal[Q2_INDEX][y_INDEX][1]->Fill( hfsPtREC_mini/elecPtREC_mini, w_mini);
-	// 			h_hfsEnergy[Q2_INDEX][y_INDEX][1]->Fill( hfsEREC_mini, w_mini);
-	// 			h_hfsPt[Q2_INDEX][y_INDEX][1]->Fill( hfsPtREC_mini, w_mini);
-	// 			h_hfsPz[Q2_INDEX][y_INDEX][1]->Fill( hfsPzREC_mini, w_mini);
-	// 			h_elecEnergy[Q2_INDEX][y_INDEX][1]->Fill( elecEREC_mini, w_mini);
-	// 			h_elecPt[Q2_INDEX][y_INDEX][1]->Fill( elecPtREC_mini, w_mini);
-	// 			h_elecPz[Q2_INDEX][y_INDEX][1]->Fill( elecPzREC_mini, w_mini);
-	// 			h_hfsEpz[Q2_INDEX][y_INDEX][1]->Fill( hfsEREC_mini - hfsPzREC_mini, w_mini);
-	// 			h_elecEpz[Q2_INDEX][y_INDEX][1]->Fill( elecEREC_mini - elecPzREC_mini, w_mini);
-	// 			h_hfsElecEpz[Q2_INDEX][y_INDEX][1]->Fill( (elecEREC_mini+hfsEREC_mini) - (hfsPzREC_mini+elecPzREC_mini), w_mini );
-	// 			h_trackEpz[Q2_INDEX][y_INDEX][1]->Fill(trk_E-trk_pz, w_mini);
-	// 		}
-			
 		}
-		
 	}
 
 	outputfile->Write();
