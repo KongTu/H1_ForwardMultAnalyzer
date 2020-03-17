@@ -491,8 +491,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				trk_pz += pzREC_mini[itrk];
 
 				// dE/dx
-				double pREC = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]);
-				h_dedxProtonVsp->Fill( pREC, dedxProtonREC_mini[itrk]);
+				// double pREC = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]);
+				// h_dedxProtonVsp->Fill( pREC, dedxProtonREC_mini[itrk]);
 
 			}
 
