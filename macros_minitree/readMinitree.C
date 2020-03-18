@@ -279,6 +279,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH2D* h_dedxProtonVspCut = new TH2D("h_dedxProtonVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
 	TH2D* h_dedxElectronVsp = new TH2D("h_dedxElectronVsp",";p(GeV);dE/dx",100,0,5,300,0,100);
 	TH2D* h_dedxElectronVspCut = new TH2D("h_dedxElectronVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
+	TH1D* h_chargedDcaPrime = new TH1D("h_chargedDcaPrime",";charge*DCA'",100,-10,10);
 
 	cout << "==== Total number of events ~ " << tree->GetEntries() << " ========" << endl;
 	for(int ievent = 0; ievent < tree->GetEntries(); ievent++){
@@ -481,7 +482,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 	//end double loop
 
-			if(passREC_mini[itrk]!=1) continue;
+			if( passREC_mini[itrk]!=1 ) continue;
 			if( etaREC_mini[itrk] > etamax ){
 				etamax = etaREC_mini[itrk];
 			}
@@ -506,12 +507,15 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				h_dedxElectronVsp->Fill( pREC, dedxElectronREC_mini[itrk]);
 				if(dedxLikelihoodProtonREC_mini[itrk] > 0.003){
 					h_dedxProtonVspCut->Fill( pREC, dedxProtonREC_mini[itrk]);
+					int chargetrack = 0;
+					if( typeChgREC_mini[itrk] > 0 ) chargetrack = 1;
+					if( typeChgREC_mini[itrk] < 0 ) chargetrack = -1;
+					h_chargedDcaPrime->Fill( chargetrack*dcaPrimeREC_mini[itrk] );
 				}
 				if(dedxLikelihoodElectronREC_mini[itrk] > 0.003){
 					h_dedxElectronVspCut->Fill( pREC, dedxElectronREC_mini[itrk]);
 				}
 			}
-
 			for(int iy=0;iy<4;iy++){
 				if(yREC_es_mini>ybins[iy] && yREC_es_mini<ybins[iy+1]){
 					h_eta[iy]->Fill( etaREC_mini[itrk], w_mini );
