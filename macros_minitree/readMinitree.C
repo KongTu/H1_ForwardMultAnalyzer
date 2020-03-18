@@ -181,6 +181,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	tree->SetBranchAddress("Q2REC_es_mini",&Q2REC_es_mini);
 	
 	tree->SetBranchAddress("typeChgREC_mini",&typeChgREC_mini);
+	tree->SetBranchAddress("typeChgREC_mini",&typeChgREC_mini);
 	tree->SetBranchAddress("dcaPrimeREC_mini",&dcaPrimeREC_mini);
 	tree->SetBranchAddress("startHitsRadiusREC_mini",&startHitsRadiusREC_mini);
 	tree->SetBranchAddress("dedxProtonREC_mini",&dedxProtonREC_mini);
@@ -281,6 +282,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH2D* h_dedxElectronVsp = new TH2D("h_dedxElectronVsp",";p(GeV);dE/dx",100,0,5,300,0,100);
 	TH2D* h_dedxElectronVspCut = new TH2D("h_dedxElectronVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
 	TH1D* h_chargedDcaPrime = new TH1D("h_chargedDcaPrime",";charge*DCA'",100,-10,10);
+	TH1D* h_chargedDcaPrimeProton = new TH1D("h_chargedDcaPrimeProton",";charge*DCA'",100,-10,10);
+	TH1D* h_chargeRstart = new TH1D("h_chargeRstart",";charge*R_{start}",200,-100,100);
+	TH1D* h_chargeRstartProton = new TH1D("h_chargeRstartProton",";charge*R_{start}",200,-100,100);
 
 	cout << "==== Total number of events ~ " << tree->GetEntries() << " ========" << endl;
 	for(int ievent = 0; ievent < tree->GetEntries(); ievent++){
@@ -506,13 +510,17 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				double pREC = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]);
 				h_dedxProtonVsp->Fill( pREC, dedxProtonREC_mini[itrk]);
 				h_dedxElectronVsp->Fill( pREC, dedxElectronREC_mini[itrk]);
+				int chargetrack = 0;
+				if( typeChgREC_mini[itrk] > 0 ) chargetrack = 1;
+				if( typeChgREC_mini[itrk] < 0 ) chargetrack = -1;
 				if(dedxLikelihoodProtonREC_mini[itrk] > 0.003){
 					h_dedxProtonVspCut->Fill( pREC, dedxProtonREC_mini[itrk]);
-					int chargetrack = 0;
-					if( typeChgREC_mini[itrk] > 0 ) chargetrack = 1;
-					if( typeChgREC_mini[itrk] < 0 ) chargetrack = -1;
-					h_chargedDcaPrime->Fill( chargetrack*dcaPrimeREC_mini[itrk] );
+					h_chargedDcaPrimeProton->Fill( chargetrack*dcaPrimeREC_mini[itrk] );
+					h_chargeRstartProton->Fill( chargetrack*startHitsRadiusREC_mini[itrk] );
 				}
+				h_chargeRstart->Fill( chargetrack*startHitsRadiusREC_mini[itrk] );
+				h_chargedDcaPrime->Fill( chargetrack*dcaPrimeREC_mini[itrk] );
+
 				if(dedxLikelihoodElectronREC_mini[itrk] > 0.003){
 					h_dedxElectronVspCut->Fill( pREC, dedxElectronREC_mini[itrk]);
 				}
