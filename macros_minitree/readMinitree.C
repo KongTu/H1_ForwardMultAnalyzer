@@ -180,6 +180,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	tree->SetBranchAddress("yREC_es_mini",&yREC_es_mini);
 	tree->SetBranchAddress("Q2REC_es_mini",&Q2REC_es_mini);
 	
+	tree->SetBranchAddress("typeChgREC_mini",&typeChgREC_mini);
 	tree->SetBranchAddress("dcaPrimeREC_mini",&dcaPrimeREC_mini);
 	tree->SetBranchAddress("startHitsRadiusREC_mini",&startHitsRadiusREC_mini);
 	tree->SetBranchAddress("dedxProtonREC_mini",&dedxProtonREC_mini);
