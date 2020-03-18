@@ -169,25 +169,25 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    int dis_events = 0;
 
    if( doRapgap_ && doGen_ ){
-      tree->Add("../batch/output/mc_9299_hadCaliNewRadPho/*.root");
-      tree->Add("../batch/output/mc_9300_hadCaliNewRadPho/*.root");
-      tree->Add("../batch/output/mc_9301_hadCaliNewRadPho/*.root");
-      tree->Add("../batch/output/mc_9302_hadCaliNewRadPho/*.root");
-      tree->Add("../batch/output/mc_9303_hadCaliNewRadPho/*.root");
-      tree->Add("../batch/output/mc_9304_hadCaliNewRadPho/*.root");
-      tree->Add("../batch/output/mc_9305_hadCaliNewRadPho/*.root");
-      tree->Add("../batch/output/mc_9306_hadCaliNewRadPho/*.root");
+      tree->Add("../batch/output/mc_9299_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9300_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9301_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9302_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9303_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9304_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9305_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9306_hadCaliNewKine/*.root");
 
       //save the number of events that separate inclusive DIS to diffractive DIS
          dis_events = tree->GetEntries();
-      tree->Add("../batch/output/mc_9015_hadCaliNewRadPho/*.root");
+      tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
 
       //nonradiative MCs
       // tree->Add("../batch/output/mc_5878_NRAD/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadCaliNewRadPho/*.root");
-      tree->Add("../batch/output/mc_8927_hadCaliNewRadPho/*.root");
+      tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
 
       // tree->Add("../batch/output/mc_5877_NRAD_django14/*.root");
 
@@ -592,9 +592,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
           }//end doGen_
 
          int event_pass = 1;
-         int event_pass_tight = 1;
-         int event_pass_loose = 1;
-
          /**RECO level starts here both MC and DATA**/
          if( (doGen_ && trigWeightRW <= 0) || (!doGen_ && trigWeightAC <= 0) ) event_pass = 0; //require trigger fired
          if( vertexType != 1 ) event_pass = 0;
