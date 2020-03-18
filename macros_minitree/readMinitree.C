@@ -195,9 +195,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	/*
 	eta distribution in different x. 
 	*/
-	TH1D* h_eta[4];
+	TH1D* h_eta_pos[4];
+	TH1D* h_eta_neg[4];
 	for(int j=0;j<4;j++){
-		h_eta[j]= new TH1D(Form("h_eta_%d",j),Form("h_eta_%d",j),100,-3,3);
+		h_eta_pos[j]= new TH1D(Form("h_eta_pos_%d",j),Form("h_eta_pos_%d",j),100,-3,3);
+		h_eta_neg[j]= new TH1D(Form("h_eta_neg_%d",j),Form("h_eta_neg_%d",j),100,-3,3);
 	}
 	/*
 	P(n) distribution in different Q2, y, and eta bins.
@@ -551,7 +553,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 			for(int iy=0;iy<4;iy++){
 				if(yREC_es_mini>ybins[iy] && yREC_es_mini<ybins[iy+1]){
-					h_eta[iy]->Fill( etaREC_mini[itrk], w_mini );
+					if(chargetrack > 0) h_eta_pos[iy]->Fill( etaREC_mini[itrk], w_mini );
+					if(chargetrack < 0) h_eta_neg[iy]->Fill( etaREC_mini[itrk], w_mini );
 				}
 			}
 		}
