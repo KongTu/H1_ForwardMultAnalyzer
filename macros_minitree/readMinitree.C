@@ -287,7 +287,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_chargedDcaPrimeProton = new TH1D("h_chargedDcaPrimeProton",";charge*DCA'",100,-10,10);
 	TH1D* h_chargeRstart = new TH1D("h_chargeRstart",";charge*R_{start}",200,-50,50);
 	TH1D* h_chargeRstartProton = new TH1D("h_chargeRstartProton",";charge*R_{start}",200,-50,50);
-	TH1D* h_chargeRstartNoCut = new TH1D("h_chargeRstartNoCut",";charge*R_{start}",200,-50,50);
+	TH1D* h_chargeRstartNoCut = new TH1D("h_chargeRstartNoCut",";charge*R_{start}",200,-100,100);
 	TH1D* h_chargeRstartProtonNoCut = new TH1D("h_chargeRstartProtonNoCut",";charge*R_{start}",200,-50,50);
 	TH1D* h_chargeRstartSplit = new TH1D("h_chargeRstartSplit",";charge*R_{start}",200,-50,50);
 	TH1D* h_chargeRstartProtonSplit = new TH1D("h_chargeRstartProtonSplit",";charge*R_{start}",200,-50,50);
@@ -533,7 +533,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				n_particle_eta_rec[3]++;
 				trk_E += sqrt(pxREC_mini[itrk]*pxREC_mini[itrk] + pyREC_mini[itrk]*pyREC_mini[itrk] + pzREC_mini[itrk]*pzREC_mini[itrk] + 0.134*0.134);
 				trk_pz += pzREC_mini[itrk];
-
 				// dE/dx
 				double pREC = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]);
 				h_dedxProtonVsp->Fill( pREC, dedxProtonREC_mini[itrk]);
