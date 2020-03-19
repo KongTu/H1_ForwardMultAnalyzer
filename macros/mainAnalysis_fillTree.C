@@ -186,10 +186,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       // tree->Add("../batch/output/mc_5878_NRAD/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
 
-      // tree->Add("../batch/output/mc_5877_NRAD_django14/*.root");
+      tree->Add("../batch/output/mc_5877_NRAD_django14/*.root");
 
    }
    else if( !doGen_ ){
@@ -565,7 +565,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
                if( TMath::Hypot(pxMC[j],pyMC[j]) < 0.15 ) continue;
                if(etaMC[j] > 0.2 && etaMC[j] < 1.6 ) Ntracks_eta_p_MC++;
-               if(etaMC[j] < 0.2 && etaMC[j] > -1.2) Ntracks_eta_m_MC++;
+               if(etaMC[j] < 0.2 && etaMC[j] > -1.6) Ntracks_eta_m_MC++;//just changed to -1.6 but not run 03.19.2020
             } 
             etaAsymMC = (Ntracks_eta_p_MC - Ntracks_eta_m_MC)/(Ntracks_eta_p_MC + Ntracks_eta_m_MC);
             if( (Ntracks_eta_p_MC + Ntracks_eta_m_MC) == 0. ) etaAsymMC = -999.;
@@ -679,7 +679,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
             if( pass_default ){
                if(etaREC[j] > 0.2 && etaREC[j] < 1.6 ) Ntracks_eta_p++;
-               if(etaREC[j] < 0.2 && etaREC[j] > -1.2) Ntracks_eta_m++;
+               if(etaREC[j] < 0.2 && etaREC[j] > -1.6) Ntracks_eta_m++;
             }
 
             //assign values to each branch on track levels:
