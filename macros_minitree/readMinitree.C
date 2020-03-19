@@ -27,7 +27,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		file = new TFile("../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine.root");
 	}else if(ifile_ == 1) {
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine.root");
+		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_NRAD_hadCaliNewKine.root");
 	}else if(ifile_ == 2){
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNew.root");
 		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine.root");
@@ -38,7 +38,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine.root";
 	}else if( ifile_ == 1 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_django_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh.root";
+		else outname = "../minitree_output/Pn_hist_django_NRAD_hadCaliNewKine.root";
 	}else if( ifile_ == 2 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_extendEtalabLooseTrack.root";
 		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh.root";
@@ -195,7 +195,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	/*
 	eta distribution in different x. 
 	*/
-	TH1D* h_mult = new TH1D("h_mult",";N_{trk}",100,0,50);
+	TH1D* h_mult = new TH1D("h_mult",";N_{trk}",50,0,50);
 	TH1D* h_eta = new TH1D("h_eta",";#eta",100,-3,3);
 	TH1D* h_eta_pos[4];
 	TH1D* h_eta_neg[4];
