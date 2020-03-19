@@ -610,7 +610,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			h_Pn[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta_rec[2], w_mini );
 			h_Pn[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta_rec[3], w_mini );
 			
-			h_mult->Fill( n_particle_eta_rec[3], w_mini );
+			h_mult->Fill( (double) n_particle_eta_rec[3], w_mini );
 		}
 	}
 
