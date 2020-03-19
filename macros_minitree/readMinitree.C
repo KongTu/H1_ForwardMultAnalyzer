@@ -195,6 +195,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	/*
 	eta distribution in different x. 
 	*/
+	TH1D* h_mult = new TH1D("h_mult",";N_{trk}",100,0,50);
 	TH1D* h_eta = new TH1D("h_eta",";#eta",100,-3,3);
 	TH1D* h_eta_pos[4];
 	TH1D* h_eta_neg[4];
@@ -360,7 +361,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		h_Q2vsX->Fill( xREC_es_mini, Q2REC_es_mini, w_mini);
 		h_y->Fill( yREC_es_mini, w_mini);
 		h_vtxZ->Fill( vertex_mini[2], w_mini );
-
+		h_mult->Fill( totalMultREC_mini, w_mini);
 	   //setting event Q2 and y indices
 		int Q2_INDEX = -1;
 		for(int iQ2 = 0; iQ2 < 4; iQ2++){
@@ -609,6 +610,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			h_Pn[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta_rec[2], w_mini );
 			h_Pn[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta_rec[3], w_mini );
 			
+			h_mult->Fill( n_particle_eta_rec[3], w_mini );
 		}
 	}
 
