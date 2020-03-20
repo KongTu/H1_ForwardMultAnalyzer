@@ -81,7 +81,7 @@ using namespace std;
 static double const ME=0.0005109989461;
 static double const M_CHARGED_PION=0.13957061;
 
-static double const ELEC_ISOLATION_CONE=0.1;
+static double const ELEC_ISOLATION_CONE=0.4;
 
 bool floatEqual(double a,double b) {
    double d1=fabs(a-b);
