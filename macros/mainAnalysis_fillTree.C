@@ -186,8 +186,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       // tree->Add("../batch/output/mc_5878_NRAD/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadCaliNewKine_v2/*.root");
-      tree->Add("../batch/output/mc_8927_hadCaliNewKine_v2/*.root");
+      tree->Add("../batch/output/mc_8926_hadCaliNewKine_v1/*.root");
+      tree->Add("../batch/output/mc_8927_hadCaliNewKine_v1/*.root");
 
       // tree->Add("../batch/output/mc_5877_NRAD_django14/*.root");
 
@@ -484,10 +484,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             if( vtxZ_weight == 0. ) vtxZ_weight = 1.0;
             if( doRapgap_ ){//rapgap has diffractive MCs
                if( i < dis_events ){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./68.);//data/mc Lumi
+                  evt_weight = w*y_weight*vtxZ_weight;//*(136./68.);//data/mc Lumi
                }
                else if( i >= dis_events && i < 1.0*(tree->GetEntries()-dis_events)+dis_events ){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./(0.9*219.35));//data/mc Lumi
+                  evt_weight = w*y_weight*vtxZ_weight;//(136./(1.0*219.35));//data/mc Lumi
                }
             }
             else{
