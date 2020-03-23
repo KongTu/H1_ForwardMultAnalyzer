@@ -515,7 +515,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 			//Rstart without cut
 			int chargetrack = typeChgREC_mini[itrk];
-			if( chargetrack == 0 ) cout << "chargetrack ~ " << typeChgREC_mini[itrk] << endl;
+			if( typeChgREC_mini[itrk] == 0 ) cout << "typeChgREC_mini[itrk] ~ " << typeChgREC_mini[itrk] << endl;
 			if( typeChgREC_mini[itrk] >= 1 ) chargetrack = 1;
 			if( typeChgREC_mini[itrk] < 0 ) chargetrack = -1;
 			
