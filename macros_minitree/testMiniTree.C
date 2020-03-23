@@ -27,7 +27,7 @@ void testMiniTree(){
 	tree->SetBranchAddress("nRECtrack_mini",&nRECtrack_mini);
 
 	TH1D* h_typeChgTemp = new TH1D("h_typeChgTemp", "h_typeChgTemp ",9,-4,5);
-	for(int ievent = 0; ievent < 1000000; ievent++){
+	for(int ievent = 0; ievent < tree->GetEntries(); ievent++){
 		tree->GetEntry(ievent);
 		for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
 			h_typeChgTemp->Fill( typeChgREC_mini[itrk] );
@@ -36,4 +36,5 @@ void testMiniTree(){
 	
 	TFile * output = new TFile("testMiniTree.root","RECREATE");
 	h_typeChgTemp->Write();
+	output->Write();
 }
