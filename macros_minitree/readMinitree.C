@@ -181,7 +181,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	tree->SetBranchAddress("Q2REC_es_mini",&Q2REC_es_mini);
 	
 	tree->SetBranchAddress("typeChgREC_mini",&typeChgREC_mini);
-	tree->SetBranchAddress("typeChgREC_mini",&typeChgREC_mini);
 	tree->SetBranchAddress("dcaPrimeREC_mini",&dcaPrimeREC_mini);
 	tree->SetBranchAddress("startHitsRadiusREC_mini",&startHitsRadiusREC_mini);
 	tree->SetBranchAddress("dedxProtonREC_mini",&dedxProtonREC_mini);
@@ -521,7 +520,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			h_chargeRstartNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
 			if(dedxLikelihoodProtonREC_mini[itrk] > 0.003) h_chargeRstartProtonNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini);
 			
-			if( passREC_mini[itrk]!=1 ) continue;
+			if( !passREC_mini[itrk] ) continue;
 			if( chargetrack == 0 ) {cout << "chargetrack ~ " << typeChgREC_mini[itrk] << endl; continue;}
 
 			if( etaREC_mini[itrk] > etamax ){
