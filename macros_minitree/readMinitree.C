@@ -294,8 +294,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_chargeRstartProtonSplit = new TH1D("h_chargeRstartProtonSplit",";charge*R_{start}",200,-50,50);
 	TH2D* h_deltaPtDeltaEta = new TH2D("h_deltaPtDeltaEta",";p_{T};#eta",200,-1,1,1000,-3.2,3.2);
 
+	TH1D* h_typeChgTemp = new TH1D("h_typeChgTemp", "h_typeChgTemp ",9,-4,5);
+
 	cout << "==== Total number of events ~ " << tree->GetEntries() << " ========" << endl;
-	for(int ievent = 0; ievent < tree->GetEntries(); ievent++){
+	for(int ievent = 0; ievent < 100000; ievent++){
 
 		tree->GetEntry(ievent);
 		
@@ -514,8 +516,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	//end double loop
 
 			//Rstart without cut
+
 			int chargetrack = typeChgREC_mini[itrk];
-			if( typeChgREC_mini[itrk] == 0 ) cout << "typeChgREC_mini[itrk] ~ " << typeChgREC_mini[itrk] << endl;
+			h_typeChgTemp->Fill(typeChgREC_mini[itrk],w_mini );
+
 			if( typeChgREC_mini[itrk] >= 1 ) chargetrack = 1;
 			if( typeChgREC_mini[itrk] < 0 ) chargetrack = -1;
 			
