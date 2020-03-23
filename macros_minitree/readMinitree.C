@@ -294,7 +294,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH2D* h_deltaPtDeltaEta = new TH2D("h_deltaPtDeltaEta",";p_{T};#eta",200,-1,1,1000,-3.2,3.2);
 
 	cout << "==== Total number of events ~ " << tree->GetEntries() << " ========" << endl;
-	for(int ievent = 0; ievent < 1000000; ievent++){
+	for(int ievent = 0; ievent < tree->GetEntries(); ievent++){
 
 		tree->GetEntry(ievent);
 		
