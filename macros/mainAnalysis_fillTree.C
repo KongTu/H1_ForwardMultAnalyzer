@@ -242,7 +242,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("Q2REC_es_mini",&myEvent.Q2REC_es_mini,"Q2REC_es_mini/F");
    outtree->Branch("eventpass_mini",&myEvent.eventpass_mini,"eventpass_mini/I");
    outtree->Branch("nRECtrack_mini",&myEvent.nRECtrack_mini,"nRECtrack_mini/I");
-   outtree->Branch("typeChgREC_mini",&myEvent.typeChgREC_mini,"typeChgREC_mini/I");
    
    outtree->Branch("EpzREC_mini",&myEvent.EpzREC_mini,"EpzREC_mini/F");
    outtree->Branch("totalMultREC_mini",&myEvent.totalMultREC_mini,"totalMultREC_mini/I");
@@ -257,6 +256,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("ptStarREC_mini",myEvent.ptStarREC_mini,"ptStarREC_mini[nRECtrack_mini]/F");
    outtree->Branch("etaStarREC_mini",myEvent.etaStarREC_mini,"etaStarREC_mini[nRECtrack_mini]/F");
    outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
+   
+   outtree->Branch("typeChgREC_mini",&myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
 
    outtree->Branch("nucliaREC_mini",myEvent.nucliaREC_mini,"nucliaREC_mini[nRECtrack_mini]/F");
    outtree->Branch("passREC_mini",myEvent.passREC_mini,"passREC_mini[nRECtrack_mini]/I");
@@ -484,10 +485,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             if( vtxZ_weight == 0. ) vtxZ_weight = 1.0;
             if( doRapgap_ ){//rapgap has diffractive MCs
                if( i < dis_events ){
-                  evt_weight = w*y_weight*vtxZ_weight;//*(136./68.);//data/mc Lumi
+                  evt_weight = w*y_weight*vtxZ_weight*(136./68.);//data/mc Lumi
                }
                else if( i >= dis_events && i < 1.0*(tree->GetEntries()-dis_events)+dis_events ){
-                  evt_weight = w*y_weight*vtxZ_weight;//(136./(1.0*219.35));//data/mc Lumi
+                  evt_weight = w*y_weight*vtxZ_weight*(136./(1.0*219.35));//data/mc Lumi
                }
             }
             else{
@@ -678,10 +679,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             cutVar.clear();
 
             if( pass_default ){
-               if( typeChgREC[j] == 0 ){
-                  cout << "typeChgREC[j] ~ " << typeChgREC[j] << endl;
-               }
-               
                if(etaREC[j] > 0.2 && etaREC[j] < 1.6 ) Ntracks_eta_p++;
                if(etaREC[j] < 0.2 && etaREC[j] > -1.6) Ntracks_eta_m++;
             }
