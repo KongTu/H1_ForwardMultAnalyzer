@@ -188,7 +188,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	tree->SetBranchAddress("dedxElectronREC_mini",&dedxElectronREC_mini);
 	tree->SetBranchAddress("dedxLikelihoodElectronREC_mini",&dedxLikelihoodElectronREC_mini);
 
-	
 	//define output file
 	TFile *outputfile = new TFile(outname,"RECREATE");
 	/*
@@ -294,10 +293,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_chargeRstartProtonSplit = new TH1D("h_chargeRstartProtonSplit",";charge*R_{start}",200,-50,50);
 	TH2D* h_deltaPtDeltaEta = new TH2D("h_deltaPtDeltaEta",";p_{T};#eta",200,-1,1,1000,-3.2,3.2);
 
-	TH1D* h_typeChgTemp = new TH1D("h_typeChgTemp", "h_typeChgTemp ",9,-4,5);
-
 	cout << "==== Total number of events ~ " << tree->GetEntries() << " ========" << endl;
-	for(int ievent = 0; ievent < 100000; ievent++){
+	for(int ievent = 0; ievent < 1000000; ievent++){
 
 		tree->GetEntry(ievent);
 		
@@ -386,6 +383,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		TLorentzVector photon_candidate(-99,-99,-99,-99);
 		TLorentzVector pip(0,0,0,0),pim(0,0,0,0);
 		TLorentzVector elecp(0,0,0,0),elecm(0,0,0,0);
+
+
 	//double nested loops
 		for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
 
@@ -501,7 +500,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				
 				//fill delta pt and delta eta to see split tracks
 				if( passREC_mini[itrk] == 1 && passREC_mini[jtrk] == 1  ){
-					int chargetrack = 0;
+					int chargetrack = typeChgREC_mini[itrk];
 					if( typeChgREC_mini[itrk] > 0 ) chargetrack = 1;
 					if( typeChgREC_mini[itrk] < 0 ) chargetrack = -1;
 					double deltaPt = TMath::Hypot(pxREC_mini[itrk],pyREC_mini[itrk]) - TMath::Hypot(pxREC_mini[jtrk],pyREC_mini[jtrk]);
@@ -518,8 +517,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			//Rstart without cut
 
 			int chargetrack = typeChgREC_mini[itrk];
-			h_typeChgTemp->Fill(typeChgREC_mini[itrk],w_mini );
-
 			if( typeChgREC_mini[itrk] >= 1 ) chargetrack = 1;
 			if( typeChgREC_mini[itrk] < 0 ) chargetrack = -1;
 			
@@ -527,8 +524,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			if(dedxLikelihoodProtonREC_mini[itrk] > 0.003) h_chargeRstartProtonNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini);
 			
 			if( passREC_mini[itrk] != 1 ) continue;
-			
-
 			if( etaREC_mini[itrk] > etamax ){
 				etamax = etaREC_mini[itrk];
 			}
