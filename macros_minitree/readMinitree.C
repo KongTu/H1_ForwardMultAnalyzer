@@ -522,6 +522,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			if(dedxLikelihoodProtonREC_mini[itrk] > 0.003) h_chargeRstartProtonNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini);
 			
 			if( passREC_mini[itrk]!=1 ) continue;
+			if( chargetrack == 0 ) {cout << "chargetrack ~ " << chargetrack << endl; continue;}
+
 			if( etaREC_mini[itrk] > etamax ){
 				etamax = etaREC_mini[itrk];
 			}
