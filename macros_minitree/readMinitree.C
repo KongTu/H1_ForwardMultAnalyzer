@@ -514,9 +514,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	//end double loop
 
 			//Rstart without cut
-			int chargetrack = 0;
-			if( typeChgREC_mini[itrk] > 0 ) chargetrack = 1;
+			int chargetrack = typeChgREC_mini[itrk];
+			if( typeChgREC_mini[itrk] >= 1 ) chargetrack = 1;
 			if( typeChgREC_mini[itrk] < 0 ) chargetrack = -1;
+			
 			h_chargeRstartNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
 			if(dedxLikelihoodProtonREC_mini[itrk] > 0.003) h_chargeRstartProtonNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini);
 			
