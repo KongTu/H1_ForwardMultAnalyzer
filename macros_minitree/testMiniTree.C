@@ -15,7 +15,7 @@
 
 using namespace std;
 
-void testMiniTree(const int ifile_ = 1 ){
+void testMiniTree(){
 
 	TFile* file = 0;
 	file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree.root");
