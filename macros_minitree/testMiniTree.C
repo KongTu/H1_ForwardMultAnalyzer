@@ -30,6 +30,7 @@ void testMiniTree(){
 	for(int ievent = 0; ievent < tree->GetEntries(); ievent++){
 		tree->GetEntry(ievent);
 		for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
+			if( typeChgREC_mini[itrk] == 0 ) cout << "typeChgREC_mini[itrk] ~ " << typeChgREC_mini[itrk] << endl;
 			h_typeChgTemp->Fill( typeChgREC_mini[itrk] );
 		}
 	}
