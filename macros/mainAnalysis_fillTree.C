@@ -678,6 +678,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             cutVar.clear();
 
             if( pass_default ){
+               cout << "typeChgREC[j] ~ " << typeChgREC[j] << endl;
                if(etaREC[j] > 0.2 && etaREC[j] < 1.6 ) Ntracks_eta_p++;
                if(etaREC[j] < 0.2 && etaREC[j] > -1.6) Ntracks_eta_m++;
             }
