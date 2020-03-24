@@ -186,8 +186,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       // tree->Add("../batch/output/mc_5878_NRAD/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadCaliNewKine_v3/*.root");
-      tree->Add("../batch/output/mc_8927_hadCaliNewKine_v3/*.root");
+      tree->Add("../batch/output/mc_8926_hadCaliNewKine_v1/*.root");
+      tree->Add("../batch/output/mc_8927_hadCaliNewKine_v1/*.root");
 
       // tree->Add("../batch/output/mc_5877_NRAD_django14/*.root");
 
@@ -492,7 +492,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                }
             }
             else{
-               evt_weight = w*y_weight*vtxZ_weight;
+               evt_weight = w*y_weight*vtxZ_weight*(136./363);
             }
          }
          else if( doGen_ && !doReweight_ ) {
@@ -510,7 +510,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                }
             }
             else{
-               evt_weight = w;
+               evt_weight = w*(136./363);
             }
             
          }
