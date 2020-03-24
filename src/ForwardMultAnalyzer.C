@@ -348,6 +348,7 @@ int main(int argc, char* argv[]) {
    */
    TH2D* h_dPhi_theta_qedc=new TH2D("h_dPhi_theta_qedc",";#theta;#Delta#phi",150,0,7,300,-7,7);
    TH2D* h_dPhi_sumPt_qedc=new TH2D("h_dPhi_sumPt_qedc",";sumPt;#Delta#phi",300,0,30,300,-7,7);
+   TH1D* h_numRadPhot = new TH1D("h_numRadPhot",";number of photon",30,0,30);
 
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
@@ -622,6 +623,7 @@ int main(int argc, char* argv[]) {
          TLorentzVector escat0_MC_lab
             (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
 
+         int number_of_radPhot = 0;
          // add radiative photon(s) in a cone
          TLorentzVector escatPhot_MC_lab(escat0_MC_lab);
          set<int> isElectron;
@@ -638,12 +640,15 @@ int main(int argc, char* argv[]) {
                   escatPhot_MC_lab += p;
                }
             }
+            if( (status==0) && mcpart.IsRadPhoton(i) ) number_of_radPhot++;
          }
          myEvent.elecEradMC=escatPhot_MC_lab.E()-escat0_MC_lab.E();
          myEvent.elecPxMC=escatPhot_MC_lab.X();
          myEvent.elecPyMC=escatPhot_MC_lab.Y();
          myEvent.elecPzMC=escatPhot_MC_lab.Z();
          myEvent.elecEMC=escatPhot_MC_lab.E();
+
+         h_numRadPhot->Fill( number_of_radPhot );
 
          if(print) {
             cout<<"MC scattered electron is made of "<<isElectron.size()<<" particle(s)\n";
@@ -1549,6 +1554,7 @@ int main(int argc, char* argv[]) {
     output->Write();
     h_dPhi_theta_qedc->Write();
     h_dPhi_sumPt_qedc->Write();
+    h_numRadPhot->Write();
 
     delete file;
 
