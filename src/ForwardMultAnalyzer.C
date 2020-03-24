@@ -349,7 +349,7 @@ int main(int argc, char* argv[]) {
    TH2D* h_dPhi_theta_qedc=new TH2D("h_dPhi_theta_qedc",";#theta;#Delta#phi",150,0,7,300,-7,7);
    TH2D* h_dPhi_sumPt_qedc=new TH2D("h_dPhi_sumPt_qedc",";sumPt;#Delta#phi",300,0,30,300,-7,7);
    TH1D* h_numRadPhot = new TH1D("h_numRadPhot",";number of photon",5,0,5);
-   TH1D* h_dPhiRadPhot = new TH1D("h_dPhiRadPhot",";dphi",300,-7,7);
+   TH1D* h_dPhiRadPhot = new TH1D("h_dPhiRadPhot",";dphi",300,-16,16);
 
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
@@ -675,9 +675,11 @@ int main(int argc, char* argv[]) {
             int pdgid = part->GetPDG();   
             int status=part->GetStatus(); 
             float charge=part->GetCharge();  
-            int elec_id = mcPartId.GetIdxScatElectron(); 
+            int elec_id = mcPartId.GetIdxScatElectron();
+            int phot_id = mcPartId.GetIdxRadPhoton();
+
             TLorentzVector p(part->GetFourVector());
-            if( status != 0 || i == elec_id ) continue;  
+            if( status != 0 || i == elec_id || i == phot_id ) continue;  
             if( p.DeltaR(mcpart[elec_id]->GetFourVector())<ELEC_ISOLATION_CONE ) continue;
             
             hfs_MC_E_lab += part->GetE(); 
