@@ -350,6 +350,7 @@ int main(int argc, char* argv[]) {
    TH2D* h_dPhi_sumPt_qedc=new TH2D("h_dPhi_sumPt_qedc",";sumPt;#Delta#phi",300,0,30,300,-7,7);
    TH1D* h_numRadPhot = new TH1D("h_numRadPhot",";number of photon",5,0,5);
    TH1D* h_dPhiRadPhot = new TH1D("h_dPhiRadPhot",";dphi",300,-16,16);
+   TH1D* h_dPhiAllPhot = new TH1D("h_dPhiAllPhot",";dphi",300,-16,16);
 
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
@@ -632,9 +633,11 @@ int main(int argc, char* argv[]) {
          for(int i=0;i<mcpart.GetEntries();i++) {
             H1PartMC *part=mcpart[i];
             int status=part->GetStatus();
-            if((status==0)&&(part->GetPDG()==22)) {
+            if((status==0||status==202)&&(part->GetPDG()==22)) {
+               
                TLorentzVector p(part->GetFourVector());
-
+               h_dPhiAllPhot->Fill( p.DeltaR(escat0_MC_lab) );
+               
                if(p.DeltaR(escat0_MC_lab)<ELEC_ISOLATION_CONE) {
                   // this photon counts with the electron
                   isElectron.insert(i);
@@ -646,9 +649,8 @@ int main(int argc, char* argv[]) {
                // this radiative photon counts with the electron
                TLorentzVector p(part->GetFourVector());
                h_dPhiRadPhot->Fill( p.DeltaR(escat0_MC_lab) );
-               isElectron.insert(i);
-               escatPhot_MC_lab += p;
             }
+
             
          }
          myEvent.elecEradMC=escatPhot_MC_lab.E()-escat0_MC_lab.E();
@@ -1567,6 +1569,7 @@ int main(int argc, char* argv[]) {
     h_dPhi_sumPt_qedc->Write();
     h_numRadPhot->Write();
     h_dPhiRadPhot->Write();
+    h_dPhiAllPhot->Write();
 
     delete file;
 
