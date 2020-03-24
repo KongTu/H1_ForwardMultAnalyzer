@@ -640,12 +640,11 @@ int main(int argc, char* argv[]) {
                   escatPhot_MC_lab += p;
                }
             }
-            if(status==0) {
-               if( i == mcPartId.GetIdxRadPhoton() ) {
-                  number_of_radPhot++;
-               }
-               
+            
+            if( i == mcPartId.GetIdxRadPhoton() ) {
+               number_of_radPhot++;
             }
+            
          }
          myEvent.elecEradMC=escatPhot_MC_lab.E()-escat0_MC_lab.E();
          myEvent.elecPxMC=escatPhot_MC_lab.X();
