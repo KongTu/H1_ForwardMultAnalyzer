@@ -631,7 +631,7 @@ int main(int argc, char* argv[]) {
          for(int i=0;i<mcpart.GetEntries();i++) {
             H1PartMC *part=mcpart[i];
             int status=part->GetStatus();
-            if((status==0 )&&(part->GetPDG()==22)) {
+            if((status==0)&&(part->GetPDG()==22)) {
                TLorentzVector p(part->GetFourVector());
 
                if(p.DeltaR(escat0_MC_lab)<ELEC_ISOLATION_CONE) {
@@ -640,7 +640,12 @@ int main(int argc, char* argv[]) {
                   escatPhot_MC_lab += p;
                }
             }
-            if( (status==0) && mcPartId.IsRadPhoton(i) ) number_of_radPhot++;
+            if(status==0) {
+               if( i == mcPartId.GetIdxRadPhoton() ) {
+                  number_of_radPhot++;
+               }
+               
+            }
          }
          myEvent.elecEradMC=escatPhot_MC_lab.E()-escat0_MC_lab.E();
          myEvent.elecPxMC=escatPhot_MC_lab.X();
@@ -648,6 +653,7 @@ int main(int argc, char* argv[]) {
          myEvent.elecPzMC=escatPhot_MC_lab.Z();
          myEvent.elecEMC=escatPhot_MC_lab.E();
 
+         cout << "number_of_radPhot ~ " << number_of_radPhot << endl;
          h_numRadPhot->Fill( number_of_radPhot );
 
          if(print) {
