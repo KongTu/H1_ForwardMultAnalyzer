@@ -348,7 +348,8 @@ int main(int argc, char* argv[]) {
    */
    TH2D* h_dPhi_theta_qedc=new TH2D("h_dPhi_theta_qedc",";#theta;#Delta#phi",150,0,7,300,-7,7);
    TH2D* h_dPhi_sumPt_qedc=new TH2D("h_dPhi_sumPt_qedc",";sumPt;#Delta#phi",300,0,30,300,-7,7);
-   TH1D* h_numRadPhot = new TH1D("h_numRadPhot",";number of photon",30,0,30);
+   TH1D* h_numRadPhot = new TH1D("h_numRadPhot",";number of photon",5,0,5);
+   TH1D* h_dPhiRadPhot = new TH1D("h_dPhiRadPhot",";dphi",300,-7,7);
 
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
@@ -640,9 +641,13 @@ int main(int argc, char* argv[]) {
                   escatPhot_MC_lab += p;
                }
             }
-            
-            if( i == mcPartId.GetIdxRadPhoton() ) {
+            else if( i == mcPartId.GetIdxRadPhoton() ) {
                number_of_radPhot++;
+               // this radiative photon counts with the electron
+               TLorentzVector p(part->GetFourVector());
+               h_dPhiRadPhot->Fill( p.DeltaR(escat0_MC_lab) );
+               isElectron.insert(i);
+               escatPhot_MC_lab += p;
             }
             
          }
@@ -652,7 +657,6 @@ int main(int argc, char* argv[]) {
          myEvent.elecPzMC=escatPhot_MC_lab.Z();
          myEvent.elecEMC=escatPhot_MC_lab.E();
 
-         cout << "number_of_radPhot ~ " << number_of_radPhot << endl;
          h_numRadPhot->Fill( number_of_radPhot );
 
          if(print) {
@@ -1560,6 +1564,7 @@ int main(int argc, char* argv[]) {
     h_dPhi_theta_qedc->Write();
     h_dPhi_sumPt_qedc->Write();
     h_numRadPhot->Write();
+    h_dPhiRadPhot->Write();
 
     delete file;
 
