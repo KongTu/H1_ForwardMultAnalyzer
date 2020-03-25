@@ -237,7 +237,7 @@ struct MyEvent {
    Int_t elecTypeREC;
 
    Float_t radPhoPxREC,radPhoPyREC,radPhoPzREC,radPhoEREC;//radiative photon
-   Int_t isQEDc;
+   Int_t isQEDc,isBtoBPhot;
 
    Float_t xREC,yREC,Q2REC;
    Float_t xREC_es,yREC_es,Q2REC_es;
@@ -388,6 +388,7 @@ int main(int argc, char* argv[]) {
    output->Branch("radPhoPzMC",&myEvent.radPhoPzMC,"radPhoPzMC[4]/F");
    output->Branch("radPhoEMC",&myEvent.radPhoEMC,"radPhoEMC[4]/F");
    output->Branch("isQEDc",&myEvent.isQEDc,"isQEDc/I");
+   output->Branch("isBtoBPhot",&myEvent.isBtoBPhot,"isBtoBPhot/I");
    output->Branch("xGKI",&myEvent.xGKI,"xGKI/F");
    output->Branch("yGKI",&myEvent.yGKI,"yGKI/F");
    output->Branch("Q2GKI",&myEvent.Q2GKI,"Q2GKI/F");
@@ -627,6 +628,7 @@ int main(int argc, char* argv[]) {
             (mcpart[mcPartId.GetIdxScatElectron()]->GetFourVector());
 
          int number_of_radPhot = 0;
+         myEvent.isBtoBPhot = 0;
          // add radiative photon(s) in a cone
          TLorentzVector escatPhot_MC_lab(escat0_MC_lab);
          set<int> isElectron;
@@ -634,26 +636,33 @@ int main(int argc, char* argv[]) {
          for(int i=0;i<mcpart.GetEntries();i++) {
             H1PartMC *part=mcpart[i];
             int status=part->GetStatus();
-            if((status==0)&&(part->GetPDG()==22)){
+            if((status==0||status==202)&&(part->GetPDG()==22)){
                
                TLorentzVector p(part->GetFourVector());
                h_dRAllPhot->Fill( p.DeltaR(escat0_MC_lab) );
             
                if(p.DeltaR(escat0_MC_lab)<ELEC_ISOLATION_CONE){
                   // this photon counts with the electron
-                  // isElectron.insert(i);
-                  // escatPhot_MC_lab += p;
+                  isElectron.insert(i);
+                  escatPhot_MC_lab += p;
+               }
+               else if( fabs(p.DeltaPhi(escat0_MC_lab)) > 2.9 ){
+                  // this photon counts with the electron
+                  isElectron.insert(i);
+                  escatPhot_MC_lab += p;
+                  myEvent.isBtoBPhot = 1;
+               }
+               else{
+                  //do nothing,not adding photon to scatElec.
                }
             }
+            //to save radiative photon separately
             if( (status==202) && (part->GetPDG()==22) ) {
                number_of_radPhot++;
                // this radiative photon counts with the electron
                TLorentzVector p(part->GetFourVector());
                h_dRRadPhot->Fill( p.DeltaR(escat0_MC_lab) );
                h_dPhiRadPhot->Fill( p.DeltaPhi(escat0_MC_lab) );
-               isElectron.insert(i);
-               escatPhot_MC_lab += p; 
-
             }
          }
          myEvent.elecEradMC=escatPhot_MC_lab.E()-escat0_MC_lab.E();
