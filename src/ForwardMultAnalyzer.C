@@ -633,22 +633,25 @@ int main(int argc, char* argv[]) {
          for(int i=0;i<mcpart.GetEntries();i++) {
             H1PartMC *part=mcpart[i];
             int status=part->GetStatus();
-            if((status==0||status==202)&&(part->GetPDG()==22)){
+            if((status==0)&&(part->GetPDG()==22)){
                
                TLorentzVector p(part->GetFourVector());
                h_dPhiAllPhot->Fill( p.DeltaR(escat0_MC_lab) );
-               
+            
                if(p.DeltaR(escat0_MC_lab)<ELEC_ISOLATION_CONE){
                   // this photon counts with the electron
-                  isElectron.insert(i);
-                  escatPhot_MC_lab += p;
+                  // isElectron.insert(i);
+                  // escatPhot_MC_lab += p;
                }
             }
-            if( i == mcPartId.GetIdxRadPhoton() ) {
+            if( (status==202) && (part->GetPDG()==22) ) {
                number_of_radPhot++;
                // this radiative photon counts with the electron
                TLorentzVector p(part->GetFourVector());
                h_dPhiRadPhot->Fill( p.DeltaR(escat0_MC_lab) );
+               
+               isElectron.insert(i);
+               escatPhot_MC_lab += p; 
             }
          }
          myEvent.elecEradMC=escatPhot_MC_lab.E()-escat0_MC_lab.E();
