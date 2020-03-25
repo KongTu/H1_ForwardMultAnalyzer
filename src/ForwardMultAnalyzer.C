@@ -349,8 +349,9 @@ int main(int argc, char* argv[]) {
    TH2D* h_dPhi_theta_qedc=new TH2D("h_dPhi_theta_qedc",";#theta;#Delta#phi",150,0,7,300,-7,7);
    TH2D* h_dPhi_sumPt_qedc=new TH2D("h_dPhi_sumPt_qedc",";sumPt;#Delta#phi",300,0,30,300,-7,7);
    TH1D* h_numRadPhot = new TH1D("h_numRadPhot",";number of photon",5,0,5);
-   TH1D* h_dPhiRadPhot = new TH1D("h_dPhiRadPhot",";dphi",300,-16,16);
-   TH1D* h_dPhiAllPhot = new TH1D("h_dPhiAllPhot",";dphi",300,-16,16);
+   TH1D* h_dRRadPhot = new TH1D("h_dRRadPhot",";dR",300,-16,16);
+   TH1D* h_dRAllPhot = new TH1D("h_dRAllPhot",";dR",300,-16,16);
+   TH1D* h_dPhiRadPhot = new TH1D("h_dPhiRadPhot",";dphi",300,-6.28,6.28);
 
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
@@ -636,7 +637,7 @@ int main(int argc, char* argv[]) {
             if((status==0)&&(part->GetPDG()==22)){
                
                TLorentzVector p(part->GetFourVector());
-               h_dPhiAllPhot->Fill( p.DeltaR(escat0_MC_lab) );
+               h_dRAllPhot->Fill( p.DeltaR(escat0_MC_lab) );
             
                if(p.DeltaR(escat0_MC_lab)<ELEC_ISOLATION_CONE){
                   // this photon counts with the electron
@@ -648,10 +649,11 @@ int main(int argc, char* argv[]) {
                number_of_radPhot++;
                // this radiative photon counts with the electron
                TLorentzVector p(part->GetFourVector());
-               h_dPhiRadPhot->Fill( p.DeltaR(escat0_MC_lab) );
-               
+               h_dRRadPhot->Fill( p.DeltaR(escat0_MC_lab) );
+               h_dPhiRadPhot->Fill( p.DeltaPhi(escat0_MC_lab) );
                isElectron.insert(i);
                escatPhot_MC_lab += p; 
+
             }
          }
          myEvent.elecEradMC=escatPhot_MC_lab.E()-escat0_MC_lab.E();
@@ -1569,8 +1571,9 @@ int main(int argc, char* argv[]) {
     h_dPhi_theta_qedc->Write();
     h_dPhi_sumPt_qedc->Write();
     h_numRadPhot->Write();
+    h_dRRadPhot->Write();
+    h_dRAllPhot->Write();
     h_dPhiRadPhot->Write();
-    h_dPhiAllPhot->Write();
 
     delete file;
 
