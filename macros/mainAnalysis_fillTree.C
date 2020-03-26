@@ -186,8 +186,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       // tree->Add("../batch/output/mc_5878_NRAD/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadCaliNewKine_v5/*.root");
-      tree->Add("../batch/output/mc_8927_hadCaliNewKine_v5/*.root");
+      tree->Add("../batch/output/mc_8926_hadCaliNewKine_v6/*.root");
+      tree->Add("../batch/output/mc_8927_hadCaliNewKine_v6/*.root");
 
       // tree->Add("../batch/output/mc_5877_NRAD_django14/*.root");
 
