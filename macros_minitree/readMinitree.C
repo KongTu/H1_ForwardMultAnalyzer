@@ -385,134 +385,134 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		TLorentzVector elecp(0,0,0,0),elecm(0,0,0,0);
 
 
-	// //double nested loops
-	// 	for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
+		for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
 
-	// 		//filling eta_lab
-	// 		if( passREC_mini[itrk] == 1 ) h_eta->Fill(etaREC_mini[itrk], w_mini);
-			
-	// 		for(int jtrk = itrk+1; jtrk < nRECtrack_mini; jtrk++){
-	// 			if( itrk==jtrk ) continue;
-	// 			if( passREC_mini[itrk] == 1 && passREC_mini[jtrk] == 1  ){
+			//filling eta_lab
+			if( passREC_mini[itrk] == 1 ) h_eta->Fill(etaREC_mini[itrk], w_mini);
+	
+	//double nested loops
+			for(int jtrk = itrk+1; jtrk < nRECtrack_mini; jtrk++){
+				if( itrk==jtrk ) continue;
+				if( passREC_mini[itrk] == 1 && passREC_mini[jtrk] == 1  ){
 
-	// 				double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]
-	// 					+pyREC_mini[itrk]*pyREC_mini[itrk]
-	// 					+pzREC_mini[itrk]*pzREC_mini[itrk]
-	// 					+PIMASS*PIMASS);
-	// 				pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
-	// 				double E_pim = sqrt( pxREC_mini[jtrk]*pxREC_mini[jtrk]
-	// 					+pyREC_mini[jtrk]*pyREC_mini[jtrk]
-	// 					+pzREC_mini[jtrk]*pzREC_mini[jtrk]
-	// 					+PIMASS*PIMASS );
-	// 				pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
+					double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]
+						+pyREC_mini[itrk]*pyREC_mini[itrk]
+						+pzREC_mini[itrk]*pzREC_mini[itrk]
+						+PIMASS*PIMASS);
+					pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
+					double E_pim = sqrt( pxREC_mini[jtrk]*pxREC_mini[jtrk]
+						+pyREC_mini[jtrk]*pyREC_mini[jtrk]
+						+pzREC_mini[jtrk]*pzREC_mini[jtrk]
+						+PIMASS*PIMASS );
+					pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
 
-	// 				k0s_candidate = pip+pim;
+					k0s_candidate = pip+pim;
 
-	// 				if(dedxLikelihoodElectronREC_mini[itrk] > 0.003 && dedxLikelihoodElectronREC_mini[jtrk] > 0.003){
-	// 					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
-	// 						pyREC_mini[itrk]*pyREC_mini[itrk]+
-	// 						pzREC_mini[itrk]*pzREC_mini[itrk]+
-	// 						ELECTRON_MASS*ELECTRON_MASS);
-	// 					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
-	// 					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
-	// 						pyREC_mini[jtrk]*pyREC_mini[jtrk]+
-	// 						pzREC_mini[jtrk]*pzREC_mini[jtrk]+
-	// 						ELECTRON_MASS*ELECTRON_MASS);
-	// 					elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
+					if(dedxLikelihoodElectronREC_mini[itrk] > 0.003 && dedxLikelihoodElectronREC_mini[jtrk] > 0.003){
+						double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
+							pyREC_mini[itrk]*pyREC_mini[itrk]+
+							pzREC_mini[itrk]*pzREC_mini[itrk]+
+							ELECTRON_MASS*ELECTRON_MASS);
+						elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
+						double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
+							pyREC_mini[jtrk]*pyREC_mini[jtrk]+
+							pzREC_mini[jtrk]*pzREC_mini[jtrk]+
+							ELECTRON_MASS*ELECTRON_MASS);
+						elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 						
-	// 					photon_candidate = elecp+elecm;
-	// 				}
+						photon_candidate = elecp+elecm;
+					}
 					
-	// 				if(Q2_INDEX>-1 && y_INDEX>-1){
-	// 					h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
-	// 					h_PhotMass[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M(), w_mini );
-	// 				}
-	// 			}
-	// 			if( passTightREC_mini[itrk] == 1 && passTightREC_mini[jtrk] == 1  ){
+					if(Q2_INDEX>-1 && y_INDEX>-1){
+						h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
+						h_PhotMass[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M(), w_mini );
+					}
+				}
+				if( passTightREC_mini[itrk] == 1 && passTightREC_mini[jtrk] == 1  ){
 
-	// 				double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]
-	// 					+pyREC_mini[itrk]*pyREC_mini[itrk]
-	// 					+pzREC_mini[itrk]*pzREC_mini[itrk]
-	// 					+PIMASS*PIMASS);
-	// 				pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
-	// 				double E_pim = sqrt( pxREC_mini[jtrk]*pxREC_mini[jtrk]
-	// 					+pyREC_mini[jtrk]*pyREC_mini[jtrk]
-	// 					+pzREC_mini[jtrk]*pzREC_mini[jtrk]
-	// 					+PIMASS*PIMASS );
-	// 				pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
+					double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]
+						+pyREC_mini[itrk]*pyREC_mini[itrk]
+						+pzREC_mini[itrk]*pzREC_mini[itrk]
+						+PIMASS*PIMASS);
+					pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
+					double E_pim = sqrt( pxREC_mini[jtrk]*pxREC_mini[jtrk]
+						+pyREC_mini[jtrk]*pyREC_mini[jtrk]
+						+pzREC_mini[jtrk]*pzREC_mini[jtrk]
+						+PIMASS*PIMASS );
+					pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
 
-	// 				k0s_candidate = pip+pim;
+					k0s_candidate = pip+pim;
 
-	// 				if(dedxLikelihoodElectronREC_mini[itrk] > 0.003 && dedxLikelihoodElectronREC_mini[jtrk] > 0.003){
-	// 					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
-	// 						pyREC_mini[itrk]*pyREC_mini[itrk]+
-	// 						pzREC_mini[itrk]*pzREC_mini[itrk]+
-	// 						ELECTRON_MASS*ELECTRON_MASS);
-	// 					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
-	// 					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
-	// 						pyREC_mini[jtrk]*pyREC_mini[jtrk]+
-	// 						pzREC_mini[jtrk]*pzREC_mini[jtrk]+
-	// 						ELECTRON_MASS*ELECTRON_MASS);
-	// 					elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
+					if(dedxLikelihoodElectronREC_mini[itrk] > 0.003 && dedxLikelihoodElectronREC_mini[jtrk] > 0.003){
+						double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
+							pyREC_mini[itrk]*pyREC_mini[itrk]+
+							pzREC_mini[itrk]*pzREC_mini[itrk]+
+							ELECTRON_MASS*ELECTRON_MASS);
+						elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
+						double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
+							pyREC_mini[jtrk]*pyREC_mini[jtrk]+
+							pzREC_mini[jtrk]*pzREC_mini[jtrk]+
+							ELECTRON_MASS*ELECTRON_MASS);
+						elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 						
-	// 					photon_candidate = elecp+elecm;
-	// 				}
+						photon_candidate = elecp+elecm;
+					}
 					
-	// 				if(Q2_INDEX>-1 && y_INDEX>-1){
-	// 					h_K0sMassTight[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
-	// 					h_PhotMassTight[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M(), w_mini );
-	// 				}
-	// 			}
-	// 			if( passLooseREC_mini[itrk] == 1 && passLooseREC_mini[jtrk] == 1  ){
+					if(Q2_INDEX>-1 && y_INDEX>-1){
+						h_K0sMassTight[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
+						h_PhotMassTight[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M(), w_mini );
+					}
+				}
+				if( passLooseREC_mini[itrk] == 1 && passLooseREC_mini[jtrk] == 1  ){
 
-	// 				double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]
-	// 					+pyREC_mini[itrk]*pyREC_mini[itrk]
-	// 					+pzREC_mini[itrk]*pzREC_mini[itrk]
-	// 					+PIMASS*PIMASS);
-	// 				pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
-	// 				double E_pim = sqrt( pxREC_mini[jtrk]*pxREC_mini[jtrk]
-	// 					+pyREC_mini[jtrk]*pyREC_mini[jtrk]
-	// 					+pzREC_mini[jtrk]*pzREC_mini[jtrk]
-	// 					+PIMASS*PIMASS );
-	// 				pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
+					double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]
+						+pyREC_mini[itrk]*pyREC_mini[itrk]
+						+pzREC_mini[itrk]*pzREC_mini[itrk]
+						+PIMASS*PIMASS);
+					pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
+					double E_pim = sqrt( pxREC_mini[jtrk]*pxREC_mini[jtrk]
+						+pyREC_mini[jtrk]*pyREC_mini[jtrk]
+						+pzREC_mini[jtrk]*pzREC_mini[jtrk]
+						+PIMASS*PIMASS );
+					pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
 
-	// 				k0s_candidate = pip+pim;
+					k0s_candidate = pip+pim;
 
-	// 				if(dedxLikelihoodElectronREC_mini[itrk] > 0.003 && dedxLikelihoodElectronREC_mini[jtrk] > 0.003){
-	// 					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
-	// 						pyREC_mini[itrk]*pyREC_mini[itrk]+
-	// 						pzREC_mini[itrk]*pzREC_mini[itrk]+
-	// 						ELECTRON_MASS*ELECTRON_MASS);
-	// 					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
-	// 					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
-	// 						pyREC_mini[jtrk]*pyREC_mini[jtrk]+
-	// 						pzREC_mini[jtrk]*pzREC_mini[jtrk]+
-	// 						ELECTRON_MASS*ELECTRON_MASS);
-	// 					elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
+					if(dedxLikelihoodElectronREC_mini[itrk] > 0.003 && dedxLikelihoodElectronREC_mini[jtrk] > 0.003){
+						double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
+							pyREC_mini[itrk]*pyREC_mini[itrk]+
+							pzREC_mini[itrk]*pzREC_mini[itrk]+
+							ELECTRON_MASS*ELECTRON_MASS);
+						elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
+						double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
+							pyREC_mini[jtrk]*pyREC_mini[jtrk]+
+							pzREC_mini[jtrk]*pzREC_mini[jtrk]+
+							ELECTRON_MASS*ELECTRON_MASS);
+						elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 						
-	// 					photon_candidate = elecp+elecm;
-	// 				}
-	// 				if(Q2_INDEX>-1 && y_INDEX>-1){
-	// 					h_K0sMassLoose[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
-	// 					h_PhotMassLoose[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M(), w_mini );
-	// 				}
-	// 			}
+						photon_candidate = elecp+elecm;
+					}
+					if(Q2_INDEX>-1 && y_INDEX>-1){
+						h_K0sMassLoose[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
+						h_PhotMassLoose[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M(), w_mini );
+					}
+				}
 				
-	// 			//fill delta pt and delta eta to see split tracks
-	// 			if( passREC_mini[itrk] == 1 && passREC_mini[jtrk] == 1  ){
-	// 				int chargetrack = typeChgREC_mini[itrk];
-	// 				if( typeChgREC_mini[itrk] > 0 ) chargetrack = 1;
-	// 				if( typeChgREC_mini[itrk] < 0 ) chargetrack = -1;
-	// 				double deltaPt = TMath::Hypot(pxREC_mini[itrk],pyREC_mini[itrk]) - TMath::Hypot(pxREC_mini[jtrk],pyREC_mini[jtrk]);
-	// 				double deltaEta = etaREC_mini[itrk] - etaREC_mini[jtrk];
-	// 				h_deltaPtDeltaEta->Fill( deltaPt, deltaEta, w_mini );
-	// 				if( fabs(deltaPt) < 0.03 && fabs(deltaEta) < 0.05 ){
-	// 					h_chargeRstartSplit->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
-	// 					if( dedxLikelihoodProtonREC_mini[itrk] > 0.003 ) h_chargeRstartProtonSplit->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
-	// 				}
-	// 			}
-	// 		}
-	// //end double loop
+				//fill delta pt and delta eta to see split tracks
+				if( passREC_mini[itrk] == 1 && passREC_mini[jtrk] == 1  ){
+					int chargetrack = typeChgREC_mini[itrk];
+					if( typeChgREC_mini[itrk] > 0 ) chargetrack = 1;
+					if( typeChgREC_mini[itrk] < 0 ) chargetrack = -1;
+					double deltaPt = TMath::Hypot(pxREC_mini[itrk],pyREC_mini[itrk]) - TMath::Hypot(pxREC_mini[jtrk],pyREC_mini[jtrk]);
+					double deltaEta = etaREC_mini[itrk] - etaREC_mini[jtrk];
+					h_deltaPtDeltaEta->Fill( deltaPt, deltaEta, w_mini );
+					if( fabs(deltaPt) < 0.03 && fabs(deltaEta) < 0.05 ){
+						h_chargeRstartSplit->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
+						if( dedxLikelihoodProtonREC_mini[itrk] > 0.003 ) h_chargeRstartProtonSplit->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
+					}
+				}
+			}
+	//end double loop
 
 			//Rstart without cut
 
