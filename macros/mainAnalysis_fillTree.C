@@ -97,6 +97,8 @@ struct MyEvent {
    Float_t phoPzMC_mini;
    Float_t phoEMC_mini;
    Int_t isQEDcMC_mini;
+   Float_t dRRadPhot_mini;
+   Float_t dPhiRadPhot_mini;
 
    // reconstructed quantities
    Float_t xREC_es_mini,yREC_es_mini,Q2REC_es_mini;
@@ -208,15 +210,17 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
    outtree->Branch("eGammaPhiMC_mini",&myEvent.eGammaPhiMC_mini,"eGammaPhiMC_mini/F");
    outtree->Branch("sumPtMC_mini",&myEvent.sumPtMC_mini,"sumPtMC_mini/F");
-   outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
-   outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
-   outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
-   outtree->Branch("elecEMC_mini",&myEvent.elecEMC_mini,"elecEMC_mini/F");
-   outtree->Branch("phoPxMC_mini",&myEvent.phoPxMC_mini,"phoPxMC_mini/F");
-   outtree->Branch("phoPyMC_mini",&myEvent.phoPyMC_mini,"phoPyMC_mini/F");
-   outtree->Branch("phoPzMC_mini",&myEvent.phoPzMC_mini,"phoPzMC_mini/F");
-   outtree->Branch("phoEMC_mini",&myEvent.phoEMC_mini,"phoEMC_mini/F");
+   // outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
+   // outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
+   // outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
+   // outtree->Branch("elecEMC_mini",&myEvent.elecEMC_mini,"elecEMC_mini/F");
+   // outtree->Branch("phoPxMC_mini",&myEvent.phoPxMC_mini,"phoPxMC_mini/F");
+   // outtree->Branch("phoPyMC_mini",&myEvent.phoPyMC_mini,"phoPyMC_mini/F");
+   // outtree->Branch("phoPzMC_mini",&myEvent.phoPzMC_mini,"phoPzMC_mini/F");
+   // outtree->Branch("phoEMC_mini",&myEvent.phoEMC_mini,"phoEMC_mini/F");
    outtree->Branch("isQEDcMC_mini",&myEvent.isQEDcMC_mini,"isQEDcMC_mini/I");
+   outtree->Branch("dRRadPhot_mini",&myEvent.dRRadPhot_mini,"dRRadPhot_mini/F");
+   outtree->Branch("dPhiRadPhot_mini",&myEvent.dPhiRadPhot_mini,"dPhiRadPhot_mini/F");
 
    outtree->Branch("nMCtrack_mini",&myEvent.nMCtrack_mini,"nMCtrack_mini/I");
    outtree->Branch("pxMC_mini",myEvent.pxMC_mini,"pxMC_mini[nMCtrack_mini]/F");
@@ -229,13 +233,13 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    /*
    comment out for simple scatElec miniTree
    */
-   outtree->Branch("hfsEREC_mini",&myEvent.hfsEREC_mini,"hfsEREC_mini/F");
-   outtree->Branch("hfsPtREC_mini",&myEvent.hfsPtREC_mini,"hfsPtREC_mini/F");
-   outtree->Branch("hfsPzREC_mini",&myEvent.hfsPzREC_mini,"hfsPzREC_mini/F");
-   outtree->Branch("elecEREC_mini",&myEvent.elecEREC_mini,"elecEREC_mini/F");
-   outtree->Branch("elecPtREC_mini",&myEvent.elecPtREC_mini,"elecPtREC_mini/F");
-   outtree->Branch("elecPzREC_mini",&myEvent.elecPzREC_mini,"elecPzREC_mini/F");
-   outtree->Branch("elecChargeREC_mini",&myEvent.elecChargeREC_mini,"elecChargeREC_mini/I");
+   // outtree->Branch("hfsEREC_mini",&myEvent.hfsEREC_mini,"hfsEREC_mini/F");
+   // outtree->Branch("hfsPtREC_mini",&myEvent.hfsPtREC_mini,"hfsPtREC_mini/F");
+   // outtree->Branch("hfsPzREC_mini",&myEvent.hfsPzREC_mini,"hfsPzREC_mini/F");
+   // outtree->Branch("elecEREC_mini",&myEvent.elecEREC_mini,"elecEREC_mini/F");
+   // outtree->Branch("elecPtREC_mini",&myEvent.elecPtREC_mini,"elecPtREC_mini/F");
+   // outtree->Branch("elecPzREC_mini",&myEvent.elecPzREC_mini,"elecPzREC_mini/F");
+   // outtree->Branch("elecChargeREC_mini",&myEvent.elecChargeREC_mini,"elecChargeREC_mini/I");
 
    outtree->Branch("xREC_es_mini",&myEvent.xREC_es_mini,"xREC_es_mini/F");
    outtree->Branch("yREC_es_mini",&myEvent.yREC_es_mini,"yREC_es_mini/F");
@@ -261,15 +265,15 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
    outtree->Branch("nucliaREC_mini",myEvent.nucliaREC_mini,"nucliaREC_mini[nRECtrack_mini]/F");
    outtree->Branch("passREC_mini",myEvent.passREC_mini,"passREC_mini[nRECtrack_mini]/I");
-   outtree->Branch("passTightREC_mini",myEvent.passTightREC_mini,"passTightREC_mini[nRECtrack_mini]/I");
-   outtree->Branch("passLooseREC_mini",myEvent.passLooseREC_mini,"passLooseREC_mini[nRECtrack_mini]/I");
+   // outtree->Branch("passTightREC_mini",myEvent.passTightREC_mini,"passTightREC_mini[nRECtrack_mini]/I");
+   // outtree->Branch("passLooseREC_mini",myEvent.passLooseREC_mini,"passLooseREC_mini[nRECtrack_mini]/I");
 
-   outtree->Branch("dcaPrimeREC_mini",myEvent.dcaPrimeREC_mini,"dcaPrimeREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("startHitsRadiusREC_mini",myEvent.startHitsRadiusREC_mini,"startHitsRadiusREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("dedxProtonREC_mini",myEvent.dedxProtonREC_mini,"dedxProtonREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("dedxLikelihoodProtonREC_mini",myEvent.dedxLikelihoodProtonREC_mini,"dedxLikelihoodProtonREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("dedxElectronREC_mini",myEvent.dedxElectronREC_mini,"dedxElectronREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("dedxLikelihoodElectronREC_mini",myEvent.dedxLikelihoodElectronREC_mini,"dedxLikelihoodElectronREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("dcaPrimeREC_mini",myEvent.dcaPrimeREC_mini,"dcaPrimeREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("startHitsRadiusREC_mini",myEvent.startHitsRadiusREC_mini,"startHitsRadiusREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("dedxProtonREC_mini",myEvent.dedxProtonREC_mini,"dedxProtonREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("dedxLikelihoodProtonREC_mini",myEvent.dedxLikelihoodProtonREC_mini,"dedxLikelihoodProtonREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("dedxElectronREC_mini",myEvent.dedxElectronREC_mini,"dedxElectronREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("dedxLikelihoodElectronREC_mini",myEvent.dedxLikelihoodElectronREC_mini,"dedxLikelihoodElectronREC_mini[nRECtrack_mini]/F");
 
    double zvtxOffset=0.;
 
@@ -286,6 +290,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Int_t elecChargeREC;
       Float_t eElectronBeam;
       Int_t isQEDc;
+      Float_t dRRadPhot;
+      Float_t dPhiRadPhot;
      
       Int_t ibgREC;
 
@@ -362,6 +368,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("simvertex",&simvertex);
       tree->SetBranchAddress("eElectronBeam",&eElectronBeam);
       tree->SetBranchAddress("isQEDc",&isQEDc);
+      tree->SetBranchAddress("dRRadPhot",&dRRadPhot);
+      tree->SetBranchAddress("dPhiRadPhot",&dPhiRadPhot);
 
       tree->SetBranchAddress("nMCtrack",&nMCtrack);
       tree->SetBranchAddress("etaStar2MC",etaStarMC);
@@ -524,11 +532,12 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.w_mini = evt_weight;
          myEvent.eElectronBeam_mini = eElectronBeam;
          myEvent.totalMultREC_mini = -999;
+         myEvent.dRRadPhot_mini = dRRadPhot;
+         myEvent.dPhiRadPhot_mini = dPhiRadPhot;
 
          myEvent.xMC_es_mini = -999.;
          myEvent.yMC_es_mini = -999.;
          myEvent.Q2MC_es_mini = -999.;
-
          myEvent.nMCtrack_mini = -999;
 
          for(int j=0;j<400;j++) {
@@ -580,14 +589,14 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             sumEgamma = eMC+gammaMC;
             myEvent.sumPtMC_mini = sumEgamma.Pt();
             myEvent.eGammaPhiMC_mini = eMC.DeltaPhi( gammaMC );
-            myEvent.elecPxMC_mini = eMC.Px();
-            myEvent.elecPyMC_mini = eMC.Py();
-            myEvent.elecPzMC_mini = eMC.Pz();
-            myEvent.elecEMC_mini = eMC.E();
-            myEvent.phoPxMC_mini = gammaMC.Px();
-            myEvent.phoPyMC_mini = gammaMC.Py();
-            myEvent.phoPzMC_mini = gammaMC.Pz();
-            myEvent.phoEMC_mini = gammaMC.E();
+            // myEvent.elecPxMC_mini = eMC.Px();
+            // myEvent.elecPyMC_mini = eMC.Py();
+            // myEvent.elecPzMC_mini = eMC.Pz();
+            // myEvent.elecEMC_mini = eMC.E();
+            // myEvent.phoPxMC_mini = gammaMC.Px();
+            // myEvent.phoPyMC_mini = gammaMC.Py();
+            // myEvent.phoPzMC_mini = gammaMC.Pz();
+            // myEvent.phoEMC_mini = gammaMC.E();
             //end QED Compton
 
           }//end doGen_
@@ -599,15 +608,15 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
          double Epz = hfsEREC+elecEREC - (hfsPzREC+elecPzREC);
          myEvent.EpzREC_mini = Epz;
-         double elecPt = TMath::Hypot(elecPxREC,elecPyREC);
-         myEvent.elecPtREC_mini = elecPt;
-         myEvent.elecPzREC_mini = elecPzREC;
-         myEvent.elecEREC_mini = elecEREC;
-         myEvent.elecChargeREC_mini = elecChargeREC;
-         double hfsPt = TMath::Hypot(hfsPxREC,hfsPyREC);
-         myEvent.hfsPtREC_mini = hfsPt;
-         myEvent.hfsPzREC_mini = hfsPzREC;
-         myEvent.hfsEREC_mini = hfsEREC;
+         // double elecPt = TMath::Hypot(elecPxREC,elecPyREC);
+         // myEvent.elecPtREC_mini = elecPt;
+         // myEvent.elecPzREC_mini = elecPzREC;
+         // myEvent.elecEREC_mini = elecEREC;
+         // myEvent.elecChargeREC_mini = elecChargeREC;
+         // double hfsPt = TMath::Hypot(hfsPxREC,hfsPyREC);
+         // myEvent.hfsPtREC_mini = hfsPt;
+         // myEvent.hfsPzREC_mini = hfsPzREC;
+         // myEvent.hfsEREC_mini = hfsEREC;
          //bkg finder bit cuts:
          if( (ibgREC & 1) != 0 ) event_pass = 0;
          if( (ibgREC & 2) != 0 ) event_pass = 0;
@@ -702,15 +711,15 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.dmatchREC_mini[j] = dmatchREC[j];
             myEvent.imatchREC_mini[j] = imatchREC[j];       
             myEvent.passREC_mini[j] = pass_default; 
-            myEvent.passTightREC_mini[j] = pass_tight;
-            myEvent.passLooseREC_mini[j] = pass_loose;  
+            // myEvent.passTightREC_mini[j] = pass_tight;
+            // myEvent.passLooseREC_mini[j] = pass_loose;  
 
-            myEvent.dcaPrimeREC_mini[j] = dcaPrimeREC[j];
-            myEvent.startHitsRadiusREC_mini[j] = startHitsRadiusREC[j];
-            myEvent.dedxProtonREC_mini[j] = dedxProtonREC[j];
-            myEvent.dedxLikelihoodProtonREC_mini[j] = dedxLikelihoodProtonREC[j];
-            myEvent.dedxElectronREC_mini[j] = dedxElectronREC[j];
-            myEvent.dedxLikelihoodElectronREC_mini[j] = dedxLikelihoodElectronREC[j];
+            // myEvent.dcaPrimeREC_mini[j] = dcaPrimeREC[j];
+            // myEvent.startHitsRadiusREC_mini[j] = startHitsRadiusREC[j];
+            // myEvent.dedxProtonREC_mini[j] = dedxProtonREC[j];
+            // myEvent.dedxLikelihoodProtonREC_mini[j] = dedxLikelihoodProtonREC[j];
+            // myEvent.dedxElectronREC_mini[j] = dedxElectronREC[j];
+            // myEvent.dedxLikelihoodElectronREC_mini[j] = dedxLikelihoodElectronREC[j];
       
          }
          myEvent.totalMultREC_mini = (int) (Ntracks_eta_p + Ntracks_eta_m);
