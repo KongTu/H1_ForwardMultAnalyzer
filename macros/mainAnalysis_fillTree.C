@@ -188,10 +188,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       // tree->Add("../batch/output/mc_5878_NRAD/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadCaliNewKine_v7/*.root");
-      tree->Add("../batch/output/mc_8927_hadCaliNewKine_v7/*.root");
+      // tree->Add("../batch/output/mc_8926_hadCaliNewKine_v7/*.root");
+      // tree->Add("../batch/output/mc_8927_hadCaliNewKine_v7/*.root");
 
-      // tree->Add("../batch/output/mc_5877_NRAD_django14/*.root");
+      tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
 
    }
    else if( !doGen_ ){
@@ -210,10 +210,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
    outtree->Branch("eGammaPhiMC_mini",&myEvent.eGammaPhiMC_mini,"eGammaPhiMC_mini/F");
    outtree->Branch("sumPtMC_mini",&myEvent.sumPtMC_mini,"sumPtMC_mini/F");
-   // outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
-   // outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
-   // outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
-   // outtree->Branch("elecEMC_mini",&myEvent.elecEMC_mini,"elecEMC_mini/F");
+   outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
+   outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
+   outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
+   outtree->Branch("elecEMC_mini",&myEvent.elecEMC_mini,"elecEMC_mini/F");
    // outtree->Branch("phoPxMC_mini",&myEvent.phoPxMC_mini,"phoPxMC_mini/F");
    // outtree->Branch("phoPyMC_mini",&myEvent.phoPyMC_mini,"phoPyMC_mini/F");
    // outtree->Branch("phoPzMC_mini",&myEvent.phoPzMC_mini,"phoPzMC_mini/F");
@@ -589,10 +589,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             sumEgamma = eMC+gammaMC;
             myEvent.sumPtMC_mini = sumEgamma.Pt();
             myEvent.eGammaPhiMC_mini = eMC.DeltaPhi( gammaMC );
-            // myEvent.elecPxMC_mini = eMC.Px();
-            // myEvent.elecPyMC_mini = eMC.Py();
-            // myEvent.elecPzMC_mini = eMC.Pz();
-            // myEvent.elecEMC_mini = eMC.E();
+            myEvent.elecPxMC_mini = eMC.Px();
+            myEvent.elecPyMC_mini = eMC.Py();
+            myEvent.elecPzMC_mini = eMC.Pz();
+            myEvent.elecEMC_mini = eMC.E();
             // myEvent.phoPxMC_mini = gammaMC.Px();
             // myEvent.phoPyMC_mini = gammaMC.Py();
             // myEvent.phoPzMC_mini = gammaMC.Pz();
