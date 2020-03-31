@@ -67,6 +67,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	Float_t eGammaPhiMC_mini;
 	Float_t sumPtMC_mini;
 	Int_t isQEDcMC_mini;
+	Float_t dRRadPhot_mini;
+	Float_t dPhiRadPhot_mini;
 	Float_t elecPxMC_mini;
 	Float_t elecPyMC_mini;
 	Float_t elecPzMC_mini;
@@ -89,6 +91,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	tree->SetBranchAddress("eGammaPhiMC_mini",&eGammaPhiMC_mini);
 	tree->SetBranchAddress("sumPtMC_mini",&sumPtMC_mini);
 	tree->SetBranchAddress("isQEDcMC_mini",&isQEDcMC_mini);
+	tree->SetBranchAddress("dRRadPhot_mini",&dRRadPhot_mini);
+	tree->SetBranchAddress("dPhiRadPhot_mini",&dPhiRadPhot_mini);
 	// tree->SetBranchAddress("elecPxMC_mini",&elecPxMC_mini);
 	// tree->SetBranchAddress("elecPyMC_mini",&elecPyMC_mini);
 	// tree->SetBranchAddress("elecPzMC_mini",&elecPzMC_mini);
@@ -164,7 +168,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	// tree->SetBranchAddress("elecPzREC_mini",&elecPzREC_mini);
 	
 	tree->SetBranchAddress("eElectronBeam_mini",&eElectronBeam_mini);
-	tree->SetBranchAddress("elecChargeREC_mini",&elecChargeREC_mini);
+	// tree->SetBranchAddress("elecChargeREC_mini",&elecChargeREC_mini);
 	
 	tree->SetBranchAddress("pxREC_mini",&pxREC_mini);
 	tree->SetBranchAddress("pyREC_mini",&pyREC_mini);
@@ -262,7 +266,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	//QED Compton event
 	TH1D* h_eGammaPhiMC = new TH1D("h_eGammaPhiMC",";#Delta#phi",100,-3.15,3.15);
 	TH1D* h_sumPtMC = new TH1D("h_sumPtMC",";#Delta#phi",100,0,5);
-
+	TH2D* h_dRRadPhotVsMult = new TH2D("h_dRRadPhotVsMult",";mult;dR",30,0,30,300,0,15);
+	TH2D* h_dPhiRadPhotVsMult = new TH2D("h_dPhiRadPhotVsMult",";mult;dR",30,0,30,300,-6.28,6.28);
 	/*
 	Elec and hfs kinematic variables
 	*/
@@ -349,6 +354,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				h_Pn_GEN[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta[1], w_mini );
 				h_Pn_GEN[Q2_INDEX][y_INDEX][2]->Fill( n_particle_eta[2], w_mini );
 				h_Pn_GEN[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta[3], w_mini );
+			
+
+				h_dPhiRadPhotVsMult->Fill( n_particle_HCM, dPhiRadPhot_mini);
+				h_dRRadPhotVsMult->Fill( n_particle_HCM, dRRadPhot_mini);
 			}
 		}
 
