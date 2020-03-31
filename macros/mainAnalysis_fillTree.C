@@ -219,8 +219,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    // outtree->Branch("phoPzMC_mini",&myEvent.phoPzMC_mini,"phoPzMC_mini/F");
    // outtree->Branch("phoEMC_mini",&myEvent.phoEMC_mini,"phoEMC_mini/F");
    outtree->Branch("isQEDcMC_mini",&myEvent.isQEDcMC_mini,"isQEDcMC_mini/I");
-   outtree->Branch("dRRadPhot_mini",&myEvent.dRRadPhot_mini,"dRRadPhot_mini/F");
-   outtree->Branch("dPhiRadPhot_mini",&myEvent.dPhiRadPhot_mini,"dPhiRadPhot_mini/F");
+   // outtree->Branch("dRRadPhot_mini",&myEvent.dRRadPhot_mini,"dRRadPhot_mini/F");
+   // outtree->Branch("dPhiRadPhot_mini",&myEvent.dPhiRadPhot_mini,"dPhiRadPhot_mini/F");
 
    outtree->Branch("nMCtrack_mini",&myEvent.nMCtrack_mini,"nMCtrack_mini/I");
    outtree->Branch("pxMC_mini",myEvent.pxMC_mini,"pxMC_mini[nMCtrack_mini]/F");
@@ -368,8 +368,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("simvertex",&simvertex);
       tree->SetBranchAddress("eElectronBeam",&eElectronBeam);
       tree->SetBranchAddress("isQEDc",&isQEDc);
-      tree->SetBranchAddress("dRRadPhot",&dRRadPhot);
-      tree->SetBranchAddress("dPhiRadPhot",&dPhiRadPhot);
+      // tree->SetBranchAddress("dRRadPhot",&dRRadPhot);
+      // tree->SetBranchAddress("dPhiRadPhot",&dPhiRadPhot);
 
       tree->SetBranchAddress("nMCtrack",&nMCtrack);
       tree->SetBranchAddress("etaStar2MC",etaStarMC);
@@ -532,8 +532,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.w_mini = evt_weight;
          myEvent.eElectronBeam_mini = eElectronBeam;
          myEvent.totalMultREC_mini = -999;
-         myEvent.dRRadPhot_mini = dRRadPhot;
-         myEvent.dPhiRadPhot_mini = dPhiRadPhot;
+         // myEvent.dRRadPhot_mini = dRRadPhot;
+         // myEvent.dPhiRadPhot_mini = dPhiRadPhot;
 
          myEvent.xMC_es_mini = -999.;
          myEvent.yMC_es_mini = -999.;
