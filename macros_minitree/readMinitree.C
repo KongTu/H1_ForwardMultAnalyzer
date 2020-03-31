@@ -344,9 +344,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			// 	h_eGammaPhiMC->Fill( eGammaPhiMC_mini );
 			// 	h_sumPtMC->Fill( sumPtMC_mini );
 			// }
-			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 ){//no QEDc event counted as radiative Gen
+			// if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 ){//no QEDc event counted as radiative Gen
 			//no QEDc event counted as radiative Gen
-			// if(Q2_INDEX >=0 && y_INDEX >= 0 ){
+			if(Q2_INDEX >=0 && y_INDEX >= 0 ){
 				//HCM frame
 				h_Pn_GEN_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, w_mini );
 				//lab frame
