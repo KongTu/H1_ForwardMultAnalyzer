@@ -27,7 +27,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		file = new TFile("../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine.root");
 	}else if(ifile_ == 1) {
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_NRAD.root");
+		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_v7.root");
 	}else if(ifile_ == 2){
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNew.root");
 		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine.root");
@@ -38,7 +38,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine.root";
 	}else if( ifile_ == 1 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_django_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_django_NRAD_hadCaliNewKine_elecIsola.root";
+		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_v7_isQEDc.root";
 	}else if( ifile_ == 2 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_extendEtalabLooseTrack.root";
 		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh.root";
@@ -93,10 +93,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	tree->SetBranchAddress("isQEDcMC_mini",&isQEDcMC_mini);
 	tree->SetBranchAddress("dRRadPhot_mini",&dRRadPhot_mini);
 	tree->SetBranchAddress("dPhiRadPhot_mini",&dPhiRadPhot_mini);
-	tree->SetBranchAddress("elecPxMC_mini",&elecPxMC_mini);
-	tree->SetBranchAddress("elecPyMC_mini",&elecPyMC_mini);
-	tree->SetBranchAddress("elecPzMC_mini",&elecPzMC_mini);
-	tree->SetBranchAddress("elecEMC_mini",&elecEMC_mini);
+	// tree->SetBranchAddress("elecPxMC_mini",&elecPxMC_mini);
+	// tree->SetBranchAddress("elecPyMC_mini",&elecPyMC_mini);
+	// tree->SetBranchAddress("elecPzMC_mini",&elecPzMC_mini);
+	// tree->SetBranchAddress("elecEMC_mini",&elecEMC_mini);
 	// tree->SetBranchAddress("phoPxMC_mini",&phoPxMC_mini);
 	// tree->SetBranchAddress("phoPyMC_mini",&phoPyMC_mini);
 	// tree->SetBranchAddress("phoPzMC_mini",&phoPzMC_mini);
@@ -226,6 +226,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	P(n) distribution in different Q2, y bins within 0<eta*<4.
 	*/
 
+	TH2D* h_dRRadPhotVsMult[4][4]; 
+	TH2D* h_dPhiRadPhotVsMult[4][4];
+
 	TH1D* h_Pn_HCM[4][4];
 	TH1D* h_Pn_genREC_HCM[4][4];	
 	TH1D* h_Pn_genNextREC_HCM[4][4];	
@@ -241,7 +244,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_PhotMassLoose[4][4];
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
-			
+
+			h_dRRadPhotVsMult[i][j]= new TH2D(Form("h_dRRadPhotVsMult_%d_%d",i,j),";mult;dR",30,0,30,300,0,15);
+			h_dPhiRadPhotVsMult[i][j]= new TH2D(Form("h_dPhiRadPhotVsMult_%d_%d",i,j),";mult;dPhi",30,0,30,300,0,15);
+
 			h_Pn_HCM[i][j] = new TH1D(Form("h_Pn_HCM_%d_%d",i,j),Form("h_Pn_HCM_%d_%d",i,j),11,Pn_binning);
 			h_Pn_genREC_HCM[i][j] = new TH1D(Form("h_Pn_genREC_HCM_%d_%d",i,j),Form("h_Pn_genREC_HCM_%d_%d",i,j),11,Pn_binning);
 			h_Pn_genNextREC_HCM[i][j] = new TH1D(Form("h_Pn_genNextREC_HCM_%d_%d",i,j),Form("h_Pn_genNextREC_HCM_%d_%d",i,j),11,Pn_binning);
@@ -266,8 +272,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	//QED Compton event
 	TH1D* h_eGammaPhiMC = new TH1D("h_eGammaPhiMC",";#Delta#phi",100,-3.15,3.15);
 	TH1D* h_sumPtMC = new TH1D("h_sumPtMC",";#Delta#phi",100,0,5);
-	TH2D* h_dRRadPhotVsMult = new TH2D("h_dRRadPhotVsMult",";mult;dR",30,0,30,300,0,15);
-	TH2D* h_dPhiRadPhotVsMult = new TH2D("h_dPhiRadPhotVsMult",";mult;dR",30,0,30,300,-6.28,6.28);
+
 	/*
 	Elec and hfs kinematic variables
 	*/
@@ -320,36 +325,22 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 			}
 
-			TVector3 scatElec;
-			scatElec.SetXYZ(elecPxMC_mini,elecPyMC_mini,elecPzMC_mini);
-
 			for(int itrk = 0; itrk < nMCtrack_mini; itrk++){
-				TVector3 part;
-				part.SetXYZ(pxMC_mini[itrk],pyMC_mini[itrk],pzMC_mini[itrk]);
-				
 				if( TMath::Hypot(pxMC_mini[itrk],pyMC_mini[itrk]) > 0.15 ){
 					if( fabs(etaMC_mini[itrk]) < 1.6 ){
 						if( etaStarMC_mini[itrk] > 0 && etaStarMC_mini[itrk] < 4.0 ){
-							if( part.DeltaR(scatElec) > 0.1 ){
-								n_particle_HCM++;
-							}
-							
+								n_particle_HCM++;	
 						}
 					}
 				}
 				if( TMath::Hypot(pxMC_mini[itrk],pyMC_mini[itrk]) < 0.15 ) continue;
 				for(int ieta = 0; ieta < 3; ieta++){
 					if( etaMC_mini[itrk] > eta_bins[2*ieta] && etaMC_mini[itrk] < eta_bins[2*ieta+1] ){
-						if( part.DeltaR(scatElec) > 0.1 ) {
-							n_particle_eta[ieta]++;
-						}
-						
+						n_particle_eta[ieta]++;
 					}
 				}
 				if( etaMC_mini[itrk] > -1.6 && etaMC_mini[itrk] < 1.6 ){
-					if( part.DeltaR(scatElec) > 0.1 ) {
-						n_particle_eta[3]++;
-					}
+					n_particle_eta[3]++;
 				}
 			}
 			//filling QED Compton delta phi
@@ -369,8 +360,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				h_Pn_GEN[Q2_INDEX][y_INDEX][3]->Fill( n_particle_eta[3], w_mini );
 			
 
-				// h_dPhiRadPhotVsMult->Fill( n_particle_HCM, dPhiRadPhot_mini);
-				// h_dRRadPhotVsMult->Fill( n_particle_HCM, dRRadPhot_mini);
+				h_dPhiRadPhotVsMult[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, dPhiRadPhot_mini);
+				h_dRRadPhotVsMult[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, dRRadPhot_mini);
 			}
 		}
 
