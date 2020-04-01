@@ -368,8 +368,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("simvertex",&simvertex);
       tree->SetBranchAddress("eElectronBeam",&eElectronBeam);
       tree->SetBranchAddress("isQEDc",&isQEDc);
-      // tree->SetBranchAddress("dRRadPhot",&dRRadPhot);
-      // tree->SetBranchAddress("dPhiRadPhot",&dPhiRadPhot);
+      tree->SetBranchAddress("dRRadPhot",&dRRadPhot);
+      tree->SetBranchAddress("dPhiRadPhot",&dPhiRadPhot);
 
       tree->SetBranchAddress("nMCtrack",&nMCtrack);
       tree->SetBranchAddress("etaStar2MC",etaStarMC);
