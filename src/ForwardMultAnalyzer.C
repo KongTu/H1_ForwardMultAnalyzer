@@ -639,20 +639,13 @@ int main(int argc, char* argv[]) {
          for(int i=0;i<mcpart.GetEntries();i++) {
             H1PartMC *part=mcpart[i];
             int status=part->GetStatus();
-            if((status==0||status==202)&&(part->GetPDG()==22)){
-               
+            if((status==0||status==202)&&(part->GetPDG()==22)){  
                TLorentzVector p(part->GetFourVector());
                h_dRAllPhot->Fill( p.DeltaR(escat0_MC_lab) );
                if(p.DeltaR(escat0_MC_lab)<ELEC_ISOLATION_CONE){
                   // this photon counts with the electron
                   isElectron.insert(i);
                   escatPhot_MC_lab += p;
-               }
-               if(status==202){
-                  if( fabs(p.DeltaPhi(escat0_MC_lab)>2.9) ){
-                     isElectron.insert(i);
-                     escatPhot_MC_lab += p;
-                  }
                }
             }
             //to save radiative photon separately
