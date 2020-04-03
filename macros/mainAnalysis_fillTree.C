@@ -182,7 +182,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
       // //save the number of events that separate inclusive DIS to diffractive DIS
       //    dis_events = tree->GetEntries();
-      // tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
 
       //nonradiative MCs
       // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
