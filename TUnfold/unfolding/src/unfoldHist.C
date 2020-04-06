@@ -59,8 +59,8 @@ int main(int argc, char const *argv[]) {
     for(TXMLNode *node=root->GetChildren();node;node=node->GetNextNode()) {
       if(node->GetNodeType()==TXMLNode::kXMLElementNode &&
          !TString(node->GetNodeName()).CompareTo("UnfoldingInput")) {
-	inputFileName=node->GetChildren()->GetContent();
-	int l;
+  inputFileName=node->GetChildren()->GetContent();
+  int l;
         do {
           l=inputFileName.Length();
           inputFileName=inputFileName.Strip(TString::kLeading,'\n');
@@ -68,11 +68,11 @@ int main(int argc, char const *argv[]) {
           inputFileName=inputFileName.Strip(TString::kTrailing,'\n');
           inputFileName=inputFileName.Strip(TString::kTrailing,' ');
         } while(l!=inputFileName.Length());
-	cout<<"main: inputFileName: "<<inputFileName<<"\n";
+  cout<<"main: inputFileName: "<<inputFileName<<"\n";
       }
       if(node->GetNodeType()==TXMLNode::kXMLElementNode &&
          !TString(node->GetNodeName()).CompareTo("UnfoldingOutput")) {
-	outputFileName=node->GetChildren()->GetContent();
+  outputFileName=node->GetChildren()->GetContent();
         int l;
         do {
           l=outputFileName.Length();
@@ -81,7 +81,7 @@ int main(int argc, char const *argv[]) {
           outputFileName=outputFileName.Strip(TString::kTrailing,'\n');
           outputFileName=outputFileName.Strip(TString::kTrailing,' ');
         } while(l!=outputFileName.Length());
-	cout<<"main: outputFileName: "<<outputFileName<<"\n";
+  cout<<"main: outputFileName: "<<outputFileName<<"\n";
       }
     }
   }
@@ -173,11 +173,11 @@ int main(int argc, char const *argv[]) {
         TH2 * hist_genRec1=0;
         //TH1 * hist_genMC1=0;
         TH1 * hist_fake1=0;
-        // TH1 * hist_QEDc1=0;
+        TH1 * hist_QEDc1=0;
         source[src1]->GetObject("hist_genRec_"+etaName,hist_genRec1);
         source[src1]->GetObject("hist_fake_"+etaName,hist_fake1);
         //source[src1]->GetObject("hist_gen_"+etaName,hist_genMC1);
-        // source[src1]->GetObject("hist_QEDc_"+etaName,hist_QEDc1);
+        source[src1]->GetObject("hist_QEDc_"+etaName,hist_QEDc1);
 
         if(hist_genRec1) {
            TUnfoldDensity *unfold1=

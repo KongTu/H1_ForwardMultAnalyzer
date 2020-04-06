@@ -305,6 +305,7 @@ int main(int argc, char * const argv[]) {
   genVariables.AddVar("etaMC_mini");
   genVariables.AddVar("pxMC_mini");
   genVariables.AddVar("pyMC_mini");
+  genVariables.AddVar("isQEDcMC_mini");
 
   cout<<"\netaStar binning\n";
   cout<<"========================================================\n";
@@ -423,7 +424,7 @@ int main(int argc, char * const argv[]) {
            }
 
            // book histograms
-           vector<TH1 *> hist_gen,hist_rec,hist_fake; // eta bins
+           vector<TH1 *> hist_gen,hist_rec,hist_fake,hist_QEDc; // eta bins
            map<ClassifierBinning const *,TH2 *> hist_recCovar;  // Q2,y bins
            vector<TH2 *> hist_genRec; // eta bins
            for(size_t k=0;k<covClasses.size();k++) {
@@ -437,6 +438,8 @@ int main(int argc, char * const argv[]) {
                         (genBinning,recBinning,"hist_genRec_"+name));
                     hist_fake.push_back
                        (recBinning->CreateHistogram("hist_fake_"+name,false));
+                    hist_QEDc.push_back
+                       (recBinning->CreateHistogram("hist_QEDc_"+name,false));
                  }
               }
            }
@@ -469,7 +472,7 @@ int main(int argc, char * const argv[]) {
            VarData const *etaMC_mini=genVariables.FindVar("etaMC_mini");
            VarData const *pxMC_mini=genVariables.FindVar("pxMC_mini");
            VarData const *pyMC_mini=genVariables.FindVar("pyMC_mini");
-
+           VarData const *isQEDcMC_mini=genVariables.FindVar("isQEDcMC_mini");
 
            double lumiWeight=1.0;
            // loop over events and fill histograms
@@ -629,7 +632,7 @@ int main(int argc, char * const argv[]) {
                  // fill gen level distribution
                  for(size_t ieta=0;ieta<genMultBins.size();ieta++) {
                     int imultGenBin=genMultBins[ieta];
-                    if(imultGenBin) {
+                    if(imultGenBin && isQEDcMC_mini->Int() != 1) {
                        hist_gen[ieta]->Fill(imultGenBin,w);
                     } else {
                        // fake -> not counted as generator truth
@@ -678,7 +681,7 @@ int main(int argc, char * const argv[]) {
                            iMultPtr!=recMultBins[ieta].end();iMultPtr++) {
                           int iMultRecBin=(*iMultPtr).first;
                           double iMultWeight=(*iMultPtr).second;
-                          hist_fake[ieta]->Fill(iMultRecBin,w*iMultWeight);
+                          if( isQEDcMC_mini->Int() != 1 ) hist_fake[ieta]->Fill(iMultRecBin,w*iMultWeight);
                        }
                     } else {
                        // fill matrix of migrations (for each ieta)
@@ -687,8 +690,11 @@ int main(int argc, char * const argv[]) {
                            iMultPtr!=recMultBins[ieta].end();iMultPtr++) {
                           int iMultRecBin=(*iMultPtr).first;
                           double iMultWeight=(*iMultPtr).second;
-                          hist_genRec[ieta]->Fill(iMultGenBin,iMultRecBin,
+                          if( isQEDcMC_mini->Int() != 1 ) hist_genRec[ieta]->Fill(iMultGenBin,iMultRecBin,
                                                   w*iMultWeight);
+
+                          if( isQEDcMC_mini->Int() == 1 ) hist_QEDc[ieta]->Fill(iMultRecBin, w*iMultWeight);
+                          
                        }
                     }
                  }
@@ -723,6 +729,7 @@ int main(int argc, char * const argv[]) {
                 i!=hist_recCovar.end();i++) (*i).second->Write();
            for(size_t i=0;i<hist_genRec.size();i++) hist_genRec[i]->Write();
            for(size_t i=0;i<hist_fake.size();i++) hist_fake[i]->Write();
+           for(size_t i=0;i<hist_QEDc.size();i++) hist_QEDc[i]->Write();
            delete tree;
         }
      }

@@ -63,8 +63,8 @@ struct MinitreeDescriptor {
 };
 
 TUnfoldBinning *ReadBinning(TXMLDocument const *document,
-			    char const *nodeNames[],
-			    char const *distribution);
+          char const *nodeNames[],
+          char const *distribution);
 
 int main(int argc, char * const argv[]) {
   // switch on histogram errors
@@ -160,7 +160,7 @@ int main(int argc, char * const argv[]) {
   Int_t error=binningParser.ParseFile(xmlBinning);
   if(error) {
     cout<<"error="<<error<<" from TDOMParser (while parsing \""
-	<<xmlBinning<<"\")\n";
+  <<xmlBinning<<"\")\n";
     return 2;
   }
 
@@ -169,7 +169,7 @@ int main(int argc, char * const argv[]) {
   error=minitreeParser.ParseFile(xmlMinitree);
   if(error) {
     cout<<"error="<<error<<" from TDOMParser (while parsing \""
-	<<xmlMinitree<<"\")\n";
+  <<xmlMinitree<<"\")\n";
     return 3;
   }
 
@@ -183,27 +183,27 @@ int main(int argc, char * const argv[]) {
     // locate <UnfoldingInput>
     for(TXMLNode *node=root->GetChildren();node;node=node->GetNextNode()) {
       if(node->GetNodeType()==TXMLNode::kXMLElementNode &&
-	 !TString(node->GetNodeName()).CompareTo("UnfoldingInput") &&
-	 node->GetAttributes()) {
-	TIterator *i=node->GetAttributes()->MakeIterator();
-	TXMLAttr *attr;
-	while((attr=(TXMLAttr *)i->Next())) {
-	  if(!TString(attr->GetName()).CompareTo("dataluminosity")) {
-	    dataLuminosity=TString(attr->GetValue()).Atof();
-	  }
-	}
-	outputFileName=node->GetChildren()->GetContent();
-	int l;
-	do {
-	  l=outputFileName.Length();
-	  outputFileName=outputFileName.Strip(TString::kLeading,'\n');
-	  outputFileName=outputFileName.Strip(TString::kLeading,' ');
-	  outputFileName=outputFileName.Strip(TString::kTrailing,'\n');
-	  outputFileName=outputFileName.Strip(TString::kTrailing,' ');
-	} while(l!=outputFileName.Length());
-	cout<<"output file: "<<outputFileName
-	    <<" data luminosity: "<<dataLuminosity<<"\n";
-	break;
+   !TString(node->GetNodeName()).CompareTo("UnfoldingInput") &&
+   node->GetAttributes()) {
+  TIterator *i=node->GetAttributes()->MakeIterator();
+  TXMLAttr *attr;
+  while((attr=(TXMLAttr *)i->Next())) {
+    if(!TString(attr->GetName()).CompareTo("dataluminosity")) {
+      dataLuminosity=TString(attr->GetValue()).Atof();
+    }
+  }
+  outputFileName=node->GetChildren()->GetContent();
+  int l;
+  do {
+    l=outputFileName.Length();
+    outputFileName=outputFileName.Strip(TString::kLeading,'\n');
+    outputFileName=outputFileName.Strip(TString::kLeading,' ');
+    outputFileName=outputFileName.Strip(TString::kTrailing,'\n');
+    outputFileName=outputFileName.Strip(TString::kTrailing,' ');
+  } while(l!=outputFileName.Length());
+  cout<<"output file: "<<outputFileName
+      <<" data luminosity: "<<dataLuminosity<<"\n";
+  break;
       }
     }
   }
@@ -299,7 +299,7 @@ int main(int argc, char * const argv[]) {
   recVariables.AddVar("passREC_mini");
   genVariables.AddVar("nMCtrack_mini");
   genVariables.AddVar("etaMC_mini");
-  // genVariables.AddVar("isQEDcMC_mini");
+  genVariables.AddVar("isQEDcMC_mini");
 
   cout<<"\neta binning\n";
   cout<<"========================================================\n";
@@ -320,14 +320,14 @@ int main(int argc, char * const argv[]) {
     // add all <InputFile> nodes
     for(TXMLNode *node=root->GetChildren();node;node=node->GetNextNode()) {
       if(node->GetNodeType()==TXMLNode::kXMLElementNode &&
-	 !TString(node->GetNodeName()).CompareTo("InputFile") &&
-	 node->GetAttributes()) {
-	TIterator *i=node->GetAttributes()->MakeIterator();
-	TXMLAttr *attr;
-	string type,name;
+   !TString(node->GetNodeName()).CompareTo("InputFile") &&
+   node->GetAttributes()) {
+  TIterator *i=node->GetAttributes()->MakeIterator();
+  TXMLAttr *attr;
+  string type,name;
         MinitreeDescriptor minitreeDescriptor;
         minitreeDescriptor.fLuminosity=-1.;
-	while((attr=(TXMLAttr *)i->Next())) {
+  while((attr=(TXMLAttr *)i->Next())) {
            TString attrName(attr->GetName());
            if(!attrName.CompareTo("name")) {
               name=attr->GetValue();
@@ -341,24 +341,24 @@ int main(int argc, char * const argv[]) {
            if(!attrName.CompareTo("treename")) {
               minitreeDescriptor.fTreeName=attr->GetValue();
            }
-	}
+  }
         TString path=node->GetChildren()->GetContent();
-	int l;
-	do {
-	  l=path.Length();
-	  path=path.Strip(TString::kLeading,'\n');
-	  path=path.Strip(TString::kLeading,' ');
-	  path=path.Strip(TString::kTrailing,'\n');
-	  path=path.Strip(TString::kTrailing,' ');
-	} while(l!=path.Length());
+  int l;
+  do {
+    l=path.Length();
+    path=path.Strip(TString::kLeading,'\n');
+    path=path.Strip(TString::kLeading,' ');
+    path=path.Strip(TString::kTrailing,'\n');
+    path=path.Strip(TString::kTrailing,' ');
+  } while(l!=path.Length());
 
-	minitreeDescriptor.fFileName=path;
-	cout<<"adding minitree: \""<<minitreeDescriptor.fFileName
-	    <<"\" name: \""<<name<<"\""
-	    <<"\" type: \""<<type<<"\""
+  minitreeDescriptor.fFileName=path;
+  cout<<"adding minitree: \""<<minitreeDescriptor.fFileName
+      <<"\" name: \""<<name<<"\""
+      <<"\" type: \""<<type<<"\""
             <<" treename=\""<<minitreeDescriptor.fTreeName<<"\""
             <<" luminosity="<<minitreeDescriptor.fLuminosity<<"\n";
-	minitreeFile[type][name].push_back(minitreeDescriptor);
+  minitreeFile[type][name].push_back(minitreeDescriptor);
      }
     }
   }
@@ -461,7 +461,7 @@ int main(int argc, char * const argv[]) {
 
            VarData const *nMCtrack_mini=genVariables.FindVar("nMCtrack_mini");
            VarData const *etaMC_mini=genVariables.FindVar("etaMC_mini");
-           // VarData const *isQEDcMC_mini=genVariables.FindVar("isQEDcMC_mini");
+           VarData const *isQEDcMC_mini=genVariables.FindVar("isQEDcMC_mini");
 
            double lumiWeight=1.0;
            // loop over events and fill histograms
@@ -510,18 +510,18 @@ int main(int argc, char * const argv[]) {
                     }
                     // track multiplicity bins
                     TUnfoldBinning const *genDist=
-		    nodeGen->GetBinningNodeDistribution();
+        nodeGen->GetBinningNodeDistribution();
                     if(genDist) {
                        // for each eta bin, locate the multiplicity bin
                        for(size_t i=0;i<genTrackMultiplicity.size();i++) {
                           int multiplicity=genTrackMultiplicity[i];
                           int ibin=genDist->GetGlobalBinNumber(multiplicity);
-			  // remember bin number and multiplicity
-			  genMultBins[i]=ibin;
+        // remember bin number and multiplicity
+        genMultBins[i]=ibin;
                        }
                     }
                  }
-	      }
+        }
               // these are the track multiplicities
               //   index : eta bin number
               //   second key : multiplicity bin
@@ -548,7 +548,7 @@ int main(int argc, char * const argv[]) {
                     // in each eta bin there is a vector of probabilies
                     //  (probability to have the given multiplicity)
                     vector<vector<double> >
-		      recTrackMultiplicity(covClasses.size());
+          recTrackMultiplicity(covClasses.size());
                     for(size_t k=0;k<recTrackMultiplicity.size();k++) {
                        recTrackMultiplicity[k].reserve(100);
                        // start with 100% probability of zero
@@ -606,7 +606,7 @@ int main(int argc, char * const argv[]) {
                  // fill gen level distribution
                  for(size_t ieta=0;ieta<genMultBins.size();ieta++) {
                     int imultGenBin=genMultBins[ieta];
-                    if(imultGenBin) {
+                    if(imultGenBin && isQEDcMC_mini->Int() != 1) {
                        hist_gen[ieta]->Fill(imultGenBin,w);
                     } else {
                        // fake -> not counted as generator truth
@@ -655,7 +655,7 @@ int main(int argc, char * const argv[]) {
                            iMultPtr!=recMultBins[ieta].end();iMultPtr++) {
                           int iMultRecBin=(*iMultPtr).first;
                           double iMultWeight=(*iMultPtr).second;
-                          hist_fake[ieta]->Fill(iMultRecBin,w*iMultWeight);
+                          if( isQEDcMC_mini->Int() != 1 ) hist_fake[ieta]->Fill(iMultRecBin,w*iMultWeight);
                        }
                     } else {
                        // fill matrix of migrations (for each ieta)
@@ -664,8 +664,11 @@ int main(int argc, char * const argv[]) {
                            iMultPtr!=recMultBins[ieta].end();iMultPtr++) {
                           int iMultRecBin=(*iMultPtr).first;
                           double iMultWeight=(*iMultPtr).second;
-                          hist_genRec[ieta]->Fill(iMultGenBin,iMultRecBin,
-                                                  w*iMultWeight);                          
+                          if( isQEDcMC_mini->Int() != 1 ) hist_genRec[ieta]->Fill(iMultGenBin,iMultRecBin,
+                                                  w*iMultWeight);
+
+                          if( isQEDcMC_mini->Int() == 1 ) hist_QEDc[ieta]->Fill(iMultRecBin, w*iMultWeight);
+                          
                        }
                     }
                  }
@@ -714,8 +717,8 @@ int main(int argc, char * const argv[]) {
 }
 
 TUnfoldBinning *ReadBinning(TXMLDocument const *document,
-			    char const *nodeNames[],
-			    char const *distribution) {
+          char const *nodeNames[],
+          char const *distribution) {
    // construct binning scheme from document
    TUnfoldBinning *r=TUnfoldBinningXML::ImportXML(document,nodeNames[0]);
    for(TUnfoldBinning *node=r->GetChildNode();node;
