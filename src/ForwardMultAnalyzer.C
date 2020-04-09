@@ -974,18 +974,19 @@ int main(int argc, char* argv[]) {
       double ptSubMax=0;
       vector< TLorentzVector> elecCandiate;
       for(int i=0;i<partCandArray.GetEntries();i++) {
-        H1PartCand *cand=partCandArray[i];
+        // H1PartCand *cand=partCandArray[i];
         H1PartEm const *elec=cand->GetIDElec();
         if(elec && elec->GetType()==4 ) elecCandiate.push_back( elec->GetFourVector() );//only SpaCal photons
-        if(elec && cand->IsScatElec()) {
-         if (myElecCut.goodElec(elec,*run)!=1) continue;
-            H1Track const *scatElecTrk=cand->GetTrack();//to match a track
+        // if(elec && cand->IsScatElec()) {
+        if(elec) {
+         // if (myElecCut.goodElec(elec,*run)!=1) continue;
+            // H1Track const *scatElecTrk=cand->GetTrack();//to match a track
             TLorentzVector p= elec->GetFourVector();
             if(p.Pt()>ptMax) {
                escat0_REC_lab = p;
                scatteredElectron=i;
                haveScatteredElectron=true;
-               if(scatElecTrk) scatteredElectronCharge=scatElecTrk->GetCharge();
+               // if(scatElecTrk) scatteredElectronCharge=scatElecTrk->GetCharge();
                ptMax=p.Pt();
             }   
          }
@@ -1396,7 +1397,7 @@ int main(int argc, char* argv[]) {
                   myEvent.covREC[k].ResizeTo(3,3);
                   myEvent.imatchREC[k]=-999;
                   myEvent.dmatchREC[k]=-1.;
-                  
+
                   // if(fstTrack) {
                   //    myEvent.covREC[k]=fstTrack->GetMomentumCovar();
                   //    myEvent.imatchREC[k]=-1;
