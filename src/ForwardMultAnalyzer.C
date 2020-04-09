@@ -1217,9 +1217,9 @@ int main(int argc, char* argv[]) {
                   // dedxLikelihoodElectron = track->GetDedxLikelihood(H1Dedx::kElectron);
                   // dedxLikelihoodProton = track->GetDedxLikelihood(H1Dedx::kProton);
 
-                  H1VertexFittedTrack const *h1track=
-                     dynamic_cast<H1VertexFittedTrack const *>
-                     (cand->GetTrack());
+                  // H1VertexFittedTrack const *h1track=
+                  //    dynamic_cast<H1VertexFittedTrack const *>
+                  //    (cand->GetTrack());
                   if(h1track) {
                      
                      // chi2vtx=h1track->GetFitChi2();
@@ -1257,13 +1257,13 @@ int main(int argc, char* argv[]) {
                      //    rZero = fwdtrack->GetR0();
                      // }
 
-                     H1Vertex const *v=h1track->GetVertex();
-                     if(floatEqual(v->X(),myEvent.vertex[0])&&
-                        floatEqual(v->Y(),myEvent.vertex[1])&&
-                        floatEqual(v->Z(),myEvent.vertex[2])) {
-                     } else {
-                        type=0;
-                     }
+                     // H1Vertex const *v=h1track->GetVertex();
+                     // if(floatEqual(v->X(),myEvent.vertex[0])&&
+                     //    floatEqual(v->Y(),myEvent.vertex[1])&&
+                     //    floatEqual(v->Z(),myEvent.vertex[2])) {
+                     // } else {
+                     //    type=0;
+                     // }
                      
                   } else {
                    type=0;
@@ -1405,11 +1405,11 @@ int main(int argc, char* argv[]) {
                   // } else {
                      // H1PartCand const *partCandI=track->GetParticle();
                      // H1Track const *trackI=partCandI ? partCandI->GetTrack():0;
-                     H1Track const *trackI=cand->GetTrack();
-                     if(trackI) {
-                        myEvent.covREC[k]=trackI->GetMomentumCovar();
-                        myEvent.imatchREC[k]=-1;
-                     }
+                     // H1Track const *trackI=cand->GetTrack();
+                     // if(trackI) {
+                     //    myEvent.covREC[k]=trackI->GetMomentumCovar();
+                     //    myEvent.imatchREC[k]=-1;
+                     // }
                   // }
                   myEvent.nRECtrack=k+1;
                }
