@@ -962,35 +962,35 @@ int main(int argc, char* argv[]) {
 
       H1FloatPtr ElecE("ElecE"); //energy of scattered electron from e-finder
 
-      // static elecCut myElecCut=0;
+      static elecCut myElecCut=0;
 
       // // find scattered electron as identified EM particle with highest PT in SpaCal
       bool haveScatteredElectron=false;
       TLorentzVector escat0_REC_lab;
       TLorentzVector radPhot_REC_lab;
       int scatteredElectron=-1;
-      // int scatteredElectronCharge=9;// 9 is default to not be confused with 0
-      // double ptMax=0;
-      // double ptSubMax=0;
-      // vector< TLorentzVector> elecCandiate;
-      // for(int i=0;i<partCandArray.GetEntries();i++) {
-      //   H1PartCand *cand=partCandArray[i];
-      //   H1PartEm const *elec=cand->GetIDElec();
-      //   if(elec && elec->GetType()==4 ) elecCandiate.push_back( elec->GetFourVector() );//only SpaCal photons
-      //   if(elec && cand->IsScatElec()) {
-      //    if (myElecCut.goodElec(elec,*run)!=1) continue;
-      //       H1Track const *scatElecTrk=cand->GetTrack();//to match a track
-      //       TLorentzVector p= elec->GetFourVector();
-      //       if(p.Pt()>ptMax) {
-      //          escat0_REC_lab = p;
-      //          scatteredElectron=i;
-      //          haveScatteredElectron=true;
-      //          if(scatElecTrk) scatteredElectronCharge=scatElecTrk->GetCharge();
-      //          ptMax=p.Pt();
-      //       }   
-      //    }
-      // }
-      // //find the second largest pt
+      int scatteredElectronCharge=9;// 9 is default to not be confused with 0
+      double ptMax=0;
+      double ptSubMax=0;
+      vector< TLorentzVector> elecCandiate;
+      for(int i=0;i<partCandArray.GetEntries();i++) {
+        H1PartCand *cand=partCandArray[i];
+        H1PartEm const *elec=cand->GetIDElec();
+        if(elec && elec->GetType()==4 ) elecCandiate.push_back( elec->GetFourVector() );//only SpaCal photons
+        if(elec && cand->IsScatElec()) {
+         if (myElecCut.goodElec(elec,*run)!=1) continue;
+            H1Track const *scatElecTrk=cand->GetTrack();//to match a track
+            TLorentzVector p= elec->GetFourVector();
+            if(p.Pt()>ptMax) {
+               escat0_REC_lab = p;
+               scatteredElectron=i;
+               haveScatteredElectron=true;
+               if(scatElecTrk) scatteredElectronCharge=scatElecTrk->GetCharge();
+               ptMax=p.Pt();
+            }   
+         }
+      }
+      //find the second largest pt
       // for(unsigned j=0;j<elecCandiate.size();j++){
       //    if( elecCandiate[j].Pt() == escat0_REC_lab.Pt() ) continue; //scattered electron
       //    if( elecCandiate[j].Pt()>ptSubMax ){
