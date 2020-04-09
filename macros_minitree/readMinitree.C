@@ -32,6 +32,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNew.root");
 		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_NRAD.root");
 	}
+	else if(ifile_ == 3){
+		file = new TFile("../new_output/mc_highE_PYTHIA6_noReweight_Tree_hadCaliNewKine_photoproduction.root");
+	}
 	//output files
 	TString outname;
 	if( ifile_ == 0 ){
@@ -42,6 +45,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	}else if( ifile_ == 2 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_extendEtalabLooseTrack.root";
 		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_NRAD_checkNoSel.root";
+	}
+	else if( ifile_ == 3 ){
+		outname = "../minitree_output/Pn_hist_pythia_hadCaliNewKine_photoproduction.root";
 	}
 	
 	TTree* tree = (TTree*) file->Get("miniTree");
@@ -536,7 +542,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				if( fabs(etaREC_mini[itrk]) < 1.6 ){
 					n_particle_HCM_rec++;
 					h_noSel_pt->Fill(TMath::Hypot(pxREC_mini[itrk],pyREC_mini[itrk]),w_mini);
-					h_noSel_eta->Fill(etaMC_mini[itrk],w_mini);
+					h_noSel_eta->Fill(etaREC_mini[itrk],w_mini);
 				}
 			}
 			for(int ieta = 0; ieta < 3; ieta++){
