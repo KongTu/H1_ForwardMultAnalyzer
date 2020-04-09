@@ -1015,11 +1015,11 @@ int main(int argc, char* argv[]) {
       // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
       set<int> isElectron;
-      // if(scatteredElectron>=0) {
-      //    isElectron.insert(scatteredElectron);
-      //    for(int i=0;i<partCandArray.GetEntries();i++) {
-      //       if(i==scatteredElectron) continue;
-      //       // H1PartCand *cand=partCandArray[i];
+      if(scatteredElectron>=0) {
+         isElectron.insert(scatteredElectron);
+         for(int i=0;i<partCandArray.GetEntries();i++) {
+            if(i==scatteredElectron) continue;
+            H1PartCand *cand=partCandArray[i];
             // H1PartEm const *elec=cand->GetIDElec();
             // if(elec) {
             //    TLorentzVector p= elec->GetFourVector();
@@ -1029,20 +1029,20 @@ int main(int argc, char* argv[]) {
             //    }
             // } 
             // if(!cand->GetTrack()) {
-               // TLorentzVector p= cand->GetFourVector();
-               // if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
-               //    escatPhot_REC_lab += p;
-               //    isElectron.insert(i);
-               // }
+               TLorentzVector p= cand->GetFourVector();
+               if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
+                  escatPhot_REC_lab += p;
+                  isElectron.insert(i);
+               }
             // }
-      //    }
-      // }
+         }
+      }
 
-      // myEvent.elecEradREC=escatPhot_REC_lab.E()-escat0_REC_lab.E();
-      // myEvent.elecPxREC=escatPhot_REC_lab.X();
-      // myEvent.elecPyREC=escatPhot_REC_lab.Y();
-      // myEvent.elecPzREC=escatPhot_REC_lab.Z();
-      // myEvent.elecEREC=escatPhot_REC_lab.E();
+      myEvent.elecEradREC=escatPhot_REC_lab.E()-escat0_REC_lab.E();
+      myEvent.elecPxREC=escatPhot_REC_lab.X();
+      myEvent.elecPyREC=escatPhot_REC_lab.Y();
+      myEvent.elecPzREC=escatPhot_REC_lab.Z();
+      myEvent.elecEREC=escatPhot_REC_lab.E();
 
       // auxillary variables: cluster radius etc
       // if(scatteredElectron>=0) {
@@ -1405,11 +1405,11 @@ int main(int argc, char* argv[]) {
                   // } else {
                      // H1PartCand const *partCandI=track->GetParticle();
                      // H1Track const *trackI=partCandI ? partCandI->GetTrack():0;
-                     // H1Track const *trackI=cand->GetTrack();
-                     // if(trackI) {
-                     //    myEvent.covREC[k]=trackI->GetMomentumCovar();
-                     //    myEvent.imatchREC[k]=-1;
-                     // }
+                     H1Track const *trackI=cand->GetTrack();
+                     if(trackI) {
+                        myEvent.covREC[k]=trackI->GetMomentumCovar();
+                        myEvent.imatchREC[k]=-1;
+                     }
                   // }
                   myEvent.nRECtrack=k+1;
                }
