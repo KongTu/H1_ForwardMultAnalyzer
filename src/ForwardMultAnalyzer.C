@@ -1014,12 +1014,12 @@ int main(int argc, char* argv[]) {
 
       // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
-      set<int> isElectron;
-      if(scatteredElectron>=0) {
-         isElectron.insert(scatteredElectron);
-         for(int i=0;i<partCandArray.GetEntries();i++) {
-            if(i==scatteredElectron) continue;
-            // H1PartCand *cand=partCandArray[i];
+      // set<int> isElectron;
+      // if(scatteredElectron>=0) {
+      //    isElectron.insert(scatteredElectron);
+      //    for(int i=0;i<partCandArray.GetEntries();i++) {
+      //       if(i==scatteredElectron) continue;
+      //       // H1PartCand *cand=partCandArray[i];
             // H1PartEm const *elec=cand->GetIDElec();
             // if(elec) {
             //    TLorentzVector p= elec->GetFourVector();
@@ -1035,14 +1035,14 @@ int main(int argc, char* argv[]) {
                //    isElectron.insert(i);
                // }
             // }
-         }
-      }
+      //    }
+      // }
 
-      myEvent.elecEradREC=escatPhot_REC_lab.E()-escat0_REC_lab.E();
-      myEvent.elecPxREC=escatPhot_REC_lab.X();
-      myEvent.elecPyREC=escatPhot_REC_lab.Y();
-      myEvent.elecPzREC=escatPhot_REC_lab.Z();
-      myEvent.elecEREC=escatPhot_REC_lab.E();
+      // myEvent.elecEradREC=escatPhot_REC_lab.E()-escat0_REC_lab.E();
+      // myEvent.elecPxREC=escatPhot_REC_lab.X();
+      // myEvent.elecPyREC=escatPhot_REC_lab.Y();
+      // myEvent.elecPzREC=escatPhot_REC_lab.Z();
+      // myEvent.elecEREC=escatPhot_REC_lab.E();
 
       // auxillary variables: cluster radius etc
       // if(scatteredElectron>=0) {
@@ -1059,8 +1059,8 @@ int main(int argc, char* argv[]) {
       //    myEvent.elecEcraREC=-1;
       // }
 
-      GetKinematics(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,
-                    &myEvent.xREC,&myEvent.yREC,&myEvent.Q2REC);
+      // GetKinematics(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,
+      //               &myEvent.xREC,&myEvent.yREC,&myEvent.Q2REC);
 
       TLorentzRotation boost_REC_HCM=BoostToHCM(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab);
       TLorentzVector q_REC_lab(ebeam_REC_lab-escatPhot_REC_lab);
