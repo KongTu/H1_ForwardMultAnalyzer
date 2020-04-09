@@ -1208,12 +1208,12 @@ int main(int argc, char* argv[]) {
                   track_err_p = track->GetDp();
                   trkTheta = track->GetTheta();
                   charge=track->GetCharge();
-                  dedxPion = track->GetDedx(H1Dedx::kPion);
-                  dedxElectron = track->GetDedx(H1Dedx::kElectron);
-                  dedxProton = track->GetDedx(H1Dedx::kProton);
-                  dedxLikelihoodPion = track->GetDedxLikelihood(H1Dedx::kPion);
-                  dedxLikelihoodElectron = track->GetDedxLikelihood(H1Dedx::kElectron);
-                  dedxLikelihoodProton = track->GetDedxLikelihood(H1Dedx::kProton);
+                  // dedxPion = track->GetDedx(H1Dedx::kPion);
+                  // dedxElectron = track->GetDedx(H1Dedx::kElectron);
+                  // dedxProton = track->GetDedx(H1Dedx::kProton);
+                  // dedxLikelihoodPion = track->GetDedxLikelihood(H1Dedx::kPion);
+                  // dedxLikelihoodElectron = track->GetDedxLikelihood(H1Dedx::kElectron);
+                  // dedxLikelihoodProton = track->GetDedxLikelihood(H1Dedx::kProton);
 
                   H1VertexFittedTrack const *h1track=
                      dynamic_cast<H1VertexFittedTrack const *>
@@ -1396,6 +1396,7 @@ int main(int argc, char* argv[]) {
                   myEvent.covREC[k].ResizeTo(3,3);
                   myEvent.imatchREC[k]=-999;
                   myEvent.dmatchREC[k]=-1.;
+                  
                   // if(fstTrack) {
                   //    myEvent.covREC[k]=fstTrack->GetMomentumCovar();
                   //    myEvent.imatchREC[k]=-1;
