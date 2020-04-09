@@ -1220,7 +1220,7 @@ int main(int argc, char* argv[]) {
                   // H1VertexFittedTrack const *h1track=
                   //    dynamic_cast<H1VertexFittedTrack const *>
                   //    (cand->GetTrack());
-                  if(h1track) {
+                  // if(h1track) {
                      
                      // chi2vtx=h1track->GetFitChi2();
                      // vtxNdf=h1track->GetFitNdf();
@@ -1265,9 +1265,9 @@ int main(int argc, char* argv[]) {
                      //    type=0;
                      // }
                      
-                  } else {
-                   type=0;
-                  }
+                  // } else {
+                  //  type=0;
+                  // }
                   
                }
                // else if(fstTrack) {
