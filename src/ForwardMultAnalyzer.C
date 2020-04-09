@@ -542,7 +542,7 @@ int main(int argc, char* argv[]) {
 
    H1PartMCArrayPtr mcpart;
 
-   H1FSTFittedTrackArrayPtr fstFittedTrack;
+   // H1FSTFittedTrackArrayPtr fstFittedTrack;
    //H1FSTTrackArrayPtr fstNonFittedTrack;
 
    Int_t eventCounter = 0;
@@ -1069,13 +1069,13 @@ int main(int argc, char* argv[]) {
       myEvent.nRECtrackAll=0;
       myEvent.nRECtrack=0;
 
-      myEvent.nRECfstFitted=fstFittedTrack.GetEntries();
+      // myEvent.nRECfstFitted=fstFittedTrack.GetEntries();
 
       vector<int> trackType(10);
 
       H1InclHfsIterator inclHfs;
       int nPart=inclHfs.GetEntries();
-      nPart += fstFittedTrack.GetEntries();
+      // nPart += fstFittedTrack.GetEntries();
 
       /*
       Start new kinematics and boost here
@@ -1122,7 +1122,7 @@ int main(int argc, char* argv[]) {
       for(int i=0;i<nPart;i++) {
          H1PartCand *cand=0;
          //H1FSTTrack *fstTrack=0;
-         H1FSTFittedTrack *fstTrack=0;
+         // H1FSTFittedTrack *fstTrack=0;
          TLorentzVector p;
          // if(i<partCand.GetEntries()) {
          //    cand=partCand[i];
@@ -1132,8 +1132,8 @@ int main(int argc, char* argv[]) {
    
          } else {
             //fstTrack=fstNonFittedTrack[i-partCand.GetEntries()];
-            fstTrack=fstFittedTrack[i-inclHfs.GetEntries()];
-            p=fstTrack->GetFourVector(M_CHARGED_PION);
+            // fstTrack=fstFittedTrack[i-inclHfs.GetEntries()];
+            // p=fstTrack->GetFourVector(M_CHARGED_PION);
          }
          // ignore particles counted with scattered electron
          if(cand && isElectron.find(i)!=isElectron.end()) continue;
@@ -1150,7 +1150,7 @@ int main(int argc, char* argv[]) {
 
          H1PartSelTrack const *track=0;
          if(cand) track=cand->GetIDTrack();
-         if(track || fstTrack) {
+         if(track) {
             if(haveScatteredElectron) {
                TLorentzVector h=p;
                if(track) h=track->GetFourVector();
@@ -1268,64 +1268,64 @@ int main(int argc, char* argv[]) {
                   }
                   
                }
-               else if(fstTrack) {
+               // else if(fstTrack) {
 
-                  //NHits = fstTrack->GetFSTTrack()->GetNHit();
-                  chi2vtx=fstTrack->GetFitChi2XY()+fstTrack->GetFitChi2SZ();
-                  chi2nv=fstTrack->GetFSTTrack()->GetChi2XY()+
-                     fstTrack->GetFSTTrack()->GetChi2XY();
+                  // //NHits = fstTrack->GetFSTTrack()->GetNHit();
+                  // chi2vtx=fstTrack->GetFitChi2XY()+fstTrack->GetFitChi2SZ();
+                  // chi2nv=fstTrack->GetFSTTrack()->GetChi2XY()+
+                  //    fstTrack->GetFSTTrack()->GetChi2XY();
                   
-                  vtxNdf=fstTrack->GetFitNdf();
-                  nvNdf=fstTrack->GetFSTTrack()->GetNdfXY()+fstTrack->GetFSTTrack()->GetNdfSZ();
+                  // vtxNdf=fstTrack->GetFitNdf();
+                  // nvNdf=fstTrack->GetFSTTrack()->GetNdfXY()+fstTrack->GetFSTTrack()->GetNdfSZ();
 
-                  // do some track selection here
-                  // (1) tracks shall be a primary track
-                  H1Vertex const *v=fstTrack->GetVertex();
-                  if(floatEqual(v->X(),myEvent.vertex[0])&&
-                     floatEqual(v->Y(),myEvent.vertex[1])&&
-                     floatEqual(v->Z(),myEvent.vertex[2])) {
-                     type=4;
-                  }
-                  // (2) minimum transverse momentum of 0.1 GeV
-                  // if(fstTrack->GetPt()<0.1) {
-                  //    type=0;
+                  // // do some track selection here
+                  // // (1) tracks shall be a primary track
+                  // H1Vertex const *v=fstTrack->GetVertex();
+                  // if(floatEqual(v->X(),myEvent.vertex[0])&&
+                  //    floatEqual(v->Y(),myEvent.vertex[1])&&
+                  //    floatEqual(v->Z(),myEvent.vertex[2])) {
+                  //    type=4;
                   // }
-                  // else{ type = 4;}
-                  // (3) momentum vector shall be incompatible with 
-                  //  any other central, combined or forward track, any other
-                  //  HFS track
-                  if(type) {
-                     charge=fstTrack->GetCharge();
-                     TVector3 p1=fstTrack->GetMomentum();
-                     TMatrix V1=fstTrack->GetMomentumCovar();
-                     // for(int j=0;j<partCand.GetEntries();j++) {
-                     //     H1PartCand *candJ=partCand[j];
-                     for(int j=0;j<inclHfs.GetEntries();j++) {
-                         H1PartCand *candJ=inclHfs[j];
-                         H1PartSelTrack const *selTrackJ=candJ->GetIDTrack();
-                         H1PartCand const *partCandJ=
-                            selTrackJ ? (selTrackJ->GetParticle()) : 0;
-                         H1Track const *trackJ=partCandJ ? partCandJ->GetTrack() : 0;
-                         if(trackJ) {
-                            TVector3 p2=trackJ->GetMomentum();
-                            TMatrix V2=trackJ->GetMomentumCovar();
-                            TMatrixD sum(V1+V2);
-                            TMatrixD Vinv(TMatrixD::kInverted,V1+V2);
-                            TVector3 d(p1-p2);
-                            double chi2=d.Dot(Vinv*d);
-                            //if(print) cout<<i<<" "<<j<<" "<<chi2;
-                            if(chi2<30.) {
-                               //if(print) cout<<" [reject]";
-                               type=0;
-                            }
-                            //if(print) cout<<"\n";
-                         }
-                     }
-                  }
+                  // // (2) minimum transverse momentum of 0.1 GeV
+                  // // if(fstTrack->GetPt()<0.1) {
+                  // //    type=0;
+                  // // }
+                  // // else{ type = 4;}
+                  // // (3) momentum vector shall be incompatible with 
+                  // //  any other central, combined or forward track, any other
+                  // //  HFS track
+                  // if(type) {
+                  //    charge=fstTrack->GetCharge();
+                  //    TVector3 p1=fstTrack->GetMomentum();
+                  //    TMatrix V1=fstTrack->GetMomentumCovar();
+                  //    // for(int j=0;j<partCand.GetEntries();j++) {
+                  //    //     H1PartCand *candJ=partCand[j];
+                  //    for(int j=0;j<inclHfs.GetEntries();j++) {
+                  //        H1PartCand *candJ=inclHfs[j];
+                  //        H1PartSelTrack const *selTrackJ=candJ->GetIDTrack();
+                  //        H1PartCand const *partCandJ=
+                  //           selTrackJ ? (selTrackJ->GetParticle()) : 0;
+                  //        H1Track const *trackJ=partCandJ ? partCandJ->GetTrack() : 0;
+                  //        if(trackJ) {
+                  //           TVector3 p2=trackJ->GetMomentum();
+                  //           TMatrix V2=trackJ->GetMomentumCovar();
+                  //           TMatrixD sum(V1+V2);
+                  //           TMatrixD Vinv(TMatrixD::kInverted,V1+V2);
+                  //           TVector3 d(p1-p2);
+                  //           double chi2=d.Dot(Vinv*d);
+                  //           //if(print) cout<<i<<" "<<j<<" "<<chi2;
+                  //           if(chi2<30.) {
+                  //              //if(print) cout<<" [reject]";
+                  //              type=0;
+                  //           }
+                  //           //if(print) cout<<"\n";
+                  //        }
+                  //    }
+                  // }
                   // if(type) {
                   //    myEvent.nRECfstSelected++;
                   // }
-               }
+               // }
                trackType[type]++;
                if(type && (myEvent.nRECtrack<MyEvent::nRECtrack_MAX)) {
                   if(print) {
@@ -1396,10 +1396,10 @@ int main(int argc, char* argv[]) {
                   myEvent.covREC[k].ResizeTo(3,3);
                   myEvent.imatchREC[k]=-999;
                   myEvent.dmatchREC[k]=-1.;
-                  if(fstTrack) {
-                     myEvent.covREC[k]=fstTrack->GetMomentumCovar();
-                     myEvent.imatchREC[k]=-1;
-                  } else {
+                  // if(fstTrack) {
+                  //    myEvent.covREC[k]=fstTrack->GetMomentumCovar();
+                  //    myEvent.imatchREC[k]=-1;
+                  // } else {
                      // H1PartCand const *partCandI=track->GetParticle();
                      // H1Track const *trackI=partCandI ? partCandI->GetTrack():0;
                      H1Track const *trackI=cand->GetTrack();
@@ -1407,7 +1407,7 @@ int main(int argc, char* argv[]) {
                         myEvent.covREC[k]=trackI->GetMomentumCovar();
                         myEvent.imatchREC[k]=-1;
                      }
-                  }
+                  // }
                   myEvent.nRECtrack=k+1;
                }
             }
