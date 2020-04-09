@@ -1062,7 +1062,7 @@ int main(int argc, char* argv[]) {
       // GetKinematics(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,
       //               &myEvent.xREC,&myEvent.yREC,&myEvent.Q2REC);
 
-      // TLorentzRotation boost_REC_HCM=BoostToHCM(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab);
+      TLorentzRotation boost_REC_HCM=BoostToHCM(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab);
       TLorentzVector q_REC_lab(ebeam_REC_lab-escatPhot_REC_lab);
 
       // calculate inclusive HFS 4-vector and track selection
