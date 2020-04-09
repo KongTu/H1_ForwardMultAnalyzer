@@ -1045,14 +1045,14 @@ int main(int argc, char* argv[]) {
       // auxillary variables: cluster radius etc
       if(scatteredElectron>=0) {
          H1PartEm const *partEM=partCandArray[scatteredElectron]->GetIDElec();
-         myEvent.elecEcraREC=partEM->GetEcra();
-         myEvent.elecXclusREC=partEM->GetXClus();
-         myEvent.elecYclusREC=partEM->GetYClus();
-         myEvent.elecThetaREC=partEM->GetTheta();
-         myEvent.elecTypeREC=partEM->GetType();
-         myEvent.elecEnergyREC=partEM->GetE();
-         myEvent.elecEfracREC=partEM->GetEaem();
-         myEvent.elecHfracREC=partEM->GetEnHadSpac();
+         // myEvent.elecEcraREC=partEM->GetEcra();
+         // myEvent.elecXclusREC=partEM->GetXClus();
+         // myEvent.elecYclusREC=partEM->GetYClus();
+         // myEvent.elecThetaREC=partEM->GetTheta();
+         // myEvent.elecTypeREC=partEM->GetType();
+         // myEvent.elecEnergyREC=partEM->GetE();
+         // myEvent.elecEfracREC=partEM->GetEaem();
+         // myEvent.elecHfracREC=partEM->GetEnHadSpac();
       } else {
          myEvent.elecEcraREC=-1;
       }
@@ -1220,19 +1220,19 @@ int main(int argc, char* argv[]) {
                      (cand->GetTrack());
                   if(h1track) {
                      
-                     chi2vtx=h1track->GetFitChi2();
-                     vtxNdf=h1track->GetFitNdf();
-                     chi2Trk=h1track->GetChi2();
-                     ndfTrk=h1track->GetNdf();
-                     vtxNHits=h1track->GetNHit(H1Track::tdCJC);
-                     vtxTrackLength=h1track->GetLength();
-                     dcaPrime=h1track->GetDcaPrime();
-                     dz0Prime=h1track->GetDz0Prime();
-                     startHitsRadius=h1track->GetStartRadius();
-                     endHitsRadius=h1track->GetEndRadius();
-                     TVector3 vect_start_hit = h1track->GetStartHit();
-                     TVector3 vect_end_hit = h1track->GetEndHit();
-                     zLengthHit = vect_start_hit.z()-vect_end_hit.z();
+                     // chi2vtx=h1track->GetFitChi2();
+                     // vtxNdf=h1track->GetFitNdf();
+                     // chi2Trk=h1track->GetChi2();
+                     // ndfTrk=h1track->GetNdf();
+                     // vtxNHits=h1track->GetNHit(H1Track::tdCJC);
+                     // vtxTrackLength=h1track->GetLength();
+                     // dcaPrime=h1track->GetDcaPrime();
+                     // dz0Prime=h1track->GetDz0Prime();
+                     // startHitsRadius=h1track->GetStartRadius();
+                     // endHitsRadius=h1track->GetEndRadius();
+                     // TVector3 vect_start_hit = h1track->GetStartHit();
+                     // TVector3 vect_end_hit = h1track->GetEndHit();
+                     // zLengthHit = vect_start_hit.z()-vect_end_hit.z();
 
                      H1NonVertexFittedTrack const *nvtrack=
                         h1track-> GetNonVertexFittedTrack();
