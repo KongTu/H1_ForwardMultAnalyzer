@@ -1044,7 +1044,7 @@ int main(int argc, char* argv[]) {
 
       // auxillary variables: cluster radius etc
       if(scatteredElectron>=0) {
-         H1PartEm const *partEM=partCandArray[scatteredElectron]->GetIDElec();
+         // H1PartEm const *partEM=partCandArray[scatteredElectron]->GetIDElec();
          // myEvent.elecEcraREC=partEM->GetEcra();
          // myEvent.elecXclusREC=partEM->GetXClus();
          // myEvent.elecYclusREC=partEM->GetYClus();
@@ -1234,26 +1234,26 @@ int main(int argc, char* argv[]) {
                      // TVector3 vect_end_hit = h1track->GetEndHit();
                      // zLengthHit = vect_start_hit.z()-vect_end_hit.z();
 
-                     H1NonVertexFittedTrack const *nvtrack=
-                        h1track-> GetNonVertexFittedTrack();
-                     if(nvtrack) {
-                        //do non vertex fitted tracks here
-                     }
+                     // H1NonVertexFittedTrack const *nvtrack=
+                     //    h1track-> GetNonVertexFittedTrack();
+                     // if(nvtrack) {
+                     //    //do non vertex fitted tracks here
+                     // }
 
-                     H1CombinedFittedTrack const *combtrack=
-                        dynamic_cast<H1CombinedFittedTrack const *>
-                        (cand->GetTrack());  
-                     if(track->IsCombinedTrk() ){
-                        chi2Link=combtrack->GetLinkChi2();
-                        ndfLink=combtrack->GetLinkNdf();
-                     }
+                     // H1CombinedFittedTrack const *combtrack=
+                     //    dynamic_cast<H1CombinedFittedTrack const *>
+                     //    (cand->GetTrack());  
+                     // if(track->IsCombinedTrk() ){
+                     //    chi2Link=combtrack->GetLinkChi2();
+                     //    ndfLink=combtrack->GetLinkNdf();
+                     // }
                      
-                     H1ForwardFittedTrack const *fwdtrack=
-                        dynamic_cast<H1ForwardFittedTrack const *>
-                        (cand->GetTrack());
-                     if(track->IsForwardTrk()){
-                        rZero = fwdtrack->GetR0();
-                     }
+                     // H1ForwardFittedTrack const *fwdtrack=
+                     //    dynamic_cast<H1ForwardFittedTrack const *>
+                     //    (cand->GetTrack());
+                     // if(track->IsForwardTrk()){
+                     //    rZero = fwdtrack->GetR0();
+                     // }
 
                      H1Vertex const *v=h1track->GetVertex();
                      if(floatEqual(v->X(),myEvent.vertex[0])&&
