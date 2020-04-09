@@ -199,10 +199,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
 			for(int k=0;k<4;k++){
-				h_Pn[i][j][k] = new TH1D(Form("h_Pn_%d_%d_%d",i,j,k),Form("h_Pn_%d_%d_%d",i,j,k),11,Pn_binning);
-				h_Pn_QEDc[i][j][k] = new TH1D(Form("h_Pn_QEDc_%d_%d_%d",i,j,k),Form("h_Pn_QEDc_%d_%d_%d",i,j,k),11,Pn_binning);
-				h_Pn_GEN[i][j][k] = new TH1D(Form("h_Pn_GEN_%d_%d_%d",i,j,k),Form("h_Pn_GEN_%d_%d_%d",i,j,k),11,Pn_binning);
-				h_Pn_cor[i][j][k] = new TH2D(Form("h_Pn_cor_%d_%d_%d",i,j,k),Form("h_Pn_cor_%d_%d_%d",i,j,k),11,Pn_binning,11,Pn_binning);
+				h_Pn[i][j][k] = new TH1D(Form("h_Pn_%d_%d_%d",i,j,k),Form("h_Pn_%d_%d_%d",i,j,k),30,0,30);
+				h_Pn_QEDc[i][j][k] = new TH1D(Form("h_Pn_QEDc_%d_%d_%d",i,j,k),Form("h_Pn_QEDc_%d_%d_%d",i,j,k),30,0,30);
+				h_Pn_GEN[i][j][k] = new TH1D(Form("h_Pn_GEN_%d_%d_%d",i,j,k),Form("h_Pn_GEN_%d_%d_%d",i,j,k),30,0,30);
+				h_Pn_cor[i][j][k] = new TH2D(Form("h_Pn_cor_%d_%d_%d",i,j,k),Form("h_Pn_cor_%d_%d_%d",i,j,k),30,0,30,30,0,30);
 			}
 		}
 	}
@@ -218,6 +218,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_Pn_genNextREC_HCM[4][4];	
 	TH1D* h_Pn_genNotREC_HCM[4][4];	
 	TH1D* h_Pn_GEN_HCM[4][4];
+	TH1D* h_Pn_GEN_HCM_noSel[4][4];
 	TH2D* h_Pn_cor_HCM[4][4];
 
 	TH1D* h_K0sMass[4][4];
@@ -229,15 +230,16 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
 
-			h_dRRadPhotVsMult[i][j]= new TH2D(Form("h_dRRadPhotVsMult_%d_%d",i,j),";mult;dR",11,Pn_binning,300,0,15);
-			h_dPhiRadPhotVsMult[i][j]= new TH2D(Form("h_dPhiRadPhotVsMult_%d_%d",i,j),";mult;dPhi",11,Pn_binning,300,-6.28,6.28);
+			h_dRRadPhotVsMult[i][j]= new TH2D(Form("h_dRRadPhotVsMult_%d_%d",i,j),";mult;dR",30,0,30,300,0,15);
+			h_dPhiRadPhotVsMult[i][j]= new TH2D(Form("h_dPhiRadPhotVsMult_%d_%d",i,j),";mult;dPhi",30,0,30,300,-6.28,6.28);
 
-			h_Pn_HCM[i][j] = new TH1D(Form("h_Pn_HCM_%d_%d",i,j),Form("h_Pn_HCM_%d_%d",i,j),11,Pn_binning);
-			h_Pn_genREC_HCM[i][j] = new TH1D(Form("h_Pn_genREC_HCM_%d_%d",i,j),Form("h_Pn_genREC_HCM_%d_%d",i,j),11,Pn_binning);
-			h_Pn_genNextREC_HCM[i][j] = new TH1D(Form("h_Pn_genNextREC_HCM_%d_%d",i,j),Form("h_Pn_genNextREC_HCM_%d_%d",i,j),11,Pn_binning);
-			h_Pn_genNotREC_HCM[i][j] = new TH1D(Form("h_Pn_genNotREC_HCM_%d_%d",i,j),Form("h_Pn_genNotREC_HCM_%d_%d",i,j),11,Pn_binning);
-			h_Pn_GEN_HCM[i][j] = new TH1D(Form("h_Pn_GEN_HCM_%d_%d",i,j),Form("h_Pn_GEN_HCM_%d_%d",i,j),11,Pn_binning);
-			h_Pn_cor_HCM[i][j] = new TH2D(Form("h_Pn_cor_HCM_%d_%d",i,j),Form("h_Pn_cor_HCM_%d_%d",i,j),11,Pn_binning,11,Pn_binning);
+			h_Pn_HCM[i][j] = new TH1D(Form("h_Pn_HCM_%d_%d",i,j),Form("h_Pn_HCM_%d_%d",i,j),30,0,30);
+			h_Pn_genREC_HCM[i][j] = new TH1D(Form("h_Pn_genREC_HCM_%d_%d",i,j),Form("h_Pn_genREC_HCM_%d_%d",i,j),30,0,30);
+			h_Pn_genNextREC_HCM[i][j] = new TH1D(Form("h_Pn_genNextREC_HCM_%d_%d",i,j),Form("h_Pn_genNextREC_HCM_%d_%d",i,j),30,0,30);
+			h_Pn_genNotREC_HCM[i][j] = new TH1D(Form("h_Pn_genNotREC_HCM_%d_%d",i,j),Form("h_Pn_genNotREC_HCM_%d_%d",i,j),30,0,30);
+			h_Pn_GEN_HCM[i][j] = new TH1D(Form("h_Pn_GEN_HCM_%d_%d",i,j),Form("h_Pn_GEN_HCM_%d_%d",i,j),30,0,30);
+			h_Pn_GEN_HCM_noSel[i][j] = new TH1D(Form("h_Pn_GEN_HCM_noSel_%d_%d",i,j),Form("h_Pn_GEN_HCM_noSel_%d_%d",i,j),30,0,30);
+			h_Pn_cor_HCM[i][j] = new TH2D(Form("h_Pn_cor_HCM_%d_%d",i,j),Form("h_Pn_cor_HCM_%d_%d",i,j),30,0,30,30,0,30);
 			
 			h_K0sMass[i][j] = new TH1D(Form("h_K0sMass_%d_%d",i,j),Form("h_K0sMass_%d_%d",i,j),200,0.25,0.54);
 			h_K0sMassTight[i][j] = new TH1D(Form("h_K0sMassTight_%d_%d",i,j),Form("h_K0sMassTight_%d_%d",i,j),200,0.25,0.54);
@@ -294,6 +296,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		
 		double n_particle_eta[4] = {0.,0.,0.,0.};
 		double n_particle_HCM = 0.;
+		double n_particle_HCM_noSel = 0.;
 		//MC generator
 		if( ifile_ != 0 ){
 			int Q2_INDEX = -1;
@@ -314,6 +317,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					if( fabs(etaMC_mini[itrk]) < 1.6 ){
 						if( etaStarMC_mini[itrk] > 0 && etaStarMC_mini[itrk] < 4.0 ){
 								n_particle_HCM++;	
+						}
+						else{
+							n_particle_HCM_noSel++;
 						}
 					}
 				}
@@ -337,6 +343,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			// if(Q2_INDEX >=0 && y_INDEX >= 0 ){
 				//HCM frame
 				h_Pn_GEN_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, w_mini );
+				h_Pn_GEN_HCM_noSel[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_noSel, w_mini );
 				//lab frame
 				h_Pn_GEN[Q2_INDEX][y_INDEX][0]->Fill( n_particle_eta[0], w_mini );
 				h_Pn_GEN[Q2_INDEX][y_INDEX][1]->Fill( n_particle_eta[1], w_mini );
