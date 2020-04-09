@@ -620,16 +620,16 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          // myEvent.hfsPzREC_mini = hfsPzREC;
          // myEvent.hfsEREC_mini = hfsEREC;
          //bkg finder bit cuts:
-         if( (ibgREC & 1) != 0 ) event_pass = 0;
-         if( (ibgREC & 2) != 0 ) event_pass = 0;
-         if( (ibgREC & 4) != 0 ) event_pass = 0;
-         if( (ibgREC & 8) != 0 ) event_pass = 0;
-         if( (ibgREC & 16) != 0 ) event_pass = 0;
-         if( (ibgREC & 32) != 0 ) event_pass = 0;
-         if( (ibgREC & 64) != 0 ) event_pass = 0;  
-         //kinematic cuts are not included   
+         // if( (ibgREC & 1) != 0 ) event_pass = 0;
+         // if( (ibgREC & 2) != 0 ) event_pass = 0;
+         // if( (ibgREC & 4) != 0 ) event_pass = 0;
+         // if( (ibgREC & 8) != 0 ) event_pass = 0;
+         // if( (ibgREC & 16) != 0 ) event_pass = 0;
+         // if( (ibgREC & 32) != 0 ) event_pass = 0;
+         // if( (ibgREC & 64) != 0 ) event_pass = 0;  
+         // //kinematic cuts are not included   
          //Cut electron spatial 
-         if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) event_pass = 0;
+         // if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) event_pass = 0;
          if( elecEREC < 12. ) event_pass = 0; 
          //E-pz cuts
          if( Epz > 70 || Epz < 35 ) event_pass = 0;
