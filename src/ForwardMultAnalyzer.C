@@ -980,13 +980,13 @@ int main(int argc, char* argv[]) {
         if(cand->IsScatElec()) {
         // if(elec) {
          // if (myElecCut.goodElec(elec,*run)!=1) continue;
-            H1Track const *scatElecTrk=cand->GetTrack();//to match a track
+            // H1Track const *scatElecTrk=cand->GetTrack();//to match a track
             TLorentzVector p= cand->GetFourVector();
             if(p.Pt()>ptMax) {
                escat0_REC_lab = p;
                scatteredElectron=i;
                haveScatteredElectron=true;
-               if(scatElecTrk) scatteredElectronCharge=scatElecTrk->GetCharge();
+               // if(scatElecTrk) scatteredElectronCharge=scatElecTrk->GetCharge();
                ptMax=p.Pt();
             }   
          }
@@ -1015,27 +1015,28 @@ int main(int argc, char* argv[]) {
       // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
       set<int> isElectron;
-      // if(scatteredElectron>=0) {
-      //    isElectron.insert(scatteredElectron);
-      //    for(int i=0;i<partCandArray.GetEntries();i++) {
-      //       if(i==scatteredElectron) continue;
-      //       H1PartCand *cand=partCandArray[i];
-      //       H1PartEm const *elec=cand->GetIDElec();
-      //       if(elec) {
-      //          TLorentzVector p= elec->GetFourVector();
-      //          if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
-      //             escatPhot_REC_lab += p;
-      //             isElectron.insert(i);
-      //          }
-      //       } else if(!cand->GetTrack()) {
-      //          TLorentzVector p= cand->GetFourVector();
-      //          if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
-      //             escatPhot_REC_lab += p;
-      //             isElectron.insert(i);
-      //          }
-      //       }
-      //    }
-      // }
+      if(scatteredElectron>=0) {
+         isElectron.insert(scatteredElectron);
+         for(int i=0;i<partCandArray.GetEntries();i++) {
+            if(i==scatteredElectron) continue;
+            H1PartCand *cand=partCandArray[i];
+            // H1PartEm const *elec=cand->GetIDElec();
+            // if(elec) {
+            //    TLorentzVector p= elec->GetFourVector();
+            //    if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
+            //       escatPhot_REC_lab += p;
+            //       isElectron.insert(i);
+            //    }
+            // } 
+            if(!cand->GetTrack()) {
+               TLorentzVector p= cand->GetFourVector();
+               if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
+                  escatPhot_REC_lab += p;
+                  isElectron.insert(i);
+               }
+            }
+         }
+      }
 
       myEvent.elecEradREC=escatPhot_REC_lab.E()-escat0_REC_lab.E();
       myEvent.elecPxREC=escatPhot_REC_lab.X();
@@ -1058,8 +1059,8 @@ int main(int argc, char* argv[]) {
       //    myEvent.elecEcraREC=-1;
       // }
 
-      // GetKinematics(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,
-      //               &myEvent.xREC,&myEvent.yREC,&myEvent.Q2REC);
+      GetKinematics(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,
+                    &myEvent.xREC,&myEvent.yREC,&myEvent.Q2REC);
 
       TLorentzRotation boost_REC_HCM=BoostToHCM(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab);
       TLorentzVector q_REC_lab(ebeam_REC_lab-escatPhot_REC_lab);
