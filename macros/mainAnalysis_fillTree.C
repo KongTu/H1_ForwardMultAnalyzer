@@ -188,11 +188,12 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      // tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
-      // tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
 
       // tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
-      tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
+      //pythia
+      // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
    }
    else if( !doGen_ ){
       tree->Add("../batch/output/data_highE_06_hadCaliNewKine/*.root");
@@ -519,8 +520,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                }
             }
             else{
-               // evt_weight = w*(136./363);
-               evt_weight = w*(136./462.99);
+               evt_weight = w*(136./363);
+               // evt_weight = w*(136./462.99);//pythia6
             }
             
          }
@@ -620,16 +621,16 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          // myEvent.hfsPzREC_mini = hfsPzREC;
          // myEvent.hfsEREC_mini = hfsEREC;
          //bkg finder bit cuts:
-         // if( (ibgREC & 1) != 0 ) event_pass = 0;
-         // if( (ibgREC & 2) != 0 ) event_pass = 0;
-         // if( (ibgREC & 4) != 0 ) event_pass = 0;
-         // if( (ibgREC & 8) != 0 ) event_pass = 0;
-         // if( (ibgREC & 16) != 0 ) event_pass = 0;
-         // if( (ibgREC & 32) != 0 ) event_pass = 0;
-         // if( (ibgREC & 64) != 0 ) event_pass = 0;  
-         // //kinematic cuts are not included   
+         if( (ibgREC & 1) != 0 ) event_pass = 0;
+         if( (ibgREC & 2) != 0 ) event_pass = 0;
+         if( (ibgREC & 4) != 0 ) event_pass = 0;
+         if( (ibgREC & 8) != 0 ) event_pass = 0;
+         if( (ibgREC & 16) != 0 ) event_pass = 0;
+         if( (ibgREC & 32) != 0 ) event_pass = 0;
+         if( (ibgREC & 64) != 0 ) event_pass = 0;  
+         //kinematic cuts are not included   
          //Cut electron spatial 
-         // if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) event_pass = 0;
+         if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) event_pass = 0;
          if( elecEREC < 12. ) event_pass = 0; 
          //E-pz cuts
          if( Epz > 70 || Epz < 35 ) event_pass = 0;
