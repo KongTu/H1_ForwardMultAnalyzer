@@ -962,50 +962,50 @@ int main(int argc, char* argv[]) {
 
       H1FloatPtr ElecE("ElecE"); //energy of scattered electron from e-finder
 
-      static elecCut myElecCut=0;
+      // static elecCut myElecCut=0;
 
-      // find scattered electron as identified EM particle with highest PT in SpaCal
-      bool haveScatteredElectron=false;
+      // // find scattered electron as identified EM particle with highest PT in SpaCal
+      // bool haveScatteredElectron=false;
       TLorentzVector escat0_REC_lab;
       TLorentzVector radPhot_REC_lab;
-      int scatteredElectron=-1;
-      int scatteredElectronCharge=9;// 9 is default to not be confused with 0
-      double ptMax=0;
-      double ptSubMax=0;
-      vector< TLorentzVector> elecCandiate;
-      for(int i=0;i<partCandArray.GetEntries();i++) {
-        H1PartCand *cand=partCandArray[i];
-        H1PartEm const *elec=cand->GetIDElec();
-        if(elec && elec->GetType()==4 ) elecCandiate.push_back( elec->GetFourVector() );//only SpaCal photons
-        if(elec && cand->IsScatElec()) {
-         if (myElecCut.goodElec(elec,*run)!=1) continue;
-            H1Track const *scatElecTrk=cand->GetTrack();//to match a track
-            TLorentzVector p= elec->GetFourVector();
-            if(p.Pt()>ptMax) {
-               escat0_REC_lab = p;
-               scatteredElectron=i;
-               haveScatteredElectron=true;
-               if(scatElecTrk) scatteredElectronCharge=scatElecTrk->GetCharge();
-               ptMax=p.Pt();
-            }   
-         }
-      }
-      //find the second largest pt
-      for(unsigned j=0;j<elecCandiate.size();j++){
-         if( elecCandiate[j].Pt() == escat0_REC_lab.Pt() ) continue; //scattered electron
-         if( elecCandiate[j].Pt()>ptSubMax ){
-            radPhot_REC_lab = elecCandiate[j];
-            ptSubMax = elecCandiate[j].Pt();
-         }
-      }
+      // int scatteredElectron=-1;
+      // int scatteredElectronCharge=9;// 9 is default to not be confused with 0
+      // double ptMax=0;
+      // double ptSubMax=0;
+      // vector< TLorentzVector> elecCandiate;
+      // for(int i=0;i<partCandArray.GetEntries();i++) {
+      //   H1PartCand *cand=partCandArray[i];
+      //   H1PartEm const *elec=cand->GetIDElec();
+      //   if(elec && elec->GetType()==4 ) elecCandiate.push_back( elec->GetFourVector() );//only SpaCal photons
+      //   if(elec && cand->IsScatElec()) {
+      //    if (myElecCut.goodElec(elec,*run)!=1) continue;
+      //       H1Track const *scatElecTrk=cand->GetTrack();//to match a track
+      //       TLorentzVector p= elec->GetFourVector();
+      //       if(p.Pt()>ptMax) {
+      //          escat0_REC_lab = p;
+      //          scatteredElectron=i;
+      //          haveScatteredElectron=true;
+      //          if(scatElecTrk) scatteredElectronCharge=scatElecTrk->GetCharge();
+      //          ptMax=p.Pt();
+      //       }   
+      //    }
+      // }
+      // //find the second largest pt
+      // for(unsigned j=0;j<elecCandiate.size();j++){
+      //    if( elecCandiate[j].Pt() == escat0_REC_lab.Pt() ) continue; //scattered electron
+      //    if( elecCandiate[j].Pt()>ptSubMax ){
+      //       radPhot_REC_lab = elecCandiate[j];
+      //       ptSubMax = elecCandiate[j].Pt();
+      //    }
+      // }
 
-      myEvent.radPhoPxREC = radPhot_REC_lab.Px();
-      myEvent.radPhoPyREC = radPhot_REC_lab.Py();
-      myEvent.radPhoPzREC = radPhot_REC_lab.Pz();
-      myEvent.radPhoEREC = radPhot_REC_lab.E();
+      // myEvent.radPhoPxREC = radPhot_REC_lab.Px();
+      // myEvent.radPhoPyREC = radPhot_REC_lab.Py();
+      // myEvent.radPhoPzREC = radPhot_REC_lab.Pz();
+      // myEvent.radPhoEREC = radPhot_REC_lab.E();
 
-      //adding a charge variable to later decide if it matched to a track with its charge
-      myEvent.elecChargeREC=scatteredElectronCharge;
+      // //adding a charge variable to later decide if it matched to a track with its charge
+      // myEvent.elecChargeREC=scatteredElectronCharge;
       
       //add energy scale by 0.5%
       // escat0_REC_lab.SetE( 1.005*escat0_REC_lab.E() );
@@ -1013,28 +1013,28 @@ int main(int argc, char* argv[]) {
 
       // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
-      set<int> isElectron;
-      if(scatteredElectron>=0) {
-         isElectron.insert(scatteredElectron);
-         for(int i=0;i<partCandArray.GetEntries();i++) {
-            if(i==scatteredElectron) continue;
-            H1PartCand *cand=partCandArray[i];
-            H1PartEm const *elec=cand->GetIDElec();
-            if(elec) {
-               TLorentzVector p= elec->GetFourVector();
-               if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
-                  escatPhot_REC_lab += p;
-                  isElectron.insert(i);
-               }
-            } else if(!cand->GetTrack()) {
-               TLorentzVector p= cand->GetFourVector();
-               if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
-                  escatPhot_REC_lab += p;
-                  isElectron.insert(i);
-               }
-            }
-         }
-      }
+      // set<int> isElectron;
+      // if(scatteredElectron>=0) {
+      //    isElectron.insert(scatteredElectron);
+      //    for(int i=0;i<partCandArray.GetEntries();i++) {
+      //       if(i==scatteredElectron) continue;
+      //       H1PartCand *cand=partCandArray[i];
+      //       H1PartEm const *elec=cand->GetIDElec();
+      //       if(elec) {
+      //          TLorentzVector p= elec->GetFourVector();
+      //          if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
+      //             escatPhot_REC_lab += p;
+      //             isElectron.insert(i);
+      //          }
+      //       } else if(!cand->GetTrack()) {
+      //          TLorentzVector p= cand->GetFourVector();
+      //          if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
+      //             escatPhot_REC_lab += p;
+      //             isElectron.insert(i);
+      //          }
+      //       }
+      //    }
+      // }
 
       myEvent.elecEradREC=escatPhot_REC_lab.E()-escat0_REC_lab.E();
       myEvent.elecPxREC=escatPhot_REC_lab.X();
@@ -1043,7 +1043,7 @@ int main(int argc, char* argv[]) {
       myEvent.elecEREC=escatPhot_REC_lab.E();
 
       // auxillary variables: cluster radius etc
-      if(scatteredElectron>=0) {
+      // if(scatteredElectron>=0) {
          // H1PartEm const *partEM=partCandArray[scatteredElectron]->GetIDElec();
          // myEvent.elecEcraREC=partEM->GetEcra();
          // myEvent.elecXclusREC=partEM->GetXClus();
@@ -1053,15 +1053,15 @@ int main(int argc, char* argv[]) {
          // myEvent.elecEnergyREC=partEM->GetE();
          // myEvent.elecEfracREC=partEM->GetEaem();
          // myEvent.elecHfracREC=partEM->GetEnHadSpac();
-      } else {
-         myEvent.elecEcraREC=-1;
-      }
+      // } else {
+      //    myEvent.elecEcraREC=-1;
+      // }
 
-      GetKinematics(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,
-                    &myEvent.xREC,&myEvent.yREC,&myEvent.Q2REC);
+      // GetKinematics(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,
+      //               &myEvent.xREC,&myEvent.yREC,&myEvent.Q2REC);
 
-      TLorentzRotation boost_REC_HCM=BoostToHCM(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab);
-      TLorentzVector q_REC_lab(ebeam_REC_lab-escatPhot_REC_lab);
+      // TLorentzRotation boost_REC_HCM=BoostToHCM(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab);
+      // TLorentzVector q_REC_lab(ebeam_REC_lab-escatPhot_REC_lab);
 
       // calculate inclusive HFS 4-vector and track selection
       // exclude particles counted as electron
