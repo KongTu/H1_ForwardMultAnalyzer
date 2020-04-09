@@ -260,6 +260,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH2D* h_Q2vsX = new TH2D("h_Q2vsX","h_Q2vsX",1000,0.00001,0.01,50,1,100);
 	TH1D* h_vtxZ  = new TH1D("h_vtxZ","h_vtxZ", 100,-50,50);
 	TH1D* h_y  = new TH1D("h_y","h_y", 200,0,1);
+	TH1D* h_y_QEDc  = new TH1D("h_y_QEDc","h_y_QEDc", 200,0,1);
 
 	//QED Compton event
 	TH1D* h_eGammaPhiMC = new TH1D("h_eGammaPhiMC",";#Delta#phi",100,-3.15,3.15);
@@ -365,10 +366,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 		if( Q2REC_es_mini > Q2max || Q2REC_es_mini < Q2min ) continue;
 		if( yREC_es_mini > ymax || yREC_es_mini < ymin ) continue;
-		if( eventpass_mini != 1 ) continue; 
-	
+		if( eventpass_mini != 1 ) continue;
+		
 		h_Q2vsX->Fill( xREC_es_mini, Q2REC_es_mini, w_mini);
 		h_y->Fill( yREC_es_mini, w_mini);
+		if( ifile_!=0 && isQEDcMC_mini==1 ) h_y_QEDc->Fill(yREC_es_mini, w_mini);
 		h_vtxZ->Fill( vertex_mini[2], w_mini );
 
 	   //setting event Q2 and y indices
