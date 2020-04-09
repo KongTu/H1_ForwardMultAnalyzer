@@ -274,6 +274,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_hfsEpz_all = new TH1D("h_hfsEpz","h_hfsEpz",500,0,100);
 	TH1D* h_hfsElecEpz_all = new TH1D("h_hfsElecEpz","h_hfsElecEpz",500,0,100);
 	TH1D* h_trackEpz_all = new TH1D("h_trackEpz","h_trackEpz",500,0,100);
+	TH1D* h_noSel_pt = new TH1D("h_noSel_pt","pt",100,0,10);
+	TH1D* h_noSel_eta = new TH1D("h_noSel_eta","eta",100,-1.7,1.7);
 
 	TH2D* h_dedxProtonVsp = new TH2D("h_dedxProtonVsp",";p(GeV);dE/dx",100,0,5,300,0,100);
 	TH2D* h_dedxProtonVspCut = new TH2D("h_dedxProtonVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
@@ -533,6 +535,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			if( etaStarREC_mini[itrk] < 0 || etaStarREC_mini[itrk] > 4.0 ){
 				if( fabs(etaREC_mini[itrk]) < 1.6 ){
 					n_particle_HCM_rec++;
+					h_noSel_pt->Fill(TMath::Hypot(pxREC_mini[itrk],pyREC_mini[itrk]),w_mini);
+					h_noSel_eta->Fill(etaMC_mini[itrk],w_mini);
 				}
 			}
 			for(int ieta = 0; ieta < 3; ieta++){
