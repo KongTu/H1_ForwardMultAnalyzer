@@ -1019,7 +1019,7 @@ int main(int argc, char* argv[]) {
          isElectron.insert(scatteredElectron);
          for(int i=0;i<partCandArray.GetEntries();i++) {
             if(i==scatteredElectron) continue;
-            H1PartCand *cand=partCandArray[i];
+            // H1PartCand *cand=partCandArray[i];
             // H1PartEm const *elec=cand->GetIDElec();
             // if(elec) {
             //    TLorentzVector p= elec->GetFourVector();
@@ -1029,11 +1029,11 @@ int main(int argc, char* argv[]) {
             //    }
             // } 
             // if(!cand->GetTrack()) {
-               TLorentzVector p= cand->GetFourVector();
-               if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
-                  escatPhot_REC_lab += p;
-                  isElectron.insert(i);
-               }
+               // TLorentzVector p= cand->GetFourVector();
+               // if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
+               //    escatPhot_REC_lab += p;
+               //    isElectron.insert(i);
+               // }
             // }
          }
       }
