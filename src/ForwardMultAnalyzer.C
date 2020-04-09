@@ -975,21 +975,22 @@ int main(int argc, char* argv[]) {
       vector< TLorentzVector> elecCandiate;
       for(int i=0;i<partCandArray.GetEntries();i++) {
         H1PartCand *cand=partCandArray[i];
-        H1PartEm const *elec=cand->GetIDElec();
-        if(elec && elec->GetType()==4 ) elecCandiate.push_back( elec->GetFourVector() );//only SpaCal photons
-        // if(elec && cand->IsScatElec()) {
-        if(elec) {
-         // if (myElecCut.goodElec(elec,*run)!=1) continue;
-            // H1Track const *scatElecTrk=cand->GetTrack();//to match a track
-            TLorentzVector p= elec->GetFourVector();
-            if(p.Pt()>ptMax) {
-               escat0_REC_lab = p;
-               scatteredElectron=i;
-               haveScatteredElectron=true;
-               // if(scatElecTrk) scatteredElectronCharge=scatElecTrk->GetCharge();
-               ptMax=p.Pt();
-            }   
-         }
+        if( cand->IsScatElec() ) cout << "here scat elect" << endl;
+        // H1PartEm const *elec=cand->GetIDElec();
+        // if(elec && elec->GetType()==4 ) elecCandiate.push_back( elec->GetFourVector() );//only SpaCal photons
+        // // if(elec && cand->IsScatElec()) {
+        // if(elec) {
+        //  // if (myElecCut.goodElec(elec,*run)!=1) continue;
+        //     // H1Track const *scatElecTrk=cand->GetTrack();//to match a track
+        //     TLorentzVector p= elec->GetFourVector();
+        //     if(p.Pt()>ptMax) {
+        //        escat0_REC_lab = p;
+        //        scatteredElectron=i;
+        //        haveScatteredElectron=true;
+        //        // if(scatElecTrk) scatteredElectronCharge=scatElecTrk->GetCharge();
+        //        ptMax=p.Pt();
+        //     }   
+        //  }
       }
       //find the second largest pt
       // for(unsigned j=0;j<elecCandiate.size();j++){
