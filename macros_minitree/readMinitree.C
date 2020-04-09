@@ -530,7 +530,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			if( etaREC_mini[itrk] > etamax ){
 				etamax = etaREC_mini[itrk];
 			}
-			if( etaStarREC_mini[itrk] > 0 && etaStarREC_mini[itrk] < 4.0 ){
+			if( etaStarREC_mini[itrk] < 0 || etaStarREC_mini[itrk] > 4.0 ){
 				if( fabs(etaREC_mini[itrk]) < 1.6 ){
 					n_particle_HCM_rec++;
 				}
