@@ -965,10 +965,10 @@ int main(int argc, char* argv[]) {
       // static elecCut myElecCut=0;
 
       // // find scattered electron as identified EM particle with highest PT in SpaCal
-      // bool haveScatteredElectron=false;
+      bool haveScatteredElectron=false;
       TLorentzVector escat0_REC_lab;
       TLorentzVector radPhot_REC_lab;
-      // int scatteredElectron=-1;
+      int scatteredElectron=-1;
       // int scatteredElectronCharge=9;// 9 is default to not be confused with 0
       // double ptMax=0;
       // double ptSubMax=0;
@@ -1013,7 +1013,7 @@ int main(int argc, char* argv[]) {
 
       // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
-      // set<int> isElectron;
+      set<int> isElectron;
       // if(scatteredElectron>=0) {
       //    isElectron.insert(scatteredElectron);
       //    for(int i=0;i<partCandArray.GetEntries();i++) {
@@ -1060,8 +1060,8 @@ int main(int argc, char* argv[]) {
       // GetKinematics(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab,
       //               &myEvent.xREC,&myEvent.yREC,&myEvent.Q2REC);
 
-      // TLorentzRotation boost_REC_HCM=BoostToHCM(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab);
-      // TLorentzVector q_REC_lab(ebeam_REC_lab-escatPhot_REC_lab);
+      TLorentzRotation boost_REC_HCM=BoostToHCM(ebeam_REC_lab,pbeam_REC_lab,escatPhot_REC_lab);
+      TLorentzVector q_REC_lab(ebeam_REC_lab-escatPhot_REC_lab);
 
       // calculate inclusive HFS 4-vector and track selection
       // exclude particles counted as electron
