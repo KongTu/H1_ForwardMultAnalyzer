@@ -1028,13 +1028,13 @@ int main(int argc, char* argv[]) {
             //       isElectron.insert(i);
             //    }
             // } 
-            if(!cand->GetTrack()) {
+            // if(!cand->GetTrack()) {
                TLorentzVector p= cand->GetFourVector();
                if(p.DeltaR(escat0_REC_lab)<ELEC_ISOLATION_CONE) {
                   escatPhot_REC_lab += p;
                   isElectron.insert(i);
                }
-            }
+            // }
          }
       }
 
