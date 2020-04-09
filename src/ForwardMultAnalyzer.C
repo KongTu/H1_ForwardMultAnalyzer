@@ -1426,116 +1426,116 @@ int main(int argc, char* argv[]) {
       //  this sets:  myEvent.dmatchREC[]  -> lowest chi**2
       //              myEvent.imatchREC[]  -> best matching MC particle
      
-      // if(*runtype==1){
-      //    //only MC does matching:
-      //    for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
-      //       // skip track where momentum covariance is not known
-      //       //  -> these will never be matched
-      //       if(myEvent.imatchREC[iREC]!=-1) continue;
-      //       TMatrixDSym Vsym(3);
-      //       for(int i=0;i<3;i++) {
-      //          for(int j=0;j<3;j++) {
-      //             Vsym(i,j)=myEvent.covREC[iREC](i,j);
-      //          }
-      //       }
-      //       TMatrixDSymEigen ODO(Vsym);
-      //       TVectorD ev=ODO.GetEigenValues();
-      //       //if(print) ev.Print();
-      //       TMatrixD O=ODO.GetEigenVectors();
-      //       TMatrixD Ot(TMatrixD::kTransposed,O);
+      if(*runtype==1){
+         //only MC does matching:
+         for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
+            // skip track where momentum covariance is not known
+            //  -> these will never be matched
+            if(myEvent.imatchREC[iREC]!=-1) continue;
+            TMatrixDSym Vsym(3);
+            for(int i=0;i<3;i++) {
+               for(int j=0;j<3;j++) {
+                  Vsym(i,j)=myEvent.covREC[iREC](i,j);
+               }
+            }
+            TMatrixDSymEigen ODO(Vsym);
+            TVectorD ev=ODO.GetEigenValues();
+            //if(print) ev.Print();
+            TMatrixD O=ODO.GetEigenVectors();
+            TMatrixD Ot(TMatrixD::kTransposed,O);
 
-      //       //TMatrixD Vinv(TMatrixD::kInverted,myEvent.covREC[iREC]);
-      //       for(int jMC=0;jMC< myEvent.nMCtrack;jMC++) {
-      //          TVector3 d=myEvent.momREC[iREC]- myEvent.partMC[jMC]->GetMomentum();
-      //          TVector3 Otd=Ot*d;
-      //          double chi2=0.;
-      //          for(int i=0;i<3;i++) {
-      //             if(ev[i]>=1.E-6*ev[0]) {
-      //                chi2+=Otd[i]*Otd[i]/ev[i];
-      //             }
-      //          }
-      //          //double chi2simple=d.Dot(Vinv*d);
-      //          //if(print) cout<<iREC<<" "<<jMC<<" "<<chi2<<" "<<chi2simple<<"\n";
-      //          if((jMC==0)||(chi2<myEvent.dmatchREC[iREC])) {
-      //             myEvent.dmatchREC[iREC]=chi2;
-      //             myEvent.imatchREC[iREC]=jMC;
-      //          }
-      //       }
-      //    }
-      //    // (2) set pointers from MC to REC
-      //    //     and remove duplicates
-      //    for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
-      //       int iMC=myEvent.imatchREC[iREC];
-      //       if(iMC<0) continue; // no match for this particle
-      //       int jREC=myEvent.imatchMC[iMC];
-      //       if(jREC>=0) {
-      //          // duplicate match for this particle
-      //          // iREC and jREC both are pointing to the same particle
-      //          // compare matching distance
-      //          if(myEvent.dmatchREC[jREC]<myEvent.dmatchREC[iREC]) {
-      //             // old match is better
-      //             // invalidate pointer REC->MC
-      //             myEvent.imatchREC[iREC]=-2-iMC;
-      //          } else {
-      //             // new match is better
-      //             // invalidate old pointer REC->MC
-      //             myEvent.imatchREC[jREC]=-2-iMC;
-      //             // save new pointer MC->REC
-      //             myEvent.imatchMC[iMC]=iREC;
-      //          }
-      //       } 
-      //       else {
-      //          // save this match
-      //          myEvent.imatchMC[iMC]=iREC;
-      //       }
-      //    }
-      //    // now:
-      //    //    myEvent.imatchMC[] points to the best matching REC particle
-      //    //                         <0 -> inefficiency
-      //    //    myEvent.imatchREC[] points to the best matching MC particle
-      //    //                         <0 -> fake track
+            //TMatrixD Vinv(TMatrixD::kInverted,myEvent.covREC[iREC]);
+            for(int jMC=0;jMC< myEvent.nMCtrack;jMC++) {
+               TVector3 d=myEvent.momREC[iREC]- myEvent.partMC[jMC]->GetMomentum();
+               TVector3 Otd=Ot*d;
+               double chi2=0.;
+               for(int i=0;i<3;i++) {
+                  if(ev[i]>=1.E-6*ev[0]) {
+                     chi2+=Otd[i]*Otd[i]/ev[i];
+                  }
+               }
+               //double chi2simple=d.Dot(Vinv*d);
+               //if(print) cout<<iREC<<" "<<jMC<<" "<<chi2<<" "<<chi2simple<<"\n";
+               if((jMC==0)||(chi2<myEvent.dmatchREC[iREC])) {
+                  myEvent.dmatchREC[iREC]=chi2;
+                  myEvent.imatchREC[iREC]=jMC;
+               }
+            }
+         }
+         // (2) set pointers from MC to REC
+         //     and remove duplicates
+         for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
+            int iMC=myEvent.imatchREC[iREC];
+            if(iMC<0) continue; // no match for this particle
+            int jREC=myEvent.imatchMC[iMC];
+            if(jREC>=0) {
+               // duplicate match for this particle
+               // iREC and jREC both are pointing to the same particle
+               // compare matching distance
+               if(myEvent.dmatchREC[jREC]<myEvent.dmatchREC[iREC]) {
+                  // old match is better
+                  // invalidate pointer REC->MC
+                  myEvent.imatchREC[iREC]=-2-iMC;
+               } else {
+                  // new match is better
+                  // invalidate old pointer REC->MC
+                  myEvent.imatchREC[jREC]=-2-iMC;
+                  // save new pointer MC->REC
+                  myEvent.imatchMC[iMC]=iREC;
+               }
+            } 
+            else {
+               // save this match
+               myEvent.imatchMC[iMC]=iREC;
+            }
+         }
+         // now:
+         //    myEvent.imatchMC[] points to the best matching REC particle
+         //                         <0 -> inefficiency
+         //    myEvent.imatchREC[] points to the best matching MC particle
+         //                         <0 -> fake track
 
-      //    // for matched particles, calculate extra weight for
-      //    // nuclear interaction probability correction
-      //    for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
-      //       int iMC=myEvent.imatchREC[iREC];
-      //       int part=0;
-      //       if(iMC>=0) {
-      //          int pdg=myEvent.idMC[iMC];
-      //          if(pdg<0) pdg= -pdg;
-      //          part= (pdg==211) ? 1 : ((pdg==321) ? 2 : 0);
-      //       }
-      //       if(part) {
-      //          myEvent.nucliaREC[iREC]=
-      //             H1NuclIACor::GetWeight
-      //             (part,myEvent.typeChgREC[iREC]>0 ? 1 : -1,
-      //              myEvent.momREC[iREC].Pt(),
-      //              myEvent.momREC[iREC].Phi(),myEvent.momREC[iREC].Theta(),
-      //              0.0 /* dca */,H1SelVertex::GetPrimaryVertex()->Z());
-      //       }
-      //    }
+         // for matched particles, calculate extra weight for
+         // nuclear interaction probability correction
+         for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
+            int iMC=myEvent.imatchREC[iREC];
+            int part=0;
+            if(iMC>=0) {
+               int pdg=myEvent.idMC[iMC];
+               if(pdg<0) pdg= -pdg;
+               part= (pdg==211) ? 1 : ((pdg==321) ? 2 : 0);
+            }
+            if(part) {
+               myEvent.nucliaREC[iREC]=
+                  H1NuclIACor::GetWeight
+                  (part,myEvent.typeChgREC[iREC]>0 ? 1 : -1,
+                   myEvent.momREC[iREC].Pt(),
+                   myEvent.momREC[iREC].Phi(),myEvent.momREC[iREC].Theta(),
+                   0.0 /* dca */,H1SelVertex::GetPrimaryVertex()->Z());
+            }
+         }
 
-      //    if(print) {
-      //       for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
-      //          if(myEvent.imatchREC[iREC]>=0) {
-      //             cout<<"REC track "<<iREC<<" is matched to MC particle "
-      //                 << myEvent.imatchREC[iREC]<<" dmatch="
-      //                 <<myEvent.dmatchREC[iREC]
-      //                 <<" nuclIA="<<myEvent.nucliaREC[iREC]
-      //                 <<"\n";
-      //          }
-      //       }
-      //       for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
-      //          if(myEvent.imatchREC[iREC]<0) {
-      //             cout<<"REC track "<<iREC<<" NOT matched "
-      //                 << myEvent.imatchREC[iREC]<<" dmatch="
-      //                 <<myEvent.dmatchREC[iREC]
-      //                 <<" nuclIA="<<myEvent.nucliaREC[iREC]
-      //                 <<"\n";
-      //          }
-      //       }
-      //    }
-      // }
+         if(print) {
+            for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
+               if(myEvent.imatchREC[iREC]>=0) {
+                  cout<<"REC track "<<iREC<<" is matched to MC particle "
+                      << myEvent.imatchREC[iREC]<<" dmatch="
+                      <<myEvent.dmatchREC[iREC]
+                      <<" nuclIA="<<myEvent.nucliaREC[iREC]
+                      <<"\n";
+               }
+            }
+            for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
+               if(myEvent.imatchREC[iREC]<0) {
+                  cout<<"REC track "<<iREC<<" NOT matched "
+                      << myEvent.imatchREC[iREC]<<" dmatch="
+                      <<myEvent.dmatchREC[iREC]
+                      <<" nuclIA="<<myEvent.nucliaREC[iREC]
+                      <<"\n";
+               }
+            }
+         }
+      }
 
     //add energy scale by 1%
       // hfs.SetPtEtaPhiM(1.01*hfs.Pt(), hfs.Eta(), hfs.Phi(), hfs.M());
