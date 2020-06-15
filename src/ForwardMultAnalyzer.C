@@ -722,6 +722,10 @@ int main(int argc, char* argv[]) {
          //bool haveElectron=false;
          myEvent.nMCtrackAll=0;
          myEvent.nMCtrack=0;
+
+         TLorentzVector K0s_Vect(0.,0.,0.,0.);
+         TLorentzVector Lam_Vect(0.,0.,0.,0.);
+
          for(int i=0;i<mcpart.GetEntries();i++) {
             
             H1PartMC *part=mcpart[i];
@@ -731,9 +735,14 @@ int main(int argc, char* argv[]) {
             // skip particles counted as electron
             if(isElectron.find(i)!=isElectron.end()) continue;
 
+            int v0s_status = -1;
+            H1PartMC *part_parent=mcpart[part->GetMother1()];
+            if(fabs(part_parent->GetPDG()) == 310 || fabs(part_parent->GetPDG()) == 3122){
+               v0s_status = 0;
+            }
+            
             int status=part->GetStatus();
-   
-            if(status==0) {
+            if(status==0 || v0s_status==0) {
                // generator "stable" particles
                // if((!haveElectron)&&
                //    ((part->GetPDG()==11)||(part->GetPDG()== -11))) {
@@ -795,7 +804,19 @@ int main(int argc, char* argv[]) {
                      myEvent.imatchMC[k]=-1;
                      myEvent.partMC[k]=part;
                      myEvent.nMCtrack=k+1;
-
+                     
+                     myEvent.isDaughtersMC[k] = 0;
+                     //check V0s decay
+                     if( part->GetMother1() != -1 ){
+                        H1PartMC *part_V0s=mcpart[part->GetMother1()];
+                        if( fabs(part_V0s->GetPDG()) == 310 ){
+                           myEvent.isDaughtersMC[k] = 1;//K0s
+                        } 
+                        else if( fabs(part_V0s->GetPDG()) == 3122 ){
+                           myEvent.isDaughtersMC[k] = 2;//K0s
+                        }
+                     }
+                     //end V0s
                   }
                }
             } // end loop over stable particles
