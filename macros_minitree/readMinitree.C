@@ -38,13 +38,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	//output files
 	TString outname;
 	if( ifile_ == 0 ){
-		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine_checkNoSel.root";
+		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine_June15.root";
 	}else if( ifile_ == 1 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_django_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_checkNoSel.root";
+		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_June15.root";
 	}else if( ifile_ == 2 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_checkNoSel.root";
+		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_June15.root";
 	}
 	else if( ifile_ == 3 ){
 		outname = "../minitree_output/Pn_hist_pythia_hadCaliNewKine_photoproduction.root";
@@ -175,12 +175,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	tree->SetBranchAddress("Q2REC_es_mini",&Q2REC_es_mini);
 	
 	tree->SetBranchAddress("typeChgREC_mini",&typeChgREC_mini);
-	// tree->SetBranchAddress("dcaPrimeREC_mini",&dcaPrimeREC_mini);
-	// tree->SetBranchAddress("startHitsRadiusREC_mini",&startHitsRadiusREC_mini);
-	// tree->SetBranchAddress("dedxProtonREC_mini",&dedxProtonREC_mini);
-	// tree->SetBranchAddress("dedxLikelihoodProtonREC_mini",&dedxLikelihoodProtonREC_mini);
-	// tree->SetBranchAddress("dedxElectronREC_mini",&dedxElectronREC_mini);
-	// tree->SetBranchAddress("dedxLikelihoodElectronREC_mini",&dedxLikelihoodElectronREC_mini);
+	tree->SetBranchAddress("dcaPrimeREC_mini",&dcaPrimeREC_mini);
+	tree->SetBranchAddress("startHitsRadiusREC_mini",&startHitsRadiusREC_mini);
+	tree->SetBranchAddress("dedxProtonREC_mini",&dedxProtonREC_mini);
+	tree->SetBranchAddress("dedxLikelihoodProtonREC_mini",&dedxLikelihoodProtonREC_mini);
+	tree->SetBranchAddress("dedxElectronREC_mini",&dedxElectronREC_mini);
+	tree->SetBranchAddress("dedxLikelihoodElectronREC_mini",&dedxLikelihoodElectronREC_mini);
 
 	//define output file
 	TFile *outputfile = new TFile(outname,"RECREATE");
@@ -288,6 +288,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH2D* h_dedxProtonVspCut = new TH2D("h_dedxProtonVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
 	TH2D* h_dedxElectronVsp = new TH2D("h_dedxElectronVsp",";p(GeV);dE/dx",100,0,5,300,0,100);
 	TH2D* h_dedxElectronVspCut = new TH2D("h_dedxElectronVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
+	TH1D* h_dedxElectronPt = new TH1D("h_dedxElectronPt",";p_{T} (GeV)",100,0,5);
+	TH1D* h_dedxElectronPtCut = new TH1D("h_dedxElectronPtCut",";p_{T} (GeV)",100,0,5);
 	TH1D* h_chargedDcaPrime = new TH1D("h_chargedDcaPrime",";charge*DCA'",100,-10,10);
 	TH1D* h_chargedDcaPrimeProton = new TH1D("h_chargedDcaPrimeProton",";charge*DCA'",100,-10,10);
 	TH1D* h_chargeRstart = new TH1D("h_chargeRstart",";charge*R_{start}",200,-50,50);
@@ -396,7 +398,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		TLorentzVector photon_candidate(-99,-99,-99,-99);
 		TLorentzVector pip(0,0,0,0),pim(0,0,0,0);
 		TLorentzVector elecp(0,0,0,0),elecm(0,0,0,0);
-
 
 		for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
 
@@ -533,8 +534,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			if( typeChgREC_mini[itrk] >= 1 ) chargetrack = 1;
 			if( typeChgREC_mini[itrk] < 0 ) chargetrack = -1;
 			
-			// h_chargeRstartNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
-			// if(dedxLikelihoodProtonREC_mini[itrk] > 0.003) h_chargeRstartProtonNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini);
+			h_chargeRstartNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
+			if(dedxLikelihoodProtonREC_mini[itrk] > 0.003) h_chargeRstartProtonNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini);
 			
 			if( passREC_mini[itrk] != 1 ) continue;
 			if( etaREC_mini[itrk] > etamax ){
@@ -556,22 +557,25 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				n_particle_eta_rec[3]++;
 				trk_E += sqrt(pxREC_mini[itrk]*pxREC_mini[itrk] + pyREC_mini[itrk]*pyREC_mini[itrk] + pzREC_mini[itrk]*pzREC_mini[itrk] + PIMASS*PIMASS);
 				trk_pz += pzREC_mini[itrk];
-				// // dE/dx
-				// double pREC = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]);
-				// h_dedxProtonVsp->Fill( pREC, dedxProtonREC_mini[itrk], w_mini);
-				// h_dedxElectronVsp->Fill( pREC, dedxElectronREC_mini[itrk], w_mini);
-				// h_chargedDcaPrime->Fill( chargetrack*dcaPrimeREC_mini[itrk], w_mini );
-				// h_chargeRstart->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
-				// //PROTON
-				// if(dedxLikelihoodProtonREC_mini[itrk] > 0.003){
-				// 	h_dedxProtonVspCut->Fill( pREC, dedxProtonREC_mini[itrk], w_mini);
-				// 	h_chargedDcaPrimeProton->Fill( chargetrack*dcaPrimeREC_mini[itrk], w_mini );
-				// 	h_chargeRstartProton->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
-				// }
-				// //ELECTRON
-				// if(dedxLikelihoodElectronREC_mini[itrk] > 0.003){
-				// 	h_dedxElectronVspCut->Fill( pREC, dedxElectronREC_mini[itrk], w_mini);
-				// }
+				// dE/dx
+				double pREC = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]);
+				h_dedxProtonVsp->Fill( pREC, dedxProtonREC_mini[itrk], w_mini);
+				h_dedxElectronVsp->Fill( pREC, dedxElectronREC_mini[itrk], w_mini);
+				h_chargedDcaPrime->Fill( chargetrack*dcaPrimeREC_mini[itrk], w_mini );
+				h_chargeRstart->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
+				//PROTON
+				if(dedxLikelihoodProtonREC_mini[itrk] > 0.003){
+					h_dedxProtonVspCut->Fill( pREC, dedxProtonREC_mini[itrk], w_mini);
+					h_chargedDcaPrimeProton->Fill( chargetrack*dcaPrimeREC_mini[itrk], w_mini );
+					h_chargeRstartProton->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
+				}
+				//ELECTRON
+				double pt = TMath::Hypot(pxREC_mini[itrk],pyREC_mini[itrk]);
+				h_dedxElectronPt->Fill( pt, w_mini );
+				if(dedxLikelihoodElectronREC_mini[itrk] > 0.003){
+					h_dedxElectronVspCut->Fill( pREC, dedxElectronREC_mini[itrk], w_mini);
+					h_dedxElectronPtCut->Fill( pt, w_mini );
+				}
 			}
 			for(int iy=0;iy<4;iy++){
 				if(yREC_es_mini>ybins[iy] && yREC_es_mini<ybins[iy+1]){
