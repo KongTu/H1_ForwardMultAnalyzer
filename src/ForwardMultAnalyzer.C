@@ -736,8 +736,8 @@ int main(int argc, char* argv[]) {
             if(isElectron.find(i)!=isElectron.end()) continue;
 
             int v0s_status = -1;
-            if(part->GetMother1() != -1) H1PartMC *part_parent=mcpart[part->GetMother1()];
-            if(part_parent){
+            if(part->GetMother1() != -1) {
+               H1PartMC *part_parent=mcpart[part->GetMother1()];
                if(fabs(part_parent->GetPDG()) == 310 || fabs(part_parent->GetPDG()) == 3122){
                   v0s_status = 0;
                }
