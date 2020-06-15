@@ -738,6 +738,7 @@ int main(int argc, char* argv[]) {
             if( part->GetMother1() != -1 ){
                H1PartMC *part_V0s=mcpart[part->GetMother1()];
                cout << "test ~ fabs(part_V0s->GetPDG()): " << fabs(part_V0s->GetPDG()) << endl;
+               cout << "test ~ status: " << status << endl;
                // if( fabs(part_V0s->GetPDG()) == 310 ){
                //    myEvent.isDaughtersMC[k] = 1;//K0s
                // } 
