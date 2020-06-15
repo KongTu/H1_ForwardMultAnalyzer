@@ -78,6 +78,7 @@ struct MyEvent {
    Float_t pyMC_mini[nMCtrack_MAX];
    Float_t pzMC_mini[nMCtrack_MAX];
    Float_t etaMC_mini[nMCtrack_MAX];
+   Int_t   isDaughtersMC_mini[nMCtrack_MAX];
    Float_t chargeMC_mini[nMCtrack_MAX];
 
    Float_t ptStarMC_mini[nMCtrack_MAX];
@@ -171,25 +172,25 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    int dis_events = 0;
 
    if( doRapgap_ && doGen_ ){
-      tree->Add("../batch/output/mc_9299_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9300_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9301_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9302_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9303_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9304_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9305_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9306_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9299_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9300_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9301_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9302_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9303_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9304_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9305_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9306_hadCaliNewKine_V0sWeight/*.root");
 
       // //save the number of events that separate inclusive DIS to diffractive DIS
       //    dis_events = tree->GetEntries();
-      tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9015_hadCaliNewKine_V0sWeight/*.root");
 
       //nonradiative MCs
       // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_8926_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_8927_hadCaliNewKine_V0sWeight/*.root");
 
       // tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
       //pythia
@@ -228,6 +229,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("pyMC_mini",myEvent.pyMC_mini,"pyMC_mini[nMCtrack_mini]/F");
    outtree->Branch("pzMC_mini",myEvent.pzMC_mini,"pzMC_mini[nMCtrack_mini]/F");
    outtree->Branch("etaMC_mini",myEvent.etaMC_mini,"etaMC_mini[nMCtrack_mini]/F");
+   outtree->Branch("isDaughtersMC_mini",myEvent.isDaughtersMC_mini,"isDaughtersMC_mini[nMCtrack_mini]/I");
    outtree->Branch("ptStarMC_mini",myEvent.ptStarMC_mini,"ptStarMC_mini[nMCtrack_mini]/F");
    outtree->Branch("etaStarMC_mini",myEvent.etaStarMC_mini,"etaStarMC_mini[nMCtrack_mini]/F");
    outtree->Branch("phiStarMC_mini",myEvent.phiStarMC_mini,"phiStarMC_mini[nMCtrack_mini]/F");
@@ -275,7 +277,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    // outtree->Branch("dedxProtonREC_mini",myEvent.dedxProtonREC_mini,"dedxProtonREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("dedxLikelihoodProtonREC_mini",myEvent.dedxLikelihoodProtonREC_mini,"dedxLikelihoodProtonREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("dedxElectronREC_mini",myEvent.dedxElectronREC_mini,"dedxElectronREC_mini[nRECtrack_mini]/F");
-   // outtree->Branch("dedxLikelihoodElectronREC_mini",myEvent.dedxLikelihoodElectronREC_mini,"dedxLikelihoodElectronREC_mini[nRECtrack_mini]/F");
+   outtree->Branch("dedxLikelihoodElectronREC_mini",myEvent.dedxLikelihoodElectronREC_mini,"dedxLikelihoodElectronREC_mini[nRECtrack_mini]/F");
 
    double zvtxOffset=0.;
 
@@ -314,6 +316,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t pyMC[400];
       Float_t pzMC[400];
       Float_t etaMC[400];
+      Int_t   isDaughtersMC[400];
+
       Float_t chargeMC[400];
       Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC;
       Float_t radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC;
@@ -381,6 +385,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("pyMC",&pyMC);
       tree->SetBranchAddress("pzMC",&pzMC);
       tree->SetBranchAddress("etaMC",&etaMC);
+      tree->SetBranchAddress("isDaughtersMC", &isDaughtersMC);
       tree->SetBranchAddress("chargeMC",&chargeMC);
       tree->SetBranchAddress("xMC",&xMC);
       tree->SetBranchAddress("yMC",&yMC);
@@ -553,6 +558,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                myEvent.etaStarMC_mini[j] = -999.;
                myEvent.phiStarMC_mini[j] = -999.;
                myEvent.imatchMC_mini[j] = -999;
+               myEvent.isDaughtersMC_mini[j] = -999;
          }
          
          if( doGen_ ){
@@ -575,6 +581,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                myEvent.etaStarMC_mini[j] = etaStarMC[j];
                myEvent.phiStarMC_mini[j] = phiStarMC[j];
                myEvent.imatchMC_mini[j] = imatchMC[j];
+               myEvent.isDaughtersMC_mini[j] = isDaughtersMC[j];
 
                if( TMath::Hypot(pxMC[j],pyMC[j]) < 0.15 ) continue;
                if(etaMC[j] > 0.2 && etaMC[j] < 1.6 ) Ntracks_eta_p_MC++;
@@ -722,7 +729,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             // myEvent.dedxProtonREC_mini[j] = dedxProtonREC[j];
             // myEvent.dedxLikelihoodProtonREC_mini[j] = dedxLikelihoodProtonREC[j];
             // myEvent.dedxElectronREC_mini[j] = dedxElectronREC[j];
-            // myEvent.dedxLikelihoodElectronREC_mini[j] = dedxLikelihoodElectronREC[j];
+            myEvent.dedxLikelihoodElectronREC_mini[j] = dedxLikelihoodElectronREC[j];
       
          }
          myEvent.totalMultREC_mini = (int) (Ntracks_eta_p + Ntracks_eta_m);
