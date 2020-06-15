@@ -732,12 +732,36 @@ int main(int argc, char* argv[]) {
             if(isElectron.find(i)!=isElectron.end()) continue;
 
             int status=part->GetStatus();
+            myEvent.isDaughtersMC[k] = 0;
+            //check V0s decay
+            cout << "test ~ test ~ part->GetMother1(): " << part->GetMother1() << endl;
+            if( part->GetMother1() != -1 ){
+               H1PartMC *part_V0s=mcpart[part->GetMother1()];
+               cout << "test ~ fabs(part_V0s->GetPDG()): " << fabs(part_V0s->GetPDG()) << endl;
+               if( fabs(part_V0s->GetPDG()) == 310 ){
+                  myEvent.isDaughtersMC[k] = 1;//K0s
+               } 
+               else if( fabs(part_V0s->GetPDG()) == 3122 ){
+                  myEvent.isDaughtersMC[k] = 2;//K0s
+               }
+            }
+            if( part->GetMother2() != -1 ){
+               H1PartMC *part_V0s=mcpart[part->GetMother2()];
+               if( fabs(part_V0s->GetPDG()) == 310 ){
+                  myEvent.isDaughtersMC[k] = 1;//K0s
+               } 
+               else if( fabs(part_V0s->GetPDG()) == 3122 ){
+                  myEvent.isDaughtersMC[k] = 2;//K0s
+               }
+            }
+            //end V0s
             if(status==0) {
                // generator "stable" particles
                // if((!haveElectron)&&
                //    ((part->GetPDG()==11)||(part->GetPDG()== -11))) {
                //    haveElectron=true;               
                // } else 
+
                if(part->GetCharge()!=0.) {
                   // other charged particles
                   TLorentzVector h=part->GetFourVector();
@@ -794,29 +818,6 @@ int main(int argc, char* argv[]) {
                      myEvent.partMC[k]=part;
                      myEvent.nMCtrack=k+1;
 
-                     myEvent.isDaughtersMC[k] = 0;
-                     //check V0s decay
-                     cout << "test ~ test ~ part->GetMother1(): " << part->GetMother1() << endl;
-                     if( part->GetMother1() != -1 ){
-                        H1PartMC *part_V0s=mcpart[part->GetMother1()];
-                        cout << "test ~ fabs(part_V0s->GetPDG()): " << fabs(part_V0s->GetPDG()) << endl;
-                        if( fabs(part_V0s->GetPDG()) == 310 ){
-                           myEvent.isDaughtersMC[k] = 1;//K0s
-                        } 
-                        else if( fabs(part_V0s->GetPDG()) == 3122 ){
-                           myEvent.isDaughtersMC[k] = 2;//K0s
-                        }
-                     }
-                     if( part->GetMother2() != -1 ){
-                        H1PartMC *part_V0s=mcpart[part->GetMother2()];
-                        if( fabs(part_V0s->GetPDG()) == 310 ){
-                           myEvent.isDaughtersMC[k] = 1;//K0s
-                        } 
-                        else if( fabs(part_V0s->GetPDG()) == 3122 ){
-                           myEvent.isDaughtersMC[k] = 2;//K0s
-                        }
-                     }
-                     //end V0s
                   }
                }
             } // end loop over stable particles
