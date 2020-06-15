@@ -214,6 +214,7 @@ struct MyEvent {
    Int_t idMC[nMCtrack_MAX];
    Int_t idxRad;
 
+   Int_t isDaughtersMC[nMCtrack_MAX];
    Float_t pxMC[nMCtrack_MAX];
    Float_t pyMC[nMCtrack_MAX];
    Float_t pzMC[nMCtrack_MAX];
@@ -404,6 +405,7 @@ int main(int argc, char* argv[]) {
    output->Branch("nMCtrackAll",&myEvent.nMCtrackAll,"nMCtrackAll/I");
    output->Branch("nMCtrack",&myEvent.nMCtrack,"nMCtrack/I");
    output->Branch("idMC",myEvent.idMC,"idMC[nMCtrack]/I");
+   output->Branch("isDaughtersMC",myEvent.isDaughtersMC,"isDaughtersMC[nMCtrack]/I");
    output->Branch("idxRad",&myEvent.idxRad,"idxRad/I");
 
    output->Branch("pxMC",myEvent.pxMC,"pxMC[nMCtrack]/F");
@@ -791,6 +793,27 @@ int main(int argc, char* argv[]) {
                      myEvent.imatchMC[k]=-1;
                      myEvent.partMC[k]=part;
                      myEvent.nMCtrack=k+1;
+
+                     myEvent.isDaughtersMC[k] = 0;
+                     //check V0s decay
+                     if( part->GetMother1() != -1 ){
+                        H1PartMC *part_V0s=mcpart[part->GetMother1()];
+                        if( fabs(part_V0s->GetPDG()) == 310 ){
+                           myEvent.isDaughtersMC[k] = 1;//K0s
+                        } 
+                        else if( fabs(part_V0s->GetPDG()) == 3122 ){
+                           myEvent.isDaughtersMC[k] = 2;//K0s
+                        }
+                     }
+                     if( part->GetMother2() != -1 ){
+                        H1PartMC *part_V0s=mcpart[part->GetMother2()];
+                        if( fabs(part_V0s->GetPDG()) == 310 ){
+                           myEvent.isDaughtersMC[k] = 1;//K0s
+                        } 
+                        else if( fabs(part_V0s->GetPDG()) == 3122 ){
+                           myEvent.isDaughtersMC[k] = 2;//K0s
+                        }
+                     }
                   }
                }
             } // end loop over stable particles
