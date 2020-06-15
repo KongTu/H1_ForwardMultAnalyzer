@@ -796,6 +796,7 @@ int main(int argc, char* argv[]) {
 
                      myEvent.isDaughtersMC[k] = 0;
                      //check V0s decay
+                     cout << "test ~ test ~ part->GetMother1(): " << part->GetMother1() << endl;
                      if( part->GetMother1() != -1 ){
                         H1PartMC *part_V0s=mcpart[part->GetMother1()];
                         if( fabs(part_V0s->GetPDG()) == 310 ){
