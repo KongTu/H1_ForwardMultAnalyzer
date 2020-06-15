@@ -755,7 +755,6 @@ int main(int argc, char* argv[]) {
                //    ((part->GetPDG()==11)||(part->GetPDG()== -11))) {
                //    haveElectron=true;               
                // } else 
-
                if(part->GetCharge()!=0.) {
                   // other charged particles
                   TLorentzVector h=part->GetFourVector();
@@ -1530,10 +1529,12 @@ int main(int argc, char* argv[]) {
          for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
             int iMC=myEvent.imatchREC[iREC];
             int part=0;
+            int isDaugV0s = 0;
             if(iMC>=0) {
                int pdg=myEvent.idMC[iMC];
                if(pdg<0) pdg= -pdg;
                part= (pdg==211) ? 1 : ((pdg==321) ? 2 : 0);
+               if(myEvent.isDaughtersMC[iMC] > 0) isDaugV0s = 1;
             }
             if(part) {
                myEvent.nucliaREC[iREC]=
@@ -1542,6 +1543,9 @@ int main(int argc, char* argv[]) {
                    myEvent.momREC[iREC].Pt(),
                    myEvent.momREC[iREC].Phi(),myEvent.momREC[iREC].Theta(),
                    0.0 /* dca */,H1SelVertex::GetPrimaryVertex()->Z());
+            }
+            if(isDaugV0s){
+               myEvent.nucliaREC[iREC] = myEvent.nucliaREC[iREC]*0.5;
             }
          }
 
