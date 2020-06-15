@@ -742,6 +742,12 @@ int main(int argc, char* argv[]) {
                   v0s_status = 0;
                }
             }
+            if(part->GetMother2() != -1) {
+               H1PartMC *part_parent=mcpart[part->GetMother2()];
+               if(fabs(part_parent->GetPDG()) == 310 || fabs(part_parent->GetPDG()) == 3122){
+                  v0s_status = 0;
+               }
+            }
             int status=part->GetStatus();
             if(status==0 || v0s_status==0) {
                // generator "stable" particles
