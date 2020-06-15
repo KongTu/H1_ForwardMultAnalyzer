@@ -723,9 +723,6 @@ int main(int argc, char* argv[]) {
          myEvent.nMCtrackAll=0;
          myEvent.nMCtrack=0;
 
-         TLorentzVector K0s_Vect(0.,0.,0.,0.);
-         TLorentzVector Lam_Vect(0.,0.,0.,0.);
-
          for(int i=0;i<mcpart.GetEntries();i++) {
             
             H1PartMC *part=mcpart[i];
