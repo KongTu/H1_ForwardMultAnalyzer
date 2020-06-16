@@ -5,9 +5,9 @@
     ../../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine.root
   </InputFile>
   <InputFile name="djangoh" type="signal" luminosity="363" treename="miniTree">
-    ../../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine.root
+    ../../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_V0sWeight.root
   </InputFile>
   <InputFile name="rapgap" type="signal" luminosity="287" treename="miniTree">
-    ../../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine.root
+    ../../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_V0sWeight.root
   </InputFile>
 </Minitree>
