@@ -435,8 +435,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 						
 						photon_candidate = elecp+elecm;
+						if( photon_candidate.M() < 0.1 ){
+							h_dedxElectronPtCut->Fill( elecp.Pt(), w_mini );
+							h_dedxElectronPtCut->Fill( elecm.Pt(), w_mini );
+						}
 					}
-					
 					if(Q2_INDEX>-1 && y_INDEX>-1){
 						h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
 						h_PhotMass[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M(), w_mini );
@@ -570,11 +573,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					h_chargeRstartProton->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
 				}
 				//ELECTRON
-				double pt = TMath::Hypot(pxREC_mini[itrk],pyREC_mini[itrk]);
-				h_dedxElectronPt->Fill( pt, w_mini );
 				if(dedxLikelihoodElectronREC_mini[itrk] > 0.003){
 					h_dedxElectronVspCut->Fill( pREC, dedxElectronREC_mini[itrk], w_mini);
-					h_dedxElectronPtCut->Fill( pt, w_mini );
 				}
 			}
 			for(int iy=0;iy<4;iy++){
