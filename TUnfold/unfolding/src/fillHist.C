@@ -300,6 +300,7 @@ int main(int argc, char * const argv[]) {
   genVariables.AddVar("nMCtrack_mini");
   genVariables.AddVar("etaMC_mini");
   genVariables.AddVar("isQEDcMC_mini");
+  genVariables.AddVar("isDaughtersMC_mini");
 
   cout<<"\neta binning\n";
   cout<<"========================================================\n";
@@ -462,6 +463,7 @@ int main(int argc, char * const argv[]) {
            VarData const *nMCtrack_mini=genVariables.FindVar("nMCtrack_mini");
            VarData const *etaMC_mini=genVariables.FindVar("etaMC_mini");
            VarData const *isQEDcMC_mini=genVariables.FindVar("isQEDcMC_mini");
+           VarData const *isDaughtersMC_mini=genVariables.FindVar("isDaughtersMC_mini");
 
            double lumiWeight=1.0;
            // loop over events and fill histograms
@@ -502,6 +504,7 @@ int main(int argc, char * const argv[]) {
                     int nGenTrack=nMCtrack_mini->Int();
                     for(int t=0;t<nGenTrack;t++) {
                        double etaGen=etaMC_mini->Double(t);
+                       if( isDaughtersMC_mini->Int(t) != 0) continue;//add selections on nonV0s on gen
                        for(size_t k=0;k<covClasses.size();k++) {
                           if(covClassifier.IsInside(etaGen,k)) {
                              genTrackMultiplicity[k]++;

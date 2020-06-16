@@ -306,6 +306,7 @@ int main(int argc, char * const argv[]) {
   genVariables.AddVar("pxMC_mini");
   genVariables.AddVar("pyMC_mini");
   genVariables.AddVar("isQEDcMC_mini");
+  genVariables.AddVar("isDaughtersMC_mini");
 
   cout<<"\netaStar binning\n";
   cout<<"========================================================\n";
@@ -473,6 +474,7 @@ int main(int argc, char * const argv[]) {
            VarData const *pxMC_mini=genVariables.FindVar("pxMC_mini");
            VarData const *pyMC_mini=genVariables.FindVar("pyMC_mini");
            VarData const *isQEDcMC_mini=genVariables.FindVar("isQEDcMC_mini");
+           VarData const *isDaughtersMC_mini=genVariables.FindVar("isDaughtersMC_mini");
 
            double lumiWeight=1.0;
            // loop over events and fill histograms
@@ -520,6 +522,7 @@ int main(int argc, char * const argv[]) {
 
                        if( fabs(etaGen) > 1.6 ) continue;
                        if( ptGen < 0.15 ) continue;
+                       if( isDaughtersMC_mini->Int(t) != 0) continue;//add selections on nonV0s on gen
 
                        for(size_t k=0;k<covClasses.size();k++) {
                           if(covClassifier.IsInside(etaStarGen,k)) {
