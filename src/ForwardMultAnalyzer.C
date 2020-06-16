@@ -542,7 +542,7 @@ int main(int argc, char* argv[]) {
    //H1PartCandArrayPtr partCand; // all good tracks
    H1PartCandArrayPtr partCandArray; // all good tracks
 
-   H1PartMCArrayPtr mcpart;
+   static H1PartMCArrayPtr mcpart;
 
    H1FSTFittedTrackArrayPtr fstFittedTrack;
    //H1FSTTrackArrayPtr fstNonFittedTrack;
@@ -594,6 +594,8 @@ int main(int argc, char* argv[]) {
             cout << "empty events!"; 
             continue;
          }
+         cout << "mcPartId.GetIdxBeamElectron() " << mcPartId.GetIdxBeamElectron() << endl;
+         cout << "mcPartId.GetIdxBeamProton() " << mcPartId.GetIdxBeamProton() << endl;
          if(mcPartId.GetIdxScatElectron()<0){
             cout << "negative index ~ " << mcPartId.GetIdxScatElectron() << endl;
             continue;
