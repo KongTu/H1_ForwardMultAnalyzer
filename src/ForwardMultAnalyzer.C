@@ -692,7 +692,7 @@ int main(int argc, char* argv[]) {
             int elec_id = mcPartId.GetIdxScatElectron();
             int phot_id = mcPartId.GetIdxRadPhoton();
             if( i== phot_id ) continue;
-            
+
             TLorentzVector p(part->GetFourVector());
             if( status != 0 || i == elec_id ) continue;  
             if( p.DeltaR(mcpart[elec_id]->GetFourVector())<ELEC_ISOLATION_CONE ) continue;
@@ -751,7 +751,7 @@ int main(int argc, char* argv[]) {
                }
             }
             int status=part->GetStatus();
-            if(status==0 || v0s_status==0) {
+            if(status==0) {
                // generator "stable" particles
                // if((!haveElectron)&&
                //    ((part->GetPDG()==11)||(part->GetPDG()== -11))) {
@@ -1546,9 +1546,9 @@ int main(int argc, char* argv[]) {
                    myEvent.momREC[iREC].Phi(),myEvent.momREC[iREC].Theta(),
                    0.0 /* dca */,H1SelVertex::GetPrimaryVertex()->Z());
             }
-            if(isDaugV0s){
-               myEvent.nucliaREC[iREC] = myEvent.nucliaREC[iREC]*0.5;
-            }
+            // if(isDaugV0s){
+            //    myEvent.nucliaREC[iREC] = myEvent.nucliaREC[iREC]*0.5;
+            // }
          }
 
          if(print) {
