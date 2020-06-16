@@ -594,10 +594,8 @@ int main(int argc, char* argv[]) {
             cout << "empty events!"; 
             continue;
          }
-         cout << "mcPartId.GetIdxBeamElectron() " << mcPartId.GetIdxBeamElectron() << endl;
-         cout << "mcPartId.GetIdxBeamProton() " << mcPartId.GetIdxBeamProton() << endl;
+         //protection over COMPTON20 generator with -1 index of scatElec
          if(mcPartId.GetIdxScatElectron()<0){
-            cout << "negative index ~ " << mcPartId.GetIdxScatElectron() << endl;
             continue;
          }
 
@@ -692,10 +690,9 @@ int main(int argc, char* argv[]) {
             int status=part->GetStatus(); 
             float charge=part->GetCharge();  
             int elec_id = mcPartId.GetIdxScatElectron();
-            //comment out for COMPTON20
-            // int phot_id = mcPartId.GetIdxRadPhoton();
-            // if( i== phot_id ) continue;
-
+            int phot_id = mcPartId.GetIdxRadPhoton();
+            if( i== phot_id ) continue;
+            
             TLorentzVector p(part->GetFourVector());
             if( status != 0 || i == elec_id ) continue;  
             if( p.DeltaR(mcpart[elec_id]->GetFourVector())<ELEC_ISOLATION_CONE ) continue;
