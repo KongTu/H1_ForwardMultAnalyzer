@@ -686,10 +686,12 @@ int main(int argc, char* argv[]) {
             int status=part->GetStatus(); 
             float charge=part->GetCharge();  
             int elec_id = mcPartId.GetIdxScatElectron();
-            int phot_id = mcPartId.GetIdxRadPhoton();
+            //comment out for COMPTON20
+            // int phot_id = mcPartId.GetIdxRadPhoton();
+            // if( i== phot_id ) continue;
 
             TLorentzVector p(part->GetFourVector());
-            if( status != 0 || i == elec_id || i == phot_id ) continue;  
+            if( status != 0 || i == elec_id ) continue;  
             if( p.DeltaR(mcpart[elec_id]->GetFourVector())<ELEC_ISOLATION_CONE ) continue;
             
             hfs_MC_E_lab += part->GetE(); 
