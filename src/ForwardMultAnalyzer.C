@@ -594,6 +594,10 @@ int main(int argc, char* argv[]) {
             cout << "empty events!"; 
             continue;
          }
+         if(mcPartId.GetIdxScatElectron()<0){
+            cout << "negative index ~ " << mcPartId.GetIdxScatElectron() << endl;
+            continue;
+         }
 
          //begin to store radiative photon and QEDc events.
          for(int i=0;i<4;i++){
