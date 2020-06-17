@@ -170,28 +170,32 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    //starting TChain;
    TChain* tree = new TChain("properties");
    int dis_events = 0;
-
+   int nonQEDc_events = 0;
    if( doRapgap_ && doGen_ ){
-      tree->Add("../batch/output/mc_9299_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9300_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9301_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9302_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9303_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9304_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9305_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9306_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9299_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9300_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9301_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9302_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9303_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9304_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9305_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9306_hadCaliNewKine/*.root");
 
       // //save the number of events that separate inclusive DIS to diffractive DIS
-      //    dis_events = tree->GetEntries();
-      tree->Add("../batch/output/mc_9015_hadCaliNewKine_V0sWeight/*.root");
+         dis_events = tree->GetEntries();
+      tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
+         nonQEDc_events = tree->GetEntries();
+      tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
 
       //nonradiative MCs
       // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_8927_hadCaliNewKine_V0sWeight/*.root");
-
+      tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
+         nonQEDc_events = tree->GetEntries();
+      tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
+      
       // tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
       //pythia
       // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
@@ -202,6 +206,11 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    }
    else{ cout << "no files" << endl;}
   
+
+   cout << "total numbner of events ~ " << tree->GetEntries() << endl;
+   cout << "DIS events ~ "<< dis_events << endl;
+   cout << "nonQEDc_events ~ " << nonQEDc_events << endl;
+
    //start to define new miniTree:
    TTree *outtree =new TTree("miniTree","miniTree");
    MyEvent myEvent;
@@ -214,12 +223,12 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("sumPtMC_mini",&myEvent.sumPtMC_mini,"sumPtMC_mini/F");
    // outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
    // outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
-   // outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
-   // outtree->Branch("elecEMC_mini",&myEvent.elecEMC_mini,"elecEMC_mini/F");
+   outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
+   outtree->Branch("elecEMC_mini",&myEvent.elecEMC_mini,"elecEMC_mini/F");
    // outtree->Branch("phoPxMC_mini",&myEvent.phoPxMC_mini,"phoPxMC_mini/F");
    // outtree->Branch("phoPyMC_mini",&myEvent.phoPyMC_mini,"phoPyMC_mini/F");
-   // outtree->Branch("phoPzMC_mini",&myEvent.phoPzMC_mini,"phoPzMC_mini/F");
-   // outtree->Branch("phoEMC_mini",&myEvent.phoEMC_mini,"phoEMC_mini/F");
+   outtree->Branch("phoPzMC_mini",&myEvent.phoPzMC_mini,"phoPzMC_mini/F");
+   outtree->Branch("phoEMC_mini",&myEvent.phoEMC_mini,"phoEMC_mini/F");
    outtree->Branch("isQEDcMC_mini",&myEvent.isQEDcMC_mini,"isQEDcMC_mini/I");
    outtree->Branch("dRRadPhot_mini",&myEvent.dRRadPhot_mini,"dRRadPhot_mini/F");
    outtree->Branch("dPhiRadPhot_mini",&myEvent.dPhiRadPhot_mini,"dPhiRadPhot_mini/F");
@@ -277,7 +286,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    // outtree->Branch("dedxProtonREC_mini",myEvent.dedxProtonREC_mini,"dedxProtonREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("dedxLikelihoodProtonREC_mini",myEvent.dedxLikelihoodProtonREC_mini,"dedxLikelihoodProtonREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("dedxElectronREC_mini",myEvent.dedxElectronREC_mini,"dedxElectronREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("dedxLikelihoodElectronREC_mini",myEvent.dedxLikelihoodElectronREC_mini,"dedxLikelihoodElectronREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("dedxLikelihoodElectronREC_mini",myEvent.dedxLikelihoodElectronREC_mini,"dedxLikelihoodElectronREC_mini[nRECtrack_mini]/F");
 
    double zvtxOffset=0.;
 
@@ -502,12 +511,17 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                if( i < dis_events ){
                   evt_weight = w*y_weight*vtxZ_weight*(136./68.);//data/mc Lumi
                }
-               else if( i >= dis_events && i < 1.0*(tree->GetEntries()-dis_events)+dis_events ){
+               // else if( i >= dis_events && i < 1.0*(tree->GetEntries()-dis_events)+dis_events ){
+               else if( i >= dis_events && i < nonQEDc_events ){
                   evt_weight = w*y_weight*vtxZ_weight*(136./(1.0*219.35));//data/mc Lumi
+               }
+               else if( i >= nonQEDc_events && i < tree->GetEntries()){
+                  evt_weight = w*y_weight*vtxZ_weight*(136./1414.1);
                }
             }
             else{
-               evt_weight = w*y_weight*vtxZ_weight*(136./363);
+               if( i<nonQEDc_events ) evt_weight = w*y_weight*vtxZ_weight*(136./363);
+               if( i>= nonQEDc_events ) evt_weight = w*y_weight*vtxZ_weight*(136./1414.1);
             }
          }
          else if( doGen_ && !doReweight_ ) {
@@ -592,6 +606,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.totalMultMC_mini = (int) (Ntracks_eta_p_MC+Ntracks_eta_m_MC);
 
             //gen level QED Compton
+            //this cut is to remove overlaps when mixing COMPTON20 and DJANGOH/RAPGAP
+            if(i<nonQEDc_events){
+               myEvent.isQEDcMC_mini = fabs(isQEDc-1);
+            }
             myEvent.isQEDcMC_mini = isQEDc;
             TLorentzVector eMC, gammaMC, sumEgamma;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
@@ -601,12 +619,12 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.eGammaPhiMC_mini = eMC.DeltaPhi( gammaMC );
             // myEvent.elecPxMC_mini = eMC.Px();
             // myEvent.elecPyMC_mini = eMC.Py();
-            // myEvent.elecPzMC_mini = eMC.Pz();
-            // myEvent.elecEMC_mini = eMC.E();
+            myEvent.elecPzMC_mini = eMC.Pz();
+            myEvent.elecEMC_mini = eMC.E();
             // myEvent.phoPxMC_mini = gammaMC.Px();
             // myEvent.phoPyMC_mini = gammaMC.Py();
-            // myEvent.phoPzMC_mini = gammaMC.Pz();
-            // myEvent.phoEMC_mini = gammaMC.E();
+            myEvent.phoPzMC_mini = gammaMC.Pz();
+            myEvent.phoEMC_mini = gammaMC.E();
             //end QED Compton
 
           }//end doGen_
@@ -729,7 +747,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             // myEvent.dedxProtonREC_mini[j] = dedxProtonREC[j];
             // myEvent.dedxLikelihoodProtonREC_mini[j] = dedxLikelihoodProtonREC[j];
             // myEvent.dedxElectronREC_mini[j] = dedxElectronREC[j];
-            myEvent.dedxLikelihoodElectronREC_mini[j] = dedxLikelihoodElectronREC[j];
+            // myEvent.dedxLikelihoodElectronREC_mini[j] = dedxLikelihoodElectronREC[j];
       
          }
          myEvent.totalMultREC_mini = (int) (Ntracks_eta_p + Ntracks_eta_m);
