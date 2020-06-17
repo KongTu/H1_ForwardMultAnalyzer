@@ -753,13 +753,8 @@ int main(int argc, char* argv[]) {
             if(part->GetMother1() != -1) {
                H1PartMC *part_parent=mcpart[part->GetMother1()];
                if(fabs(part_parent->GetPDG()) == 310 || fabs(part_parent->GetPDG()) == 3122){
-                  v0s_status = 0;
-               }
-            }
-            if(part->GetMother2() != -1) {
-               H1PartMC *part_parent=mcpart[part->GetMother2()];
-               if(fabs(part_parent->GetPDG()) == 310 || fabs(part_parent->GetPDG()) == 3122){
-                  v0s_status = 0;
+                  if( part_parent->GetMother1() == -1 ) {v0s_status = 0;}
+                  else{ v0s_status = -1; }
                }
             }
             //remember the largest quark or anti-quark flavor.
@@ -769,7 +764,7 @@ int main(int argc, char* argv[]) {
             }
             
             int status=part->GetStatus();
-            if(status==0) {
+            if(status==0||v0s_status==0) {
                // generator "stable" particles
                // if((!haveElectron)&&
                //    ((part->GetPDG()==11)||(part->GetPDG()== -11))) {
@@ -833,13 +828,13 @@ int main(int argc, char* argv[]) {
 
                      myEvent.isDaughtersMC[k] = 0;
                      //check V0s decay
-                     if( part->GetMother1() != -1 ){
+                     if( v0s_status==0 ){
                         H1PartMC *part_V0s=mcpart[part->GetMother1()];
                         if( fabs(part_V0s->GetPDG()) == 310 ){
                            myEvent.isDaughtersMC[k] = 1;//K0s
                         } 
                         else if( fabs(part_V0s->GetPDG()) == 3122 ){
-                           myEvent.isDaughtersMC[k] = 2;//K0s
+                           myEvent.isDaughtersMC[k] = 2;//Lambdas
                         }
                      }
                      //end V0s
@@ -847,7 +842,7 @@ int main(int argc, char* argv[]) {
                }
             } // end loop over stable particles
          }// end of MC particle loop
-          myEvent.maxPDGmc = maxPDG;
+         myEvent.maxPDGmc = maxPDG;
       }//end of MC particles
 
 
@@ -1565,10 +1560,10 @@ int main(int argc, char* argv[]) {
                    myEvent.momREC[iREC].Pt(),
                    myEvent.momREC[iREC].Phi(),myEvent.momREC[iREC].Theta(),
                    0.0 /* dca */,H1SelVertex::GetPrimaryVertex()->Z());
+                
+                   if(isDaugV0s) myEvent.nucliaREC[iREC] = myEvent.nucliaREC[iREC]*0.5;   
             }
-            // if(isDaugV0s){
-            //    myEvent.nucliaREC[iREC] = myEvent.nucliaREC[iREC]*0.5;
-            // }
+            
          }
 
          if(print) {
