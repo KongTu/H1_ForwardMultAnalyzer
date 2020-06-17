@@ -765,7 +765,7 @@ int main(int argc, char* argv[]) {
             //remember the largest quark or anti-quark flavor.
             
             if( fabs(part->GetPDG()) < 10 ){
-               if( fabs(part->GetPDG()) > maxPDG ) maxPDG = fabs(part->GetPDG())
+               if( fabs(part->GetPDG()) > maxPDG ) maxPDG = fabs(part->GetPDG());
             }
             
             int status=part->GetStatus();
