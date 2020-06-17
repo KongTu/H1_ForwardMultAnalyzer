@@ -756,7 +756,7 @@ int main(int argc, char* argv[]) {
                   if( part_parent->GetMother1() == -1 ) {v0s_status = 0;}
                   else{ 
                      cout << "part_parent->GetMother1() ~" << part_parent->GetMother1() << endl;
-                     H1PartMCmc* part_grandparent = mcpart[part_parent->GetMother1()];
+                     H1PartMC* part_grandparent = mcpart[part_parent->GetMother1()];
                      cout << "pdg of grand parent~ " << part_grandparent->GetPDG() << endl;
                      v0s_status = -1; }
                }
