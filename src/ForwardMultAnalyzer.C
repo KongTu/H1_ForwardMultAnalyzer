@@ -754,7 +754,11 @@ int main(int argc, char* argv[]) {
                H1PartMC *part_parent=mcpart[part->GetMother1()];
                if(fabs(part_parent->GetPDG()) == 310 || fabs(part_parent->GetPDG()) == 3122){
                   if( part_parent->GetMother1() == -1 ) {v0s_status = 0;}
-                  else{ v0s_status = -1; }
+                  else{ 
+                     cout << "part_parent->GetMother1() ~" << part_parent->GetMother1() << endl;
+                     H1PartMCmc* part_grandparent = mcpart[part_parent->GetMother1()];
+                     cout << "pdg of grand parent~ " << part_grandparent->GetPDG() << endl;
+                     v0s_status = -1; }
                }
             }
             //remember the largest quark or anti-quark flavor.
