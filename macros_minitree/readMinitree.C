@@ -73,6 +73,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	Float_t eGammaPhiMC_mini;
 	Float_t sumPtMC_mini;
 	Int_t isQEDcMC_mini;
+	Float_t EpzQEDcMC_mini;
 	Float_t dRRadPhot_mini;
 	Float_t dPhiRadPhot_mini;
 	Float_t elecPxMC_mini;
@@ -99,11 +100,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	tree->SetBranchAddress("isQEDcMC_mini",&isQEDcMC_mini);
 	tree->SetBranchAddress("dRRadPhot_mini",&dRRadPhot_mini);
 	tree->SetBranchAddress("dPhiRadPhot_mini",&dPhiRadPhot_mini);
-	
-	tree->SetBranchAddress("elecEMC_mini",&elecEMC_mini);
-	tree->SetBranchAddress("elecPzMC_mini",&elecPzMC_mini);
-	tree->SetBranchAddress("phoEMC_mini",&phoEMC_mini);
-	tree->SetBranchAddress("phoPzMC_mini",&phoPzMC_mini);
+	tree->SetBranchAddress("EpzQEDcMC_mini",&EpzQEDcMC_mini);
+
 
 	tree->SetBranchAddress("nMCtrack_mini",&nMCtrack_mini);
 	tree->SetBranchAddress("pxMC_mini",&pxMC_mini);
@@ -354,7 +352,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 1 ) {
 				h_eGammaPhiMC->Fill( eGammaPhiMC_mini, w_mini );
 				h_sumPtMC->Fill( sumPtMC_mini, w_mini );
-				h_EpzElecPhotMC->Fill( elecEMC_mini+phoEMC_mini-elecPzMC_mini-phoPzMC_mini, w_mini);
+				h_EpzElecPhotMC->Fill( EpzQEDcMC_mini, w_mini);
 			}
 			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 ){//no QEDc event counted as radiative Gen
 			//no QEDc event counted as radiative Gen
