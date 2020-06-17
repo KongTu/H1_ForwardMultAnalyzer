@@ -64,8 +64,8 @@
 
 //#include "H1Tracks/H1FSTTrackArrayPtr.h"
 
-//#include "H1Mods/H1GkiInfoArrayPtr.h"
-//#include "H1Mods/H1GkiInfo.h"
+#include "H1Mods/H1GkiInfoArrayPtr.h"
+#include "H1Mods/H1GkiInfo.h"
 #include <TLorentzRotation.h>
 #include "H1HadronicCalibration/H1HadronicCalibration.h"
 #include "H1PhysUtils/H1MakeKine.h"
@@ -197,6 +197,8 @@ struct MyEvent {
    Float_t eElectronBeamMC;
    Float_t simvertex[3];
    Float_t xGKI,yGKI,Q2GKI;
+   Float_t xpdf,mu2pdf;
+   Int_t ipdf;
 
    Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC,elecEradMC; // scattered electron
    Float_t radPhoPxMC[4],radPhoPyMC[4],radPhoPzMC[4],radPhoEMC[4]; // radiative photon
@@ -395,6 +397,9 @@ int main(int argc, char* argv[]) {
    output->Branch("xGKI",&myEvent.xGKI,"xGKI/F");
    output->Branch("yGKI",&myEvent.yGKI,"yGKI/F");
    output->Branch("Q2GKI",&myEvent.Q2GKI,"Q2GKI/F");
+   output->Branch("xpdf",&myEvent.xpdf,"xpdf/F");
+   output->Branch("mu2pdf",&myEvent.mu2pdf,"mu2pdf/F");
+   output->Branch("ipdf",&myEvent.ipdf,"ipdf/I");
    output->Branch("xMC",&myEvent.xMC,"xMC/F");
    output->Branch("yMC",&myEvent.yMC,"yMC/F");
    output->Branch("Q2MC",&myEvent.Q2MC,"Q2MC/F");
@@ -543,6 +548,7 @@ int main(int argc, char* argv[]) {
    H1PartCandArrayPtr partCandArray; // all good tracks
 
    static H1PartMCArrayPtr mcpart;
+   static H1GkiInfoArrayPtr gkiinfoptr;
 
    H1FSTFittedTrackArrayPtr fstFittedTrack;
    //H1FSTTrackArrayPtr fstNonFittedTrack;
@@ -586,6 +592,12 @@ int main(int argc, char* argv[]) {
          myEvent.yGKI = *yGki;
          myEvent.Q2GKI = *Q2Gki;
 
+         //generator event info
+         H1GkiInfo *gki=gkiinfoptr[0];
+         myEvent.xpdf= gki->GetX2();
+         myEvent.mu2pdf = gki->GetSCALE2();
+         myEvent.ipdf = gki->GetPDFID2();
+
          H1GetPartMCId mcPartId(&*mcpart);
          mcPartId.Fill();
 
@@ -598,7 +610,6 @@ int main(int argc, char* argv[]) {
          if(mcPartId.GetIdxScatElectron()<0){
             continue;
          }
-
          //begin to store radiative photon and QEDc events.
          for(int i=0;i<4;i++){
             myEvent.radPhoPxMC[i] = 0.;
@@ -609,20 +620,18 @@ int main(int argc, char* argv[]) {
          TDetectQedc detectQedc(mcpart);
          if( detectQedc.IsQedcEvent() ) {myEvent.isQEDc = 1;}
          else {myEvent.isQEDc = 0;}
-         if( detectQedc.IsQedcEvent() ){
-            TLorentzVector eMC = detectQedc.GetElectron();
-            TLorentzVector gammaMC;
-            for(int i=0;i<4;i++){
-               gammaMC = detectQedc.GetPhoton(i);
-               TLorentzVector eGamma=eMC+gammaMC;
-               h_dPhi_theta_qedc->Fill( eMC.Theta(), eMC.DeltaPhi( gammaMC ) );
-               h_dPhi_sumPt_qedc->Fill( eGamma.Pt(), eMC.DeltaPhi( gammaMC ) );
-               myEvent.radPhoPxMC[i] = gammaMC.Px();
-               myEvent.radPhoPyMC[i] = gammaMC.Py();
-               myEvent.radPhoPzMC[i] = gammaMC.Pz();
-               myEvent.radPhoEMC[i] = gammaMC.E();
-            }
-         } //end qedc
+         TLorentzVector eMC = detectQedc.GetElectron();
+         TLorentzVector gammaMC;
+         for(int i=0;i<4;i++){
+            gammaMC = detectQedc.GetPhoton(i);
+            TLorentzVector eGamma=eMC+gammaMC;
+            h_dPhi_theta_qedc->Fill( eMC.Theta(), eMC.DeltaPhi( gammaMC ) );
+            h_dPhi_sumPt_qedc->Fill( eGamma.Pt(), eMC.DeltaPhi( gammaMC ) );
+            myEvent.radPhoPxMC[i] = gammaMC.Px();
+            myEvent.radPhoPyMC[i] = gammaMC.Py();
+            myEvent.radPhoPzMC[i] = gammaMC.Pz();
+            myEvent.radPhoEMC[i] = gammaMC.E();
+         }
      
          TLorentzVector ebeam_MC_lab
             (mcpart[mcPartId.GetIdxBeamElectron()]->GetFourVector());
