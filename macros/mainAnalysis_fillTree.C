@@ -610,12 +610,12 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
             //gen level QED Compton
             //this cut is to remove overlaps when mixing COMPTON20 and DJANGOH/RAPGAP
-            // if(i<nonQEDc_events){
-            //    myEvent.isQEDcMC_mini = 0;
-            // }
-            // else{
+            if(i<nonQEDc_events){
+               myEvent.isQEDcMC_mini = 0;
+            }
+            else{
                myEvent.isQEDcMC_mini = isQEDc;
-            // }
+            }
             TLorentzVector eMC, gammaMC, sumEgamma;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
             gammaMC.SetPxPyPzE(radPhoPxMC[0],radPhoPyMC[0],radPhoPzMC[0],radPhoEMC[0]);
