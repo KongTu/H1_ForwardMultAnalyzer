@@ -27,7 +27,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		file = new TFile("../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine_June16.root");
 	}else if(ifile_ == 1) {
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_V0sWeight.root");
+		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_MixCompton20.root");
 	}else if(ifile_ == 2){
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNew.root");
 		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_V0sWeight.root");
@@ -100,6 +100,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	tree->SetBranchAddress("dRRadPhot_mini",&dRRadPhot_mini);
 	tree->SetBranchAddress("dPhiRadPhot_mini",&dPhiRadPhot_mini);
 	
+	tree->SetBranchAddress("elecEMC_mini",&elecEMC_mini);
+	tree->SetBranchAddress("elecPzMC_mini",&elecPzMC_mini);
+	tree->SetBranchAddress("phoEMC_mini",&phoEMC_mini);
+	tree->SetBranchAddress("phoPzMC_mini",&phoPzMC_mini);
+
 	tree->SetBranchAddress("nMCtrack_mini",&nMCtrack_mini);
 	tree->SetBranchAddress("pxMC_mini",&pxMC_mini);
 	tree->SetBranchAddress("pyMC_mini",&pyMC_mini);
@@ -265,6 +270,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	//QED Compton event
 	TH1D* h_eGammaPhiMC = new TH1D("h_eGammaPhiMC",";#Delta#phi",100,-3.15,3.15);
 	TH1D* h_sumPtMC = new TH1D("h_sumPtMC",";#Delta#phi",100,0,5);
+	TH1D* h_EpzElecPhotMC = new TH1D("h_EpzElecPhotMC",";E-pz",100,0,70);
 
 	/*
 	Elec and hfs kinematic variables
@@ -345,10 +351,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 			}
 			//filling QED Compton delta phi
-			// if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 1 ) {
-			// 	h_eGammaPhiMC->Fill( eGammaPhiMC_mini );
-			// 	h_sumPtMC->Fill( sumPtMC_mini );
-			// }
+			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 1 ) {
+				h_eGammaPhiMC->Fill( eGammaPhiMC_mini, w_mini );
+				h_sumPtMC->Fill( sumPtMC_mini, w_mini );
+				h_EpzElecPhotMC->Fill( elecEMC_mini+phoEMC_mini-elecPzMC_mini-phoPzMC_mini, w_mini);
+			}
 			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 ){//no QEDc event counted as radiative Gen
 			//no QEDc event counted as radiative Gen
 			// if(Q2_INDEX >=0 && y_INDEX >= 0 ){
