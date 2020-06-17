@@ -199,6 +199,7 @@ struct MyEvent {
    Float_t xGKI,yGKI,Q2GKI;
    Float_t xpdf,mu2pdf;
    Int_t ipdf;
+   Int_t maxPDGmc;
 
    Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC,elecEradMC; // scattered electron
    Float_t radPhoPxMC[4],radPhoPyMC[4],radPhoPzMC[4],radPhoEMC[4]; // radiative photon
@@ -400,6 +401,7 @@ int main(int argc, char* argv[]) {
    output->Branch("xpdf",&myEvent.xpdf,"xpdf/F");
    output->Branch("mu2pdf",&myEvent.mu2pdf,"mu2pdf/F");
    output->Branch("ipdf",&myEvent.ipdf,"ipdf/I");
+   output->Branch("maxPDGmc",&myEvent.maxPDGmc,"maxPDGmc/I");
    output->Branch("xMC",&myEvent.xMC,"xMC/F");
    output->Branch("yMC",&myEvent.yMC,"yMC/F");
    output->Branch("Q2MC",&myEvent.Q2MC,"Q2MC/F");
@@ -736,7 +738,8 @@ int main(int argc, char* argv[]) {
          //bool haveElectron=false;
          myEvent.nMCtrackAll=0;
          myEvent.nMCtrack=0;
-
+         myEvent.maxPDGmc=-99;
+         int maxPDG=-99;
          for(int i=0;i<mcpart.GetEntries();i++) {
             
             H1PartMC *part=mcpart[i];
@@ -759,6 +762,12 @@ int main(int argc, char* argv[]) {
                   v0s_status = 0;
                }
             }
+            //remember the largest quark or anti-quark flavor.
+            
+            if( fabs(part->GetPDG()) < 10 ){
+               if( fabs(part->GetPDG()) > maxPDG ) maxPDG = fabs(part->GetPDG())
+            }
+            
             int status=part->GetStatus();
             if(status==0) {
                // generator "stable" particles
@@ -837,8 +846,10 @@ int main(int argc, char* argv[]) {
                   }
                }
             } // end loop over stable particles
-         }
+         }// end of MC particle loop
+          myEvent.maxPDGmc = maxPDG;
       }//end of MC particles
+
 
       // define initial state particle four-vectors
       double ee=*eBeamE;
