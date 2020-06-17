@@ -332,7 +332,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
       Float_t chargeMC[400];
       Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC;
-      Float_t radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC;
+      Float_t radPhoPxMC[4],radPhoPyMC[4],radPhoPzMC[4],radPhoEMC[4];
  
       Int_t nRECtrack;
       Int_t typeChgREC[200];
@@ -618,7 +618,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             // }
             TLorentzVector eMC, gammaMC, sumEgamma;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
-            gammaMC.SetPxPyPzE(radPhoPxMC,radPhoPyMC,radPhoPzMC,radPhoEMC);
+            gammaMC.SetPxPyPzE(radPhoPxMC[0],radPhoPyMC[0],radPhoPzMC[0],radPhoEMC[0]);
             sumEgamma = eMC+gammaMC;
             myEvent.sumPtMC_mini = sumEgamma.Pt();
             myEvent.eGammaPhiMC_mini = eMC.DeltaPhi( gammaMC );
