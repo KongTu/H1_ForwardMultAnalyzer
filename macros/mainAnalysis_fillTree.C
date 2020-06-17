@@ -622,7 +622,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             sumEgamma = eMC+gammaMC;
             myEvent.sumPtMC_mini = sumEgamma.Pt();
             myEvent.eGammaPhiMC_mini = eMC.DeltaPhi( gammaMC );
-            myEvent.EpzQEDcMC_mini = sumEgamma.E() - sumEgamma.Pz();
+            myEvent.EpzQEDcMC_mini = eMC.E()+gammaMC.E()-eMC.Pz()-gammaMC.Pz();
             // myEvent.elecPxMC_mini = eMC.Px();
             // myEvent.elecPyMC_mini = eMC.Py();
             // myEvent.elecPzMC_mini = eMC.Pz();
