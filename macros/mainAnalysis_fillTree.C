@@ -94,10 +94,10 @@ struct MyEvent {
    Float_t elecPyMC_mini;
    Float_t elecPzMC_mini;
    Float_t elecEMC_mini;
-   Float_t phoPxMC_mini;
-   Float_t phoPyMC_mini;
-   Float_t phoPzMC_mini;
-   Float_t phoEMC_mini;
+   Float_t phoPxMC_mini[4];
+   Float_t phoPyMC_mini[4];
+   Float_t phoPzMC_mini[4];
+   Float_t phoEMC_mini[4];
    Int_t isQEDcMC_mini;
    Float_t dRRadPhot_mini;
    Float_t dPhiRadPhot_mini;
@@ -220,18 +220,15 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("vertex_mini",myEvent.vertex_mini,"vertex_mini[3]/F");
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
-   outtree->Branch("eGammaPhiMC_mini",&myEvent.eGammaPhiMC_mini,"eGammaPhiMC_mini/F");
-   outtree->Branch("sumPtMC_mini",&myEvent.sumPtMC_mini,"sumPtMC_mini/F");
-   outtree->Branch("EpzQEDcMC_mini",&myEvent.EpzQEDcMC_mini,"EpzQEDcMC_mini/F");
 
-   // outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
-   // outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
-   // outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
-   // outtree->Branch("elecEMC_mini",&myEvent.elecEMC_mini,"elecEMC_mini/F");
-   // outtree->Branch("phoPxMC_mini",&myEvent.phoPxMC_mini,"phoPxMC_mini/F");
-   // outtree->Branch("phoPyMC_mini",&myEvent.phoPyMC_mini,"phoPyMC_mini/F");
-   // outtree->Branch("phoPzMC_mini",&myEvent.phoPzMC_mini,"phoPzMC_mini/F");
-   // outtree->Branch("phoEMC_mini",&myEvent.phoEMC_mini,"phoEMC_mini/F");
+   outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
+   outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
+   outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
+   outtree->Branch("elecEMC_mini",&myEvent.elecEMC_mini,"elecEMC_mini/F");
+   outtree->Branch("phoPxMC_mini",myEvent.phoPxMC_mini,"phoPxMC_mini[4]/F");
+   outtree->Branch("phoPyMC_mini",myEvent.phoPyMC_mini,"phoPyMC_mini[4]/F");
+   outtree->Branch("phoPzMC_mini",myEvent.phoPzMC_mini,"phoPzMC_mini[4]/F");
+   outtree->Branch("phoEMC_mini",myEvent.phoEMC_mini,"phoEMC_mini[4]/F");
    outtree->Branch("isQEDcMC_mini",&myEvent.isQEDcMC_mini,"isQEDcMC_mini/I");
    outtree->Branch("dRRadPhot_mini",&myEvent.dRRadPhot_mini,"dRRadPhot_mini/F");
    outtree->Branch("dPhiRadPhot_mini",&myEvent.dPhiRadPhot_mini,"dPhiRadPhot_mini/F");
@@ -617,21 +614,19 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             else{
                myEvent.isQEDcMC_mini = isQEDc;
             }
-            TLorentzVector eMC, gammaMC, sumEgamma;
+            TLorentzVector eMC, gammaMC;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
-            gammaMC.SetPxPyPzE(radPhoPxMC[0],radPhoPyMC[0],radPhoPzMC[0],radPhoEMC[0]);
-            sumEgamma = eMC+gammaMC;
-            myEvent.sumPtMC_mini = sumEgamma.Pt();
-            myEvent.eGammaPhiMC_mini = eMC.DeltaPhi( gammaMC );
-            myEvent.EpzQEDcMC_mini = eMC.E()+gammaMC.E()-eMC.Pz()-gammaMC.Pz();
-            // myEvent.elecPxMC_mini = eMC.Px();
-            // myEvent.elecPyMC_mini = eMC.Py();
-            // myEvent.elecPzMC_mini = eMC.Pz();
-            // myEvent.elecEMC_mini = eMC.E();
-            // myEvent.phoPxMC_mini = gammaMC.Px();
-            // myEvent.phoPyMC_mini = gammaMC.Py();
-            // myEvent.phoPzMC_mini = gammaMC.Pz();
-            // myEvent.phoEMC_mini = gammaMC.E();
+            myEvent.elecPxMC_mini = eMC.Px();
+            myEvent.elecPyMC_mini = eMC.Py();
+            myEvent.elecPzMC_mini = eMC.Pz();
+            myEvent.elecEMC_mini = eMC.E();
+            for(int itype=0;itype<4;itype++){
+               gammaMC.SetPxPyPzE(radPhoPxMC[itype],radPhoPyMC[itype],radPhoPzMC[itype],radPhoEMC[itype]);
+               myEvent.phoPxMC_mini[itype] = gammaMC.Px();
+               myEvent.phoPyMC_mini[itype] = gammaMC.Py();
+               myEvent.phoPzMC_mini[itype] = gammaMC.Pz();
+               myEvent.phoEMC_mini[itype] = gammaMC.E();
+            }
             //end QED Compton
 
           }//end doGen_
@@ -643,15 +638,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
          double Epz = hfsEREC+elecEREC - (hfsPzREC+elecPzREC);
          myEvent.EpzREC_mini = Epz;
-         // double elecPt = TMath::Hypot(elecPxREC,elecPyREC);
-         // myEvent.elecPtREC_mini = elecPt;
-         // myEvent.elecPzREC_mini = elecPzREC;
-         // myEvent.elecEREC_mini = elecEREC;
-         // myEvent.elecChargeREC_mini = elecChargeREC;
-         // double hfsPt = TMath::Hypot(hfsPxREC,hfsPyREC);
-         // myEvent.hfsPtREC_mini = hfsPt;
-         // myEvent.hfsPzREC_mini = hfsPzREC;
-         // myEvent.hfsEREC_mini = hfsEREC;
          //bkg finder bit cuts:
          if( (ibgREC & 1) != 0 ) event_pass = 0;
          if( (ibgREC & 2) != 0 ) event_pass = 0;
