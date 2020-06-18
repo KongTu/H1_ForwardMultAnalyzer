@@ -348,12 +348,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 			}
 			//filling QED Compton delta phi
-			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 1) {
+			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini != 2) {
 				h_eGammaPhiMC->Fill( eGammaPhiMC_mini, w_mini );
 				h_sumPtMC->Fill( sumPtMC_mini, w_mini );
 				h_EpzElecPhotMC->Fill( EpzQEDcMC_mini, w_mini);
 			}
-			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 ){//no QEDc event counted as radiative Gen
+			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini != 2 ){//no QEDc event counted as radiative Gen
 			//no QEDc event counted as radiative Gen
 			// if(Q2_INDEX >=0 && y_INDEX >= 0 ){
 				//HCM frame
