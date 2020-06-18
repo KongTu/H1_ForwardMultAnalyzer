@@ -220,8 +220,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 	//QED Compton event
 	TH1D* h_eGammaPhiMC[4][4][2];
+	TH1D* h_eGammaPhiMC_allQ2y[2];
 	TH1D* h_sumPtMC[4][4][2];
+	TH1D* h_sumPtMC_allQ2y[2];
 	TH1D* h_EpzElecPhotMC[4][4][2];
+	TH1D* h_EpzElecPhotMC_allQ2y[2];
 
 	TH2D* h_dRRadPhotVsMult[4][4]; 
 	TH2D* h_dPhiRadPhotVsMult[4][4];
@@ -240,11 +243,17 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_PhotMass[4][4];
 	TH1D* h_PhotMassTight[4][4];
 	TH1D* h_PhotMassLoose[4][4];
+	
+	for(int k=0;k<2;k++){
+		h_eGammaPhiMC_allQ2y[k] = new TH1D(Form("h_eGammaPhiMC_allQ2y_%d",k),";#Delta#phi",100,-3.15,3.15);
+		h_sumPtMC_allQ2y[k] = new TH1D(Form("h_sumPtMC_allQ2y_%d",k),";sum pt",100,0,5);
+		h_EpzElecPhotMC_allQ2y[k] = new TH1D(Form("h_EpzElecPhotMC_allQ2y_%d",k),";E-pz",100,0,70);
+	}
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
 			for(int k=0;k<2;k++){
 				h_eGammaPhiMC[i][j][k] = new TH1D(Form("h_eGammaPhiMC_%d_%d_%d",i,j,k),";#Delta#phi",100,-3.15,3.15);
-				h_sumPtMC[i][j][k] = new TH1D(Form("h_sumPtMC_%d_%d_%d",i,j,k),";#Delta#phi",100,0,5);
+				h_sumPtMC[i][j][k] = new TH1D(Form("h_sumPtMC_%d_%d_%d",i,j,k),";sum pt",100,0,5);
 				h_EpzElecPhotMC[i][j][k] = new TH1D(Form("h_EpzElecPhotMC_%d_%d_%d",i,j,k),";E-pz",100,0,70);
 			}
 			h_dRRadPhotVsMult[i][j]= new TH2D(Form("h_dRRadPhotVsMult_%d_%d",i,j),";mult;dR",30,0,30,300,0,15);
@@ -353,18 +362,24 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			//filling QED Compton delta phi
 			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini != 2) {
 				if( n_particle_eta[3] < 2 ){
+					h_eGammaPhiMC_allQ2y[0]->Fill( eGammaPhiMC_mini, w_mini );
+					h_sumPtMC_allQ2y[0]->Fill( sumPtMC_mini, w_mini );
+					h_EpzElecPhotMC_allQ2y[0]->Fill( EpzQEDcMC_mini, w_mini );
 					h_eGammaPhiMC[Q2_INDEX][y_INDEX][0]->Fill( eGammaPhiMC_mini, w_mini );
 					h_sumPtMC[Q2_INDEX][y_INDEX][0]->Fill( sumPtMC_mini, w_mini );
 					h_EpzElecPhotMC[Q2_INDEX][y_INDEX][0]->Fill( EpzQEDcMC_mini, w_mini);
 				}
 				else{
+					h_eGammaPhiMC_allQ2y[1]->Fill( eGammaPhiMC_mini, w_mini );
+					h_sumPtMC_allQ2y[1]->Fill( sumPtMC_mini, w_mini );
+					h_EpzElecPhotMC_allQ2y[1]->Fill( EpzQEDcMC_mini, w_mini );
 					h_eGammaPhiMC[Q2_INDEX][y_INDEX][1]->Fill( eGammaPhiMC_mini, w_mini );
 					h_sumPtMC[Q2_INDEX][y_INDEX][1]->Fill( sumPtMC_mini, w_mini );
 					h_EpzElecPhotMC[Q2_INDEX][y_INDEX][1]->Fill( EpzQEDcMC_mini, w_mini);
 				}
 				
 			}
-			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini != 2 ){//no QEDc event counted as radiative Gen
+			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 ){//no QEDc event counted as radiative Gen
 			//no QEDc event counted as radiative Gen
 			// if(Q2_INDEX >=0 && y_INDEX >= 0 ){
 				//HCM frame
