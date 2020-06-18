@@ -360,7 +360,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 			}
 			//filling QED Compton delta phi
-			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0) {
+			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 1) {
 				if( n_particle_eta[3] < 2 ){
 					h_eGammaPhiMC_allQ2y[0]->Fill( eGammaPhiMC_mini, w_mini );
 					h_sumPtMC_allQ2y[0]->Fill( sumPtMC_mini, w_mini );
