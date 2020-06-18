@@ -30,7 +30,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_MixCompton20.root");
 	}else if(ifile_ == 2){
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_V0sWeight.root");
+		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_MixCompton20.root");
 	}
 	else if(ifile_ == 3){
 		file = new TFile("../new_output/mc_highE_PYTHIA6_noReweight_Tree_hadCaliNewKine_photoproduction.root");
@@ -44,7 +44,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_MixCompton20.root";
 	}else if( ifile_ == 2 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_June16.root";
+		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_MixCompton20.root";
 	}
 	else if( ifile_ == 3 ){
 		outname = "../minitree_output/Pn_hist_pythia_hadCaliNewKine_photoproduction.root";
@@ -101,7 +101,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	tree->SetBranchAddress("dRRadPhot_mini",&dRRadPhot_mini);
 	tree->SetBranchAddress("dPhiRadPhot_mini",&dPhiRadPhot_mini);
 	tree->SetBranchAddress("EpzQEDcMC_mini",&EpzQEDcMC_mini);
-
 
 	tree->SetBranchAddress("nMCtrack_mini",&nMCtrack_mini);
 	tree->SetBranchAddress("pxMC_mini",&pxMC_mini);
@@ -349,7 +348,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 			}
 			//filling QED Compton delta phi
-			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 1 ) {
+			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini != 2 ) {
 				h_eGammaPhiMC->Fill( eGammaPhiMC_mini, w_mini );
 				h_sumPtMC->Fill( sumPtMC_mini, w_mini );
 				h_EpzElecPhotMC->Fill( EpzQEDcMC_mini, w_mini);
