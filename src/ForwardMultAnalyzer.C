@@ -202,7 +202,7 @@ struct MyEvent {
    Int_t maxPDGmc;
 
    Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC,elecEradMC; // scattered electron
-   Float_t radPhoPxMC[4],radPhoPyMC[4],radPhoPzMC[4],radPhoEMC[4]; // radiative photon
+   Float_t radPhoPxMC[3],radPhoPyMC[3],radPhoPzMC[3],radPhoEMC[3]; // radiative photon
   
    Float_t elecEcraREC;
    Float_t xMC,yMC,Q2MC;
@@ -388,10 +388,10 @@ int main(int argc, char* argv[]) {
    output->Branch("elecPyMC",&myEvent.elecPyMC,"elecPyMC/F");
    output->Branch("elecPzMC",&myEvent.elecPzMC,"elecPzMC/F");
    output->Branch("elecEMC",&myEvent.elecEMC,"elecEMC/F");
-   output->Branch("radPhoPxMC",myEvent.radPhoPxMC,"radPhoPxMC[4]/F");
-   output->Branch("radPhoPyMC",&myEvent.radPhoPyMC,"radPhoPyMC[4]/F");
-   output->Branch("radPhoPzMC",&myEvent.radPhoPzMC,"radPhoPzMC[4]/F");
-   output->Branch("radPhoEMC",&myEvent.radPhoEMC,"radPhoEMC[4]/F");
+   output->Branch("radPhoPxMC",myEvent.radPhoPxMC,"radPhoPxMC[3]/F");
+   output->Branch("radPhoPyMC",&myEvent.radPhoPyMC,"radPhoPyMC[3]/F");
+   output->Branch("radPhoPzMC",&myEvent.radPhoPzMC,"radPhoPzMC[3]/F");
+   output->Branch("radPhoEMC",&myEvent.radPhoEMC,"radPhoEMC[3]/F");
    output->Branch("isQEDc",&myEvent.isQEDc,"isQEDc/I");
    output->Branch("dRRadPhot",&myEvent.dRRadPhot,"dRRadPhot/F");
    output->Branch("dPhiRadPhot",&myEvent.dPhiRadPhot,"dPhiRadPhot/F");
@@ -613,7 +613,7 @@ int main(int argc, char* argv[]) {
             continue;
          }
          //begin to store radiative photon and QEDc events.
-         for(int i=0;i<4;i++){
+         for(int i=0;i<3;i++){
             myEvent.radPhoPxMC[i] = 0.;
             myEvent.radPhoPyMC[i] = 0.;
             myEvent.radPhoPzMC[i] = 0.;
@@ -624,7 +624,7 @@ int main(int argc, char* argv[]) {
          else {myEvent.isQEDc = 0;}
          TLorentzVector eMC = detectQedc.GetElectron();
          TLorentzVector gammaMC;
-         for(int i=0;i<4;i++){
+         for(int i=0;i<3;i++){
             gammaMC = detectQedc.GetPhoton(i);
             TLorentzVector eGamma=eMC+gammaMC;
             h_dPhi_theta_qedc->Fill( eMC.Theta(), eMC.DeltaPhi( gammaMC ) );
@@ -763,7 +763,7 @@ int main(int argc, char* argv[]) {
             }
             
             int status=part->GetStatus();
-            if(status==0||v0s_status==0) {
+            if(status==0) {
                // generator "stable" particles
                // if((!haveElectron)&&
                //    ((part->GetPDG()==11)||(part->GetPDG()== -11))) {
@@ -1560,7 +1560,7 @@ int main(int argc, char* argv[]) {
                    myEvent.momREC[iREC].Phi(),myEvent.momREC[iREC].Theta(),
                    0.0 /* dca */,H1SelVertex::GetPrimaryVertex()->Z());
                 
-                   if(isDaugV0s) myEvent.nucliaREC[iREC] = myEvent.nucliaREC[iREC]*0.5;   
+                   // if(isDaugV0s) myEvent.nucliaREC[iREC] = myEvent.nucliaREC[iREC]*0.5;   
             }
             
          }
