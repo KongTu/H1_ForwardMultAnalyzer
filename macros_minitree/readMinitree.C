@@ -232,6 +232,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_EpzElecPhotMC[4][4][2];
 	TH1D* h_EpzElecPhotMC_allQ2y[2];
 
+	TH2D* h_deltaPhiVsThetaMC[2];
+
 	TH2D* h_dRRadPhotVsMult[4][4]; 
 	TH2D* h_dPhiRadPhotVsMult[4][4];
 
@@ -254,6 +256,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		h_eGammaPhiMC_allQ2y[k] = new TH1D(Form("h_eGammaPhiMC_allQ2y_%d",k),";#Delta#phi",100,-3.15,3.15);
 		h_sumPtMC_allQ2y[k] = new TH1D(Form("h_sumPtMC_allQ2y_%d",k),";sum pt",100,0,5);
 		h_EpzElecPhotMC_allQ2y[k] = new TH1D(Form("h_EpzElecPhotMC_allQ2y_%d",k),";E-pz",100,0,70);
+		
+		h_deltaPhiVsThetaMC[k] = new TH2D(Form("h_deltaPhiVsThetaMC_%d",k),";theta;#Delta#phi",100,0,1,100,-3.15,3.15);
+
 	}
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
@@ -366,22 +371,23 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 			}
 			//filling QED Compton delta phi
-			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 1) {
+			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini != 2) {
 				TLorentzVector eMC;eMC.SetPxPyPzE(elecPxMC_mini,elecPyMC_mini,elecPzMC_mini,elecEMC_mini);
 				TLorentzVector eGamma, sumEgamma;
 				for(int itype=0;itype<3;itype++){
 					eGamma.SetPxPyPzE(phoPxMC_mini[itype],phoPyMC_mini[itype],phoPzMC_mini[itype],phoEMC_mini[itype]);
 					sumEgamma = eMC+eGamma;
 					if( n_particle_eta[3] < 2 ){
+						h_deltaPhiVsThetaMC[0]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
 						h_eGammaPhiMC_allQ2y[0]->Fill( eMC.DeltaPhi(eGamma), w_mini );
 						h_sumPtMC_allQ2y[0]->Fill( sumEgamma.Pt(), w_mini );
 						h_EpzElecPhotMC_allQ2y[0]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
 						h_eGammaPhiMC[Q2_INDEX][y_INDEX][0]->Fill( eMC.DeltaPhi(eGamma), w_mini );
 						h_sumPtMC[Q2_INDEX][y_INDEX][0]->Fill( sumEgamma.Pt(), w_mini );
 						h_EpzElecPhotMC[Q2_INDEX][y_INDEX][0]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
-						
 					}
 					else{
+						h_deltaPhiVsThetaMC[1]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
 						h_eGammaPhiMC_allQ2y[1]->Fill( eMC.DeltaPhi(eGamma), w_mini );
 						h_sumPtMC_allQ2y[1]->Fill( sumEgamma.Pt(), w_mini );
 						h_EpzElecPhotMC_allQ2y[1]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
