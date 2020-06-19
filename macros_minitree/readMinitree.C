@@ -257,7 +257,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		h_sumPtMC_allQ2y[k] = new TH1D(Form("h_sumPtMC_allQ2y_%d",k),";sum pt",100,0,5);
 		h_EpzElecPhotMC_allQ2y[k] = new TH1D(Form("h_EpzElecPhotMC_allQ2y_%d",k),";E-pz",100,0,70);
 		
-		h_deltaPhiVsThetaMC[k] = new TH2D(Form("h_deltaPhiVsThetaMC_%d",k),";theta;#Delta#phi",100,0,1,100,-3.15,3.15);
+		h_deltaPhiVsThetaMC[k] = new TH2D(Form("h_deltaPhiVsThetaMC_%d",k),";theta;#Delta#phi",100,-3.15,3.15,100,-3.15,3.15);
 
 	}
 	for(int i=0;i<4;i++){
