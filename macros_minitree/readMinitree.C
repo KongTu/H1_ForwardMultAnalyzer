@@ -378,7 +378,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					eGamma.SetPxPyPzE(phoPxMC_mini[itype],phoPyMC_mini[itype],phoPzMC_mini[itype],phoEMC_mini[itype]);
 					sumEgamma = eMC+eGamma;
 					if( n_particle_eta[3] < 2 ){
-						h_deltaPhiVsThetaMC[0]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
+						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[0]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
 						h_eGammaPhiMC_allQ2y[0]->Fill( eMC.DeltaPhi(eGamma), w_mini );
 						h_sumPtMC_allQ2y[0]->Fill( sumEgamma.Pt(), w_mini );
 						h_EpzElecPhotMC_allQ2y[0]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
@@ -387,7 +387,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						h_EpzElecPhotMC[Q2_INDEX][y_INDEX][0]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
 					}
 					else{
-						h_deltaPhiVsThetaMC[1]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
+						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[1]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
 						h_eGammaPhiMC_allQ2y[1]->Fill( eMC.DeltaPhi(eGamma), w_mini );
 						h_sumPtMC_allQ2y[1]->Fill( sumEgamma.Pt(), w_mini );
 						h_EpzElecPhotMC_allQ2y[1]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
