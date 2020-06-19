@@ -331,6 +331,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	for(int ievent = 0; ievent < tree->GetEntries(); ievent++){
 
 		tree->GetEntry(ievent);
+		if( ievent%100000 == 0 )cout << "Events ~ " << ievent << endl;
 		
 		double n_particle_eta[4] = {0.,0.,0.,0.};
 		double n_particle_HCM = 0.;
