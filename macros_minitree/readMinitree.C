@@ -395,7 +395,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				else generator_index=1;
 			}
 			//filling QED Compton delta phi
-			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini != 2) {
+			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini >= 0) {
 				TLorentzVector eMC;eMC.SetPxPyPzE(elecPxMC_mini,elecPyMC_mini,elecPzMC_mini,elecEMC_mini);
 				TLorentzVector eGamma, sumEgamma;
 				for(int itype=0;itype<3;itype++){
