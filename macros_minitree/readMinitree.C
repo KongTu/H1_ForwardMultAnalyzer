@@ -225,14 +225,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	*/
 
 	//QED Compton event
-	TH1D* h_eGammaPhiMC[4][4][2];
-	TH1D* h_eGammaPhiMC_allQ2y[2];
-	TH1D* h_sumPtMC[4][4][2];
-	TH1D* h_sumPtMC_allQ2y[2];
-	TH1D* h_EpzElecPhotMC[4][4][2];
-	TH1D* h_EpzElecPhotMC_allQ2y[2];
-
-	TH2D* h_deltaPhiVsThetaMC[2];
+	TH1D* h_eGammaPhiMC[4][4][2][2];
+	TH1D* h_eGammaPhiMC_allQ2y[2][2];
+	TH1D* h_sumPtMC[4][4][2][2];
+	TH1D* h_sumPtMC_allQ2y[2][2];
+	TH1D* h_EpzElecPhotMC[4][4][2][2];
+	TH1D* h_EpzElecPhotMC_allQ2y[2][2];
+	TH2D* h_deltaPhiVsThetaMC[2][2];
 
 	TH2D* h_dRRadPhotVsMult[4][4]; 
 	TH2D* h_dPhiRadPhotVsMult[4][4];
@@ -253,19 +252,21 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_PhotMassLoose[4][4];
 	
 	for(int k=0;k<2;k++){
-		h_eGammaPhiMC_allQ2y[k] = new TH1D(Form("h_eGammaPhiMC_allQ2y_%d",k),";#Delta#phi",100,-3.15,3.15);
-		h_sumPtMC_allQ2y[k] = new TH1D(Form("h_sumPtMC_allQ2y_%d",k),";sum pt",100,0,5);
-		h_EpzElecPhotMC_allQ2y[k] = new TH1D(Form("h_EpzElecPhotMC_allQ2y_%d",k),";E-pz",100,0,70);
-		
-		h_deltaPhiVsThetaMC[k] = new TH2D(Form("h_deltaPhiVsThetaMC_%d",k),";theta;#Delta#phi",100,-3.15,3.15,100,-3.15,3.15);
-
+		for(int l=0;l<2;l++){
+			h_eGammaPhiMC_allQ2y[k][l] = new TH1D(Form("h_eGammaPhiMC_allQ2y_%d_%d",k,l),";#Delta#phi",100,-3.15,3.15);
+			h_sumPtMC_allQ2y[k][l] = new TH1D(Form("h_sumPtMC_allQ2y_%d_%d",k,l),";sum pt",100,0,5);
+			h_EpzElecPhotMC_allQ2y[k][l] = new TH1D(Form("h_EpzElecPhotMC_allQ2y_%d_%d",k,l),";E-pz",100,0,70);
+			h_deltaPhiVsThetaMC[k][l] = new TH2D(Form("h_deltaPhiVsThetaMC_%d_%d",k,l),";theta;#Delta#phi",100,-3.15,3.15,100,-3.15,3.15);
+		}
 	}
 	for(int i=0;i<4;i++){
 		for(int j=0;j<4;j++){
 			for(int k=0;k<2;k++){
-				h_eGammaPhiMC[i][j][k] = new TH1D(Form("h_eGammaPhiMC_%d_%d_%d",i,j,k),";#Delta#phi",100,-3.15,3.15);
-				h_sumPtMC[i][j][k] = new TH1D(Form("h_sumPtMC_%d_%d_%d",i,j,k),";sum pt",100,0,5);
-				h_EpzElecPhotMC[i][j][k] = new TH1D(Form("h_EpzElecPhotMC_%d_%d_%d",i,j,k),";E-pz",100,0,70);
+				for(int l=0;l<2;l++){
+					h_eGammaPhiMC[i][j][k][l] = new TH1D(Form("h_eGammaPhiMC_%d_%d_%d_%d",i,j,k,l),";#Delta#phi",100,-3.15,3.15);
+					h_sumPtMC[i][j][k][l] = new TH1D(Form("h_sumPtMC_%d_%d_%d_%d",i,j,k,l),";sum pt",100,0,5);
+					h_EpzElecPhotMC[i][j][k][l] = new TH1D(Form("h_EpzElecPhotMC_%d_%d_%d_%d",i,j,k,l),";E-pz",100,0,70);
+				}
 			}
 			h_dRRadPhotVsMult[i][j]= new TH2D(Form("h_dRRadPhotVsMult_%d_%d",i,j),";mult;dR",30,0,30,300,0,15);
 			h_dPhiRadPhotVsMult[i][j]= new TH2D(Form("h_dPhiRadPhotVsMult_%d_%d",i,j),";mult;dPhi",30,0,30,300,-6.28,6.28);
@@ -383,30 +384,39 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					n_particle_eta[3]++;
 				}
 			}
+			int generator_index = -1;
+			if( ifile_==1 ){
+				if(ievent<3e7) generator_index=0;
+				else generator_index=1;
+			}
+			if( ifile_==2 ){
+				if(ievent<44999982) generator_index=0;
+				else generator_index=1;
+			}
 			//filling QED Compton delta phi
-			if(Q2MC_mini > 2 && yMC_mini > 0.1 && isQEDcMC_mini != 2) {
+			if(Q2_INDEX_elec>=0 && y_INDEX_elec >= 0 && isQEDcMC_mini != 2) {
 				TLorentzVector eMC;eMC.SetPxPyPzE(elecPxMC_mini,elecPyMC_mini,elecPzMC_mini,elecEMC_mini);
 				TLorentzVector eGamma, sumEgamma;
 				for(int itype=0;itype<3;itype++){
 					eGamma.SetPxPyPzE(phoPxMC_mini[itype],phoPyMC_mini[itype],phoPzMC_mini[itype],phoEMC_mini[itype]);
 					sumEgamma = eMC+eGamma;
 					if( n_particle_eta[3] < 2 ){
-						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[0]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
-						h_eGammaPhiMC_allQ2y[0]->Fill( eMC.DeltaPhi(eGamma), w_mini );
-						h_sumPtMC_allQ2y[0]->Fill( sumEgamma.Pt(), w_mini );
-						h_EpzElecPhotMC_allQ2y[0]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
-						h_eGammaPhiMC[Q2_INDEX_elec][y_INDEX_elec][0]->Fill( eMC.DeltaPhi(eGamma), w_mini );
-						h_sumPtMC[Q2_INDEX_elec][y_INDEX_elec][0]->Fill( sumEgamma.Pt(), w_mini );
-						h_EpzElecPhotMC[Q2_INDEX_elec][y_INDEX_elec][0]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
+						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[0][generator_index]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
+						h_eGammaPhiMC_allQ2y[0][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						h_sumPtMC_allQ2y[0][generator_index]->Fill( sumEgamma.Pt(), w_mini );
+						h_EpzElecPhotMC_allQ2y[0][generator_index]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
+						h_eGammaPhiMC[Q2_INDEX_elec][y_INDEX_elec][0][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						h_sumPtMC[Q2_INDEX_elec][y_INDEX_elec][0][generator_index]->Fill( sumEgamma.Pt(), w_mini );
+						h_EpzElecPhotMC[Q2_INDEX_elec][y_INDEX_elec][0][generator_index]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
 					}
 					else{
-						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[1]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
-						h_eGammaPhiMC_allQ2y[1]->Fill( eMC.DeltaPhi(eGamma), w_mini );
-						h_sumPtMC_allQ2y[1]->Fill( sumEgamma.Pt(), w_mini );
-						h_EpzElecPhotMC_allQ2y[1]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
-						h_eGammaPhiMC[Q2_INDEX_elec][y_INDEX_elec][1]->Fill( eMC.DeltaPhi(eGamma), w_mini );
-						h_sumPtMC[Q2_INDEX_elec][y_INDEX_elec][1]->Fill( sumEgamma.Pt(), w_mini );
-						h_EpzElecPhotMC[Q2_INDEX_elec][y_INDEX_elec][1]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
+						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[1][generator_index]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
+						h_eGammaPhiMC_allQ2y[1][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						h_sumPtMC_allQ2y[1][generator_index]->Fill( sumEgamma.Pt(), w_mini );
+						h_EpzElecPhotMC_allQ2y[1][generator_index]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
+						h_eGammaPhiMC[Q2_INDEX_elec][y_INDEX_elec][1][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						h_sumPtMC[Q2_INDEX_elec][y_INDEX_elec][1][generator_index]->Fill( sumEgamma.Pt(), w_mini );
+						h_EpzElecPhotMC[Q2_INDEX_elec][y_INDEX_elec][1][generator_index]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
 					}
 				}
 				
