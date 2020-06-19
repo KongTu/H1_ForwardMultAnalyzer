@@ -624,7 +624,7 @@ int main(int argc, char* argv[]) {
          else {myEvent.isQEDc = 0;}
          TLorentzVector eMC = detectQedc.GetElectron();
          TLorentzVector gammaMC;
-         for(int i=0;i<3;i++){
+         for(int i=0;i<1;i++){
             gammaMC = detectQedc.GetPhoton(i);
             TLorentzVector eGamma=eMC+gammaMC;
             h_dPhi_theta_qedc->Fill( eMC.Theta(), eMC.DeltaPhi( gammaMC ) );
