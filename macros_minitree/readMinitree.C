@@ -400,7 +400,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				TLorentzVector eGamma, sumEgamma;
 				for(int itype=0;itype<3;itype++){
 					eGamma.SetPxPyPzE(phoPxMC_mini[itype],phoPyMC_mini[itype],phoPzMC_mini[itype],phoEMC_mini[itype]);
-					cout << "photon " << itype << " E ~ " <<  eGamma.E() << endl;
+					if( eGamma.E() <= 0 ) continue;
 					sumEgamma = eMC+eGamma;
 					if( n_particle_eta[3] < 2 ){
 						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[0][generator_index]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
