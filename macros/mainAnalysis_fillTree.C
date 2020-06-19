@@ -68,6 +68,7 @@ struct MyEvent {
    Float_t vertex_mini[3];
    // Monte Carlo information
    Float_t xMC_es_mini,yMC_es_mini,Q2MC_es_mini;
+   Float_t yMC_mini,Q2MC_mini;
 
    enum {
       nMCtrack_MAX=400
@@ -94,10 +95,10 @@ struct MyEvent {
    Float_t elecPyMC_mini;
    Float_t elecPzMC_mini;
    Float_t elecEMC_mini;
-   Float_t phoPxMC_mini[4];
-   Float_t phoPyMC_mini[4];
-   Float_t phoPzMC_mini[4];
-   Float_t phoEMC_mini[4];
+   Float_t phoPxMC_mini[3];
+   Float_t phoPyMC_mini[3];
+   Float_t phoPzMC_mini[3];
+   Float_t phoEMC_mini[3];
    Int_t isQEDcMC_mini;
    Float_t dRRadPhot_mini;
    Float_t dPhiRadPhot_mini;
@@ -220,15 +221,17 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("vertex_mini",myEvent.vertex_mini,"vertex_mini[3]/F");
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
+   outtree->Branch("yMC_mini",&myEvent.yMC_mini,"yMC_mini/F");
+   outtree->Branch("Q2MC_mini",&myEvent.Q2MC_mini,"Q2MC_mini/F");
 
    outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
    outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
    outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
    outtree->Branch("elecEMC_mini",&myEvent.elecEMC_mini,"elecEMC_mini/F");
-   outtree->Branch("phoPxMC_mini",myEvent.phoPxMC_mini,"phoPxMC_mini[4]/F");
-   outtree->Branch("phoPyMC_mini",myEvent.phoPyMC_mini,"phoPyMC_mini[4]/F");
-   outtree->Branch("phoPzMC_mini",myEvent.phoPzMC_mini,"phoPzMC_mini[4]/F");
-   outtree->Branch("phoEMC_mini",myEvent.phoEMC_mini,"phoEMC_mini[4]/F");
+   outtree->Branch("phoPxMC_mini",myEvent.phoPxMC_mini,"phoPxMC_mini[3]/F");
+   outtree->Branch("phoPyMC_mini",myEvent.phoPyMC_mini,"phoPyMC_mini[3]/F");
+   outtree->Branch("phoPzMC_mini",myEvent.phoPzMC_mini,"phoPzMC_mini[3]/F");
+   outtree->Branch("phoEMC_mini",myEvent.phoEMC_mini,"phoEMC_mini[3]/F");
    outtree->Branch("isQEDcMC_mini",&myEvent.isQEDcMC_mini,"isQEDcMC_mini/I");
    outtree->Branch("dRRadPhot_mini",&myEvent.dRRadPhot_mini,"dRRadPhot_mini/F");
    outtree->Branch("dPhiRadPhot_mini",&myEvent.dPhiRadPhot_mini,"dPhiRadPhot_mini/F");
@@ -317,6 +320,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t xMC,yMC,Q2MC;
       Float_t xGKI,yGKI,Q2GKI;
       Float_t xMC_es,yMC_es,Q2MC_es;
+
       Int_t nMCtrack;
       Float_t ptStarMC[400];
       Float_t etaStarMC[400];
@@ -402,6 +406,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("xMC_es",&xMC_es);
       tree->SetBranchAddress("yMC_es",&yMC_es);
       tree->SetBranchAddress("Q2MC_es",&Q2MC_es);
+      tree->SetBranchAddress("yMC",&yMC);
+      tree->SetBranchAddress("Q2MC",&Q2MC);
       tree->SetBranchAddress("elecEMC",&elecEMC);
       tree->SetBranchAddress("elecEradMC",&elecEradMC);
       tree->SetBranchAddress("imatchMC",&imatchMC);
@@ -560,6 +566,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.xMC_es_mini = -999.;
          myEvent.yMC_es_mini = -999.;
          myEvent.Q2MC_es_mini = -999.;
+         myEvent.yMC_mini = -999.;
+         myEvent.Q2MC_mini = -999.;
          myEvent.nMCtrack_mini = -999;
 
          for(int j=0;j<400;j++) {
@@ -580,6 +588,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.xMC_es_mini = xMC_es;
             myEvent.yMC_es_mini = yMC_es;
             myEvent.Q2MC_es_mini = Q2MC_es;
+            myEvent.yMC_mini = yMC;
+            myEvent.Q2MC_mini = Q2MC;
             myEvent.nMCtrack_mini = nMCtrack;
 
             double Ntracks_eta_p_MC=0.;
@@ -620,7 +630,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.elecPyMC_mini = eMC.Py();
             myEvent.elecPzMC_mini = eMC.Pz();
             myEvent.elecEMC_mini = eMC.E();
-            for(int itype=0;itype<4;itype++){
+            for(int itype=0;itype<3;itype++){
                gammaMC.SetPxPyPzE(radPhoPxMC[itype],radPhoPyMC[itype],radPhoPzMC[itype],radPhoEMC[itype]);
                myEvent.phoPxMC_mini[itype] = gammaMC.Px();
                myEvent.phoPyMC_mini[itype] = gammaMC.Py();
