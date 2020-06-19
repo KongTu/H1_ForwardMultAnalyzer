@@ -349,6 +349,19 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 			}
 
+			int Q2_INDEX_elec = -1;
+			for(int iQ2 = 0; iQ2 < 4; iQ2++){
+				if(Q2MC_mini > Q2_bins[iQ2] && Q2MC_mini < Q2_bins[iQ2+1] ){
+					Q2_INDEX_elec = iQ2;
+				}
+			}
+			int y_INDEX_elec = -1;
+			for(int iy = 0; iy < 4; iy++){
+				if(yMC_mini > ybins[iy] && yMC_mini < ybins[iy+1] ){
+					y_INDEX_elec = iy;
+				}
+			}
+
 			for(int itrk = 0; itrk < nMCtrack_mini; itrk++){
 				if( TMath::Hypot(pxMC_mini[itrk],pyMC_mini[itrk]) > 0.15 ){
 					if( fabs(etaMC_mini[itrk]) < 1.6 ){
@@ -371,7 +384,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 			}
 			//filling QED Compton delta phi
-			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini != 2) {
+			if(Q2_INDEX_elec >=0 && y_INDEX_elec >= 0 && isQEDcMC_mini != 2) {
 				TLorentzVector eMC;eMC.SetPxPyPzE(elecPxMC_mini,elecPyMC_mini,elecPzMC_mini,elecEMC_mini);
 				TLorentzVector eGamma, sumEgamma;
 				for(int itype=0;itype<3;itype++){
@@ -382,25 +395,23 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						h_eGammaPhiMC_allQ2y[0]->Fill( eMC.DeltaPhi(eGamma), w_mini );
 						h_sumPtMC_allQ2y[0]->Fill( sumEgamma.Pt(), w_mini );
 						h_EpzElecPhotMC_allQ2y[0]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
-						h_eGammaPhiMC[Q2_INDEX][y_INDEX][0]->Fill( eMC.DeltaPhi(eGamma), w_mini );
-						h_sumPtMC[Q2_INDEX][y_INDEX][0]->Fill( sumEgamma.Pt(), w_mini );
-						h_EpzElecPhotMC[Q2_INDEX][y_INDEX][0]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
+						h_eGammaPhiMC[Q2_INDEX_elec][y_INDEX_elec][0]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						h_sumPtMC[Q2_INDEX_elec][y_INDEX_elec][0]->Fill( sumEgamma.Pt(), w_mini );
+						h_EpzElecPhotMC[Q2_INDEX_elec][y_INDEX_elec][0]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
 					}
 					else{
 						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[1]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
 						h_eGammaPhiMC_allQ2y[1]->Fill( eMC.DeltaPhi(eGamma), w_mini );
 						h_sumPtMC_allQ2y[1]->Fill( sumEgamma.Pt(), w_mini );
 						h_EpzElecPhotMC_allQ2y[1]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
-						h_eGammaPhiMC[Q2_INDEX][y_INDEX][1]->Fill( eMC.DeltaPhi(eGamma), w_mini );
-						h_sumPtMC[Q2_INDEX][y_INDEX][1]->Fill( sumEgamma.Pt(), w_mini );
-						h_EpzElecPhotMC[Q2_INDEX][y_INDEX][1]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
+						h_eGammaPhiMC[Q2_INDEX_elec][y_INDEX_elec][1]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						h_sumPtMC[Q2_INDEX_elec][y_INDEX_elec][1]->Fill( sumEgamma.Pt(), w_mini );
+						h_EpzElecPhotMC[Q2_INDEX_elec][y_INDEX_elec][1]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
 					}
 				}
 				
 			}
 			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 ){//no QEDc event counted as radiative Gen
-			//no QEDc event counted as radiative Gen
-			// if(Q2_INDEX >=0 && y_INDEX >= 0 ){
 				//HCM frame
 				h_Pn_GEN_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, w_mini );
 				h_Pn_GEN_HCM_noSel[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_noSel, w_mini );
