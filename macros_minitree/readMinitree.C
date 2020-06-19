@@ -395,7 +395,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				else generator_index=1;
 			}
 			//filling QED Compton delta phi
-			if(Q2_INDEX_elec>=0 && y_INDEX_elec >= 0 && isQEDcMC_mini != 2) {
+			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini != 2) {
 				TLorentzVector eMC;eMC.SetPxPyPzE(elecPxMC_mini,elecPyMC_mini,elecPzMC_mini,elecEMC_mini);
 				TLorentzVector eGamma, sumEgamma;
 				for(int itype=0;itype<3;itype++){
@@ -406,18 +406,18 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						h_eGammaPhiMC_allQ2y[0][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
 						h_sumPtMC_allQ2y[0][generator_index]->Fill( sumEgamma.Pt(), w_mini );
 						h_EpzElecPhotMC_allQ2y[0][generator_index]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
-						h_eGammaPhiMC[Q2_INDEX_elec][y_INDEX_elec][0][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
-						h_sumPtMC[Q2_INDEX_elec][y_INDEX_elec][0][generator_index]->Fill( sumEgamma.Pt(), w_mini );
-						h_EpzElecPhotMC[Q2_INDEX_elec][y_INDEX_elec][0][generator_index]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
+						h_eGammaPhiMC[Q2_INDEX][y_INDEX][0][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						h_sumPtMC[Q2_INDEX][y_INDEX][0][generator_index]->Fill( sumEgamma.Pt(), w_mini );
+						h_EpzElecPhotMC[Q2_INDEX][y_INDEX][0][generator_index]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
 					}
 					else{
 						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[1][generator_index]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
 						h_eGammaPhiMC_allQ2y[1][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
 						h_sumPtMC_allQ2y[1][generator_index]->Fill( sumEgamma.Pt(), w_mini );
 						h_EpzElecPhotMC_allQ2y[1][generator_index]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
-						h_eGammaPhiMC[Q2_INDEX_elec][y_INDEX_elec][1][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
-						h_sumPtMC[Q2_INDEX_elec][y_INDEX_elec][1][generator_index]->Fill( sumEgamma.Pt(), w_mini );
-						h_EpzElecPhotMC[Q2_INDEX_elec][y_INDEX_elec][1][generator_index]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
+						h_eGammaPhiMC[Q2_INDEX][y_INDEX][1][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						h_sumPtMC[Q2_INDEX][y_INDEX][1][generator_index]->Fill( sumEgamma.Pt(), w_mini );
+						h_EpzElecPhotMC[Q2_INDEX][y_INDEX][1][generator_index]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
 					}
 				}
 				
