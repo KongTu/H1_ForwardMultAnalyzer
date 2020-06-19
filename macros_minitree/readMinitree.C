@@ -65,25 +65,23 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TString sy_bins[5]={"0.0375","0.075","0.15","0.3","0.6"};
 
 	Float_t xMC_es_mini,yMC_es_mini,Q2MC_es_mini;
+	Float_t yMC_mini,Q2MC_mini;
 	Float_t w_mini;
 	
 	const int nMCtrack_MAX=400;
 	// if there is no MC info, nMCtrack is set to zero
 	Int_t nMCtrack_mini;
-	Float_t eGammaPhiMC_mini;
-	Float_t sumPtMC_mini;
 	Int_t isQEDcMC_mini;
-	Float_t EpzQEDcMC_mini;
 	Float_t dRRadPhot_mini;
 	Float_t dPhiRadPhot_mini;
 	Float_t elecPxMC_mini;
 	Float_t elecPyMC_mini;
 	Float_t elecPzMC_mini;
 	Float_t elecEMC_mini;
-	Float_t phoPxMC_mini;
-	Float_t phoPyMC_mini;
-	Float_t phoPzMC_mini;
-	Float_t phoEMC_mini;
+	Float_t phoPxMC_mini[3];
+	Float_t phoPyMC_mini[3];
+	Float_t phoPzMC_mini[3];
+	Float_t phoEMC_mini[3];
 
 	Float_t pxMC_mini[nMCtrack_MAX];
 	Float_t pyMC_mini[nMCtrack_MAX];
@@ -95,12 +93,20 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
    	
 	tree->SetBranchAddress("yMC_es_mini",&yMC_es_mini);
 	tree->SetBranchAddress("Q2MC_es_mini",&Q2MC_es_mini);
-	tree->SetBranchAddress("eGammaPhiMC_mini",&eGammaPhiMC_mini);
-	tree->SetBranchAddress("sumPtMC_mini",&sumPtMC_mini);
+	tree->SetBranchAddress("yMC_mini",&yMC_mini);
+	tree->SetBranchAddress("Q2MC_mini",&Q2MC_mini);
 	tree->SetBranchAddress("isQEDcMC_mini",&isQEDcMC_mini);
+	tree->SetBranchAddress("elecPxMC_mini",&elecPxMC_mini);
+	tree->SetBranchAddress("elecPyMC_mini",&elecPyMC_mini);
+	tree->SetBranchAddress("elecPzMC_mini",&elecPzMC_mini);
+	tree->SetBranchAddress("elecEMC_mini",&elecEMC_mini);
+	tree->SetBranchAddress("phoPxMC_mini",&phoPxMC_mini);
+	tree->SetBranchAddress("phoPyMC_mini",&phoPyMC_mini);
+	tree->SetBranchAddress("phoPzMC_mini",&phoPzMC_mini);
+	tree->SetBranchAddress("phoEMC_mini",&phoEMC_mini);
+
 	tree->SetBranchAddress("dRRadPhot_mini",&dRRadPhot_mini);
 	tree->SetBranchAddress("dPhiRadPhot_mini",&dPhiRadPhot_mini);
-	tree->SetBranchAddress("EpzQEDcMC_mini",&EpzQEDcMC_mini);
 
 	tree->SetBranchAddress("nMCtrack_mini",&nMCtrack_mini);
 	tree->SetBranchAddress("pxMC_mini",&pxMC_mini);
@@ -361,21 +367,28 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 			//filling QED Compton delta phi
 			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini != 2) {
-				if( n_particle_eta[3] < 2 ){
-					h_eGammaPhiMC_allQ2y[0]->Fill( eGammaPhiMC_mini, w_mini );
-					h_sumPtMC_allQ2y[0]->Fill( sumPtMC_mini, w_mini );
-					h_EpzElecPhotMC_allQ2y[0]->Fill( EpzQEDcMC_mini, w_mini );
-					h_eGammaPhiMC[Q2_INDEX][y_INDEX][0]->Fill( eGammaPhiMC_mini, w_mini );
-					h_sumPtMC[Q2_INDEX][y_INDEX][0]->Fill( sumPtMC_mini, w_mini );
-					h_EpzElecPhotMC[Q2_INDEX][y_INDEX][0]->Fill( EpzQEDcMC_mini, w_mini);
-				}
-				else{
-					h_eGammaPhiMC_allQ2y[1]->Fill( eGammaPhiMC_mini, w_mini );
-					h_sumPtMC_allQ2y[1]->Fill( sumPtMC_mini, w_mini );
-					h_EpzElecPhotMC_allQ2y[1]->Fill( EpzQEDcMC_mini, w_mini );
-					h_eGammaPhiMC[Q2_INDEX][y_INDEX][1]->Fill( eGammaPhiMC_mini, w_mini );
-					h_sumPtMC[Q2_INDEX][y_INDEX][1]->Fill( sumPtMC_mini, w_mini );
-					h_EpzElecPhotMC[Q2_INDEX][y_INDEX][1]->Fill( EpzQEDcMC_mini, w_mini);
+				TLorentzVector eMC;eMC.SetPxPyPzE(elecPxMC_mini,elecPyMC_mini,elecPzMC_mini,elecEMC_mini);
+				TLorentzVector eGamma, sumEgamma;
+				for(int itype=0;itype<3;itype++){
+					eGamma.SetPxPyPzE(phoPxMC_mini[itype],phoPyMC_mini[itype],phoPzMC_mini[itype],phoEMC_mini[itype]);
+					sumEgamma = eMC+eGamma;
+					if( n_particle_eta[3] < 2 ){
+						h_eGammaPhiMC_allQ2y[0]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						h_sumPtMC_allQ2y[0]->Fill( sumEgamma.Pt(), w_mini );
+						h_EpzElecPhotMC_allQ2y[0]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
+						h_eGammaPhiMC[Q2_INDEX][y_INDEX][0]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						h_sumPtMC[Q2_INDEX][y_INDEX][0]->Fill( sumEgamma.Pt(), w_mini );
+						h_EpzElecPhotMC[Q2_INDEX][y_INDEX][0]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
+						
+					}
+					else{
+						h_eGammaPhiMC_allQ2y[1]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						h_sumPtMC_allQ2y[1]->Fill( sumEgamma.Pt(), w_mini );
+						h_EpzElecPhotMC_allQ2y[1]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
+						h_eGammaPhiMC[Q2_INDEX][y_INDEX][1]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						h_sumPtMC[Q2_INDEX][y_INDEX][1]->Fill( sumEgamma.Pt(), w_mini );
+						h_EpzElecPhotMC[Q2_INDEX][y_INDEX][1]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini);
+					}
 				}
 				
 			}
