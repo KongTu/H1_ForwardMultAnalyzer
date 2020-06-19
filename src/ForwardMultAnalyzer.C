@@ -634,7 +634,7 @@ int main(int argc, char* argv[]) {
             myEvent.radPhoPzMC[i] = gammaMC.Pz();
             myEvent.radPhoEMC[i] = gammaMC.E();
 
-            if( gammaMC.E() > 0 && detectQedc.IsQedcEvent() ) cout << "type of photon ~ "<< i << " E " << gammaMC.E() << endl;
+            // if( gammaMC.E() > 0 && detectQedc.IsQedcEvent() ) cout << "type of photon ~ "<< i << " E " << gammaMC.E() << endl;
          }
      
          TLorentzVector ebeam_MC_lab
