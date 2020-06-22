@@ -410,8 +410,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						if( eMC.Theta()*TMath::RadToDeg()>178. || eMC.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
 						if( eGamma.E() < 0.5 ) passcut = 0;
 						if( eGamma.Theta()*TMath::RadToDeg()>178. || eGamma.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
-						if( sumEgamma.Pt() > 20. ) passcut = 0;
-						if( sumEgamma.E() < 15. ) passcut = 0;
+						if( sumEgamma.Pt() > 25. ) passcut = 0;
+						if( sumEgamma.E() < 5. ) passcut = 0;
 						if( sumEgamma.M() > 310. || sumEgamma.M() < 1.5 ) passcut = 0;
 						Double_t dphi=fabs(remainder(eMC.Phi()+3.1415-eGamma.Phi(),2.*3.1415)*180./3.1415);
 						if( dphi > 50. ) passcut = 0;
