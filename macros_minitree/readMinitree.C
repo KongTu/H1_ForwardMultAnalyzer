@@ -408,6 +408,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						int passcut = 1;
 						if( eMC.E() < 1.5 ) passcut = 0;
 						if( eMC.Theta()*TMath::RadToDeg()>178. || eMC.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
+						if( eGamma.E() < 1.5 ) passcut = 0;
 						if( eGamma.Theta()*TMath::RadToDeg()>178. || eGamma.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
 						if( sumEgamma.Pt() > 20. ) passcut = 0;
 						if( sumEgamma.E() < 15. ) passcut = 0;
@@ -417,6 +418,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 						if( passcut == 1 ) {
 							isQEDcMC_mini = 2;
+							cout << "different"<<endl;
 						}
 					}
 					//keep orginal QEDc events out.
