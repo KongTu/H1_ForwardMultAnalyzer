@@ -417,7 +417,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 						if( passcut == 1 ) {
 							isQEDcMC_mini = 2;
-							cout << "different cuts!" << endl;
 						}
 					}
 					//keep orginal QEDc events out.
