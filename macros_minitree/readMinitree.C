@@ -406,9 +406,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					if( (ifile_==1 && ievent<3e7) && isQEDcMC_mini==0 ){
 						//check all cuts again:
 						int passcut = 1;
-						if( eMC.E() < 0.5 ) passcut = 0;
+						if( eMC.E() < 0.1 ) passcut = 0;
 						if( eMC.Theta()*TMath::RadToDeg()>179.9 || eMC.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
-						if( eGamma.E() < 0.5 ) passcut = 0;
+						if( eGamma.E() < 0.1 ) passcut = 0;
 						if( eGamma.Theta()*TMath::RadToDeg()>179.9 || eGamma.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
 						if( sumEgamma.Pt() > 25. ) passcut = 0;
 						if( sumEgamma.E() < 15. ) passcut = 0;
