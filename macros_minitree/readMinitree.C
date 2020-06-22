@@ -403,7 +403,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					if( eGamma.E() <= 0 ) continue;
 					sumEgamma = eMC+eGamma;
 					//try to make additional cuts:
-					if( ifile_==1 && ievent<3e7 && isQEDcMC_mini==0 ){
+					if( (ifile_==1 && ievent<3e7) || (ifile_==2 && ievent<44999982) && isQEDcMC_mini==0 ){
 						//check all cuts again:
 						int passcut = 1;
 						if( eMC.E() < 1.5 ) passcut = 0;
@@ -415,12 +415,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						Double_t dphi=fabs(remainder(eMC.Phi()+3.1415-eGamma.Phi(),2.*3.1415)*180./3.1415);
 						if( dphi > 50. ) passcut = 0;
 
-						if( passcut != isQEDcMC_mini ) {
+						if( passcut == 1 ) {
+							isQEDcMC_mini = 2;
 							cout << "different cuts!" << endl;
-							cout << "passcut = " << passcut << endl;
-							cout << "isQEDcMC_mini = " << isQEDcMC_mini << endl;
 						}
 					}
+					//keep orginal QEDc events out.
+					if( isQEDcMC_mini == 2 ) continue;
 
 					if( n_particle_eta[3] < 2 ){
 						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[0][generator_index]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
