@@ -406,11 +406,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					if( (ifile_==1 && ievent<3e7) || (ifile_==2 && ievent<44999982) && isQEDcMC_mini==0 ){
 						//check all cuts again:
 						int passcut = 1;
-						if( eMC.E() < 1.5 ) passcut = 0;
+						if( eMC.E() < 0.5 ) passcut = 0;
 						if( eMC.Theta()*TMath::RadToDeg()>178. || eMC.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
-						if( eGamma.E() < 1.5 ) passcut = 0;
+						if( eGamma.E() < 0.5 ) passcut = 0;
 						if( eGamma.Theta()*TMath::RadToDeg()>178. || eGamma.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
-						if( sumEgamma.Pt() > 5. ) passcut = 0;
+						if( sumEgamma.Pt() > 20. ) passcut = 0;
 						if( sumEgamma.E() < 15. ) passcut = 0;
 						if( sumEgamma.M() > 310. || sumEgamma.M() < 1.5 ) passcut = 0;
 						Double_t dphi=fabs(remainder(eMC.Phi()+3.1415-eGamma.Phi(),2.*3.1415)*180./3.1415);
