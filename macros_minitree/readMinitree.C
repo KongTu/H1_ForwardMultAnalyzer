@@ -402,6 +402,20 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					eGamma.SetPxPyPzE(phoPxMC_mini[itype],phoPyMC_mini[itype],phoPzMC_mini[itype],phoEMC_mini[itype]);
 					if( eGamma.E() <= 0 ) continue;
 					sumEgamma = eMC+eGamma;
+					//try to make additional cuts:
+					if( ifile_==1 && ievent<3e7 && isQEDcMC_mini==0 ){
+						//check all cuts again:
+						int passcut = 1;
+						if( eMC.E() < 1.5 ) passcut = 0;
+						if( eMC.Theta()*TMath::RadToDeg()>178. || eMC.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
+						if( eGamma.Theta()*TMath::RadToDeg()>178. || eGamma.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
+						if( sumEgamma.Pt() > 20. ) passcut = 0;
+						if( sumEgamma.E() < 15. ) passcut = 0;
+						if( sumEgamma.M() > 310. || sumEgamma.M() < 1.5 ) passcut = 0;
+
+						if( passcut != isQEDcMC_mini ) cout << "different cuts!" << endl;
+					}
+
 					if( n_particle_eta[3] < 2 ){
 						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[0][generator_index]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
 						h_eGammaPhiMC_allQ2y[0][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
