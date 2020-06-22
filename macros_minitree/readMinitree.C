@@ -395,31 +395,30 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				else generator_index=1;
 			}
 			//filling QED Compton delta phi
-			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini >= 0) {
+			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini != 2) {
 				TLorentzVector eMC;eMC.SetPxPyPzE(elecPxMC_mini,elecPyMC_mini,elecPzMC_mini,elecEMC_mini);
 				TLorentzVector eGamma, sumEgamma;
 				for(int itype=0;itype<3;itype++){
 					eGamma.SetPxPyPzE(phoPxMC_mini[itype],phoPyMC_mini[itype],phoPzMC_mini[itype],phoEMC_mini[itype]);
 					if( eGamma.E() <= 0 ) continue;
 					sumEgamma = eMC+eGamma;
-					//try to make additional cuts:
-					if( (ifile_==1 && ievent<3e7) || (ifile_==2 && ievent<44999982) && (isQEDcMC_mini==0) ){
-						//check all cuts again:
-						int passcut = 1;
-						if( eMC.E() < 0.2 ) passcut = 0;
-						if( eMC.Theta()*TMath::RadToDeg()>179.5 || eMC.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
-						if( eGamma.E() < 0.2 ) passcut = 0;
-						if( eGamma.Theta()*TMath::RadToDeg()>179.5 || eGamma.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
-						if( sumEgamma.Pt() > 25. ) passcut = 0;
-						if( sumEgamma.E() < 15. ) passcut = 0;
-						if( sumEgamma.M() > 310. || sumEgamma.M() < 1.5 ) passcut = 0;
-						Double_t dphi=fabs(remainder(eMC.Phi()+3.1415-eGamma.Phi(),2.*3.1415)*180./3.1415);
-						if( dphi > 50. ) passcut = 0;
-						if(n_particle_eta[3]<2&&passcut==1) isQEDcMC_mini=2;
-					}
-					//keep orginal QEDc events out.
-					if( isQEDcMC_mini == 2 ) continue;
-
+					// //try to make additional cuts:
+					// if( (ifile_==1 && ievent<3e7) || (ifile_==2 && ievent<44999982) && (isQEDcMC_mini==0) ){
+					// 	//check all cuts again:
+					// 	int passcut = 1;
+					// 	if( eMC.E() < 0.2 ) passcut = 0;
+					// 	if( eMC.Theta()*TMath::RadToDeg()>179.5 || eMC.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
+					// 	if( eGamma.E() < 0.2 ) passcut = 0;
+					// 	if( eGamma.Theta()*TMath::RadToDeg()>179.5 || eGamma.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
+					// 	if( sumEgamma.Pt() > 25. ) passcut = 0;
+					// 	if( sumEgamma.E() < 15. ) passcut = 0;
+					// 	if( sumEgamma.M() > 310. || sumEgamma.M() < 1.5 ) passcut = 0;
+					// 	Double_t dphi=fabs(remainder(eMC.Phi()+3.1415-eGamma.Phi(),2.*3.1415)*180./3.1415);
+					// 	if( dphi > 50. ) passcut = 0;
+					// 	if(n_particle_eta[3]<2&&passcut==1) isQEDcMC_mini=2;
+					// }
+					// //keep orginal QEDc events out.
+					// if( isQEDcMC_mini == 2 ) continue;
 					if( n_particle_eta[3] < 2 ){
 						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[0][generator_index]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
 						h_eGammaPhiMC_allQ2y[0][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
