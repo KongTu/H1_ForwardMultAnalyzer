@@ -413,7 +413,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						if( sumEgamma.E() < 15. ) passcut = 0;
 						if( sumEgamma.M() > 310. || sumEgamma.M() < 1.5 ) passcut = 0;
 
-						if( passcut != isQEDcMC_mini ) cout << "different cuts!" << endl;
+						if( passcut != isQEDcMC_mini ) {
+							cout << "different cuts!" << endl;
+							cout << "passcut = " << passcut << endl;
+							cout << "isQEDcMC_mini = " << isQEDcMC_mini << endl;
+						}
 					}
 
 					if( n_particle_eta[3] < 2 ){
