@@ -221,8 +221,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("vertex_mini",myEvent.vertex_mini,"vertex_mini[3]/F");
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
-   outtree->Branch("yMC_mini",&myEvent.yMC_mini,"yMC_mini/F");
-   outtree->Branch("Q2MC_mini",&myEvent.Q2MC_mini,"Q2MC_mini/F");
+   // outtree->Branch("yMC_mini",&myEvent.yMC_mini,"yMC_mini/F");
+   // outtree->Branch("Q2MC_mini",&myEvent.Q2MC_mini,"Q2MC_mini/F");
 
    outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
    outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
@@ -616,26 +616,51 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.totalMultMC_mini = (int) (Ntracks_eta_p_MC+Ntracks_eta_m_MC);
 
             //gen level QED Compton
-            //this cut is to remove overlaps when mixing COMPTON20 and DJANGOH/RAPGAP
-            if(i<nonQEDc_events){
-               if(isQEDc==1){myEvent.isQEDcMC_mini = 2;}
-               else{myEvent.isQEDcMC_mini = isQEDc;}
-            }
-            else{
-               myEvent.isQEDcMC_mini = isQEDc;
-            }
-            TLorentzVector eMC, gammaMC;
+            TLorentzVector eMC, eGamma,sumEgamma;
             eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
             myEvent.elecPxMC_mini = eMC.Px();
             myEvent.elecPyMC_mini = eMC.Py();
             myEvent.elecPzMC_mini = eMC.Pz();
             myEvent.elecEMC_mini = eMC.E();
             for(int itype=0;itype<3;itype++){
-               gammaMC.SetPxPyPzE(radPhoPxMC[itype],radPhoPyMC[itype],radPhoPzMC[itype],radPhoEMC[itype]);
-               myEvent.phoPxMC_mini[itype] = gammaMC.Px();
-               myEvent.phoPyMC_mini[itype] = gammaMC.Py();
-               myEvent.phoPzMC_mini[itype] = gammaMC.Pz();
-               myEvent.phoEMC_mini[itype] = gammaMC.E();
+               eGamma.SetPxPyPzE(radPhoPxMC[itype],radPhoPyMC[itype],radPhoPzMC[itype],radPhoEMC[itype]);
+               myEvent.phoPxMC_mini[itype] = eGamma.Px();
+               myEvent.phoPyMC_mini[itype] = eGamma.Py();
+               myEvent.phoPzMC_mini[itype] = eGamma.Pz();
+               myEvent.phoEMC_mini[itype] = eGamma.E();
+            }
+            //this cut is to remove overlaps when mixing COMPTON20 and DJANGOH/RAPGAP
+            if(i<nonQEDc_events){
+               if(isQEDc==1){myEvent.isQEDcMC_mini = 2;}
+               else{
+                  //try to make additional cuts:
+                  myEvent.isQEDcMC_mini = isQEDc;
+                  for(int itype=0;itype<3;itype++){
+                     int passcut = 1;
+                     TLorentzVector eGamma_CUT; eGamma_CUT.SetPxPyPzE(myEvent.phoPxMC_mini[itype],myEvent.phoPyMC_mini[itype],myEvent.phoPzMC_mini[itype],myEvent.phoEMC_mini[itype]);
+                     TLorentzVector sumEgamma_CUT = eGamma_CUT+eMC;
+                     if( eGamma_CUT.E() <=0. ) continue;
+                     if( eMC.E() < 0.2 ) passcut = 0;
+                     if( eMC.Theta()*TMath::RadToDeg()>179.5 || eMC.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
+                     if( eGamma_CUT.E() < 0.2 ) passcut = 0;
+                     if( eGamma_CUT.Theta()*TMath::RadToDeg()>179.5 || eGamma_CUT.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
+                     if( sumEgamma_CUT.Pt() > 25. ) passcut = 0;
+                     if( sumEgamma_CUT.E() < 15. ) passcut = 0;
+                     if( sumEgamma_CUT.M() > 310. || sumEgamma_CUT.M() < 1.5 ) passcut = 0;
+                     Double_t dphi=fabs(remainder(eMC.Phi()+3.1415-eGamma_CUT.Phi(),2.*3.1415)*180./3.1415);
+                     if( dphi > 50. ) passcut = 0;
+                     //redefine QEDc cuts
+                     if(myEvent.totalMultMC_mini<=2&&passcut==1) {
+                        myEvent.isQEDcMC_mini = 2;
+                     }
+                     else{
+                        myEvent.isQEDcMC_mini = 0;
+                     }
+                  }//loop over 3 types of photons
+               }//isQEDc=0 loop
+            }//non-COMPTON20 if
+            else{
+               myEvent.isQEDcMC_mini = isQEDc;
             }
             //end QED Compton
 
