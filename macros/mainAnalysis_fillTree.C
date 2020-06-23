@@ -174,31 +174,33 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    int dis_events = 0;
    int nonQEDc_events = 0;
    if( doRapgap_ && doGen_ ){
-      tree->Add("../batch/output/mc_9299_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9300_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9301_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9302_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9303_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9304_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9305_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9306_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_9299_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_9300_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_9301_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_9302_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_9303_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_9304_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_9305_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_9306_hadCaliNewKine/*.root");
 
-      // //save the number of events that separate inclusive DIS to diffractive DIS
-         dis_events = tree->GetEntries();
-      tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
-         nonQEDc_events = tree->GetEntries();
-      tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
+      // // //save the number of events that separate inclusive DIS to diffractive DIS
+      //    dis_events = tree->GetEntries();
+      // tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
+      //    nonQEDc_events = tree->GetEntries();
+      // tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
 
       //nonradiative MCs
-      // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
+      tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
+      dis_events = tree->GetEntries();
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
-         nonQEDc_events = tree->GetEntries();
-      tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
+      //    nonQEDc_events = tree->GetEntries();
+      // tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
       
-      // tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
+      tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
+      nonQEDc_events = tree->GetEntries();
       //pythia
       // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
    }
@@ -515,7 +517,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             if( vtxZ_weight == 0. ) vtxZ_weight = 1.0;
             if( doRapgap_ ){//rapgap has diffractive MCs
                if( i < dis_events ){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./68.);//data/mc Lumi
+                  evt_weight = w*y_weight*vtxZ_weight*(136./204);//68,RAD,204 for NRAD //data/mc Lumi
                }
                // else if( i >= dis_events && i < 1.0*(tree->GetEntries()-dis_events)+dis_events ){
                else if( i >= dis_events && i < nonQEDc_events ){
@@ -526,7 +528,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                }
             }
             else{
-               if( i<nonQEDc_events ) evt_weight = w*y_weight*vtxZ_weight*(136./363);
+               if( i<nonQEDc_events ) evt_weight = w*y_weight*vtxZ_weight*(136./162.03);//162.03 for NRAD, 363 for RAD
                if( i>= nonQEDc_events ) evt_weight = w*y_weight*vtxZ_weight*(136./1414.1);
             }
          }
