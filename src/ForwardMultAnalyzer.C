@@ -757,6 +757,16 @@ int main(int argc, char* argv[]) {
                   v0s_status = 0;
                }
             }
+            //test
+            if( part->GetStatus()==0 ){
+               int parent_index=part->GetMother1();
+               H1PartMC *part_parent=mcpart[parent_index];
+               if( part_parent->GetPDG() == 310 ) {
+                  cout << "K0s IS HERE" << endl;
+               }
+            }
+            //endtest
+            
             //remember the largest quark or anti-quark flavor.
             
             if( fabs(part->GetPDG()) < 10 ){
