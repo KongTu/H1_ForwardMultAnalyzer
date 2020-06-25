@@ -761,33 +761,47 @@ int main(int argc, char* argv[]) {
             
             int parent_index1=part->GetMother1();
             int parent_index2=part->GetMother2();
-            if( parent_index1!= -1 ){
+            if( parent_index1!=-1 && parent_index2==-1 ){
                H1PartMC *part_parent1=mcpart[parent_index1];
-               if( part_parent1->GetPDG() == 3122 ){
-                  cout << "1. K0s IS HERE" << endl;
-                  if( part_parent1->GetMother1() != -1 ){
-                     cout << "1. what is grand mother " << endl;
-                     H1PartMC *part_grandparent1=mcpart[part_parent1->GetMother1()];
-                     cout << "1. pdg of grand mother: " << part_grandparent1->GetPDG() << endl;
+               if(part_parent1->GetPDG() == 310 || fabs(part_parent1->GetPDG())=3122 ){
+                  cout << "case 1 PDG() = " << part_parent1->GetPDG() << endl;
+                  cout << "check if they have grand parent ~ "<< endl;
+                  if( part_parent1->GetMother1() == -1 && part_parent1->GetMother2() == -1 ){
+                     cout << "primary v0s" << endl;
+                  }
+                  else{
+                     cout << "additional mother is found!" << endl;
                   }
                }
             }
-            else{
-               cout << "primary lambda 1" << endl;
-            }
-            if( parent_index2!= -1 ){
+            else if( parent_index1==-1 && parent_index2!=-1 ){
                H1PartMC *part_parent2=mcpart[parent_index2];
-               if( part_parent2->GetPDG() == 3122 ){
-                  cout << "2. K0s IS HERE" << endl;
-                  if( part_parent2->GetMother2() != -1 ){
-                     cout << "2. what is grand mother " << endl;
-                     H1PartMC *part_grandparent2=mcpart[part_parent2->GetMother2()];
-                     cout << "2. pdg of grand mother: " << part_grandparent2->GetPDG() << endl;
+               if(part_parent2->GetPDG() == 310 || fabs(part_parent2->GetPDG())=3122 ){
+                  cout << "case 2 PDG() = " << part_parent2->GetPDG() << endl;
+                  cout << "check if they have grand parent ~ "<< endl;
+                  if( part_parent2->GetMother1() == -1 && part_parent2->GetMother2() == -1 ){
+                     cout << "primary v0s" << endl;
+                  }
+                  else{
+                     cout << "additional mother is found!" << endl;
                   }
                }
             }
-            else{
-               cout << "primary lambda 2" << endl;
+            else if( parent_index1!=-1 && parent_index2!=-1 ){
+               for(int iv0s=parent_index1; iv0s<parent_index2+1; iv0s++){
+                  H1PartMC *part_parent3=mcpart[iv0s];
+                  if(part_parent3->GetPDG() == 310 || fabs(part_parent3->GetPDG())=3122 ){
+                     cout << "case 3 PDG() = " << part_parent3->GetPDG() << endl;
+                     cout << "check if they have grand parent ~ "<< endl;
+                     if( part_parent3->GetMother1() == -1 && part_parent3->GetMother2() == -1 ){
+                        cout << "primary v0s" << endl;
+                     }
+                     else{
+                        cout << "additional mother is found!" << endl;
+                     }
+                  }
+               }
+
             }
             
             //endtest
