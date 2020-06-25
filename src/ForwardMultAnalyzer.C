@@ -763,7 +763,7 @@ int main(int argc, char* argv[]) {
             int parent_index2=part->GetMother2();
             if( parent_index1!=-1 && parent_index2==-1 ){
                H1PartMC *part_parent1=mcpart[parent_index1];
-               if(part_parent1->GetPDG() == 310 || fabs(part_parent1->GetPDG())=3122 ){
+               if( part_parent1->GetPDG() == 310 || fabs(part_parent1->GetPDG())==3122 ){
                   cout << "case 1 PDG() = " << part_parent1->GetPDG() << endl;
                   cout << "check if they have grand parent ~ "<< endl;
                   if( part_parent1->GetMother1() == -1 && part_parent1->GetMother2() == -1 ){
@@ -776,7 +776,7 @@ int main(int argc, char* argv[]) {
             }
             if( parent_index1==-1 && parent_index2!=-1 ){
                H1PartMC *part_parent2=mcpart[parent_index2];
-               if(part_parent2->GetPDG() == 310 || fabs(part_parent2->GetPDG())=3122 ){
+               if(part_parent2->GetPDG() == 310 || fabs(part_parent2->GetPDG())==3122 ){
                   cout << "case 2 PDG() = " << part_parent2->GetPDG() << endl;
                   cout << "check if they have grand parent ~ "<< endl;
                   if( part_parent2->GetMother1() == -1 && part_parent2->GetMother2() == -1 ){
@@ -790,7 +790,7 @@ int main(int argc, char* argv[]) {
             if( parent_index1!=-1 && parent_index2!=-1 ){
                for(int iv0s=parent_index1; iv0s<parent_index2+1; iv0s++){
                   H1PartMC *part_parent3=mcpart[iv0s];
-                  if(part_parent3->GetPDG() == 310 || fabs(part_parent3->GetPDG())=3122 ){
+                  if(part_parent3->GetPDG() == 310 || fabs(part_parent3->GetPDG())==3122 ){
                      cout << "case 3 PDG() = " << part_parent3->GetPDG() << endl;
                      cout << "check if they have grand parent ~ "<< endl;
                      if( part_parent3->GetMother1() == -1 && part_parent3->GetMother2() == -1 ){
