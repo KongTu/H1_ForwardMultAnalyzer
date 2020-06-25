@@ -758,15 +758,34 @@ int main(int argc, char* argv[]) {
                }
             }
             //test
-            if( part->GetStatus()==0 ){
-               int parent_index=part->GetMother1();
-               H1PartMC *part_parent=mcpart[parent_index];
-               if( part_parent->GetPDG() == 310 ) {
-                  cout << "K0s IS HERE" << endl;
+            
+            int parent_index1=part->GetMother1();
+            int parent_index2=part->GetMother2();
+            if( parent_index1!= -1 ){
+               H1PartMC *part_parent1=mcpart[parent_index1];
+               if( part_parent1->GetPDG() == 310 ){
+                  cout << "1. K0s IS HERE" << endl;
+                  if( part_parent1->GetMother1() != -1 ){
+                     cout << "1. what is grand mother " << endl;
+                     H1PartMC *part_grandparent1=mcpart[part_parent1->GetMother1()];
+                     cout << "1. pdg of grand mother: " << part_grandparent1->GetPDG() << endl;
+                  }
                }
             }
-            //endtest
+            if( parent_index2!= -1 ){
+               H1PartMC *part_parent2=mcpart[parent_index2];
+               if( part_parent2->GetPDG() == 310 ){
+                  cout << "2. K0s IS HERE" << endl;
+                  if( part_parent2->GetMother2() != -1 ){
+                     cout << "2. what is grand mother " << endl;
+                     H1PartMC *part_grandparent2=mcpart[part_parent2->GetMother2()];
+                     cout << "2. pdg of grand mother: " << part_grandparent2->GetPDG() << endl;
+                  }
+               }
+            }
             
+            //endtest
+
             //remember the largest quark or anti-quark flavor.
             
             if( fabs(part->GetPDG()) < 10 ){
