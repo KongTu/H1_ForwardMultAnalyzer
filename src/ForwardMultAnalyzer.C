@@ -758,7 +758,6 @@ int main(int argc, char* argv[]) {
                }
             }
             //test
-            
             int parent_index1=part->GetMother1();
             int parent_index2=part->GetMother2();
             if( parent_index1!=-1 && parent_index2==-1 ){
@@ -776,37 +775,7 @@ int main(int argc, char* argv[]) {
                      cout << "additional mother is found!" << endl;
                   }
                }
-            }
-            if( parent_index1==-1 && parent_index2!=-1 ){
-               H1PartMC *part_parent2=mcpart[parent_index2];
-               if(part_parent2->GetPDG() == 310 || fabs(part_parent2->GetPDG())==3122 ){
-                  cout << "case 2 PDG() = " << part_parent2->GetPDG() << endl;
-                  cout << "check if they have grand parent ~ "<< endl;
-                  if( part_parent2->GetMother1() == -1 && part_parent2->GetMother2() == -1 ){
-                     cout << "primary v0s" << endl;
-                  }
-                  else{
-                     cout << "additional mother is found!" << endl;
-                  }
-               }
-            }
-            if( parent_index1!=-1 && parent_index2!=-1 ){
-               for(int iv0s=parent_index1; iv0s<parent_index2+1; iv0s++){
-                  H1PartMC *part_parent3=mcpart[iv0s];
-                  if(part_parent3->GetPDG() == 310 || fabs(part_parent3->GetPDG())==3122 ){
-                     cout << "case 3 PDG() = " << part_parent3->GetPDG() << endl;
-                     cout << "check if they have grand parent ~ "<< endl;
-                     if( part_parent3->GetMother1() == -1 && part_parent3->GetMother2() == -1 ){
-                        cout << "primary v0s" << endl;
-                     }
-                     else{
-                        cout << "additional mother is found!" << endl;
-                     }
-                  }
-               }
-
-            }
-            
+            }        
             //endtest
 
             //remember the largest quark or anti-quark flavor.
