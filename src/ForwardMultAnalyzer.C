@@ -763,7 +763,7 @@ int main(int argc, char* argv[]) {
             int parent_index2=part->GetMother2();
             if( parent_index1!= -1 ){
                H1PartMC *part_parent1=mcpart[parent_index1];
-               if( part_parent1->GetPDG() == 310 ){
+               if( part_parent1->GetPDG() == 3122 ){
                   cout << "1. K0s IS HERE" << endl;
                   if( part_parent1->GetMother1() != -1 ){
                      cout << "1. what is grand mother " << endl;
@@ -774,7 +774,7 @@ int main(int argc, char* argv[]) {
             }
             if( parent_index2!= -1 ){
                H1PartMC *part_parent2=mcpart[parent_index2];
-               if( part_parent2->GetPDG() == 310 ){
+               if( part_parent2->GetPDG() == 3122 ){
                   cout << "2. K0s IS HERE" << endl;
                   if( part_parent2->GetMother2() != -1 ){
                      cout << "2. what is grand mother " << endl;
