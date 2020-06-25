@@ -766,7 +766,10 @@ int main(int argc, char* argv[]) {
                if( part_parent1->GetPDG() == 310 || fabs(part_parent1->GetPDG())==3122 ){
                   cout << "case 1 PDG() = " << part_parent1->GetPDG() << endl;
                   cout << "check if they have grand parent ~ "<< endl;
-                  if( part_parent1->GetMother1() == -1 && part_parent1->GetMother2() == -1 ){
+                  cout << "part_parent1->GetMother1() = " << part_parent1->GetMother1() << endl;
+                  cout << "part_parent1->GetMother2() = " << part_parent1->GetMother2() << endl;
+
+                  if( part_parent1->GetMother1() == -1 ){
                      cout << "primary v0s" << endl;
                   }
                   else{
