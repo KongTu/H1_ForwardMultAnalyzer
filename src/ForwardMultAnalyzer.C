@@ -774,7 +774,7 @@ int main(int argc, char* argv[]) {
                   }
                }
             }
-            else if( parent_index1==-1 && parent_index2!=-1 ){
+            if( parent_index1==-1 && parent_index2!=-1 ){
                H1PartMC *part_parent2=mcpart[parent_index2];
                if(part_parent2->GetPDG() == 310 || fabs(part_parent2->GetPDG())=3122 ){
                   cout << "case 2 PDG() = " << part_parent2->GetPDG() << endl;
@@ -787,7 +787,7 @@ int main(int argc, char* argv[]) {
                   }
                }
             }
-            else if( parent_index1!=-1 && parent_index2!=-1 ){
+            if( parent_index1!=-1 && parent_index2!=-1 ){
                for(int iv0s=parent_index1; iv0s<parent_index2+1; iv0s++){
                   H1PartMC *part_parent3=mcpart[iv0s];
                   if(part_parent3->GetPDG() == 310 || fabs(part_parent3->GetPDG())=3122 ){
