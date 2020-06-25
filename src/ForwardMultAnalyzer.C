@@ -772,6 +772,9 @@ int main(int argc, char* argv[]) {
                   }
                }
             }
+            else{
+               cout << "primary lambda 1" << endl;
+            }
             if( parent_index2!= -1 ){
                H1PartMC *part_parent2=mcpart[parent_index2];
                if( part_parent2->GetPDG() == 3122 ){
@@ -782,6 +785,9 @@ int main(int argc, char* argv[]) {
                      cout << "2. pdg of grand mother: " << part_grandparent2->GetPDG() << endl;
                   }
                }
+            }
+            else{
+               cout << "primary lambda 2" << endl;
             }
             
             //endtest
