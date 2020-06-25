@@ -174,35 +174,41 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    int dis_events = 0;
    int nonQEDc_events = 0;
    if( doRapgap_ && doGen_ ){
-      tree->Add("../batch/output/mc_9299_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9300_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9301_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9302_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9303_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9304_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9305_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9306_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9299_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9300_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9301_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9302_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9303_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9304_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9305_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9306_hadCaliNewKine/*.root");
 
       // //save the number of events that separate inclusive DIS to diffractive DIS
          dis_events = tree->GetEntries();
-      tree->Add("../batch/output/mc_9015_hadCaliNewKine_V0sWeight/*.root");
-         nonQEDc_events = tree->GetEntries();
+      tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
+         // nonQEDc_events = tree->GetEntries();
+      //   // COMPTON20
       // tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
+
+      //pythia
+      nonQEDc_events = tree->GetEntries();//use it for photoproduction as well "nonQEDc" just a name
+      tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
 
       //nonradiative MCs
       // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
       // dis_events = tree->GetEntries();
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_8927_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
       //    nonQEDc_events = tree->GetEntries();
+      //    //COMPTON20
       // tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
       
       // tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
       nonQEDc_events = tree->GetEntries();
       //pythia
-      // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
    }
    else if( !doGen_ ){
       tree->Add("../batch/output/data_highE_06_hadCaliNewKine/*.root");
@@ -503,6 +509,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       for(int i=start;i<end;i++) {
          tree->GetEntry(i);
 
+         //this is to remove overlap for pythia64
+         if( i>=nonQEDc_events && Q2MC_es>2.0 ) continue;
+
          //assigning all reweights:
          double evt_weight = 1.;
          if( !doGen_ && !doReweight_ ){
@@ -524,12 +533,12 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                   evt_weight = w*y_weight*vtxZ_weight*(136./(1.0*219.35));//data/mc Lumi
                }
                else if( i >= nonQEDc_events && i < tree->GetEntries()){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./1414.1);
+                  evt_weight = w*y_weight*vtxZ_weight*(136./449);//1414.1 for COMPTON20, 449 q2<2 for PYTHIA64
                }
             }
             else{
                if( i<nonQEDc_events ) evt_weight = w*y_weight*vtxZ_weight*(136./363);//162.03 for NRAD, 363 for RAD
-               if( i>= nonQEDc_events ) evt_weight = w*y_weight*vtxZ_weight*(136./1414.1);
+               if( i>= nonQEDc_events ) evt_weight = w*y_weight*vtxZ_weight*(136./449.); //1414.1 for COMPTON20, 449 q2<2 for PYTHIA64
             }
          }
          else if( doGen_ && !doReweight_ ) {
