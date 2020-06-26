@@ -356,19 +356,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 			}
 
-			int Q2_INDEX_elec = -1;
-			for(int iQ2 = 0; iQ2 < 4; iQ2++){
-				if(Q2MC_mini > Q2_bins[iQ2] && Q2MC_mini < Q2_bins[iQ2+1] ){
-					Q2_INDEX_elec = iQ2;
-				}
-			}
-			int y_INDEX_elec = -1;
-			for(int iy = 0; iy < 4; iy++){
-				if(yMC_mini > ybins[iy] && yMC_mini < ybins[iy+1] ){
-					y_INDEX_elec = iy;
-				}
-			}
-
 			for(int itrk = 0; itrk < nMCtrack_mini; itrk++){
 				if( TMath::Hypot(pxMC_mini[itrk],pyMC_mini[itrk]) > 0.15 ){
 					if( fabs(etaMC_mini[itrk]) < 1.6 ){
@@ -399,6 +386,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				if(ievent<44999982) generator_index=0;
 				else generator_index=1;
 			}
+
+			cout << "isQEDcMC_mini ~ " << isQEDcMC_mini << endl;
 			//filling QED Compton delta phi
 			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini != 2) {
 				TLorentzVector eMC;eMC.SetPxPyPzE(elecPxMC_mini,elecPyMC_mini,elecPzMC_mini,elecEMC_mini);
