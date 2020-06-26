@@ -241,7 +241,7 @@ struct MyEvent {
    Int_t elecTypeREC;
 
    Float_t radPhoPxREC,radPhoPyREC,radPhoPzREC,radPhoEREC;//radiative photon
-   Int_t isQEDc;
+   Int_t isQEDc,isQEDbkg;
    Float_t dRRadPhot,dPhiRadPhot;
 
    Float_t xREC,yREC,Q2REC;
@@ -357,6 +357,7 @@ int main(int argc, char* argv[]) {
    TH1D* h_dRRadPhot = new TH1D("h_dRRadPhot",";dR",300,-16,16);
    TH1D* h_dRAllPhot = new TH1D("h_dRAllPhot",";dR",300,-16,16);
    TH1D* h_dPhiRadPhot = new TH1D("h_dPhiRadPhot",";dphi",300,-6.28,6.28);
+   TH1D* h_EpzGEN = new TH1D("h_EpzGEN",";E-pz",300,0,80);
 
    TTree *output=new TTree("properties","properties");
    MyEvent myEvent;
@@ -393,6 +394,7 @@ int main(int argc, char* argv[]) {
    output->Branch("radPhoPzMC",&myEvent.radPhoPzMC,"radPhoPzMC[3]/F");
    output->Branch("radPhoEMC",&myEvent.radPhoEMC,"radPhoEMC[3]/F");
    output->Branch("isQEDc",&myEvent.isQEDc,"isQEDc/I");
+   output->Branch("isQEDbkg",&myEvent.isQEDbkg,"isQEDbkg/I");
    output->Branch("dRRadPhot",&myEvent.dRRadPhot,"dRRadPhot/F");
    output->Branch("dPhiRadPhot",&myEvent.dPhiRadPhot,"dPhiRadPhot/F");
    output->Branch("xGKI",&myEvent.xGKI,"xGKI/F");
@@ -633,7 +635,6 @@ int main(int argc, char* argv[]) {
             myEvent.radPhoPyMC[i] = gammaMC.Py();
             myEvent.radPhoPzMC[i] = gammaMC.Pz();
             myEvent.radPhoEMC[i] = gammaMC.E();
-            if( gammaMC.E() > 0 && detectQedc.IsQedcEvent() ) cout << "type of photon ~ "<< i << " E " << gammaMC.E() << endl;
          }
      
          TLorentzVector ebeam_MC_lab
@@ -650,6 +651,7 @@ int main(int argc, char* argv[]) {
          int number_of_radPhot = 0;
          myEvent.dRRadPhot = -99.;
          myEvent.dPhiRadPhot = -99.;
+         TLorentzVector genPartSum(0.,0.,0.,0.);
          // add radiative photon(s) in a cone
          TLorentzVector escatPhot_MC_lab(escat0_MC_lab);
          set<int> isElectron;
@@ -657,6 +659,13 @@ int main(int argc, char* argv[]) {
          for(int i=0;i<mcpart.GetEntries();i++) {
             H1PartMC *part=mcpart[i];
             int status=part->GetStatus();
+            //check isQEDbkg
+            if( status==0 && i!=mcPartId.GetIdxScatElectron() ){
+               TLorentzVector genpart = part->GetFourVector();
+               if(genpart.Theta()*TMath::RadToDeg() > 177.5 || genpart.Theta()*TMath::RadToDeg() < 15.0 ) continue;
+               genPartSum += genpart;
+            }
+            //fsr
             if((status==0||status==202)&&(part->GetPDG()==22)){  
                TLorentzVector p(part->GetFourVector());
                h_dRAllPhot->Fill( p.DeltaR(escat0_MC_lab) );
@@ -677,6 +686,12 @@ int main(int argc, char* argv[]) {
                myEvent.dPhiRadPhot = p.DeltaPhi(escat0_MC_lab);
             }
          }
+
+         double EpzGEN_CUT=escat0_MC_lab.E()+genPartSum.E()-escat0_MC_lab.Pz()-genPartSum.Pz();
+         h_EpzGEN->Fill( EpzGEN_CUT );
+         myEvent.isQEDbkg = 0;
+         if(EpzGEN_CUT>35. && EpzGEN_CUT<70.) myEvent.isQEDbkg=1;
+
          myEvent.elecEradMC=escatPhot_MC_lab.E()-escat0_MC_lab.E();
          myEvent.elecPxMC=escatPhot_MC_lab.X();
          myEvent.elecPyMC=escatPhot_MC_lab.Y();
@@ -750,32 +765,32 @@ int main(int argc, char* argv[]) {
             // skip particles counted as electron
             if(isElectron.find(i)!=isElectron.end()) continue;
 
-            int v0s_status = -1;
-            if(part->GetMother1() != -1) {
-               H1PartMC *part_parent=mcpart[part->GetMother1()];
-               if(fabs(part_parent->GetPDG()) == 310 || fabs(part_parent->GetPDG()) == 3122){
-                  v0s_status = 0;
-               }
-            }
+            // int v0s_status = -1;
+            // if(part->GetMother1() != -1) {
+            //    H1PartMC *part_parent=mcpart[part->GetMother1()];
+            //    if(fabs(part_parent->GetPDG()) == 310 || fabs(part_parent->GetPDG()) == 3122){
+            //       v0s_status = 0;
+            //    }
+            // }
             //test
-            int parent_index1=part->GetMother1();
-            int parent_index2=part->GetMother2();
-            if( parent_index1!=-1 && parent_index2==-1 ){
-               H1PartMC *part_parent1=mcpart[parent_index1];
-               if( part_parent1->GetPDG() == 310 || fabs(part_parent1->GetPDG())==3122 ){
-                  cout << "case 1 PDG() = " << part_parent1->GetPDG() << endl;
-                  cout << "check if they have grand parent ~ "<< endl;
-                  cout << "part_parent1->GetMother1() = " << part_parent1->GetMother1() << endl;
-                  cout << "part_parent1->GetMother2() = " << part_parent1->GetMother2() << endl;
+            // int parent_index1=part->GetMother1();
+            // int parent_index2=part->GetMother2();
+            // if( parent_index1!=-1 && parent_index2==-1 ){
+            //    H1PartMC *part_parent1=mcpart[parent_index1];
+            //    if( part_parent1->GetPDG() == 310 || fabs(part_parent1->GetPDG())==3122 ){
+            //       cout << "case 1 PDG() = " << part_parent1->GetPDG() << endl;
+            //       cout << "check if they have grand parent ~ "<< endl;
+            //       cout << "part_parent1->GetMother1() = " << part_parent1->GetMother1() << endl;
+            //       cout << "part_parent1->GetMother2() = " << part_parent1->GetMother2() << endl;
 
-                  if( part_parent1->GetMother1() == -1 ){
-                     cout << "primary v0s" << endl;
-                  }
-                  else{
-                     cout << "additional mother is found!" << endl;
-                  }
-               }
-            }        
+            //       if( part_parent1->GetMother1() == -1 ){
+            //          cout << "primary v0s" << endl;
+            //       }
+            //       else{
+            //          cout << "additional mother is found!" << endl;
+            //       }
+            //    }
+            // }        
             //endtest
 
             //remember the largest quark or anti-quark flavor.
@@ -849,15 +864,15 @@ int main(int argc, char* argv[]) {
 
                      myEvent.isDaughtersMC[k] = 0;
                      //check V0s decay
-                     if( v0s_status==0 ){
-                        H1PartMC *part_V0s=mcpart[part->GetMother1()];
-                        if( fabs(part_V0s->GetPDG()) == 310 ){
-                           myEvent.isDaughtersMC[k] = 1;//K0s
-                        } 
-                        else if( fabs(part_V0s->GetPDG()) == 3122 ){
-                           myEvent.isDaughtersMC[k] = 2;//Lambdas
-                        }
-                     }
+                     // if( v0s_status==0 ){
+                     //    H1PartMC *part_V0s=mcpart[part->GetMother1()];
+                     //    if( fabs(part_V0s->GetPDG()) == 310 ){
+                     //       myEvent.isDaughtersMC[k] = 1;//K0s
+                     //    } 
+                     //    else if( fabs(part_V0s->GetPDG()) == 3122 ){
+                     //       myEvent.isDaughtersMC[k] = 2;//Lambdas
+                     //    }
+                     // }
                      //end V0s
                   }
                }
@@ -1567,12 +1582,12 @@ int main(int argc, char* argv[]) {
          for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
             int iMC=myEvent.imatchREC[iREC];
             int part=0;
-            int isDaugV0s = 0;
+            // int isDaugV0s = 0;
             if(iMC>=0) {
                int pdg=myEvent.idMC[iMC];
                if(pdg<0) pdg= -pdg;
                part= (pdg==211) ? 1 : ((pdg==321) ? 2 : 0);
-               if(myEvent.isDaughtersMC[iMC] > 0) isDaugV0s = 1;
+               // if(myEvent.isDaughtersMC[iMC] > 0) isDaugV0s = 1;
             }
             if(part) {
                myEvent.nucliaREC[iREC]=
@@ -1652,6 +1667,7 @@ int main(int argc, char* argv[]) {
     h_dRRadPhot->Write();
     h_dRAllPhot->Write();
     h_dPhiRadPhot->Write();
+    h_EpzGEN->Write();
 
     delete file;
 
