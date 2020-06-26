@@ -186,13 +186,13 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       // //save the number of events that separate inclusive DIS to diffractive DIS
          dis_events = tree->GetEntries();
       tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
-         // nonQEDc_events = tree->GetEntries();
+         nonQEDc_events = tree->GetEntries();
       //   // COMPTON20
       // tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
 
       //pythia
-      nonQEDc_events = tree->GetEntries();//use it for photoproduction as well "nonQEDc" just a name
-      tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
+      // nonQEDc_events = tree->GetEntries();//use it for photoproduction as well "nonQEDc" just a name
+      // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
 
       //nonradiative MCs
       // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
@@ -206,9 +206,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       // tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
       
       // tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
-      nonQEDc_events = tree->GetEntries();
+      // nonQEDc_events = tree->GetEntries();
       //pythia
-      tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
    }
    else if( !doGen_ ){
       tree->Add("../batch/output/data_highE_06_hadCaliNewKine/*.root");
@@ -229,8 +229,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("vertex_mini",myEvent.vertex_mini,"vertex_mini[3]/F");
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
-   // outtree->Branch("yMC_mini",&myEvent.yMC_mini,"yMC_mini/F");
-   // outtree->Branch("Q2MC_mini",&myEvent.Q2MC_mini,"Q2MC_mini/F");
 
    outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
    outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
@@ -626,7 +624,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             if( (Ntracks_eta_p_MC + Ntracks_eta_m_MC) == 0. ) etaAsymMC = -999.;
             myEvent.totalMultMC_mini = (int) (Ntracks_eta_p_MC+Ntracks_eta_m_MC);
             myEvent.isQEDcMC_mini = isQEDc;
-            
+
             //gen level QED Compton
             // TLorentzVector eMC, eGamma,sumEgamma;
             // eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
