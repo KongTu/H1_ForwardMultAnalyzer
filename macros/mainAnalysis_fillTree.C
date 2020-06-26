@@ -201,7 +201,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    else if( !doRapgap_ && doGen_){
       tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
       tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
-      //    nonQEDc_events = tree->GetEntries();
+         nonQEDc_events = tree->GetEntries();
       //    //COMPTON20
       // tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
       
