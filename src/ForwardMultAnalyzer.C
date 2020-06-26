@@ -689,8 +689,8 @@ int main(int argc, char* argv[]) {
 
          double EpzGEN_CUT=escat0_MC_lab.E()+genPartSum.E()-escat0_MC_lab.Pz()-genPartSum.Pz();
          h_EpzGEN->Fill( EpzGEN_CUT );
-         myEvent.isQEDbkg = 0;
-         if(EpzGEN_CUT>35. && EpzGEN_CUT<70.) myEvent.isQEDbkg=1;
+         myEvent.isQEDbkg = 1;
+         if(EpzGEN_CUT>35. && EpzGEN_CUT<70.) myEvent.isQEDbkg=0;
 
          myEvent.elecEradMC=escatPhot_MC_lab.E()-escat0_MC_lab.E();
          myEvent.elecPxMC=escatPhot_MC_lab.X();
@@ -719,7 +719,6 @@ int main(int argc, char* argv[]) {
             int elec_id = mcPartId.GetIdxScatElectron();
             int phot_id = mcPartId.GetIdxRadPhoton();
             if( i== phot_id ) continue;
-
             TLorentzVector p(part->GetFourVector());
             if( status != 0 || i == elec_id ) continue;  
             if( p.DeltaR(mcpart[elec_id]->GetFourVector())<ELEC_ISOLATION_CONE ) continue;
