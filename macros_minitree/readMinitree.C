@@ -27,10 +27,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		file = new TFile("../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine_June16.root");
 	}else if(ifile_ == 1) {
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_NRAD_Mix.root");
+		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_check.root");
 	}else if(ifile_ == 2){
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_NRAD_Mix.root");
+		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_check.root");
 	}
 	else if(ifile_ == 3){
 		file = new TFile("../new_output/mc_highE_PYTHIA6_noReweight_Tree_hadCaliNewKine_photoproduction.root");
@@ -41,10 +41,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine_June16.root";
 	}else if( ifile_ == 1 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_django_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_NRAD_Mix.root";
+		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_debug.root";
 	}else if( ifile_ == 2 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_NRAD_Mix.root";
+		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_debug.root";
 	}
 	else if( ifile_ == 3 ){
 		outname = "../minitree_output/Pn_hist_pythia_hadCaliNewKine_photoproduction.root";
@@ -232,6 +232,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_EpzElecPhotMC[4][4][2][2];
 	TH1D* h_EpzElecPhotMC_allQ2y[2][2];
 	TH2D* h_deltaPhiVsThetaMC[2][2];
+	
+	TH2D* h_gammaMCEnergyVsTheta_allQ2y[2][2];
+	TH2D* h_elecMCEnergyVsTheta_allQ2y[2][2];
 
 	TH2D* h_dRRadPhotVsMult[4][4]; 
 	TH2D* h_dPhiRadPhotVsMult[4][4];
@@ -257,6 +260,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			h_sumPtMC_allQ2y[k][l] = new TH1D(Form("h_sumPtMC_allQ2y_%d_%d",k,l),";sum pt",100,0,5);
 			h_EpzElecPhotMC_allQ2y[k][l] = new TH1D(Form("h_EpzElecPhotMC_allQ2y_%d_%d",k,l),";E-pz",100,0,70);
 			h_deltaPhiVsThetaMC[k][l] = new TH2D(Form("h_deltaPhiVsThetaMC_%d_%d",k,l),";theta;#Delta#phi",100,-3.15,3.15,100,-3.15,3.15);
+			h_gammaMCEnergyVsTheta_allQ2y[k][l] = new TH2D(Form("h_gammaMCEnergyVsTheta_allQ2y_%d_%d",k,l),";theta;energy",100,-3.15,3.15,500,0,50);
+			h_elecMCEnergyVsTheta_allQ2y[k][l] = new TH2D(Form("h_elecMCEnergyVsTheta_allQ2y_%d_%d",k,l),";theta;energy",100,-3.15,3.15,500,0,50);
 		}
 	}
 	for(int i=0;i<4;i++){
@@ -402,26 +407,17 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					eGamma.SetPxPyPzE(phoPxMC_mini[itype],phoPyMC_mini[itype],phoPzMC_mini[itype],phoEMC_mini[itype]);
 					if( eGamma.E() <= 0 ) continue;
 					sumEgamma = eMC+eGamma;
-					// //try to make additional cuts:
-					// if( (ifile_==1 && ievent<3e7) || (ifile_==2 && ievent<44999982) && (isQEDcMC_mini==0) ){
-					// 	//check all cuts again:
-					// 	int passcut = 1;
-					// 	if( eMC.E() < 0.2 ) passcut = 0;
-					// 	if( eMC.Theta()*TMath::RadToDeg()>179.5 || eMC.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
-					// 	if( eGamma.E() < 0.2 ) passcut = 0;
-					// 	if( eGamma.Theta()*TMath::RadToDeg()>179.5 || eGamma.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
-					// 	if( sumEgamma.Pt() > 25. ) passcut = 0;
-					// 	if( sumEgamma.E() < 15. ) passcut = 0;
-					// 	if( sumEgamma.M() > 310. || sumEgamma.M() < 1.5 ) passcut = 0;
-					// 	Double_t dphi=fabs(remainder(eMC.Phi()+3.1415-eGamma.Phi(),2.*3.1415)*180./3.1415);
-					// 	if( dphi > 50. ) passcut = 0;
-					// 	if(n_particle_eta[3]<2&&passcut==1) isQEDcMC_mini=2;
-					// }
-					// //keep orginal QEDc events out.
-					// if( isQEDcMC_mini == 2 ) continue;
 					if( n_particle_eta[3] < 2 ){
 						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[0][generator_index]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
 						h_eGammaPhiMC_allQ2y[0][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						if( fabs(eMC.DeltaPhi(eGamma)) > 2.7 ){
+							h_elecMCEnergyVsTheta_allQ2y[0][0]->Fill(eMC.Theta(),eMC.E());
+							h_gammaMCEnergyVsTheta_allQ2y[0][0]->Fill(eGamma.Theta(),eGamma.E());
+						}
+						if( fabs(eMC.DeltaPhi(eGamma)) < 2.7 && fabs(eMC.DeltaPhi(eGamma))>0.4 ){
+							h_elecMCEnergyVsTheta_allQ2y[0][1]->Fill(eMC.Theta(),eMC.E());
+							h_gammaMCEnergyVsTheta_allQ2y[0][1]->Fill(eGamma.Theta(),eGamma.E());
+						}
 						h_sumPtMC_allQ2y[0][generator_index]->Fill( sumEgamma.Pt(), w_mini );
 						h_EpzElecPhotMC_allQ2y[0][generator_index]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
 						h_eGammaPhiMC[Q2_INDEX][y_INDEX][0][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
@@ -431,6 +427,14 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					else{
 						if(eGamma.E()>0.1) h_deltaPhiVsThetaMC[1][generator_index]->Fill( eGamma.Theta(),eMC.DeltaPhi(eGamma),w_mini );
 						h_eGammaPhiMC_allQ2y[1][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
+						if( fabs(eMC.DeltaPhi(eGamma)) > 2.7 ){
+							h_elecMCEnergyVsTheta_allQ2y[1][0]->Fill(eMC.Theta(),eMC.E());
+							h_gammaMCEnergyVsTheta_allQ2y[1][0]->Fill(eGamma.Theta(),eGamma.E());
+						}
+						if( fabs(eMC.DeltaPhi(eGamma)) < 2.7 && fabs(eMC.DeltaPhi(eGamma))>0.4 ){
+							h_elecMCEnergyVsTheta_allQ2y[1][1]->Fill(eMC.Theta(),eMC.E());
+							h_gammaMCEnergyVsTheta_allQ2y[1][1]->Fill(eGamma.Theta(),eGamma.E());
+						}
 						h_sumPtMC_allQ2y[1][generator_index]->Fill( sumEgamma.Pt(), w_mini );
 						h_EpzElecPhotMC_allQ2y[1][generator_index]->Fill( sumEgamma.E()-sumEgamma.Pz(), w_mini );
 						h_eGammaPhiMC[Q2_INDEX][y_INDEX][1][generator_index]->Fill( eMC.DeltaPhi(eGamma), w_mini );
