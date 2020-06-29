@@ -101,8 +101,7 @@ struct MyEvent {
    Float_t phoEMC_mini[3];
    Int_t isQEDcMC_mini;
    Int_t isQEDbkg_mini;
-   Float_t dRRadPhot_mini;
-   Float_t dPhiRadPhot_mini;
+   Int_t isPHPbkg_mini;
 
    // reconstructed quantities
    Float_t xREC_es_mini,yREC_es_mini,Q2REC_es_mini;
@@ -173,7 +172,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    //starting TChain;
    TChain* tree = new TChain("properties");
    int dis_events = 0;
-   int nonQEDc_events = 0;
+   int diffractive_events = 0;
    if( doRapgap_ && doGen_ ){
       tree->Add("../batch/output/mc_9299_hadCaliNewKine/*.root");
       tree->Add("../batch/output/mc_9300_hadCaliNewKine/*.root");
@@ -183,33 +182,30 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->Add("../batch/output/mc_9304_hadCaliNewKine/*.root");
       tree->Add("../batch/output/mc_9305_hadCaliNewKine/*.root");
       tree->Add("../batch/output/mc_9306_hadCaliNewKine/*.root");
-
-      // //save the number of events that separate inclusive DIS to diffractive DIS
-         dis_events = tree->GetEntries();
-      tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
-         nonQEDc_events = tree->GetEntries();
-      //   // COMPTON20
-      // tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
-
+      dis_events = tree->GetEntries();
+      //save the number of events that separate inclusive DIS to diffractive DIS
+      
+      // tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
+      diffractive_events = tree->GetEntries();
+      
       //pythia
-      // nonQEDc_events = tree->GetEntries();//use it for photoproduction as well "nonQEDc" just a name
       // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
 
-      //nonradiative MCs
+      //nonradiative RAPGAP
       // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
       // dis_events = tree->GetEntries();
    }
    else if( !doRapgap_ && doGen_){
       tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
       tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
-         nonQEDc_events = tree->GetEntries();
-      //    //COMPTON20
-      // tree->Add("../batch/output/mc_8349_hadCaliNewKine/*.root");
-      
-      // tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
-      // nonQEDc_events = tree->GetEntries();
+      dis_events = tree->GetEntries();
+
       //pythia
       // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
+
+      //nonradiative DJANGO
+      // tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
+      // dis_events = tree->GetEntries();
    }
    else if( !doGen_ ){
       tree->Add("../batch/output/data_highE_06_hadCaliNewKine/*.root");
@@ -220,7 +216,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
    cout << "total numbner of events ~ " << tree->GetEntries() << endl;
    cout << "DIS events ~ "<< dis_events << endl;
-   cout << "nonQEDc_events ~ " << nonQEDc_events << endl;
+   cout << "diffractive_events ~ " << diffractive_events << endl;
 
    //start to define new miniTree:
    TTree *outtree =new TTree("miniTree","miniTree");
@@ -241,8 +237,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("phoEMC_mini",myEvent.phoEMC_mini,"phoEMC_mini[3]/F");
    outtree->Branch("isQEDcMC_mini",&myEvent.isQEDcMC_mini,"isQEDcMC_mini/I");
    outtree->Branch("isQEDbkg_mini",&myEvent.isQEDbkg_mini,"isQEDbkg_mini/I");
-   outtree->Branch("dRRadPhot_mini",&myEvent.dRRadPhot_mini,"dRRadPhot_mini/F");
-   outtree->Branch("dPhiRadPhot_mini",&myEvent.dPhiRadPhot_mini,"dPhiRadPhot_mini/F");
+   outtree->Branch("isPHPbkg_mini",&myEvent.isPHPbkg_mini,"isPHPbkg_mini/I");
 
    outtree->Branch("nMCtrack_mini",&myEvent.nMCtrack_mini,"nMCtrack_mini/I");
    outtree->Branch("pxMC_mini",myEvent.pxMC_mini,"pxMC_mini[nMCtrack_mini]/F");
@@ -286,11 +281,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
    
    outtree->Branch("typeChgREC_mini",&myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
-
    outtree->Branch("nucliaREC_mini",myEvent.nucliaREC_mini,"nucliaREC_mini[nRECtrack_mini]/F");
    outtree->Branch("passREC_mini",myEvent.passREC_mini,"passREC_mini[nRECtrack_mini]/I");
-   // outtree->Branch("passTightREC_mini",myEvent.passTightREC_mini,"passTightREC_mini[nRECtrack_mini]/I");
-   // outtree->Branch("passLooseREC_mini",myEvent.passLooseREC_mini,"passLooseREC_mini[nRECtrack_mini]/I");
 
    // outtree->Branch("dcaPrimeREC_mini",myEvent.dcaPrimeREC_mini,"dcaPrimeREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("startHitsRadiusREC_mini",myEvent.startHitsRadiusREC_mini,"startHitsRadiusREC_mini[nRECtrack_mini]/F");
@@ -505,14 +497,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       if(end == -1 || end >= tree->GetEntries()) {end = tree->GetEntries();}
       cout << "starting events = " << start << endl;
       cout << "ending events = " << end << endl;
-      cout << "total events now ~ " << 1.0*(tree->GetEntries()-dis_events)+dis_events << endl;
 
       int totalEvents = 0;
       for(int i=start;i<end;i++) {
          tree->GetEntry(i);
-
-         //this is to remove overlap for pythia64
-         if( i>=nonQEDc_events && Q2MC_es>2.0 ) continue;
 
          //assigning all reweights:
          double evt_weight = 1.;
@@ -530,17 +518,16 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                if( i < dis_events ){
                   evt_weight = w*y_weight*vtxZ_weight*(136./68);//68,RAD,204 for NRAD //data/mc Lumi
                }
-               // else if( i >= dis_events && i < 1.0*(tree->GetEntries()-dis_events)+dis_events ){
-               else if( i >= dis_events && i < nonQEDc_events ){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./219.35)*0.1;//data/mc Lumi
+               else if( i >= dis_events && i < diffractive_events ){
+                  evt_weight = w*y_weight*vtxZ_weight*(136./219.35)*0.1;//diffractive weights for 10% of DIS cross section
                }
-               else if( i >= nonQEDc_events && i < tree->GetEntries()){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./449);//1414.1 for COMPTON20, 449 q2<2 for PYTHIA64
+               else if( i >= diffractive_events && i < tree->GetEntries()){
+                  evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
                }
             }
             else{
-               if( i<nonQEDc_events ) evt_weight = w*y_weight*vtxZ_weight*(136./363);//162.03 for NRAD, 363 for RAD
-               if( i>= nonQEDc_events ) evt_weight = w*y_weight*vtxZ_weight*(136./449.); //1414.1 for COMPTON20, 449 q2<2 for PYTHIA64
+               if( i<dis_events ) evt_weight = w*y_weight*vtxZ_weight*(136./363);//162.03 for NRAD, 363 for RAD
+               if( i>= dis_events ) evt_weight = w*y_weight*vtxZ_weight*(136./449.); //449. q2<2 for PYTHIA64
             }
          }
          else if( doGen_ && !doReweight_ ) {
@@ -567,14 +554,11 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             cout << "Error in config! " << endl;
          }
 
-
          myEvent.run_mini = run;
          myEvent.evno_mini = evno;
          myEvent.w_mini = evt_weight;
          myEvent.eElectronBeam_mini = eElectronBeam;
          myEvent.totalMultREC_mini = -999;
-         myEvent.dRRadPhot_mini = dRRadPhot;
-         myEvent.dPhiRadPhot_mini = dPhiRadPhot;
 
          myEvent.xMC_es_mini = -999.;
          myEvent.yMC_es_mini = -999.;
@@ -597,6 +581,13 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          }
          
          if( doGen_ ){
+            //this is to remove overlap for pythia64 and assign PHPbkg flag
+            myEvent.isPHPbkg_mini = 0;
+            if( doRapgap_ && i>=diffractive_events && Q2MC_es>2.0 ) continue;
+            if( doRapgap_ && i>=diffractive_events ) myEvent.isPHPbkg_mini = 1;
+            if( !doRapgap_ && i>=dis_events && Q2MC_es>2.0 ) continue;
+            if( !doRapgap_ && i>=dis_events ) myEvent.isPHPbkg_mini = 1;
+
             //generator level event selections:
             myEvent.xMC_es_mini = xMC_es;
             myEvent.yMC_es_mini = yMC_es;
@@ -622,7 +613,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
                if( TMath::Hypot(pxMC[j],pyMC[j]) < 0.15 ) continue;
                if(etaMC[j] > 0.2 && etaMC[j] < 1.6 ) Ntracks_eta_p_MC++;
-               if(etaMC[j] < 0.2 && etaMC[j] > -1.6) Ntracks_eta_m_MC++;//just changed to -1.6 but not run 03.19.2020
+               if(etaMC[j] < 0.2 && etaMC[j] > -1.6) Ntracks_eta_m_MC++;
             } 
             etaAsymMC = (Ntracks_eta_p_MC - Ntracks_eta_m_MC)/(Ntracks_eta_p_MC + Ntracks_eta_m_MC);
             if( (Ntracks_eta_p_MC + Ntracks_eta_m_MC) == 0. ) etaAsymMC = -999.;
@@ -644,41 +635,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                myEvent.phoPzMC_mini[itype] = eGamma.Pz();
                myEvent.phoEMC_mini[itype] = eGamma.E();
             }
-            // //this cut is to remove overlaps when mixing COMPTON20 and DJANGOH/RAPGAP
-            // if(i<nonQEDc_events){
-            //    if(isQEDc==1){myEvent.isQEDcMC_mini = 2;}
-            //    else{
-            //       //try to make additional cuts:
-            //       myEvent.isQEDcMC_mini = isQEDc;
-            //       for(int itype=0;itype<3;itype++){
-            //          int passcut = 1;
-            //          TLorentzVector eGamma_CUT; eGamma_CUT.SetPxPyPzE(myEvent.phoPxMC_mini[itype],myEvent.phoPyMC_mini[itype],myEvent.phoPzMC_mini[itype],myEvent.phoEMC_mini[itype]);
-            //          TLorentzVector sumEgamma_CUT = eGamma_CUT+eMC;
-            //          if( eGamma_CUT.E() <=0. ) continue;
-            //          if( eMC.E() < 0.2 ) passcut = 0;
-            //          if( eMC.Theta()*TMath::RadToDeg()>179.5 || eMC.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
-            //          if( eGamma_CUT.E() < 0.2 ) passcut = 0;
-            //          if( eGamma_CUT.Theta()*TMath::RadToDeg()>179.5 || eGamma_CUT.Theta()*TMath::RadToDeg()<3.6 ) passcut = 0;
-            //          if( sumEgamma_CUT.Pt() > 25. ) passcut = 0;
-            //          if( sumEgamma_CUT.E() < 15. ) passcut = 0;
-            //          if( sumEgamma_CUT.M() > 310. || sumEgamma_CUT.M() < 1.5 ) passcut = 0;
-            //          Double_t dphi=fabs(remainder(eMC.Phi()+3.1415-eGamma_CUT.Phi(),2.*3.1415)*180./3.1415);
-            //          if( dphi > 50. ) passcut = 0;
-            //          //redefine QEDc cuts
-            //          if(myEvent.totalMultMC_mini<=2&&passcut==1) {
-            //             myEvent.isQEDcMC_mini = 2;
-            //          }
-            //          else{
-            //             myEvent.isQEDcMC_mini = 0;
-            //          }
-            //       }//loop over 3 types of photons
-            //    }//isQEDc=0 loop
-            // }//non-COMPTON20 if
-            // else{
-            //    myEvent.isQEDcMC_mini = isQEDc;
-            // }
-            //end QED Compton
-
           }//end doGen_
 
          int event_pass = 1;
@@ -782,9 +738,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.dmatchREC_mini[j] = dmatchREC[j];
             myEvent.imatchREC_mini[j] = imatchREC[j];       
             myEvent.passREC_mini[j] = pass_default; 
-            // myEvent.passTightREC_mini[j] = pass_tight;
-            // myEvent.passLooseREC_mini[j] = pass_loose;  
-
+ 
             // myEvent.dcaPrimeREC_mini[j] = dcaPrimeREC[j];
             // myEvent.startHitsRadiusREC_mini[j] = startHitsRadiusREC[j];
             // myEvent.dedxProtonREC_mini[j] = dedxProtonREC[j];
