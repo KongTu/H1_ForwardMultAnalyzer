@@ -100,6 +100,7 @@ struct MyEvent {
    Float_t phoPzMC_mini[3];
    Float_t phoEMC_mini[3];
    Int_t isQEDcMC_mini;
+   Int_t isQEDbkg_mini;
    Float_t dRRadPhot_mini;
    Float_t dPhiRadPhot_mini;
 
@@ -239,6 +240,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("phoPzMC_mini",myEvent.phoPzMC_mini,"phoPzMC_mini[3]/F");
    outtree->Branch("phoEMC_mini",myEvent.phoEMC_mini,"phoEMC_mini[3]/F");
    outtree->Branch("isQEDcMC_mini",&myEvent.isQEDcMC_mini,"isQEDcMC_mini/I");
+   outtree->Branch("isQEDbkg_mini",&myEvent.isQEDbkg_mini,"isQEDbkg_mini/I");
    outtree->Branch("dRRadPhot_mini",&myEvent.dRRadPhot_mini,"dRRadPhot_mini/F");
    outtree->Branch("dPhiRadPhot_mini",&myEvent.dPhiRadPhot_mini,"dPhiRadPhot_mini/F");
 
@@ -312,6 +314,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Int_t elecChargeREC;
       Float_t eElectronBeam;
       Int_t isQEDc;
+      Int_t isQEDbkg;
       Float_t dRRadPhot;
       Float_t dPhiRadPhot;
      
@@ -393,6 +396,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("simvertex",&simvertex);
       tree->SetBranchAddress("eElectronBeam",&eElectronBeam);
       tree->SetBranchAddress("isQEDc",&isQEDc);
+      tree->SetBranchAddress("isQEDbkg",&isQEDbkg);
       tree->SetBranchAddress("dRRadPhot",&dRRadPhot);
       tree->SetBranchAddress("dPhiRadPhot",&dPhiRadPhot);
 
@@ -624,21 +628,22 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             if( (Ntracks_eta_p_MC + Ntracks_eta_m_MC) == 0. ) etaAsymMC = -999.;
             myEvent.totalMultMC_mini = (int) (Ntracks_eta_p_MC+Ntracks_eta_m_MC);
             myEvent.isQEDcMC_mini = isQEDc;
+            myEvent.isQEDbkg_mini = isQEDbkg;
 
             //gen level QED Compton
-            // TLorentzVector eMC, eGamma,sumEgamma;
-            // eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
-            // myEvent.elecPxMC_mini = eMC.Px();
-            // myEvent.elecPyMC_mini = eMC.Py();
-            // myEvent.elecPzMC_mini = eMC.Pz();
-            // myEvent.elecEMC_mini = eMC.E();
-            // for(int itype=0;itype<3;itype++){
-            //    eGamma.SetPxPyPzE(radPhoPxMC[itype],radPhoPyMC[itype],radPhoPzMC[itype],radPhoEMC[itype]);
-            //    myEvent.phoPxMC_mini[itype] = eGamma.Px();
-            //    myEvent.phoPyMC_mini[itype] = eGamma.Py();
-            //    myEvent.phoPzMC_mini[itype] = eGamma.Pz();
-            //    myEvent.phoEMC_mini[itype] = eGamma.E();
-            // }
+            TLorentzVector eMC, eGamma,sumEgamma;
+            eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
+            myEvent.elecPxMC_mini = eMC.Px();
+            myEvent.elecPyMC_mini = eMC.Py();
+            myEvent.elecPzMC_mini = eMC.Pz();
+            myEvent.elecEMC_mini = eMC.E();
+            for(int itype=0;itype<3;itype++){
+               eGamma.SetPxPyPzE(radPhoPxMC[itype],radPhoPyMC[itype],radPhoPzMC[itype],radPhoEMC[itype]);
+               myEvent.phoPxMC_mini[itype] = eGamma.Px();
+               myEvent.phoPyMC_mini[itype] = eGamma.Py();
+               myEvent.phoPzMC_mini[itype] = eGamma.Pz();
+               myEvent.phoEMC_mini[itype] = eGamma.E();
+            }
             // //this cut is to remove overlaps when mixing COMPTON20 and DJANGOH/RAPGAP
             // if(i<nonQEDc_events){
             //    if(isQEDc==1){myEvent.isQEDcMC_mini = 2;}
