@@ -705,30 +705,9 @@ int main(int argc, char* argv[]) {
          }
          
          //HFS 4-vectors, calculate sigma with scatElec + radPhot
-         // TLorentzVector hfs_MC_lab = ebeam_MC_lab+pbeam_MC_lab-escatPhot_MC_lab;
-         // double sigma = hfs_MC_lab.E() - hfs_MC_lab.Pz();
-         
-         //HFS 4-vectors   
-         double hfs_MC_E_lab = 0.;  
-         double hfs_MC_pz_lab = 0.; 
-         for(int i=0;i<mcpart.GetEntries();i++) {  
-            H1PartMC *part=mcpart[i];  
-            int pdgid = part->GetPDG();   
-            int status=part->GetStatus(); 
-            float charge=part->GetCharge();  
-            int elec_id = mcPartId.GetIdxScatElectron();
-            int phot_id = mcPartId.GetIdxRadPhoton();
-            if( i== phot_id ) continue;
-            TLorentzVector p(part->GetFourVector());
-            if( status != 0 || i == elec_id ) continue;  
-            if( p.DeltaR(mcpart[elec_id]->GetFourVector())<ELEC_ISOLATION_CONE ) continue;
-            
-            hfs_MC_E_lab += part->GetE(); 
-            hfs_MC_pz_lab += part->GetPz();  
-         }  
-
-         double sigma = hfs_MC_E_lab - hfs_MC_pz_lab;
-
+         TLorentzVector hfs_MC_lab = ebeam_MC_lab+pbeam_MC_lab-escatPhot_MC_lab;
+         double sigma = hfs_MC_lab.E() - hfs_MC_lab.Pz();
+ 
          H1MakeKine makeKin_es;
          makeKin_es.MakeESig(escatPhot_MC_lab.E(), escatPhot_MC_lab.Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
          
@@ -764,42 +743,20 @@ int main(int argc, char* argv[]) {
             // skip particles counted as electron
             if(isElectron.find(i)!=isElectron.end()) continue;
 
-            // int v0s_status = -1;
-            // if(part->GetMother1() != -1) {
-            //    H1PartMC *part_parent=mcpart[part->GetMother1()];
-            //    if(fabs(part_parent->GetPDG()) == 310 || fabs(part_parent->GetPDG()) == 3122){
-            //       v0s_status = 0;
-            //    }
-            // }
-            //test
-            // int parent_index1=part->GetMother1();
-            // int parent_index2=part->GetMother2();
-            // if( parent_index1!=-1 && parent_index2==-1 ){
-            //    H1PartMC *part_parent1=mcpart[parent_index1];
-            //    if( part_parent1->GetPDG() == 310 || fabs(part_parent1->GetPDG())==3122 ){
-            //       cout << "case 1 PDG() = " << part_parent1->GetPDG() << endl;
-            //       cout << "check if they have grand parent ~ "<< endl;
-            //       cout << "part_parent1->GetMother1() = " << part_parent1->GetMother1() << endl;
-            //       cout << "part_parent1->GetMother2() = " << part_parent1->GetMother2() << endl;
-
-            //       if( part_parent1->GetMother1() == -1 ){
-            //          cout << "primary v0s" << endl;
-            //       }
-            //       else{
-            //          cout << "additional mother is found!" << endl;
-            //       }
-            //    }
-            // }        
-            //endtest
-
+            int v0s_status = -1;
+            if(part->GetMother1() != -1) {
+               H1PartMC *part_parent=mcpart[part->GetMother1()];
+               if(fabs(part_parent->GetPDG()) == 310 || fabs(part_parent->GetPDG()) == 3122){
+                  v0s_status = 0;
+               }
+            }
             //remember the largest quark or anti-quark flavor.
-            
             if( fabs(part->GetPDG()) < 10 ){
                if( fabs(part->GetPDG()) > maxPDG ) maxPDG = fabs(part->GetPDG());
             }
             
             int status=part->GetStatus();
-            if(status==0) {
+            if(status==0||v0s_status==0) {
                // generator "stable" particles
                // if((!haveElectron)&&
                //    ((part->GetPDG()==11)||(part->GetPDG()== -11))) {
@@ -863,15 +820,15 @@ int main(int argc, char* argv[]) {
 
                      myEvent.isDaughtersMC[k] = 0;
                      //check V0s decay
-                     // if( v0s_status==0 ){
-                     //    H1PartMC *part_V0s=mcpart[part->GetMother1()];
-                     //    if( fabs(part_V0s->GetPDG()) == 310 ){
-                     //       myEvent.isDaughtersMC[k] = 1;//K0s
-                     //    } 
-                     //    else if( fabs(part_V0s->GetPDG()) == 3122 ){
-                     //       myEvent.isDaughtersMC[k] = 2;//Lambdas
-                     //    }
-                     // }
+                     if( v0s_status==0 ){
+                        H1PartMC *part_V0s=mcpart[part->GetMother1()];
+                        if( fabs(part_V0s->GetPDG()) == 310 ){
+                           myEvent.isDaughtersMC[k] = 1;//K0s
+                        } 
+                        else if( fabs(part_V0s->GetPDG()) == 3122 ){
+                           myEvent.isDaughtersMC[k] = 2;//Lambdas
+                        }
+                     }
                      //end V0s
                   }
                }
@@ -1581,12 +1538,10 @@ int main(int argc, char* argv[]) {
          for(int iREC=0;iREC<myEvent.nRECtrack;iREC++) {
             int iMC=myEvent.imatchREC[iREC];
             int part=0;
-            // int isDaugV0s = 0;
             if(iMC>=0) {
                int pdg=myEvent.idMC[iMC];
                if(pdg<0) pdg= -pdg;
                part= (pdg==211) ? 1 : ((pdg==321) ? 2 : 0);
-               // if(myEvent.isDaughtersMC[iMC] > 0) isDaugV0s = 1;
             }
             if(part) {
                myEvent.nucliaREC[iREC]=
@@ -1595,8 +1550,6 @@ int main(int argc, char* argv[]) {
                    myEvent.momREC[iREC].Pt(),
                    myEvent.momREC[iREC].Phi(),myEvent.momREC[iREC].Theta(),
                    0.0 /* dca */,H1SelVertex::GetPrimaryVertex()->Z());
-                
-                   // if(isDaugV0s) myEvent.nucliaREC[iREC] = myEvent.nucliaREC[iREC]*0.5;   
             }
             
          }
