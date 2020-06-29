@@ -306,6 +306,7 @@ int main(int argc, char * const argv[]) {
   genVariables.AddVar("pxMC_mini");
   genVariables.AddVar("pyMC_mini");
   genVariables.AddVar("isQEDcMC_mini");
+  genVariables.AddVar("isQEDbkg_mini");
   genVariables.AddVar("isDaughtersMC_mini");
 
   cout<<"\netaStar binning\n";
@@ -474,6 +475,7 @@ int main(int argc, char * const argv[]) {
            VarData const *pxMC_mini=genVariables.FindVar("pxMC_mini");
            VarData const *pyMC_mini=genVariables.FindVar("pyMC_mini");
            VarData const *isQEDcMC_mini=genVariables.FindVar("isQEDcMC_mini");
+           VarData const *isQEDbkg_mini=genVariables.FindVar("isQEDbkg_mini");
            VarData const *isDaughtersMC_mini=genVariables.FindVar("isDaughtersMC_mini");
 
            double lumiWeight=1.0;
@@ -635,7 +637,7 @@ int main(int argc, char * const argv[]) {
                  // fill gen level distribution
                  for(size_t ieta=0;ieta<genMultBins.size();ieta++) {
                     int imultGenBin=genMultBins[ieta];
-                    if(imultGenBin && isQEDcMC_mini->Int() == 0) {
+                    if(imultGenBin && isQEDcMC_mini->Int() == 0 && isQEDbkg_mini->Int() == 0) {
                        hist_gen[ieta]->Fill(imultGenBin,w);
                     } else {
                        // fake -> not counted as generator truth
@@ -684,7 +686,7 @@ int main(int argc, char * const argv[]) {
                            iMultPtr!=recMultBins[ieta].end();iMultPtr++) {
                           int iMultRecBin=(*iMultPtr).first;
                           double iMultWeight=(*iMultPtr).second;
-                          if( isQEDcMC_mini->Int() == 0 ) hist_fake[ieta]->Fill(iMultRecBin,w*iMultWeight);
+                          if( isQEDcMC_mini->Int() == 0 && isQEDbkg_mini->Int() == 0 ) hist_fake[ieta]->Fill(iMultRecBin,w*iMultWeight);
                        }
                     } else {
                        // fill matrix of migrations (for each ieta)
@@ -693,10 +695,10 @@ int main(int argc, char * const argv[]) {
                            iMultPtr!=recMultBins[ieta].end();iMultPtr++) {
                           int iMultRecBin=(*iMultPtr).first;
                           double iMultWeight=(*iMultPtr).second;
-                          if( isQEDcMC_mini->Int() == 0 ) hist_genRec[ieta]->Fill(iMultGenBin,iMultRecBin,
+                          if( isQEDcMC_mini->Int() == 0 && isQEDbkg_mini->Int() == 0 ) hist_genRec[ieta]->Fill(iMultGenBin,iMultRecBin,
                                                   w*iMultWeight);
 
-                          if( isQEDcMC_mini->Int() == 1 ) hist_QEDc[ieta]->Fill(iMultRecBin, w*iMultWeight);
+                          if( isQEDcMC_mini->Int() == 1 || isQEDbkg_mini->Int() == 1 ) hist_QEDc[ieta]->Fill(iMultRecBin, w*iMultWeight);
                           
                        }
                     }
