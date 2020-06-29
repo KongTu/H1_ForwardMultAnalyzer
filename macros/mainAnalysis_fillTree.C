@@ -532,7 +532,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                }
                // else if( i >= dis_events && i < 1.0*(tree->GetEntries()-dis_events)+dis_events ){
                else if( i >= dis_events && i < nonQEDc_events ){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./(1.0*219.35));//data/mc Lumi
+                  evt_weight = w*y_weight*vtxZ_weight*(136./219.35)*0.1;//data/mc Lumi
                }
                else if( i >= nonQEDc_events && i < tree->GetEntries()){
                   evt_weight = w*y_weight*vtxZ_weight*(136./449);//1414.1 for COMPTON20, 449 q2<2 for PYTHIA64
