@@ -244,6 +244,8 @@ struct MyEvent {
    Int_t isQEDc,isQEDbkg;
    Float_t dRRadPhot,dPhiRadPhot;
 
+   Float_t clusDepositREC;
+
    Float_t xREC,yREC,Q2REC;
    Float_t xREC_es,yREC_es,Q2REC_es;
    Float_t hfsPxREC,hfsPyREC,hfsPzREC,hfsEREC; // hadronic final state
@@ -446,6 +448,7 @@ int main(int argc, char* argv[]) {
    output->Branch("elecEnergyREC",&myEvent.elecEnergyREC,"elecEnergyREC/F");
    output->Branch("elecEfracREC",&myEvent.elecEfracREC,"elecEfracREC/F");
    output->Branch("elecHfracREC",&myEvent.elecHfracREC,"elecHfracREC/F");
+   output->Branch("clusDepositREC",&myEvent.clusDepositREC,"clusDepositREC/F");
 
    output->Branch("radPhoPxREC",&myEvent.radPhoPxREC,"radPhoPxREC/F");
    output->Branch("radPhoPyREC",&myEvent.radPhoPyREC,"radPhoPyREC/F");
@@ -1054,6 +1057,7 @@ int main(int argc, char* argv[]) {
 
       // add EM particles and neutrals in a cone around the electron 
       TLorentzVector escatPhot_REC_lab(escat0_REC_lab);
+      double clusterEnergySum=0.;
       set<int> isElectron;
       if(scatteredElectron>=0) {
          isElectron.insert(scatteredElectron);
@@ -1074,7 +1078,14 @@ int main(int argc, char* argv[]) {
                   isElectron.insert(i);
                }
             }
+            //sum over all energy cluster
+            //use for rejecting diffractive events
+            double clusAngle=TMath::RadToDeg()*cand->GetTheta();
+            if(clusAngle>4.4&&clusAngle<15.){
+               clusterEnergySum += cand->GetE();
+            }
          }
+         myEvent.clusDepositREC = clusterEnergySum;
       }
 
       myEvent.elecEradREC=escatPhot_REC_lab.E()-escat0_REC_lab.E();
