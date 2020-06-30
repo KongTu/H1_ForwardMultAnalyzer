@@ -515,6 +515,8 @@ int main(int argc, char * const argv[]) {
                     // loop over eta bins
                     vector<int> genTrackMultiplicity(covClasses.size());
                     int nGenTrack=nMCtrack_mini->Int();
+                    int QEDc = isQEDcMC_mini->Int();
+                    int QEDbkg = isQEDbkg_mini->Int();
                     for(int t=0;t<nGenTrack;t++) {
                        double etaStarGen=etaStarMC_mini->Double(t);
                        double etaGen = etaMC_mini->Double(t);
@@ -527,7 +529,7 @@ int main(int argc, char * const argv[]) {
                        if( isDaughtersMC_mini->Int(t) != 0) continue;//add selections on nonV0s on gen
 
                        for(size_t k=0;k<covClasses.size();k++) {
-                          if(covClassifier.IsInside(etaStarGen,k)) {
+                          if(covClassifier.IsInside(etaStarGen,k) && QEDc==0 && QEDbkg==0 ) {
                              genTrackMultiplicity[k]++;
                           }
                        }
@@ -637,7 +639,7 @@ int main(int argc, char * const argv[]) {
                  // fill gen level distribution
                  for(size_t ieta=0;ieta<genMultBins.size();ieta++) {
                     int imultGenBin=genMultBins[ieta];
-                    if(imultGenBin && isQEDcMC_mini->Int() == 0 && isQEDbkg_mini->Int() == 0) {
+                    if(imultGenBin) {
                        hist_gen[ieta]->Fill(imultGenBin,w);
                     } else {
                        // fake -> not counted as generator truth
@@ -655,6 +657,8 @@ int main(int argc, char * const argv[]) {
                        int iMultRecBin=(*iMultPtr).first;
                        double iMultWeight=(*iMultPtr).second;
                        hist_rec[ieta]->Fill(iMultRecBin,w*iMultWeight);
+                       if( isQEDcMC_mini->Int() == 1 
+                        || isQEDbkg_mini->Int() == 1 ) {hist_QEDc[ieta]->Fill(iMultRecBin, w*iMultWeight);}
                     }
                  }
                  // covariance in bins of Q2,y
@@ -686,7 +690,7 @@ int main(int argc, char * const argv[]) {
                            iMultPtr!=recMultBins[ieta].end();iMultPtr++) {
                           int iMultRecBin=(*iMultPtr).first;
                           double iMultWeight=(*iMultPtr).second;
-                          if( isQEDcMC_mini->Int() == 0 && isQEDbkg_mini->Int() == 0 ) hist_fake[ieta]->Fill(iMultRecBin,w*iMultWeight);
+                          hist_fake[ieta]->Fill(iMultRecBin,w*iMultWeight);
                        }
                     } else {
                        // fill matrix of migrations (for each ieta)
@@ -695,11 +699,8 @@ int main(int argc, char * const argv[]) {
                            iMultPtr!=recMultBins[ieta].end();iMultPtr++) {
                           int iMultRecBin=(*iMultPtr).first;
                           double iMultWeight=(*iMultPtr).second;
-                          if( isQEDcMC_mini->Int() == 0 && isQEDbkg_mini->Int() == 0 ) hist_genRec[ieta]->Fill(iMultGenBin,iMultRecBin,
-                                                  w*iMultWeight);
-
-                          if( isQEDcMC_mini->Int() == 1 || isQEDbkg_mini->Int() == 1 ) hist_QEDc[ieta]->Fill(iMultRecBin, w*iMultWeight);
-                          
+                          hist_genRec[ieta]->Fill(iMultGenBin,iMultRecBin,
+                                                  w*iMultWeight);                          
                        }
                     }
                  }
