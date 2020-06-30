@@ -641,7 +641,6 @@ int main(int argc, char * const argv[]) {
                        int iMultRecBin=(*iMultPtr).first;
                        double iMultWeight=(*iMultPtr).second;
                        hist_rec[ieta]->Fill(iMultRecBin,w*iMultWeight);
-                       if(!isSignal) hist_QEDc[ieta]->Fill(iMultRecBin, w*iMultWeight);
                     }
                  }
                  // covariance in bins of Q2,y
@@ -684,6 +683,7 @@ int main(int argc, char * const argv[]) {
                           double iMultWeight=(*iMultPtr).second;
                           hist_genRec[ieta]->Fill(iMultGenBin,iMultRecBin,
                                                   w*iMultWeight);
+                          if(!isSignal) hist_QEDc[ieta]->Fill(iMultRecBin, w*iMultWeight);
                        }
                     }
                  }
