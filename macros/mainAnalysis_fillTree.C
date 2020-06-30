@@ -185,7 +185,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       dis_events = tree->GetEntries();
       //save the number of events that separate inclusive DIS to diffractive DIS
       
-      // tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
       diffractive_events = tree->GetEntries();
       
       //pythia
