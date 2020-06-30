@@ -299,6 +299,8 @@ int main(int argc, char * const argv[]) {
   recVariables.AddVar("passREC_mini");
   genVariables.AddVar("nMCtrack_mini");
   genVariables.AddVar("etaMC_mini");
+  genVariables.AddVar("pxMC_mini");
+  genVariables.AddVar("pyMC_mini");
   genVariables.AddVar("isQEDcMC_mini");
   genVariables.AddVar("isQEDbkg_mini");
   genVariables.AddVar("isDaughtersMC_mini");
@@ -463,6 +465,8 @@ int main(int argc, char * const argv[]) {
 
            VarData const *nMCtrack_mini=genVariables.FindVar("nMCtrack_mini");
            VarData const *etaMC_mini=genVariables.FindVar("etaMC_mini");
+           VarData const *pxMC_mini=genVariables.FindVar("pxMC_mini");
+           VarData const *pyMC_mini=genVariables.FindVar("pyMC_mini");
            VarData const *isQEDcMC_mini=genVariables.FindVar("isQEDcMC_mini");
            VarData const *isQEDbkg_mini=genVariables.FindVar("isQEDbkg_mini");
            VarData const *isDaughtersMC_mini=genVariables.FindVar("isDaughtersMC_mini");
@@ -490,11 +494,16 @@ int main(int argc, char * const argv[]) {
                  if(!print) break;
               }
 
+              //gen level signal and background;
+              int QEDc = isQEDcMC_mini->Int();
+              int QEDbkg = isQEDbkg_mini->Int();
+              bool isSignal=true;
+              if(QEDc==1||QEDbkg==1) isSignal=false;
               //  these are the bin numbers in (Q2,y,track multiplicity)
               //    index: eta bin
               //    value: global bin number
               vector<int> genMultBins(covClasses.size());
-              if(fillGen) {
+              if(fillGen&&isSignal) {
                  // nodeGen will point to the (Q2,y) bin
                  // or it is zero
                  ClassifierBinning const *nodeGen=
@@ -504,31 +513,31 @@ int main(int argc, char * const argv[]) {
                     // loop over eta bins
                     vector<int> genTrackMultiplicity(covClasses.size());
                     int nGenTrack=nMCtrack_mini->Int();
-                    int QEDc = isQEDcMC_mini->Int();
-                    int QEDbkg = isQEDbkg_mini->Int();
                     for(int t=0;t<nGenTrack;t++) {
                        double etaGen=etaMC_mini->Double(t);
-                       // if( isDaughtersMC_mini->Int(t) != 0) continue;//add selections on nonV0s on gen
+                       double ptGen=TMath::Hypot(pxMC_mini->Double(t),pyMC_mini->Double(t));
+                       if(fabs(etaGen)>1.6||ptGen<0.15) continue;
+                       if(isDaughtersMC_mini->Int(t)!=0) continue;//add selections on nonV0s on gen
                        for(size_t k=0;k<covClasses.size();k++) {
-                          if(covClassifier.IsInside(etaGen,k) && QEDc==0 && QEDbkg==0) {
+                          if(covClassifier.IsInside(etaGen,k)) {
                              genTrackMultiplicity[k]++;
                           }
                        }
                     }
                     // track multiplicity bins
                     TUnfoldBinning const *genDist=
-        nodeGen->GetBinningNodeDistribution();
+                        nodeGen->GetBinningNodeDistribution();
                     if(genDist) {
                        // for each eta bin, locate the multiplicity bin
                        for(size_t i=0;i<genTrackMultiplicity.size();i++) {
                           int multiplicity=genTrackMultiplicity[i];
                           int ibin=genDist->GetGlobalBinNumber(multiplicity);
-        // remember bin number and multiplicity
-        genMultBins[i]=ibin;
-                       }
+                          // remember bin number and multiplicity
+                          genMultBins[i]=ibin;
+                        }
                     }
-                 }
-        }
+                  }
+              }
               // these are the track multiplicities
               //   index : eta bin number
               //   second key : multiplicity bin
@@ -565,6 +574,7 @@ int main(int argc, char * const argv[]) {
                        // reject bad tracks
                        if(!passREC_mini->Int(t)) continue;
                        double etaRec=etaREC_mini->Double(t);
+                       if(fabs(etaRec)>1.6) continue;
                        double trackEff=nucliaREC_mini->Double(t);
                        // locate eta bin
                        for(size_t k=0;k<covClasses.size();k++) {
@@ -631,8 +641,7 @@ int main(int argc, char * const argv[]) {
                        int iMultRecBin=(*iMultPtr).first;
                        double iMultWeight=(*iMultPtr).second;
                        hist_rec[ieta]->Fill(iMultRecBin,w*iMultWeight);
-                       if( isQEDcMC_mini->Int() == 1 
-                        || isQEDbkg_mini->Int() == 1 ) {hist_QEDc[ieta]->Fill(iMultRecBin, w*iMultWeight);}
+                       if(!isSignal) hist_QEDc[ieta]->Fill(iMultRecBin, w*iMultWeight);
                     }
                  }
                  // covariance in bins of Q2,y

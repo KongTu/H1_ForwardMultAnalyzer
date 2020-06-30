@@ -501,11 +501,17 @@ int main(int argc, char * const argv[]) {
                  if(!print) break;
               }
 
+              //gen level signal and background;
+              int QEDc = isQEDcMC_mini->Int();
+              int QEDbkg = isQEDbkg_mini->Int();
+              bool isSignal=true;
+              if(QEDc==1||QEDbkg==1) isSignal=false;
+
               //  these are the bin numbers in (Q2,y,track multiplicity)
               //    index: eta bin
               //    value: global bin number
               vector<int> genMultBins(covClasses.size());
-              if(fillGen) {
+              if(fillGen&&isSignal) {
                  // nodeGen will point to the (Q2,y) bin
                  // or it is zero
                  ClassifierBinning const *nodeGen=
@@ -515,21 +521,16 @@ int main(int argc, char * const argv[]) {
                     // loop over eta bins
                     vector<int> genTrackMultiplicity(covClasses.size());
                     int nGenTrack=nMCtrack_mini->Int();
-                    int QEDc = isQEDcMC_mini->Int();
-                    int QEDbkg = isQEDbkg_mini->Int();
                     for(int t=0;t<nGenTrack;t++) {
                        double etaStarGen=etaStarMC_mini->Double(t);
                        double etaGen = etaMC_mini->Double(t);
                        double pxGen = pxMC_mini->Double(t);
                        double pyGen = pyMC_mini->Double(t);
                        double ptGen = TMath::Hypot(pxGen,pyGen);
-
-                       if( fabs(etaGen) > 1.6 ) continue;
-                       if( ptGen < 0.15 ) continue;
-                       if( isDaughtersMC_mini->Int(t) != 0) continue;//add selections on nonV0s on gen
-
+                       if(fabs(etaGen)>1.6||ptGen<0.15) continue;
+                       if(isDaughtersMC_mini->Int(t) != 0) continue;//add selections on nonV0s on gen
                        for(size_t k=0;k<covClasses.size();k++) {
-                          if(covClassifier.IsInside(etaStarGen,k) && QEDc==0 && QEDbkg==0 ) {
+                          if(covClassifier.IsInside(etaStarGen,k)) {
                              genTrackMultiplicity[k]++;
                           }
                        }
@@ -591,7 +592,6 @@ int main(int argc, char * const argv[]) {
                        double ptRec = TMath::Hypot(pxRec,pyRec);
                        if( fabs(etaRec) > 1.6 ) continue;
                        if( ptRec < 0.15 ) continue;
-
                        // locate eta bin
                        for(size_t k=0;k<covClasses.size();k++) {
                           if(covClassifier.IsInside(etaStarRec,k)) {
@@ -657,8 +657,7 @@ int main(int argc, char * const argv[]) {
                        int iMultRecBin=(*iMultPtr).first;
                        double iMultWeight=(*iMultPtr).second;
                        hist_rec[ieta]->Fill(iMultRecBin,w*iMultWeight);
-                       if( isQEDcMC_mini->Int() == 1 
-                        || isQEDbkg_mini->Int() == 1 ) {hist_QEDc[ieta]->Fill(iMultRecBin, w*iMultWeight);}
+                       if(!isSignal) hist_QEDc[ieta]->Fill(iMultRecBin, w*iMultWeight);
                     }
                  }
                  // covariance in bins of Q2,y
