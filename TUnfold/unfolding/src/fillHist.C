@@ -303,6 +303,7 @@ int main(int argc, char * const argv[]) {
   genVariables.AddVar("pyMC_mini");
   genVariables.AddVar("isQEDcMC_mini");
   genVariables.AddVar("isQEDbkg_mini");
+  genVariables.AddVar("isDIFFbkg_mini");
   genVariables.AddVar("isDaughtersMC_mini");
 
   cout<<"\neta binning\n";
@@ -469,6 +470,7 @@ int main(int argc, char * const argv[]) {
            VarData const *pyMC_mini=genVariables.FindVar("pyMC_mini");
            VarData const *isQEDcMC_mini=genVariables.FindVar("isQEDcMC_mini");
            VarData const *isQEDbkg_mini=genVariables.FindVar("isQEDbkg_mini");
+           VarData const *isDIFFbkg_mini=genVariables.FindVar("isDIFFbkg_mini");
            VarData const *isDaughtersMC_mini=genVariables.FindVar("isDaughtersMC_mini");
 
            double lumiWeight=1.0;
@@ -497,8 +499,9 @@ int main(int argc, char * const argv[]) {
               //gen level signal and background;
               int QEDc = isQEDcMC_mini->Int();
               int QEDbkg = isQEDbkg_mini->Int();
+              int DIFFbkg = isDIFFbkg_mini->Int();
               bool isSignal=true;
-              if(QEDc==1||QEDbkg==1) isSignal=false;
+              if(QEDc==1||QEDbkg==1||DIFFbkg==1) isSignal=false;
               //  these are the bin numbers in (Q2,y,track multiplicity)
               //    index: eta bin
               //    value: global bin number
