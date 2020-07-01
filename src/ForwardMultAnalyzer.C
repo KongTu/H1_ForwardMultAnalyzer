@@ -832,7 +832,9 @@ int main(int argc, char* argv[]) {
                            myEvent.isDaughtersMC[k] = 2;//Lambdas
                         }
                      }
+                     if(status!=0&&myEvent.isDaughtersMC[k]==0){cout << "problem!" << endl;}
                      //end V0s
+
                   }
                }
             } // end loop over stable particles
