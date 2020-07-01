@@ -137,16 +137,16 @@ struct MyEvent {
    Float_t dmatchREC_mini[nRECtrack_MAX];
    Int_t imatchREC_mini[nRECtrack_MAX];
    Int_t passREC_mini[nRECtrack_MAX];
-   Int_t passTightREC_mini[nRECtrack_MAX];
-   Int_t passLooseREC_mini[nRECtrack_MAX];
+   // Int_t passTightREC_mini[nRECtrack_MAX];
+   // Int_t passLooseREC_mini[nRECtrack_MAX];
    Int_t typeChgREC_mini[nRECtrack_MAX];
 
    Float_t dcaPrimeREC_mini[nRECtrack_MAX];
    Float_t startHitsRadiusREC_mini[nRECtrack_MAX];
-   Float_t dedxProtonREC_mini[nRECtrack_MAX];
-   Float_t dedxLikelihoodProtonREC_mini[nRECtrack_MAX];
-   Float_t dedxElectronREC_mini[nRECtrack_MAX];
-   Float_t dedxLikelihoodElectronREC_mini[nRECtrack_MAX];
+   // Float_t dedxProtonREC_mini[nRECtrack_MAX];
+   // Float_t dedxLikelihoodProtonREC_mini[nRECtrack_MAX];
+   // Float_t dedxElectronREC_mini[nRECtrack_MAX];
+   // Float_t dedxLikelihoodElectronREC_mini[nRECtrack_MAX];
 };
 
 void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ = true, const bool doRapgap_ = true, const bool doReweight_ = false, const bool doComb_=true, const bool doFwd_= false) {
@@ -250,7 +250,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("isDaughtersMC_mini",myEvent.isDaughtersMC_mini,"isDaughtersMC_mini[nMCtrack_mini]/I");
    outtree->Branch("ptStarMC_mini",myEvent.ptStarMC_mini,"ptStarMC_mini[nMCtrack_mini]/F");
    outtree->Branch("etaStarMC_mini",myEvent.etaStarMC_mini,"etaStarMC_mini[nMCtrack_mini]/F");
-   outtree->Branch("phiStarMC_mini",myEvent.phiStarMC_mini,"phiStarMC_mini[nMCtrack_mini]/F");
+   // outtree->Branch("phiStarMC_mini",myEvent.phiStarMC_mini,"phiStarMC_mini[nMCtrack_mini]/F");
    outtree->Branch("totalMultMC_mini",&myEvent.totalMultMC_mini,"totalMultMC_mini/I");
    /*
    comment out for simple scatElec miniTree
@@ -316,15 +316,11 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t dPhiRadPhot;
      
       Int_t ibgREC;
-
       Float_t vertex[3];
-      Float_t xREC,yREC,Q2REC;
       Float_t xREC_es,yREC_es,Q2REC_es;
       
       Float_t simvertex[3];
       Float_t elecEradMC;
-      Float_t xMC,yMC,Q2MC;
-      Float_t xGKI,yGKI,Q2GKI;
       Float_t xMC_es,yMC_es,Q2MC_es;
 
       Int_t nMCtrack;
@@ -338,8 +334,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Int_t   isDaughtersMC[400];
 
       Float_t chargeMC[400];
-      Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC;
-      Float_t radPhoPxMC[4],radPhoPyMC[4],radPhoPzMC[4],radPhoEMC[4];
+      // Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC;
+      // Float_t radPhoPxMC[3],radPhoPyMC[3],radPhoPzMC[3],radPhoEMC[3];
  
       Int_t nRECtrack;
       Int_t typeChgREC[200];
@@ -364,10 +360,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t dz0PrimeREC[400];
       Float_t nucliaREC[400];
 
-      Float_t dedxProtonREC[400];
-      Float_t dedxLikelihoodProtonREC[400];
-      Float_t dedxElectronREC[400];
-      Float_t dedxLikelihoodElectronREC[400];
+      // Float_t dedxProtonREC[400];
+      // Float_t dedxLikelihoodProtonREC[400];
+      // Float_t dedxElectronREC[400];
+      // Float_t dedxLikelihoodElectronREC[400];
 
       Int_t imatchREC[400];
       Float_t dmatchREC[400];
@@ -385,11 +381,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
       tree->SetBranchAddress("run",&run);
       tree->SetBranchAddress("evno",&evno);
-      tree->SetBranchAddress("xGKI",&xGKI);
-
-      tree->SetBranchAddress("xGKI",&xGKI);
-      tree->SetBranchAddress("yGKI",&yGKI);
-      tree->SetBranchAddress("Q2GKI",&Q2GKI);
+      // tree->SetBranchAddress("xGKI",&xGKI);
+      // tree->SetBranchAddress("yGKI",&yGKI);
+      // tree->SetBranchAddress("Q2GKI",&Q2GKI);
       tree->SetBranchAddress("simvertex",&simvertex);
       tree->SetBranchAddress("eElectronBeam",&eElectronBeam);
       tree->SetBranchAddress("isQEDc",&isQEDc);
@@ -407,25 +401,22 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("etaMC",&etaMC);
       tree->SetBranchAddress("isDaughtersMC", &isDaughtersMC);
       tree->SetBranchAddress("chargeMC",&chargeMC);
-      tree->SetBranchAddress("xMC",&xMC);
-      tree->SetBranchAddress("yMC",&yMC);
-      tree->SetBranchAddress("Q2MC",&Q2MC);
+      // tree->SetBranchAddress("xMC",&xMC);
+      // tree->SetBranchAddress("yMC",&yMC);
+      // tree->SetBranchAddress("Q2MC",&Q2MC);
       tree->SetBranchAddress("xMC_es",&xMC_es);
       tree->SetBranchAddress("yMC_es",&yMC_es);
       tree->SetBranchAddress("Q2MC_es",&Q2MC_es);
-      tree->SetBranchAddress("yMC",&yMC);
-      tree->SetBranchAddress("Q2MC",&Q2MC);
-      tree->SetBranchAddress("elecEMC",&elecEMC);
       tree->SetBranchAddress("elecEradMC",&elecEradMC);
       tree->SetBranchAddress("imatchMC",&imatchMC);
-      tree->SetBranchAddress("elecPxMC",&elecPxMC);
-      tree->SetBranchAddress("elecPyMC",&elecPyMC);
-      tree->SetBranchAddress("elecPzMC",&elecPzMC);
-      tree->SetBranchAddress("elecEMC",&elecEMC);
-      tree->SetBranchAddress("radPhoPxMC",&radPhoPxMC);
-      tree->SetBranchAddress("radPhoPyMC",&radPhoPyMC);
-      tree->SetBranchAddress("radPhoPzMC",&radPhoPzMC);
-      tree->SetBranchAddress("radPhoEMC",&radPhoEMC);
+      // tree->SetBranchAddress("elecPxMC",&elecPxMC);
+      // tree->SetBranchAddress("elecPyMC",&elecPyMC);
+      // tree->SetBranchAddress("elecPzMC",&elecPzMC);
+      // tree->SetBranchAddress("elecEMC",&elecEMC);
+      // tree->SetBranchAddress("radPhoPxMC",&radPhoPxMC);
+      // tree->SetBranchAddress("radPhoPyMC",&radPhoPyMC);
+      // tree->SetBranchAddress("radPhoPzMC",&radPhoPzMC);
+      // tree->SetBranchAddress("radPhoEMC",&radPhoEMC);
 
       tree->SetBranchAddress("ibg",&ibgREC);
       tree->SetBranchAddress("elecXclusREC",&elecXclusREC);
@@ -441,9 +432,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("vertex",vertex);
       tree->SetBranchAddress("trigWeightAC",&trigWeightAC);
       tree->SetBranchAddress("trigWeightRW",&trigWeightRW);
-      tree->SetBranchAddress("xREC",&xREC);
-      tree->SetBranchAddress("yREC",&yREC);
-      tree->SetBranchAddress("Q2REC",&Q2REC);
+      // tree->SetBranchAddress("xREC",&xREC);
+      // tree->SetBranchAddress("yREC",&yREC);
+      // tree->SetBranchAddress("Q2REC",&Q2REC);
       tree->SetBranchAddress("xREC_es",&xREC_es);
       tree->SetBranchAddress("yREC_es",&yREC_es);
       tree->SetBranchAddress("Q2REC_es",&Q2REC_es);
@@ -480,10 +471,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("dcaPrimeREC",dcaPrimeREC);
       tree->SetBranchAddress("dz0PrimeREC",dz0PrimeREC);
       tree->SetBranchAddress("nucliaREC",nucliaREC);
-      tree->SetBranchAddress("dedxProtonREC",dedxProtonREC);
-      tree->SetBranchAddress("dedxLikelihoodProtonREC",dedxLikelihoodProtonREC);
-      tree->SetBranchAddress("dedxElectronREC",dedxElectronREC);
-      tree->SetBranchAddress("dedxLikelihoodElectronREC",dedxLikelihoodElectronREC);
+      // tree->SetBranchAddress("dedxProtonREC",dedxProtonREC);
+      // tree->SetBranchAddress("dedxLikelihoodProtonREC",dedxLikelihoodProtonREC);
+      // tree->SetBranchAddress("dedxElectronREC",dedxElectronREC);
+      // tree->SetBranchAddress("dedxLikelihoodElectronREC",dedxLikelihoodElectronREC);
       
       tree->SetBranchAddress("imatchREC",imatchREC);
       tree->SetBranchAddress("dmatchREC",dmatchREC);
@@ -569,8 +560,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.xMC_es_mini = -999.;
          myEvent.yMC_es_mini = -999.;
          myEvent.Q2MC_es_mini = -999.;
-         myEvent.yMC_mini = -999.;
-         myEvent.Q2MC_mini = -999.;
          myEvent.nMCtrack_mini = -999;
 
          for(int j=0;j<400;j++) {
@@ -602,8 +591,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.xMC_es_mini = xMC_es;
             myEvent.yMC_es_mini = yMC_es;
             myEvent.Q2MC_es_mini = Q2MC_es;
-            myEvent.yMC_mini = yMC;
-            myEvent.Q2MC_mini = Q2MC;
             myEvent.nMCtrack_mini = nMCtrack;
 
             double Ntracks_eta_p_MC=0.;
@@ -751,7 +738,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.dmatchREC_mini[j] = dmatchREC[j];
             myEvent.imatchREC_mini[j] = imatchREC[j];       
             myEvent.passREC_mini[j] = pass_default; 
-            
+
             // myEvent.dcaPrimeREC_mini[j] = dcaPrimeREC[j];
             // myEvent.startHitsRadiusREC_mini[j] = startHitsRadiusREC[j];
             // myEvent.dedxProtonREC_mini[j] = dedxProtonREC[j];
