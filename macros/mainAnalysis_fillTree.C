@@ -102,6 +102,7 @@ struct MyEvent {
    Int_t isQEDcMC_mini;
    Int_t isQEDbkg_mini;
    Int_t isPHPbkg_mini;
+   Int_t isDIFFbkg_mini;
 
    // reconstructed quantities
    Float_t xREC_es_mini,yREC_es_mini,Q2REC_es_mini;
@@ -117,6 +118,7 @@ struct MyEvent {
    Float_t hfsEREC_mini, hfsPtREC_mini, hfsPzREC_mini;
    Float_t elecEREC_mini, elecPtREC_mini, elecPzREC_mini;
    Int_t elecChargeREC_mini;
+   Float_t clusDepositREC_mini;
 
    Int_t totalMultREC_mini;
    Float_t pxREC_mini[nRECtrack_MAX];
@@ -174,18 +176,18 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    int dis_events = 0;
    int diffractive_events = 0;
    if( doRapgap_ && doGen_ ){
-      tree->Add("../batch/output/mc_9299_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9300_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9301_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9302_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9303_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9304_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9305_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_9306_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9299_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9300_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9301_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9302_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9303_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9304_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9305_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9306_hadCaliNewKine_V0sWeight/*.root");
       dis_events = tree->GetEntries();
       //save the number of events that separate inclusive DIS to diffractive DIS
       
-      tree->Add("../batch/output/mc_9015_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_9015_hadCaliNewKine_V0sWeight/*.root");
       diffractive_events = tree->GetEntries();
       
       //pythia
@@ -196,8 +198,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       // dis_events = tree->GetEntries();
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/mc_8927_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_8926_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_8927_hadCaliNewKine_V0sWeight/*.root");
       dis_events = tree->GetEntries();
 
       //pythia
@@ -208,8 +210,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       // dis_events = tree->GetEntries();
    }
    else if( !doGen_ ){
-      tree->Add("../batch/output/data_highE_06_hadCaliNewKine/*.root");
-      tree->Add("../batch/output/data_highE_07_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/data_highE_06_hadCaliNewKine_final/*.root");
+      tree->Add("../batch/output/data_highE_07_hadCaliNewKine_final/*.root");
    }
    else{ cout << "no files" << endl;}
   
@@ -238,6 +240,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("isQEDcMC_mini",&myEvent.isQEDcMC_mini,"isQEDcMC_mini/I");
    outtree->Branch("isQEDbkg_mini",&myEvent.isQEDbkg_mini,"isQEDbkg_mini/I");
    outtree->Branch("isPHPbkg_mini",&myEvent.isPHPbkg_mini,"isPHPbkg_mini/I");
+   outtree->Branch("isDIFFbkg_mini",&myEvent.isDIFFbkg_mini,"isDIFFbkg_mini/I");
 
    outtree->Branch("nMCtrack_mini",&myEvent.nMCtrack_mini,"nMCtrack_mini/I");
    outtree->Branch("pxMC_mini",myEvent.pxMC_mini,"pxMC_mini[nMCtrack_mini]/F");
@@ -265,6 +268,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("Q2REC_es_mini",&myEvent.Q2REC_es_mini,"Q2REC_es_mini/F");
    outtree->Branch("eventpass_mini",&myEvent.eventpass_mini,"eventpass_mini/I");
    outtree->Branch("nRECtrack_mini",&myEvent.nRECtrack_mini,"nRECtrack_mini/I");
+   outtree->Branch("clusDepositREC_mini",&myEvent.clusDepositREC_mini,"clusDepositREC_mini/F");
    
    outtree->Branch("EpzREC_mini",&myEvent.EpzREC_mini,"EpzREC_mini/F");
    outtree->Branch("totalMultREC_mini",&myEvent.totalMultREC_mini,"totalMultREC_mini/I");
@@ -304,9 +308,11 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t hfsEREC,hfsPxREC, hfsPyREC, hfsPzREC;
       Float_t elecXclusREC,elecYclusREC, elecThetaREC,elecEnergyREC,elecEfracREC,elecHfracREC;
       Int_t elecChargeREC;
+      Float_t clusDepositREC;
       Float_t eElectronBeam;
       Int_t isQEDc;
       Int_t isQEDbkg;
+
       Float_t dRRadPhot;
       Float_t dPhiRadPhot;
      
@@ -452,6 +458,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("hfsPzREC",&hfsPzREC);
       tree->SetBranchAddress("hfsEREC",&hfsEREC);
       
+      tree->SetBranchAddress("clusDepositREC",&clusDepositREC);
       tree->SetBranchAddress("nRECtrack",&nRECtrack);
       tree->SetBranchAddress("typeChgREC",typeChgREC);
       tree->SetBranchAddress("pxREC",pxREC);
@@ -588,6 +595,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             if( !doRapgap_ && i>=dis_events && Q2MC_es>2.0 ) continue;
             if( !doRapgap_ && i>=dis_events ) myEvent.isPHPbkg_mini = 1;
 
+            myEvent.isDIFFbkg_mini = 0;
+            if(doRapgap_ && i>=dis_events 
+               && i<diffractive_events) myEvent.isDIFFbkg_mini = 1;
+
             //generator level event selections:
             myEvent.xMC_es_mini = xMC_es;
             myEvent.yMC_es_mini = yMC_es;
@@ -660,6 +671,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          if( Epz > 70 || Epz < 35 ) event_pass = 0;
          //vertex cuts
          if(TMath::Abs(vertex[2]+zvtxOffset)>35.) event_pass = 0;
+         //additional cluster energy sum cut to suppress diffractions
+         if( clusDepositREC<0.5 ) event_pass = 0;
+
 
          //rec level QED Compton
          // we don't do anything at rec level
@@ -676,6 +690,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
          myEvent.eventpass_mini = event_pass;
          myEvent.nRECtrack_mini = nRECtrack;
+         myEvent.clusDepositREC_mini = clusDepositREC;
 
          double Ntracks_eta_m = 0;
          double Ntracks_eta_p = 0;
