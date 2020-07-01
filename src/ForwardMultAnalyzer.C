@@ -663,7 +663,7 @@ int main(int argc, char* argv[]) {
             H1PartMC *part=mcpart[i];
             int status=part->GetStatus();
             //check isQEDbkg
-            if( status==0 && i!=mcPartId.GetIdxScatElectron() ){
+            if( (status==0||status==202) && i!=mcPartId.GetIdxScatElectron() ){
                TLorentzVector genpart = part->GetFourVector();
                if(genpart.Theta()*TMath::RadToDeg() > 177.5 || genpart.Theta()*TMath::RadToDeg() < 15.0 ) continue;
                genPartSum += genpart;
