@@ -708,8 +708,29 @@ int main(int argc, char* argv[]) {
          }
          
          //HFS 4-vectors, calculate sigma with scatElec + radPhot
-         TLorentzVector hfs_MC_lab = ebeam_MC_lab+pbeam_MC_lab-escatPhot_MC_lab;
-         double sigma = hfs_MC_lab.E() - hfs_MC_lab.Pz();
+         // TLorentzVector hfs_MC_lab = ebeam_MC_lab+pbeam_MC_lab-escatPhot_MC_lab;
+         // double sigma = hfs_MC_lab.E() - hfs_MC_lab.Pz();
+
+         //HFS 4-vectors      
+         double hfs_MC_E_lab = 0.;     
+         double hfs_MC_pz_lab = 0.;    
+         for(int i=0;i<mcpart.GetEntries();i++) {     
+            H1PartMC *part=mcpart[i];     
+            int pdgid = part->GetPDG();      
+            int status=part->GetStatus();    
+            float charge=part->GetCharge();     
+            int elec_id = mcPartId.GetIdxScatElectron(); 
+            int phot_id = mcPartId.GetIdxRadPhoton(); 
+            if( i== phot_id ) continue;   
+            TLorentzVector p(part->GetFourVector());  
+            if( status != 0 || i == elec_id ) continue;     
+            if( p.DeltaR(mcpart[elec_id]->GetFourVector())<ELEC_ISOLATION_CONE ) continue;   
+
+            hfs_MC_E_lab += part->GetE();    
+            hfs_MC_pz_lab += part->GetPz();     
+         }     
+
+         double sigma = hfs_MC_E_lab - hfs_MC_pz_lab;
  
          H1MakeKine makeKin_es;
          makeKin_es.MakeESig(escatPhot_MC_lab.E(), escatPhot_MC_lab.Theta(), sigma, ebeam_MC_lab.E(), pbeam_MC_lab.E());
