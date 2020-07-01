@@ -2,12 +2,12 @@
 <!DOCTYPE Minitree SYSTEM "minitree.dtd">
 <Minitree>
   <InputFile name="data" type="data" luminosity="136" treename="miniTree">
-    ../../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine.root
+    ../../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine_final.root
   </InputFile>
   <InputFile name="djangoh" type="signal" luminosity="136" treename="miniTree">
-    ../../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_addQEDbkg.root
+    ../../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_final.root
   </InputFile>
   <InputFile name="rapgap" type="signal" luminosity="136" treename="miniTree">
-    ../../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_addQEDbkg_10perDIFF.root
+    ../../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_final.root
   </InputFile>
 </Minitree>
