@@ -229,14 +229,14 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
 
-   outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
-   outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
-   outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
-   outtree->Branch("elecEMC_mini",&myEvent.elecEMC_mini,"elecEMC_mini/F");
-   outtree->Branch("phoPxMC_mini",myEvent.phoPxMC_mini,"phoPxMC_mini[3]/F");
-   outtree->Branch("phoPyMC_mini",myEvent.phoPyMC_mini,"phoPyMC_mini[3]/F");
-   outtree->Branch("phoPzMC_mini",myEvent.phoPzMC_mini,"phoPzMC_mini[3]/F");
-   outtree->Branch("phoEMC_mini",myEvent.phoEMC_mini,"phoEMC_mini[3]/F");
+   // outtree->Branch("elecPxMC_mini",&myEvent.elecPxMC_mini,"elecPxMC_mini/F");
+   // outtree->Branch("elecPyMC_mini",&myEvent.elecPyMC_mini,"elecPyMC_mini/F");
+   // outtree->Branch("elecPzMC_mini",&myEvent.elecPzMC_mini,"elecPzMC_mini/F");
+   // outtree->Branch("elecEMC_mini",&myEvent.elecEMC_mini,"elecEMC_mini/F");
+   // outtree->Branch("phoPxMC_mini",myEvent.phoPxMC_mini,"phoPxMC_mini[3]/F");
+   // outtree->Branch("phoPyMC_mini",myEvent.phoPyMC_mini,"phoPyMC_mini[3]/F");
+   // outtree->Branch("phoPzMC_mini",myEvent.phoPzMC_mini,"phoPzMC_mini[3]/F");
+   // outtree->Branch("phoEMC_mini",myEvent.phoEMC_mini,"phoEMC_mini[3]/F");
    outtree->Branch("isQEDcMC_mini",&myEvent.isQEDcMC_mini,"isQEDcMC_mini/I");
    outtree->Branch("isQEDbkg_mini",&myEvent.isQEDbkg_mini,"isQEDbkg_mini/I");
    outtree->Branch("isPHPbkg_mini",&myEvent.isPHPbkg_mini,"isPHPbkg_mini/I");
@@ -283,7 +283,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("ptStarREC_mini",myEvent.ptStarREC_mini,"ptStarREC_mini[nRECtrack_mini]/F");
    outtree->Branch("etaStarREC_mini",myEvent.etaStarREC_mini,"etaStarREC_mini[nRECtrack_mini]/F");
    outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
-   
    outtree->Branch("typeChgREC_mini",&myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
    outtree->Branch("nucliaREC_mini",myEvent.nucliaREC_mini,"nucliaREC_mini[nRECtrack_mini]/F");
    outtree->Branch("passREC_mini",myEvent.passREC_mini,"passREC_mini[nRECtrack_mini]/I");
@@ -526,7 +525,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                   evt_weight = w*y_weight*vtxZ_weight*(136./68);//68,RAD,204 for NRAD //data/mc Lumi
                }
                else if( i >= dis_events && i < diffractive_events ){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./219.35)*0.1;//diffractive weights for 10% of DIS cross section
+                  evt_weight = w*y_weight*vtxZ_weight*(136./219.35);//diffractive weights for 10% of DIS cross section
                }
                else if( i >= diffractive_events && i < tree->GetEntries()){
                   evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
@@ -633,19 +632,19 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.isQEDbkg_mini = isQEDbkg;
 
             //gen level QED Compton
-            TLorentzVector eMC, eGamma,sumEgamma;
-            eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
-            myEvent.elecPxMC_mini = eMC.Px();
-            myEvent.elecPyMC_mini = eMC.Py();
-            myEvent.elecPzMC_mini = eMC.Pz();
-            myEvent.elecEMC_mini = eMC.E();
-            for(int itype=0;itype<3;itype++){
-               eGamma.SetPxPyPzE(radPhoPxMC[itype],radPhoPyMC[itype],radPhoPzMC[itype],radPhoEMC[itype]);
-               myEvent.phoPxMC_mini[itype] = eGamma.Px();
-               myEvent.phoPyMC_mini[itype] = eGamma.Py();
-               myEvent.phoPzMC_mini[itype] = eGamma.Pz();
-               myEvent.phoEMC_mini[itype] = eGamma.E();
-            }
+            // TLorentzVector eMC, eGamma,sumEgamma;
+            // eMC.SetPxPyPzE(elecPxMC,elecPyMC,elecPzMC,elecEMC);
+            // myEvent.elecPxMC_mini = eMC.Px();
+            // myEvent.elecPyMC_mini = eMC.Py();
+            // myEvent.elecPzMC_mini = eMC.Pz();
+            // myEvent.elecEMC_mini = eMC.E();
+            // for(int itype=0;itype<3;itype++){
+            //    eGamma.SetPxPyPzE(radPhoPxMC[itype],radPhoPyMC[itype],radPhoPzMC[itype],radPhoEMC[itype]);
+            //    myEvent.phoPxMC_mini[itype] = eGamma.Px();
+            //    myEvent.phoPyMC_mini[itype] = eGamma.Py();
+            //    myEvent.phoPzMC_mini[itype] = eGamma.Pz();
+            //    myEvent.phoEMC_mini[itype] = eGamma.E();
+            // }
           }//end doGen_
 
          int event_pass = 1;
@@ -673,7 +672,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          if(TMath::Abs(vertex[2]+zvtxOffset)>35.) event_pass = 0;
          //additional cluster energy sum cut to suppress diffractions
          if( clusDepositREC<0.5 ) event_pass = 0;
-
 
          //rec level QED Compton
          // we don't do anything at rec level
@@ -753,7 +751,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.dmatchREC_mini[j] = dmatchREC[j];
             myEvent.imatchREC_mini[j] = imatchREC[j];       
             myEvent.passREC_mini[j] = pass_default; 
- 
+            
             // myEvent.dcaPrimeREC_mini[j] = dcaPrimeREC[j];
             // myEvent.startHitsRadiusREC_mini[j] = startHitsRadiusREC[j];
             // myEvent.dedxProtonREC_mini[j] = dedxProtonREC[j];
