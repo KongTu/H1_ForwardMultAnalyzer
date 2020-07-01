@@ -92,6 +92,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	Float_t etaStarMC_mini[nMCtrack_MAX];
 	Float_t ptStarMC_mini[nMCtrack_MAX];
 	Float_t chargeMC_mini[nMCtrack_MAX];
+	Int_t isDaughtersMC_mini[nMCtrack_MAX];
    	
 	tree->SetBranchAddress("yMC_es_mini",&yMC_es_mini);
 	tree->SetBranchAddress("Q2MC_es_mini",&Q2MC_es_mini);
@@ -119,6 +120,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	tree->SetBranchAddress("etaMC_mini",&etaMC_mini);
 	tree->SetBranchAddress("etaStarMC_mini",&etaStarMC_mini);
 	tree->SetBranchAddress("ptStarMC_mini",&ptStarMC_mini);
+	tree->SetBranchAddress("isDaughtersMC_mini",&isDaughtersMC_mini);
 
 	Float_t xREC_es_mini,yREC_es_mini,Q2REC_es_mini;
 	const int nRECtrack_MAX = 200;
@@ -361,6 +363,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 
 			for(int itrk = 0; itrk < nMCtrack_mini; itrk++){
+				if( isDaughtersMC_mini[itrk]!=0 ) continue;
 				if( TMath::Hypot(pxMC_mini[itrk],pyMC_mini[itrk]) > 0.15 ){
 					if( fabs(etaMC_mini[itrk]) < 1.6 ){
 						if( etaStarMC_mini[itrk] > 0 && etaStarMC_mini[itrk] < 4.0 ){
@@ -394,7 +397,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 
 			//filling QED Compton delta phi
-			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 && isQEDbkg_mini==0) {
+			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 && isQEDbkg_mini==0 && isDIFFbkg_mini==0 ) {
 				TLorentzVector eMC;eMC.SetPxPyPzE(elecPxMC_mini,elecPyMC_mini,elecPzMC_mini,elecEMC_mini);
 				TLorentzVector eGamma, sumEgamma;
 				for(int itype=0;itype<3;itype++){
@@ -438,7 +441,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 				
 			}
-			if(Q2_INDEX >=0 && y_INDEX >= 0 ){//no QEDc event counted as radiative Gen
+			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 && isQEDbkg_mini==0 && isDIFFbkg_mini==0 ){//no QEDc event counted as radiative Gen
 				//HCM frame
 				h_Pn_GEN_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, w_mini );
 				h_Pn_GEN_HCM_noSel[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_noSel, w_mini );
