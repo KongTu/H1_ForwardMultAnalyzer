@@ -438,7 +438,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 				
 			}
-			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 && isQEDbkg_mini==0 ){//no QEDc event counted as radiative Gen
+			if(Q2_INDEX >=0 && y_INDEX >= 0 ){//no QEDc event counted as radiative Gen
 				//HCM frame
 				h_Pn_GEN_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, w_mini );
 				h_Pn_GEN_HCM_noSel[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_noSel, w_mini );
