@@ -73,6 +73,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	Int_t nMCtrack_mini;
 	Int_t isQEDcMC_mini;
 	Int_t isQEDbkg_mini;
+	Int_t isDIFFbkg_mini;
 	Float_t dRRadPhot_mini;
 	Float_t dPhiRadPhot_mini;
 	Float_t elecPxMC_mini;
@@ -97,7 +98,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	tree->SetBranchAddress("yMC_mini",&yMC_mini);
 	tree->SetBranchAddress("Q2MC_mini",&Q2MC_mini);
 	tree->SetBranchAddress("isQEDcMC_mini",&isQEDcMC_mini);
-	// tree->SetBranchAddress("isQEDbkg_mini",&isQEDbkg_mini);
+	tree->SetBranchAddress("isQEDbkg_mini",&isQEDbkg_mini);
+	tree->SetBranchAddress("isDIFFbkg_mini",&isDIFFbkg_mini);
 	tree->SetBranchAddress("elecPxMC_mini",&elecPxMC_mini);
 	tree->SetBranchAddress("elecPyMC_mini",&elecPyMC_mini);
 	tree->SetBranchAddress("elecPzMC_mini",&elecPzMC_mini);
@@ -386,13 +388,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 			if( ifile_==2 ){
 				//no mixing diffractive
-				if( ievent<39999984 ) continue;
+				// if( ievent<39999984 ) continue;
 				if(ievent<44999982) generator_index=0;
 				else generator_index=1;
 			}
 
 			//filling QED Compton delta phi
-			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 ) {
+			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 && isQEDbkg_mini==0 && isDIFFbkg_mini==0 ) {
 				TLorentzVector eMC;eMC.SetPxPyPzE(elecPxMC_mini,elecPyMC_mini,elecPzMC_mini,elecEMC_mini);
 				TLorentzVector eGamma, sumEgamma;
 				for(int itype=0;itype<3;itype++){
@@ -436,7 +438,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 				
 			}
-			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 ){//no QEDc event counted as radiative Gen
+			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 && isQEDbkg_mini==0 && isDIFFbkg_mini==0 ){//no QEDc event counted as radiative Gen
 				//HCM frame
 				h_Pn_GEN_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, w_mini );
 				h_Pn_GEN_HCM_noSel[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_noSel, w_mini );
