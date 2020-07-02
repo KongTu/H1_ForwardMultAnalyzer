@@ -645,7 +645,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          int event_pass = 1;
          /**RECO level starts here both MC and DATA**/
          if( (doGen_ && trigWeightRW <= 0) || (!doGen_ && trigWeightAC <= 0) ) event_pass = 0; //require trigger fired
+                  cout << "eventpass 1 ~ " << event_pass<< endl;
+
          if( vertexType != 1 ) event_pass = 0;
+                  cout << "eventpass 2 ~ " << event_pass<< endl;
 
          double Epz = hfsEREC+elecEREC - (hfsPzREC+elecPzREC);
          myEvent.EpzREC_mini = Epz;
@@ -657,14 +660,22 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          if( (ibgREC & 16) != 0 ) event_pass = 0;
          if( (ibgREC & 32) != 0 ) event_pass = 0;
          if( (ibgREC & 64) != 0 ) event_pass = 0;  
+                           cout << "eventpass 3 ~ " << event_pass<< endl;
+
          //kinematic cuts are not included   
          //Cut electron spatial 
          if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) event_pass = 0;
          if( elecEREC < 12. ) event_pass = 0; 
+                           cout << "eventpass 4 ~ " << event_pass<< endl;
+
          //E-pz cuts
          if( Epz > 70 || Epz < 35 ) event_pass = 0;
+                           cout << "eventpass 5 ~ " << event_pass<< endl;
+
          //vertex cuts
          if(TMath::Abs(vertex[2]+zvtxOffset)>35.) event_pass = 0;
+                           cout << "eventpass 6 ~ " << event_pass<< endl;
+
          //additional cluster energy sum cut to suppress diffractions
          // if( clusDepositREC<0.5 ) event_pass = 0;
 
