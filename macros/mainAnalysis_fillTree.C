@@ -666,7 +666,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          //vertex cuts
          if(TMath::Abs(vertex[2]+zvtxOffset)>35.) event_pass = 0;
          //additional cluster energy sum cut to suppress diffractions
-         if( clusDepositREC<0.5 ) event_pass = 0;
+         // if( clusDepositREC<0.5 ) event_pass = 0;
 
          //rec level QED Compton
          // we don't do anything at rec level
