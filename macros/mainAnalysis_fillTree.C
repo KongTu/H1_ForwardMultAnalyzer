@@ -584,8 +584,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             if( !doRapgap_ && i>=dis_events ) myEvent.isPHPbkg_mini = 1;
 
             myEvent.isDIFFbkg_mini = 0;
-            if(doRapgap_ && i>=dis_events 
-               && i<diffractive_events) myEvent.isDIFFbkg_mini = 1;
+            // if(doRapgap_ && i>=dis_events 
+            //    && i<diffractive_events) myEvent.isDIFFbkg_mini = 1;
 
             //generator level event selections:
             myEvent.xMC_es_mini = xMC_es;
@@ -596,10 +596,15 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             double Ntracks_eta_p_MC=0.;
             double Ntracks_eta_m_MC=0.;
             double etaAsymMC=0.;
+            TVector3 genPartSum(0.,0.,0.);
             for(int j=0;j<nMCtrack;j++) {
                myEvent.pxMC_mini[j] = pxMC[j];
                myEvent.pyMC_mini[j] = pyMC[j];
                myEvent.pzMC_mini[j] = pzMC[j];
+               TVector3 genPart;
+               genPart.SetXYZ(pxMC[j],pyMC[j],pzMC[j]);
+               if( genPart.Theta()*TMath::RadToDeg() > 4.4 && 
+                  genPart.Theta()*TMath::RadToDeg() <15.0 ) genPartSum += genPart;
                myEvent.etaMC_mini[j] = etaMC[j];
                myEvent.chargeMC_mini[j] = chargeMC[j];
                myEvent.ptStarMC_mini[j] = ptStarMC[j];
@@ -617,6 +622,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.totalMultMC_mini = (int) (Ntracks_eta_p_MC+Ntracks_eta_m_MC);
             myEvent.isQEDcMC_mini = isQEDc;
             myEvent.isQEDbkg_mini = isQEDbkg;
+            if(genPartSum.Mag()<0.5) myEvent.isDIFFbkg_mini = 1;
 
             //gen level QED Compton
             // TLorentzVector eMC, eGamma,sumEgamma;
