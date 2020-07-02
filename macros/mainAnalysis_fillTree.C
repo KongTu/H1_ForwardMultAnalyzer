@@ -176,38 +176,38 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    int dis_events = 0;
    int diffractive_events = 0;
    if( doRapgap_ && doGen_ ){
-      tree->Add("../batch/output/mc_9299_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9300_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9301_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9302_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9303_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9304_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9305_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9306_hadCaliNewKine_V0sWeight/*.root");
-      dis_events = tree->GetEntries();
+      // tree->Add("../batch/output/mc_9299_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9300_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9301_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9302_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9303_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9304_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9305_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9306_hadCaliNewKine_V0sWeight/*.root");
+      // dis_events = tree->GetEntries();
       //save the number of events that separate inclusive DIS to diffractive DIS
       
-      tree->Add("../batch/output/mc_9015_hadCaliNewKine_V0sWeight/*.root");
-      diffractive_events = tree->GetEntries();
+      // tree->Add("../batch/output/mc_9015_hadCaliNewKine_V0sWeight/*.root");
+      // diffractive_events = tree->GetEntries();
       
       //pythia
       // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
 
       //nonradiative RAPGAP
-      // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
-      // dis_events = tree->GetEntries();
+      tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
+      dis_events = tree->GetEntries();
    }
    else if( !doRapgap_ && doGen_){
-      tree->Add("../batch/output/mc_8926_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_8927_hadCaliNewKine_V0sWeight/*.root");
-      dis_events = tree->GetEntries();
+      // tree->Add("../batch/output/mc_8926_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_8927_hadCaliNewKine_V0sWeight/*.root");
+      // dis_events = tree->GetEntries();
 
       //pythia
       // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
 
       //nonradiative DJANGO
-      // tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
-      // dis_events = tree->GetEntries();
+      tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
+      dis_events = tree->GetEntries();
    }
    else if( !doGen_ ){
       tree->Add("../batch/output/data_highE_06_hadCaliNewKine_final/*.root");
@@ -513,7 +513,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             if( vtxZ_weight == 0. ) vtxZ_weight = 1.0;
             if( doRapgap_ ){//rapgap has diffractive MCs
                if( i < dis_events ){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./68);//68,RAD,204 for NRAD //data/mc Lumi
+                  evt_weight = w*y_weight*vtxZ_weight*(136./204);//68,RAD,204 for NRAD //data/mc Lumi
                }
                else if( i >= dis_events && i < diffractive_events ){
                   evt_weight = w*y_weight*vtxZ_weight*(136./219.35);//diffractive weights for 10% of DIS cross section
@@ -523,7 +523,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                }
             }
             else{
-               if( i<dis_events ) evt_weight = w*y_weight*vtxZ_weight*(136./363);//162.03 for NRAD, 363 for RAD
+               if( i<dis_events ) evt_weight = w*y_weight*vtxZ_weight*(136./162.03);//162.03 for NRAD, 363 for RAD
                if( i>= dis_events ) evt_weight = w*y_weight*vtxZ_weight*(136./449.); //449. q2<2 for PYTHIA64
             }
          }
