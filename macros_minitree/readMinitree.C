@@ -395,6 +395,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				if(ievent<44999982) generator_index=0;
 				else generator_index=1;
 			}
+			else{
+				generator_index=0;
+			}
 
 			//filling QED Compton delta phi
 			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 && isQEDbkg_mini==0 && isDIFFbkg_mini==0 ) {
