@@ -300,6 +300,8 @@ int main(int argc, char * const argv[]) {
   recVariables.AddVar("pyREC_mini");
   recVariables.AddVar("nucliaREC_mini");
   recVariables.AddVar("passREC_mini");
+  recVariables.AddVar("clusDepositREC_mini");
+
   genVariables.AddVar("nMCtrack_mini");
   genVariables.AddVar("etaStarMC_mini");
   genVariables.AddVar("etaMC_mini");
@@ -470,6 +472,8 @@ int main(int argc, char * const argv[]) {
            VarData const *pyREC_mini=recVariables.FindVar("pyREC_mini");
            VarData const *nucliaREC_mini=recVariables.FindVar("nucliaREC_mini");
            VarData const *passREC_mini=recVariables.FindVar("passREC_mini");
+           VarData const *clusDepositREC_mini=recVariables.FindVar("clusDepositREC_mini");
+
            VarData const *nMCtrack_mini=genVariables.FindVar("nMCtrack_mini");
            VarData const *etaStarMC_mini=genVariables.FindVar("etaStarMC_mini");
            VarData const *etaMC_mini=genVariables.FindVar("etaMC_mini");
@@ -493,7 +497,7 @@ int main(int argc, char * const argv[]) {
               if((ievt%200000)==0) cout<<"ievt="<<ievt<<"\n";
               // skip non-reconstructed events
               // if there are no gen-level histograms
-              bool isReconstructed=(eventpass_mini->Int()>0);
+              bool isReconstructed=(eventpass_mini->Int()>0&&clusDepositREC_mini->Double()>1.0);
               if((!fillGen)&&(!isReconstructed)) continue;
               // event weight
               double w=weight->Double()*lumiWeight;
