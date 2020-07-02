@@ -519,8 +519,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                //    evt_weight = w*y_weight*vtxZ_weight*(136./219.35);//diffractive weights for 10% of DIS cross section
                // }
                // else if( i >= diffractive_events && i < tree->GetEntries()){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
+               //    evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
                // }
+               evt_weight = w*(136./449);//449. q2<2 for PYTHIA64
+
             }
             else{
                if( i<dis_events ) evt_weight = w*y_weight*vtxZ_weight*(136./162.03);//162.03 for NRAD, 363 for RAD
