@@ -191,11 +191,11 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       // diffractive_events = tree->GetEntries();
       
       //pythia
-      // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
 
       //nonradiative RAPGAP
-      tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
-      dis_events = tree->GetEntries();
+      // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
+      // dis_events = tree->GetEntries();
    }
    else if( !doRapgap_ && doGen_){
       // tree->Add("../batch/output/mc_8926_hadCaliNewKine_V0sWeight/*.root");
@@ -206,8 +206,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
 
       //nonradiative DJANGO
-      tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
-      dis_events = tree->GetEntries();
+      // tree->Add("../batch/output/mc_5877_NRAD_django14_NewKine/*.root");
+      // dis_events = tree->GetEntries();
    }
    else if( !doGen_ ){
       tree->Add("../batch/output/data_highE_06_hadCaliNewKine_final/*.root");
@@ -512,15 +512,15 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             double vtxZ_weight = DATA_vtxZ->GetBinContent( DATA_vtxZ->FindBin( simvertex[2]) );
             if( vtxZ_weight == 0. ) vtxZ_weight = 1.0;
             if( doRapgap_ ){//rapgap has diffractive MCs
-               if( i < dis_events ){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./204);//68,RAD,204 for NRAD //data/mc Lumi
-               }
-               else if( i >= dis_events && i < diffractive_events ){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./219.35);//diffractive weights for 10% of DIS cross section
-               }
-               else if( i >= diffractive_events && i < tree->GetEntries()){
+               // if( i < dis_events ){
+               //    evt_weight = w*y_weight*vtxZ_weight*(136./204);//68,RAD,204 for NRAD //data/mc Lumi
+               // }
+               // else if( i >= dis_events && i < diffractive_events ){
+               //    evt_weight = w*y_weight*vtxZ_weight*(136./219.35);//diffractive weights for 10% of DIS cross section
+               // }
+               // else if( i >= diffractive_events && i < tree->GetEntries()){
                   evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
-               }
+               // }
             }
             else{
                if( i<dis_events ) evt_weight = w*y_weight*vtxZ_weight*(136./162.03);//162.03 for NRAD, 363 for RAD
@@ -577,7 +577,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          
          if( doGen_ ){
             //this is to remove overlap for pythia64 and assign PHPbkg flag
-            myEvent.isPHPbkg_mini = 0;
+            myEvent.isPHPbkg_mini = 1;
             // if( doRapgap_ && i>=diffractive_events && Q2MC_es>2.0 ) continue;
             // if( doRapgap_ && i>=diffractive_events ) myEvent.isPHPbkg_mini = 1;
             // if( !doRapgap_ && i>=dis_events && Q2MC_es>2.0 ) continue;
