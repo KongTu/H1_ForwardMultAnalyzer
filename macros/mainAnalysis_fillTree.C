@@ -580,6 +580,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          if( doGen_ ){
             //this is to remove overlap for pythia64 and assign PHPbkg flag
             myEvent.isPHPbkg_mini = 1;
+            if(Q2MC_es>2.0) continue;
             // if( doRapgap_ && i>=diffractive_events && Q2MC_es>2.0 ) continue;
             // if( doRapgap_ && i>=diffractive_events ) myEvent.isPHPbkg_mini = 1;
             // if( !doRapgap_ && i>=dis_events && Q2MC_es>2.0 ) continue;
