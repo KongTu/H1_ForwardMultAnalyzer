@@ -488,7 +488,7 @@ int main(int argc, char * const argv[]) {
               if((ievt%200000)==0) cout<<"ievt="<<ievt<<"\n";
               // skip non-reconstructed events
               // if there are no gen-level histograms
-              bool isReconstructed=(eventpass_mini->Int()>0&&clusDepositREC_mini->Double()>1.0);
+              bool isReconstructed=(eventpass_mini->Int()>0);
               if((!fillGen)&&(!isReconstructed)) continue;
               // event weight
               double w=weight->Double()*lumiWeight;
