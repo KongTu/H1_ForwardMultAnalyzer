@@ -668,6 +668,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          //additional cluster energy sum cut to suppress diffractions
          // if( clusDepositREC<0.5 ) event_pass = 0;
 
+         cout << "eventpass_mini ~ " << event_pass<< endl;
+         cout << "Q2 "<< Q2REC_es << endl;
          //rec level QED Compton
          // we don't do anything at rec level
          //end QED Compton
