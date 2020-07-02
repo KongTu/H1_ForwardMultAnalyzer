@@ -459,6 +459,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 		}
 
+		cout << "Q2 " << Q2REC_es_mini << endl;
 		if( Q2REC_es_mini > Q2max || Q2REC_es_mini < Q2min ) continue;
 		if( yREC_es_mini > ymax || yREC_es_mini < ymin ) continue;
 		if( eventpass_mini != 1 ) continue;
