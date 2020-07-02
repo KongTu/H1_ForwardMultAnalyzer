@@ -176,31 +176,31 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    int dis_events = 0;
    int diffractive_events = 0;
    if( doRapgap_ && doGen_ ){
-      // tree->Add("../batch/output/mc_9299_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9300_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9301_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9302_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9303_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9304_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9305_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9306_hadCaliNewKine_V0sWeight/*.root");
-      // dis_events = tree->GetEntries();
-      //save the number of events that separate inclusive DIS to diffractive DIS
+      tree->Add("../batch/output/mc_9299_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9300_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9301_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9302_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9303_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9304_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9305_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9306_hadCaliNewKine_V0sWeight/*.root");
+      dis_events = tree->GetEntries();
+      // save the number of events that separate inclusive DIS to diffractive DIS
       
-      // tree->Add("../batch/output/mc_9015_hadCaliNewKine_V0sWeight/*.root");
-      // diffractive_events = tree->GetEntries();
+      tree->Add("../batch/output/mc_9015_hadCaliNewKine_V0sWeight/*.root");
+      diffractive_events = tree->GetEntries();
       
       //pythia
-      tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
 
       //nonradiative RAPGAP
       // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
       // dis_events = tree->GetEntries();
    }
    else if( !doRapgap_ && doGen_){
-      // tree->Add("../batch/output/mc_8926_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_8927_hadCaliNewKine_V0sWeight/*.root");
-      // dis_events = tree->GetEntries();
+      tree->Add("../batch/output/mc_8926_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_8927_hadCaliNewKine_V0sWeight/*.root");
+      dis_events = tree->GetEntries();
 
       //pythia
       // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
@@ -512,20 +512,20 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             double vtxZ_weight = DATA_vtxZ->GetBinContent( DATA_vtxZ->FindBin( simvertex[2]) );
             if( vtxZ_weight == 0. ) vtxZ_weight = 1.0;
             if( doRapgap_ ){//rapgap has diffractive MCs
-               // if( i < dis_events ){
-               //    evt_weight = w*y_weight*vtxZ_weight*(136./204);//68,RAD,204 for NRAD //data/mc Lumi
-               // }
-               // else if( i >= dis_events && i < diffractive_events ){
-               //    evt_weight = w*y_weight*vtxZ_weight*(136./219.35);//diffractive weights for 10% of DIS cross section
-               // }
-               // else if( i >= diffractive_events && i < tree->GetEntries()){
-               //    evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
-               // }
-               evt_weight = w*(136./449);//449. q2<2 for PYTHIA64
+               if( i < dis_events ){
+                  evt_weight = w*y_weight*vtxZ_weight*(136./68);//68,RAD,204 for NRAD //data/mc Lumi
+               }
+               else if( i >= dis_events && i < diffractive_events ){
+                  evt_weight = w*y_weight*vtxZ_weight*(136./219.35);//diffractive weights for 10% of DIS cross section
+               }
+               else if( i >= diffractive_events && i < tree->GetEntries()){
+                  evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
+               }
+               // evt_weight = w*(136./449);//449. q2<2 for PYTHIA64
 
             }
             else{
-               if( i<dis_events ) evt_weight = w*y_weight*vtxZ_weight*(136./162.03);//162.03 for NRAD, 363 for RAD
+               if( i<dis_events ) evt_weight = w*y_weight*vtxZ_weight*(136./363);//162.03 for NRAD, 363 for RAD
                if( i>= dis_events ) evt_weight = w*y_weight*vtxZ_weight*(136./449.); //449. q2<2 for PYTHIA64
             }
          }
@@ -578,18 +578,11 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          }
          
          if( doGen_ ){
+            myEvent.isPHPbkg_mini = 0;
             //this is to remove overlap for pythia64 and assign PHPbkg flag
-            myEvent.isPHPbkg_mini = 1;
-            if(Q2MC_es>2.0) continue;
-            // if( doRapgap_ && i>=diffractive_events && Q2MC_es>2.0 ) continue;
-            // if( doRapgap_ && i>=diffractive_events ) myEvent.isPHPbkg_mini = 1;
-            // if( !doRapgap_ && i>=dis_events && Q2MC_es>2.0 ) continue;
-            // if( !doRapgap_ && i>=dis_events ) myEvent.isPHPbkg_mini = 1;
-
+            // if(Q2MC_es>2.0) continue;
             myEvent.isDIFFbkg_mini = 0;
-            // if(doRapgap_ && i>=dis_events 
-            //    && i<diffractive_events) myEvent.isDIFFbkg_mini = 1;
-
+        
             //generator level event selections:
             myEvent.xMC_es_mini = xMC_es;
             myEvent.yMC_es_mini = yMC_es;
@@ -660,14 +653,14 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          if( (ibgREC & 64) != 0 ) event_pass = 0;  
          //kinematic cuts are not included   
          //Cut electron spatial 
-            // if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) event_pass = 0;
+         if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) event_pass = 0;
          if( elecEREC < 12. ) event_pass = 0; 
          //E-pz cuts
          if( Epz > 70 || Epz < 35 ) event_pass = 0;
          //vertex cuts
          if(TMath::Abs(vertex[2]+zvtxOffset)>35.) event_pass = 0;
          //additional cluster energy sum cut to suppress diffractions
-            // if( clusDepositREC<0.5 ) event_pass = 0;
+         if( clusDepositREC<0.5 ) event_pass = 0;
 
          //rec level QED Compton
          // we don't do anything at rec level
