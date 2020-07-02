@@ -659,16 +659,15 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          if( (ibgREC & 64) != 0 ) event_pass = 0;  
          //kinematic cuts are not included   
          //Cut electron spatial 
-         // if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) event_pass = 0;
+            // if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) event_pass = 0;
          if( elecEREC < 12. ) event_pass = 0; 
          //E-pz cuts
          if( Epz > 70 || Epz < 35 ) event_pass = 0;
          //vertex cuts
          if(TMath::Abs(vertex[2]+zvtxOffset)>35.) event_pass = 0;
          //additional cluster energy sum cut to suppress diffractions
-         // if( clusDepositREC<0.5 ) event_pass = 0;
+            // if( clusDepositREC<0.5 ) event_pass = 0;
 
-         cout << "eventpass_mini ~ " << event_pass<< endl;
          //rec level QED Compton
          // we don't do anything at rec level
          //end QED Compton
