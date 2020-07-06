@@ -300,7 +300,6 @@ int main(int argc, char * const argv[]) {
   recVariables.AddVar("pyREC_mini");
   recVariables.AddVar("nucliaREC_mini");
   recVariables.AddVar("passREC_mini");
-  recVariables.AddVar("clusDepositREC_mini");
 
   genVariables.AddVar("nMCtrack_mini");
   genVariables.AddVar("etaStarMC_mini");
@@ -472,7 +471,6 @@ int main(int argc, char * const argv[]) {
            VarData const *pyREC_mini=recVariables.FindVar("pyREC_mini");
            VarData const *nucliaREC_mini=recVariables.FindVar("nucliaREC_mini");
            VarData const *passREC_mini=recVariables.FindVar("passREC_mini");
-           VarData const *clusDepositREC_mini=recVariables.FindVar("clusDepositREC_mini");
 
            VarData const *nMCtrack_mini=genVariables.FindVar("nMCtrack_mini");
            VarData const *etaStarMC_mini=genVariables.FindVar("etaStarMC_mini");
@@ -510,9 +508,9 @@ int main(int argc, char * const argv[]) {
               //gen level signal and background;
               int QEDc = isQEDcMC_mini->Int();
               int QEDbkg = isQEDbkg_mini->Int();
-              int DIFFbkg = isDIFFbkg_mini->Int();
+              int DIFFbkg = isDIFFbkg_mini->Int();//not using it for final results
               bool isSignal=true;
-              if(QEDc==1||QEDbkg==1||DIFFbkg==1) isSignal=false;
+              if(QEDc==1||QEDbkg==1) isSignal=false;
 
               //  these are the bin numbers in (Q2,y,track multiplicity)
               //    index: eta bin
