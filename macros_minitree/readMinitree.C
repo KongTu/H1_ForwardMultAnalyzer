@@ -27,10 +27,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		file = new TFile("../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine_final.root");
 	}else if(ifile_ == 1) {
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_NRAD_supDIFF.root");
+		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_withDIFF.root");
 	}else if(ifile_ == 2){
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_NRAD_supDIFF.root");
+		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_withDIFF.root");
 	}
 	else if(ifile_ == 3){
 		file = new TFile("../new_output/mc_highE_PYTHIA6_noReweight_Tree_hadCaliNewKine_photoproduction.root");
@@ -41,10 +41,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine_final.root";
 	}else if( ifile_ == 1 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_django_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_NRAD_supDIFF.root";
+		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_withDIFF.root";
 	}else if( ifile_ == 2 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_NRAD_supDIFF.root";
+		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_withDIFF.root";
 	}
 	else if( ifile_ == 3 ){
 		outname = "../minitree_output/Pn_hist_pythia_hadCaliNewKine_photoproduction.root";
@@ -400,7 +400,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 
 			//filling QED Compton delta phi
-			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 && isQEDbkg_mini==0 && isDIFFbkg_mini==0 ) {
+			if(Q2_INDEX>=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 && isQEDbkg_mini==0 ) {
 				TLorentzVector eMC;eMC.SetPxPyPzE(elecPxMC_mini,elecPyMC_mini,elecPzMC_mini,elecEMC_mini);
 				TLorentzVector eGamma, sumEgamma;
 				for(int itype=0;itype<3;itype++){
@@ -444,7 +444,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 				
 			}
-			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 && isQEDbkg_mini==0 && isDIFFbkg_mini==0 ){//no QEDc event counted as radiative Gen
+			if(Q2_INDEX >=0 && y_INDEX >= 0 && isQEDcMC_mini == 0 && isQEDbkg_mini==0 ){//no QEDc event counted as radiative Gen
 				//HCM frame
 				h_Pn_GEN_HCM[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM, w_mini );
 				h_Pn_GEN_HCM_noSel[Q2_INDEX][y_INDEX]->Fill( n_particle_HCM_noSel, w_mini );
