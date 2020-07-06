@@ -134,6 +134,7 @@ struct MyEvent {
    Float_t phiStarREC_mini[nRECtrack_MAX];
 
    Float_t nucliaREC_mini[nRECtrack_MAX];
+   Float_t nucliaV0sREC_mini[nRECtrack_MAX];
    Float_t dmatchREC_mini[nRECtrack_MAX];
    Int_t imatchREC_mini[nRECtrack_MAX];
    Int_t passREC_mini[nRECtrack_MAX];
@@ -282,9 +283,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("phiREC_mini",myEvent.phiREC_mini,"phiREC_mini[nRECtrack_mini]/F");
    outtree->Branch("ptStarREC_mini",myEvent.ptStarREC_mini,"ptStarREC_mini[nRECtrack_mini]/F");
    outtree->Branch("etaStarREC_mini",myEvent.etaStarREC_mini,"etaStarREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
    outtree->Branch("typeChgREC_mini",&myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
    outtree->Branch("nucliaREC_mini",myEvent.nucliaREC_mini,"nucliaREC_mini[nRECtrack_mini]/F");
+   outtree->Branch("nucliaV0sREC_mini",myEvent.nucliaV0sREC_mini,"nucliaV0sREC_mini[nRECtrack_mini]/F");
    outtree->Branch("passREC_mini",myEvent.passREC_mini,"passREC_mini[nRECtrack_mini]/I");
 
    // outtree->Branch("dcaPrimeREC_mini",myEvent.dcaPrimeREC_mini,"dcaPrimeREC_mini[nRECtrack_mini]/F");
@@ -516,7 +518,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                   evt_weight = w*y_weight*vtxZ_weight*(136./68);//68,RAD,204 for NRAD //data/mc Lumi
                }
                else if( i >= dis_events && i < diffractive_events ){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./219.35);//diffractive weights for 10% of DIS cross section
+                  evt_weight = w*y_weight*vtxZ_weight*(136./219.35)*0.1;//diffractive weights for 10% of DIS cross section
                }
                else if( i >= diffractive_events && i < tree->GetEntries()){
                   evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
@@ -660,7 +662,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          //vertex cuts
          if(TMath::Abs(vertex[2]+zvtxOffset)>35.) event_pass = 0;
          //additional cluster energy sum cut to suppress diffractions
-         if( clusDepositREC<0.5 ) event_pass = 0;
+         // if( clusDepositREC<0.5 ) event_pass = 0;
 
          //rec level QED Compton
          // we don't do anything at rec level
@@ -732,11 +734,16 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.phiREC_mini[j] = phi;
             myEvent.etaStarREC_mini[j] = etaStarREC[j];
             myEvent.ptStarREC_mini[j] = ptStarREC[j];
-            myEvent.phiStarREC_mini[j] = phiStarREC[j];
+            // myEvent.phiStarREC_mini[j] = phiStarREC[j];
             // double eff_error = 0.995;
             // if( type == 2 ) eff_error = 0.9;
             // myEvent.nucliaREC_mini[j] = nucliaREC[j]*eff_error;
             myEvent.nucliaREC_mini[j] = nucliaREC[j];
+            myEvent.nucliaV0sREC_mini[j] = nucliaREC[j];
+            int iMC=imatchREC[j];
+            if(iMC>=0){
+               if(isDaughtersMC[iMC]>0) myEvent.nucliaV0sREC_mini[j] = 0.7*nucliaREC[j];
+            }
             myEvent.dmatchREC_mini[j] = dmatchREC[j];
             myEvent.imatchREC_mini[j] = imatchREC[j];       
             myEvent.passREC_mini[j] = pass_default; 
