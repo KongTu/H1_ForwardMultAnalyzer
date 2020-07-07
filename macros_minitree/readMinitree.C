@@ -30,7 +30,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_withDIFF.root");
 	}else if(ifile_ == 2){
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_withDIFF.root");
+		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_noDIFF.root");
 	}
 	else if(ifile_ == 3){
 		file = new TFile("../new_output/mc_highE_PYTHIA6_noReweight_Tree_hadCaliNewKine_photoproduction.root");
@@ -391,7 +391,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 			if( ifile_==2 ){
 				//no mixing diffractive
-				// if( ievent<39999984 ) continue;
+				if( ievent>=39999984 ) continue;
 				if(ievent<44999982) generator_index=0;
 				else generator_index=1;
 			}
