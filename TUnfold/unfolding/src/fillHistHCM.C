@@ -291,7 +291,7 @@ int main(int argc, char * const argv[]) {
   ClassifierBinning genClassifier(genBinning,genVariables);
   
   cout<<"\nDefine variables\n";
-  recVariables.AddVar("w_moreDIFF_mini");
+  recVariables.AddVar("w_pdg_mini");
   recVariables.AddVar("eventpass_mini");
   recVariables.AddVar("nRECtrack_mini");
   recVariables.AddVar("etaStarREC_mini");
@@ -462,7 +462,7 @@ int main(int argc, char * const argv[]) {
            }
 
            // fast access inside event loop
-           VarData const *weight=recVariables.FindVar("w_moreDIFF_mini");
+           VarData const *weight=recVariables.FindVar("w_pdg_mini");
            VarData const *eventpass_mini=recVariables.FindVar("eventpass_mini");
            VarData const *nRECtrack_mini=recVariables.FindVar("nRECtrack_mini");
            VarData const *etaStarREC_mini=recVariables.FindVar("etaStarREC_mini");
