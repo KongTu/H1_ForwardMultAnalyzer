@@ -64,6 +64,9 @@ struct MyEvent {
    // general information
    Int_t run_mini,evno_mini; // run and event number
    Float_t w_mini; // event weight
+   //check MCs
+   Float_t w_pdg_mini;
+   Float_t w_moreDIFF_mini;
    // event quality .. not complete yet
    Float_t vertex_mini[3];
    // Monte Carlo information
@@ -226,6 +229,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    MyEvent myEvent;
 
    outtree->Branch("w_mini",&myEvent.w_mini,"w_mini/F");
+   outtree->Branch("w_pdg_mini",&myEvent.w_pdg_mini,"w_pdg_mini/F");
+   outtree->Branch("w_moreDIFF_mini",&myEvent.w_moreDIFF_mini,"w_moreDIFF_mini/F");
    outtree->Branch("vertex_mini",myEvent.vertex_mini,"vertex_mini[3]/F");
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
@@ -286,7 +291,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    // outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
    outtree->Branch("typeChgREC_mini",&myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
    outtree->Branch("nucliaREC_mini",myEvent.nucliaREC_mini,"nucliaREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("nucliaV0sREC_mini",myEvent.nucliaV0sREC_mini,"nucliaV0sREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("nucliaV0sREC_mini",myEvent.nucliaV0sREC_mini,"nucliaV0sREC_mini[nRECtrack_mini]/F");
    outtree->Branch("passREC_mini",myEvent.passREC_mini,"passREC_mini[nRECtrack_mini]/I");
 
    // outtree->Branch("dcaPrimeREC_mini",myEvent.dcaPrimeREC_mini,"dcaPrimeREC_mini[nRECtrack_mini]/F");
@@ -313,6 +318,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Float_t eElectronBeam;
       Int_t isQEDc;
       Int_t isQEDbkg;
+      Int_t maxPDGmc;
 
       Float_t dRRadPhot;
       Float_t dPhiRadPhot;
@@ -392,6 +398,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("isQEDbkg",&isQEDbkg);
       tree->SetBranchAddress("dRRadPhot",&dRRadPhot);
       tree->SetBranchAddress("dPhiRadPhot",&dPhiRadPhot);
+      tree->SetBranchAddress("maxPDGmc",&maxPDGmc);
 
       tree->SetBranchAddress("nMCtrack",&nMCtrack);
       tree->SetBranchAddress("etaStar2MC",etaStarMC);
@@ -503,6 +510,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
          //assigning all reweights:
          double evt_weight = 1.;
+         double evt_weight_pdg = 1.;
+         double evt_weight_moreDIFF = 1.;
          if( !doGen_ && !doReweight_ ){
             //this is data weighting for triggers
             evt_weight = w*trigWeightRW;
@@ -516,9 +525,20 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             if( doRapgap_ ){//rapgap has diffractive MCs
                if( i < dis_events ){
                   evt_weight = w*y_weight*vtxZ_weight*(136./68);//68,RAD,204 for NRAD //data/mc Lumi
+                  //check maxPDG
+                  if( maxPDGmc==4 ) {evt_weight_pdg = evt_weight*1.2;}
+                  else if( maxPDGmc==5 ) {evt_weight_pdg = evt_weight*2.;}
+                  else {evt_weight_pdg = evt_weight;}
+                  
                }
                else if( i >= dis_events && i < diffractive_events ){
                   evt_weight = w*y_weight*vtxZ_weight*(136./219.35)*0.1;//diffractive weights for 10% of DIS cross section
+                  //check moreDIFF
+                  evt_weight_moreDIFF = w*y_weight*vtxZ_weight*(136./219.35)*0.2;
+                  //check maxPDG
+                  if( maxPDGmc==4 ) {evt_weight_pdg = evt_weight*1.2;}
+                  else if( maxPDGmc==5 ) {evt_weight_pdg = evt_weight*2.;}
+                  else {evt_weight_pdg = evt_weight;}
                }
                else if( i >= diffractive_events && i < tree->GetEntries()){
                   evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
@@ -529,6 +549,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             else{
                if( i<dis_events ) evt_weight = w*y_weight*vtxZ_weight*(136./363);//162.03 for NRAD, 363 for RAD
                if( i>= dis_events ) evt_weight = w*y_weight*vtxZ_weight*(136./449.); //449. q2<2 for PYTHIA64
+               //check maxPDG
+               if( maxPDGmc==4 ) {evt_weight_pdg = evt_weight*1.2;}
+               else if( maxPDGmc==5 ) {evt_weight_pdg = evt_weight*2.;}
+               else {evt_weight_pdg = evt_weight*1.0;}
             }
          }
          else if( doGen_ && !doReweight_ ) {
@@ -558,6 +582,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.run_mini = run;
          myEvent.evno_mini = evno;
          myEvent.w_mini = evt_weight;
+         myEvent.w_moreDIFF_mini = evt_weight_moreDIFF;
+         myEvent.w_pdg_mini = evt_weight_pdg;
          myEvent.eElectronBeam_mini = eElectronBeam;
          myEvent.totalMultREC_mini = -999;
 
@@ -739,11 +765,11 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             // if( type == 2 ) eff_error = 0.9;
             // myEvent.nucliaREC_mini[j] = nucliaREC[j]*eff_error;
             myEvent.nucliaREC_mini[j] = nucliaREC[j];
-            myEvent.nucliaV0sREC_mini[j] = nucliaREC[j];
-            int iMC=imatchREC[j];
-            if(iMC>=0){
-               if(isDaughtersMC[iMC]>0) myEvent.nucliaV0sREC_mini[j] = 0.7*nucliaREC[j];
-            }
+            // myEvent.nucliaV0sREC_mini[j] = nucliaREC[j];
+            // int iMC=imatchREC[j];
+            // if(iMC>=0){
+            //    if(isDaughtersMC[iMC]>0) myEvent.nucliaV0sREC_mini[j] = 0.7*nucliaREC[j];
+            // }
             myEvent.dmatchREC_mini[j] = dmatchREC[j];
             myEvent.imatchREC_mini[j] = imatchREC[j];       
             myEvent.passREC_mini[j] = pass_default; 
