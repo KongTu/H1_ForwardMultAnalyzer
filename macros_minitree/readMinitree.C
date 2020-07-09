@@ -27,10 +27,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		file = new TFile("../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine_final.root");
 	}else if(ifile_ == 1) {
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_final_withDIFF.root");
+		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_final_pdgAndMoreDIFF.root");
 	}else if(ifile_ == 2){
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_final_withDIFF.root");
+		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_final_pdgAndMoreDIFF.root");
 	}
 	else if(ifile_ == 3){
 		file = new TFile("../new_output/mc_highE_PYTHIA6_noReweight_Tree_hadCaliNewKine_photoproduction.root");
@@ -41,10 +41,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine_final.root";
 	}else if( ifile_ == 1 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_django_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_withDIFF.root";
+		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_pdgOnly.root";
 	}else if( ifile_ == 2 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_noDIFF.root";
+		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_pdgOnly.root";
 	}
 	else if( ifile_ == 3 ){
 		outname = "../minitree_output/Pn_hist_pythia_hadCaliNewKine_photoproduction.root";
@@ -168,7 +168,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	
 	tree->SetBranchAddress("eventpass_mini",&eventpass_mini);
 	tree->SetBranchAddress("nRECtrack_mini",&nRECtrack_mini);
-	tree->SetBranchAddress("w_mini",&w_mini);
+	tree->SetBranchAddress("w_pdg_mini",&w_mini);
 	tree->SetBranchAddress("EpzREC_mini",&EpzREC_mini);
 	tree->SetBranchAddress("totalMultREC_mini",&totalMultREC_mini);
 	tree->SetBranchAddress("vertex_mini",&vertex_mini);
