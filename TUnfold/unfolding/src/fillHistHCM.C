@@ -298,7 +298,7 @@ int main(int argc, char * const argv[]) {
   recVariables.AddVar("etaREC_mini");
   recVariables.AddVar("pxREC_mini");
   recVariables.AddVar("pyREC_mini");
-  recVariables.AddVar("nucliaREC_mini");
+  recVariables.AddVar("nucliaV0sREC_mini");
   recVariables.AddVar("passREC_mini");
 
   genVariables.AddVar("nMCtrack_mini");
@@ -469,7 +469,7 @@ int main(int argc, char * const argv[]) {
            VarData const *etaREC_mini=recVariables.FindVar("etaREC_mini");
            VarData const *pxREC_mini=recVariables.FindVar("pxREC_mini");
            VarData const *pyREC_mini=recVariables.FindVar("pyREC_mini");
-           VarData const *nucliaREC_mini=recVariables.FindVar("nucliaREC_mini");
+           VarData const *nucliaV0sREC_mini=recVariables.FindVar("nucliaV0sREC_mini");
            VarData const *passREC_mini=recVariables.FindVar("passREC_mini");
 
            VarData const *nMCtrack_mini=genVariables.FindVar("nMCtrack_mini");
@@ -590,7 +590,7 @@ int main(int argc, char * const argv[]) {
                        // reject bad tracks
                        if(!passREC_mini->Int(t)) continue;
                        double etaStarRec=etaStarREC_mini->Double(t);
-                       double trackEff=nucliaREC_mini->Double(t);
+                       double trackEff=nucliaV0sREC_mini->Double(t);
                        double etaRec = etaREC_mini->Double(t);
                        double pxRec = pxREC_mini->Double(t);
                        double pyRec = pyREC_mini->Double(t);
