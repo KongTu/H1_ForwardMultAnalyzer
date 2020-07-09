@@ -582,8 +582,13 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.run_mini = run;
          myEvent.evno_mini = evno;
          myEvent.w_mini = evt_weight;
-         myEvent.w_moreDIFF_mini = evt_weight_moreDIFF;
-         myEvent.w_pdg_mini = evt_weight_pdg;
+         if( !doGen_ ){
+            myEvent.w_moreDIFF_mini = evt_weight;
+            myEvent.w_pdg_mini = evt_weight;
+         }else{
+            myEvent.w_moreDIFF_mini = evt_weight_moreDIFF;
+            myEvent.w_pdg_mini = evt_weight_pdg;
+         }
          myEvent.eElectronBeam_mini = eElectronBeam;
          myEvent.totalMultREC_mini = -999;
 
