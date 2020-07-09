@@ -2,7 +2,7 @@
 <!DOCTYPE Minitree SYSTEM "minitree.dtd">
 <Minitree>
   <InputFile name="data" type="data" luminosity="136" treename="miniTree">
-    ../../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine_final_withDIFF.root
+    ../../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine_final_pdgAndMoreDIFF.root
   </InputFile>
   <InputFile name="djangoh" type="signal" luminosity="136" treename="miniTree">
     ../../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_final_pdgAndMoreDIFF.root
