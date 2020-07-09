@@ -291,14 +291,14 @@ int main(int argc, char * const argv[]) {
   ClassifierBinning genClassifier(genBinning,genVariables);
   
   cout<<"\nDefine variables\n";
-  recVariables.AddVar("w_mini");
+  recVariables.AddVar("w_moreDIFF_mini");
   recVariables.AddVar("eventpass_mini");
   recVariables.AddVar("nRECtrack_mini");
   recVariables.AddVar("etaStarREC_mini");
   recVariables.AddVar("etaREC_mini");
   recVariables.AddVar("pxREC_mini");
   recVariables.AddVar("pyREC_mini");
-  recVariables.AddVar("nucliaV0sREC_mini");
+  recVariables.AddVar("nucliaREC_mini");
   recVariables.AddVar("passREC_mini");
 
   genVariables.AddVar("nMCtrack_mini");
@@ -462,14 +462,14 @@ int main(int argc, char * const argv[]) {
            }
 
            // fast access inside event loop
-           VarData const *weight=recVariables.FindVar("w_mini");
+           VarData const *weight=recVariables.FindVar("w_moreDIFF_mini");
            VarData const *eventpass_mini=recVariables.FindVar("eventpass_mini");
            VarData const *nRECtrack_mini=recVariables.FindVar("nRECtrack_mini");
            VarData const *etaStarREC_mini=recVariables.FindVar("etaStarREC_mini");
            VarData const *etaREC_mini=recVariables.FindVar("etaREC_mini");
            VarData const *pxREC_mini=recVariables.FindVar("pxREC_mini");
            VarData const *pyREC_mini=recVariables.FindVar("pyREC_mini");
-           VarData const *nucliaV0sREC_mini=recVariables.FindVar("nucliaV0sREC_mini");
+           VarData const *nucliaREC_mini=recVariables.FindVar("nucliaREC_mini");
            VarData const *passREC_mini=recVariables.FindVar("passREC_mini");
 
            VarData const *nMCtrack_mini=genVariables.FindVar("nMCtrack_mini");
@@ -590,7 +590,7 @@ int main(int argc, char * const argv[]) {
                        // reject bad tracks
                        if(!passREC_mini->Int(t)) continue;
                        double etaStarRec=etaStarREC_mini->Double(t);
-                       double trackEff=nucliaV0sREC_mini->Double(t);
+                       double trackEff=nucliaREC_mini->Double(t);
                        double etaRec = etaREC_mini->Double(t);
                        double pxRec = pxREC_mini->Double(t);
                        double pyRec = pyREC_mini->Double(t);

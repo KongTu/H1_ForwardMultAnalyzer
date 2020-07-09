@@ -291,11 +291,11 @@ int main(int argc, char * const argv[]) {
   ClassifierBinning genClassifier(genBinning,genVariables);
   
   cout<<"\nDefine variables\n";
-  recVariables.AddVar("w_mini");
+  recVariables.AddVar("w_moreDIFF_mini");
   recVariables.AddVar("eventpass_mini");
   recVariables.AddVar("nRECtrack_mini");
   recVariables.AddVar("etaREC_mini");
-  recVariables.AddVar("nucliaV0sREC_mini");
+  recVariables.AddVar("nucliaREC_mini");
   recVariables.AddVar("passREC_mini");
   genVariables.AddVar("nMCtrack_mini");
   genVariables.AddVar("etaMC_mini");
@@ -457,11 +457,11 @@ int main(int argc, char * const argv[]) {
            }
 
            // fast access inside event loop
-           VarData const *weight=recVariables.FindVar("w_mini");
+           VarData const *weight=recVariables.FindVar("w_moreDIFF_mini");
            VarData const *eventpass_mini=recVariables.FindVar("eventpass_mini");
            VarData const *nRECtrack_mini=recVariables.FindVar("nRECtrack_mini");
            VarData const *etaREC_mini=recVariables.FindVar("etaREC_mini");
-           VarData const *nucliaV0sREC_mini=recVariables.FindVar("nucliaV0sREC_mini");
+           VarData const *nucliaREC_mini=recVariables.FindVar("nucliaREC_mini");
            VarData const *passREC_mini=recVariables.FindVar("passREC_mini");
 
            VarData const *nMCtrack_mini=genVariables.FindVar("nMCtrack_mini");
@@ -578,7 +578,7 @@ int main(int argc, char * const argv[]) {
                        if(!passREC_mini->Int(t)) continue;
                        double etaRec=etaREC_mini->Double(t);
                        if(fabs(etaRec)>1.6) continue;
-                       double trackEff=nucliaV0sREC_mini->Double(t);
+                       double trackEff=nucliaREC_mini->Double(t);
                        // locate eta bin
                        for(size_t k=0;k<covClasses.size();k++) {
                           if(covClassifier.IsInside(etaRec,k)) {
