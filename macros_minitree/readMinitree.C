@@ -391,7 +391,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 			if( ifile_==2 ){
 				//no mixing diffractive
-				if( ievent>=39999984 ) continue;
+				// if( ievent>=39999984 ) continue;
 				if(ievent<44999982) generator_index=0;
 				else generator_index=1;
 			}
