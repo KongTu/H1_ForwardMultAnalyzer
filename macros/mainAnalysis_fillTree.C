@@ -149,8 +149,8 @@ struct MyEvent {
    Float_t startHitsRadiusREC_mini[nRECtrack_MAX];
    // Float_t dedxProtonREC_mini[nRECtrack_MAX];
    // Float_t dedxLikelihoodProtonREC_mini[nRECtrack_MAX];
-   // Float_t dedxElectronREC_mini[nRECtrack_MAX];
-   // Float_t dedxLikelihoodElectronREC_mini[nRECtrack_MAX];
+   Float_t dedxElectronREC_mini[nRECtrack_MAX];
+   Float_t dedxLikelihoodElectronREC_mini[nRECtrack_MAX];
 };
 
 void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ = true, const bool doRapgap_ = true, const bool doReweight_ = false, const bool doComb_=true, const bool doFwd_= false) {
@@ -298,8 +298,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    // outtree->Branch("startHitsRadiusREC_mini",myEvent.startHitsRadiusREC_mini,"startHitsRadiusREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("dedxProtonREC_mini",myEvent.dedxProtonREC_mini,"dedxProtonREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("dedxLikelihoodProtonREC_mini",myEvent.dedxLikelihoodProtonREC_mini,"dedxLikelihoodProtonREC_mini[nRECtrack_mini]/F");
-   // outtree->Branch("dedxElectronREC_mini",myEvent.dedxElectronREC_mini,"dedxElectronREC_mini[nRECtrack_mini]/F");
-   // outtree->Branch("dedxLikelihoodElectronREC_mini",myEvent.dedxLikelihoodElectronREC_mini,"dedxLikelihoodElectronREC_mini[nRECtrack_mini]/F");
+   outtree->Branch("dedxElectronREC_mini",myEvent.dedxElectronREC_mini,"dedxElectronREC_mini[nRECtrack_mini]/F");
+   outtree->Branch("dedxLikelihoodElectronREC_mini",myEvent.dedxLikelihoodElectronREC_mini,"dedxLikelihoodElectronREC_mini[nRECtrack_mini]/F");
 
    double zvtxOffset=0.;
 
@@ -370,8 +370,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
       // Float_t dedxProtonREC[400];
       // Float_t dedxLikelihoodProtonREC[400];
-      // Float_t dedxElectronREC[400];
-      // Float_t dedxLikelihoodElectronREC[400];
+      Float_t dedxElectronREC[400];
+      Float_t dedxLikelihoodElectronREC[400];
 
       Int_t imatchREC[400];
       Float_t dmatchREC[400];
@@ -482,8 +482,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("nucliaREC",nucliaREC);
       // tree->SetBranchAddress("dedxProtonREC",dedxProtonREC);
       // tree->SetBranchAddress("dedxLikelihoodProtonREC",dedxLikelihoodProtonREC);
-      // tree->SetBranchAddress("dedxElectronREC",dedxElectronREC);
-      // tree->SetBranchAddress("dedxLikelihoodElectronREC",dedxLikelihoodElectronREC);
+      tree->SetBranchAddress("dedxElectronREC",dedxElectronREC);
+      tree->SetBranchAddress("dedxLikelihoodElectronREC",dedxLikelihoodElectronREC);
       
       tree->SetBranchAddress("imatchREC",imatchREC);
       tree->SetBranchAddress("dmatchREC",dmatchREC);
@@ -783,8 +783,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             // myEvent.startHitsRadiusREC_mini[j] = startHitsRadiusREC[j];
             // myEvent.dedxProtonREC_mini[j] = dedxProtonREC[j];
             // myEvent.dedxLikelihoodProtonREC_mini[j] = dedxLikelihoodProtonREC[j];
-            // myEvent.dedxElectronREC_mini[j] = dedxElectronREC[j];
-            // myEvent.dedxLikelihoodElectronREC_mini[j] = dedxLikelihoodElectronREC[j];
+            myEvent.dedxElectronREC_mini[j] = dedxElectronREC[j];
+            myEvent.dedxLikelihoodElectronREC_mini[j] = dedxLikelihoodElectronREC[j];
       
          }
          myEvent.totalMultREC_mini = (int) (Ntracks_eta_p + Ntracks_eta_m);
