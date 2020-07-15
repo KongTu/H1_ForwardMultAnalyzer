@@ -504,6 +504,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	//double nested loops
 			for(int jtrk = itrk+1; jtrk < nRECtrack_mini; jtrk++){
 				if( itrk==jtrk ) continue;
+				if( fabs(etaREC_mini[itrk]) > 1.6 || fabs(etaREC_mini[jtrk]) > 1.6 ) continue;
 				int chargetrack_2 = typeChgREC_mini[jtrk];
 				if( typeChgREC_mini[jtrk] > 0 ) chargetrack_2 = 1;
 				if( typeChgREC_mini[jtrk] < 0 ) chargetrack_2 = -1;
@@ -553,11 +554,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 								if( chargetrack_1 != chargetrack_2 ){
 									h_PhotMass[Q2_INDEX][y_INDEX][0]->Fill( photon_candidate.M(), w_mini );
 									h_PhotMass[Q2_INDEX][y_INDEX][1]->Fill( photon_candidate_loose.M(), w_mini );
-									if( photon_candidate.M() < 0.2 ) {
+									if( photon_candidate.M() < 0.2 && photon_candidate.M() > 0.  ) {
 										h_dedxElectronThetaCut[0]->Fill(elecp.Theta(), w_mini);
 										h_dedxElectronThetaCut[0]->Fill(elecm.Theta(), w_mini);
 									}
-									if( photon_candidate_loose.M() < 0.2 ){
+									if( photon_candidate_loose.M() < 0.2 && photon_candidate_loose.M() > 0. ){
 										h_dedxElectronThetaCut[1]->Fill(elecp.Theta(), w_mini);
 										h_dedxElectronThetaCut[1]->Fill(elecm.Theta(), w_mini);
 									}
@@ -567,11 +568,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 								if( chargetrack_1 == chargetrack_2 ){
 									h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
 									h_PhotMass[Q2_INDEX][y_INDEX][3]->Fill( photon_candidate_loose.M(), w_mini );
-									if( photon_candidate.M() < 0.2 ) {
+									if( photon_candidate.M() < 0.2 && photon_candidate.M() > 0. ) {
 										h_dedxElectronThetaCut[2]->Fill(elecp.Theta(), w_mini);
 										h_dedxElectronThetaCut[2]->Fill(elecm.Theta(), w_mini);
 									}
-									if( photon_candidate_loose.M() < 0.2 ){
+									if( photon_candidate_loose.M() < 0.2 && photon_candidate_loose.M() > 0. ){
 										h_dedxElectronThetaCut[3]->Fill(elecp.Theta(), w_mini);
 										h_dedxElectronThetaCut[3]->Fill(elecm.Theta(), w_mini);
 									}
