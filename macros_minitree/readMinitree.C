@@ -580,8 +580,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 							double pt_m = elecm.P()*TMath::Sin(m_angle);
 							double pL_m = elecm.P()*TMath::Cos(m_angle);
 							double alpha = (pL_p-pL_m)/(pL_p+pL_m);
-							h_AP[Q2_INDEX][y_INDEX][0]->Fill(alpha, pt_p, w_mini);
-							h_AP[Q2_INDEX][y_INDEX][0]->Fill(alpha, pt_m, w_mini);
+							if( photon_candidate.M() < 0.1 ){
+								h_AP[Q2_INDEX][y_INDEX][0]->Fill(alpha, pt_p, w_mini);
+								h_AP[Q2_INDEX][y_INDEX][0]->Fill(alpha, pt_m, w_mini);
+							}
 							//end AP
 						}
 						if( k0s_candidate.M() < 0.48 || k0s_candidate.M() > 0.51 ) {
