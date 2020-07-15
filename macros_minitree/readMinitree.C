@@ -558,10 +558,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 								TVector3 photon_candidate_3Vect = photon_candidate.Vect();
 								double p_angle = elecp.Angle(photon_candidate_3Vect);
 								double m_angle = elecm.Angle(photon_candidate_3Vect);
-								double pt_p = elecp.Mag()*TMath::Sin(p_angle);
-								double pL_p = elecp.Mag()*TMath::Cos(p_angle);
-								double pt_m = elecp.Mag()*TMath::Sin(m_angle);
-								double pL_m = elecp.Mag()*TMath::Cos(m_angle);
+								double pt_p = elecp.P()*TMath::Sin(p_angle);
+								double pL_p = elecp.P()*TMath::Cos(p_angle);
+								double pt_m = elecp.P()*TMath::Sin(m_angle);
+								double pL_m = elecp.P()*TMath::Cos(m_angle);
 								double alpha = (pL_p-pL_m)/(pL_p+pL_m);
 								h_AP[Q2_INDEX][y_INDEX][0]->Fill(alpha, pt_p, w_mini);
 								h_AP[Q2_INDEX][y_INDEX][0]->Fill(alpha, pt_m, w_mini);
