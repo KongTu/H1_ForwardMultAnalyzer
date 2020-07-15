@@ -552,7 +552,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 							h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
 							if( elecp.E() == -99 ) continue;
 							if( elecm.E() != -99 ) photon_candidate = elecp+elecm;
+							else photon_candidate.SetPxPyPzE(-99,-99,-99,-99);
 							if( elecm_loose.E() != -99 ) photon_candidate_loose = elecp+elecm_loose;
+							else photon_candidate_loose.SetPxPyPzE(-99,-99,-99,-99);
 							if( elecm.E() != -99 ){
 								//AP plot:
 								TVector3 photon_candidate_3Vect = photon_candidate.Vect();
