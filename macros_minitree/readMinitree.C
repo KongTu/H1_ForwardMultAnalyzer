@@ -528,15 +528,18 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 							ELECTRON_MASS*ELECTRON_MASS);
 						elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 						
-						photon_candidate = elecp+elecm;
-						if( photon_candidate.M() < 0.1 ){
-							h_dedxElectronPtCut->Fill( elecp.Pt(), w_mini );
-							h_dedxElectronPtCut->Fill( elecm.Pt(), w_mini );
+						if( k0s_candidate.M() < 0.48 || k0s_candidate.M() > 0.51 ){
+							photon_candidate = elecp+elecm;
+							if( photon_candidate.M() < 0.1 ){
+								h_dedxElectronPtCut->Fill( elecp.Pt(), w_mini );
+								h_dedxElectronPtCut->Fill( elecm.Pt(), w_mini );
+							}
 						}
+						
 					}
 					if(Q2_INDEX>-1 && y_INDEX>-1){
 						h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
-						h_PhotMass[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M(), w_mini );
+						if( k0s_candidate.M() < 0.48 || k0s_candidate.M() > 0.51 ) h_PhotMass[Q2_INDEX][y_INDEX]->Fill( photon_candidate.M(), w_mini );
 					}
 				}
 				if( passTightREC_mini[itrk] == 1 && passTightREC_mini[jtrk] == 1  ){
