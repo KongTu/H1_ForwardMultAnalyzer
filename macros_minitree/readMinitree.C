@@ -489,8 +489,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 		TLorentzVector k0s_candidate(0,0,0,0);
 		TLorentzVector photon_candidate(-99,-99,-99,-99),photon_candidate_loose(-99,-99,-99,-99);
-		TLorentzVector pip(0,0,0,0),pim(0,0,0,0);
-		TLorentzVector elecp(0,0,0,0),elecm(0,0,0,0),elecm_loose(0,0,0,0);
+		TLorentzVector pip(-99,-99,-99,-99),pim(-99,-99,-99,-99);
+		TLorentzVector elecp(-99,-99,-99,-99),elecm(-99,-99,-99,-99),elecm_loose(-99,-99,-99,-99);
 
 		for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
 
