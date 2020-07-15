@@ -27,10 +27,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		file = new TFile("../new_output/data_highE_0607_noReweight_Tree_hadCaliNewKine_final.root");
 	}else if(ifile_ == 1) {
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_DJANGOH_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_final_pdgAndMoreDIFF.root");
+		else file = new TFile("../new_output/mc_highE_DJANGOH_fullReweight_Tree_hadCaliNewKine_forPhotonicElectron.root");
 	}else if(ifile_ == 2){
 		if(!isReweigh) file = new TFile("../new_output/mc_highE_RAPGAP_noReweight_Tree_hadCaliNew.root");
-		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_final_pdgAndMoreDIFF.root");
+		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_forPhotonicElectron.root");
 	}
 	else if(ifile_ == 3){
 		file = new TFile("../new_output/mc_highE_PYTHIA6_noReweight_Tree_hadCaliNewKine_photoproduction.root");
@@ -41,10 +41,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine_final.root";
 	}else if( ifile_ == 1 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_django_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_pdgOnly.root";
+		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_forPhotonicElectron.root";
 	}else if( ifile_ == 2 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_pdgOnly.root";
+		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_forPhotonicElectron.root";
 	}
 	else if( ifile_ == 3 ){
 		outname = "../minitree_output/Pn_hist_pythia_hadCaliNewKine_photoproduction.root";
@@ -59,6 +59,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	double ybins[] = {0.0375,0.075,0.15,0.3,0.6};
 	double eta_bins[] = {-1.2,0.2,-0.5,0.9,0.2,1.6};
 	double Q2_bins[] = {5,10,20,40,100};
+	double electron_likelihood = 0.1;
 
 	TString seta_bins[6]={"-1.2","0.2","-0.5","0.9","0.2","1.6"};
 	TString sQ2_bins[5]={"5","10","20","40","100"};
@@ -515,7 +516,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 					k0s_candidate = pip+pim;
 
-					if(dedxLikelihoodElectronREC_mini[itrk] > 0.003 && dedxLikelihoodElectronREC_mini[jtrk] > 0.003){
+					if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood && dedxLikelihoodElectronREC_mini[jtrk] > electron_likelihood){
 						double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
 							pyREC_mini[itrk]*pyREC_mini[itrk]+
 							pzREC_mini[itrk]*pzREC_mini[itrk]+
@@ -553,7 +554,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 					k0s_candidate = pip+pim;
 
-					if(dedxLikelihoodElectronREC_mini[itrk] > 0.003 && dedxLikelihoodElectronREC_mini[jtrk] > 0.003){
+					if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood && dedxLikelihoodElectronREC_mini[jtrk] > electron_likelihood){
 						double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
 							pyREC_mini[itrk]*pyREC_mini[itrk]+
 							pzREC_mini[itrk]*pzREC_mini[itrk]+
@@ -588,7 +589,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 					k0s_candidate = pip+pim;
 
-					if(dedxLikelihoodElectronREC_mini[itrk] > 0.003 && dedxLikelihoodElectronREC_mini[jtrk] > 0.003){
+					if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood && dedxLikelihoodElectronREC_mini[jtrk] > electron_likelihood){
 						double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
 							pyREC_mini[itrk]*pyREC_mini[itrk]+
 							pzREC_mini[itrk]*pzREC_mini[itrk]+
@@ -618,7 +619,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					h_deltaPtDeltaEta->Fill( deltaPt, deltaEta, w_mini );
 					if( fabs(deltaPt) < 0.03 && fabs(deltaEta) < 0.05 ){
 						h_chargeRstartSplit->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
-						if( dedxLikelihoodProtonREC_mini[itrk] > 0.003 ) h_chargeRstartProtonSplit->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
+						if( dedxLikelihoodProtonREC_mini[itrk] > electron_likelihood ) h_chargeRstartProtonSplit->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
 					}
 				}
 			}
@@ -631,7 +632,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			if( typeChgREC_mini[itrk] < 0 ) chargetrack = -1;
 			
 			h_chargeRstartNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
-			if(dedxLikelihoodProtonREC_mini[itrk] > 0.003) h_chargeRstartProtonNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini);
+			if(dedxLikelihoodProtonREC_mini[itrk] > electron_likelihood) h_chargeRstartProtonNoCut->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini);
 			
 			if( passREC_mini[itrk] != 1 ) continue;
 			if( etaREC_mini[itrk] > etamax ){
@@ -660,13 +661,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				h_chargedDcaPrime->Fill( chargetrack*dcaPrimeREC_mini[itrk], w_mini );
 				h_chargeRstart->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
 				//PROTON
-				if(dedxLikelihoodProtonREC_mini[itrk] > 0.003){
+				if(dedxLikelihoodProtonREC_mini[itrk] > electron_likelihood){
 					h_dedxProtonVspCut->Fill( pREC, dedxProtonREC_mini[itrk], w_mini);
 					h_chargedDcaPrimeProton->Fill( chargetrack*dcaPrimeREC_mini[itrk], w_mini );
 					h_chargeRstartProton->Fill( chargetrack*startHitsRadiusREC_mini[itrk], w_mini );
 				}
 				//ELECTRON
-				if(dedxLikelihoodElectronREC_mini[itrk] > 0.003){
+				if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood){
 					h_dedxElectronVspCut->Fill( pREC, dedxElectronREC_mini[itrk], w_mini);
 				}
 			}
