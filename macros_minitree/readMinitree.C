@@ -256,6 +256,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 	TH1D* h_K0sMass[4][4];
 	TH1D* h_PhotMass[4][4][4];
+	TH2D* h_AP[4][4][4];
 
 	for(int k=0;k<2;k++){
 		for(int l=0;l<2;l++){
@@ -291,6 +292,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 			for(int m=0;m<4;m++){
 				h_PhotMass[i][j][m] = new TH1D(Form("h_PhotMass_%d_%d_%d",i,j,m),Form("h_PhotMass_%d_%d_%d",i,j,m),200,0,0.25);
+				h_AP[i][j][m] = new TH2D(Form("h_AP_%d_%d_%d",i,j,m),Form("h_AP_%d_%d_%d",i,j,m),100,-1,1,100,0,0.3);
 			}
 			
 		}
@@ -545,15 +547,32 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 							elecm_loose.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 							
 						}
+						
 						if(Q2_INDEX>-1 && y_INDEX>-1){
 							h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
+							if( elecp.E() == -99 ) continue;
+							if( elecm.E() != -99 ) photon_candidate = elecp+elecm;
+							if( elecm_loose.E() != -99 ) photon_candidate_loose = elecp+elecm_loose;
+							if( elecm.E() != -99 ){
+								//AP plot:
+								TVector3 photon_candidate_3Vect = photon_candidate.Vect();
+								double p_angle = elecp.Angle(photon_candidate_3Vect);
+								double m_angle = elecm.Angle(photon_candidate_3Vect);
+								double pt_p = elecp.Mag()*TMath::Sin(p_angle);
+								double pL_p = elecp.Mag()*TMath::Cos(p_angle);
+								double pt_m = elecp.Mag()*TMath::Sin(m_angle);
+								double pL_m = elecp.Mag()*TMath::Cos(m_angle);
+								double alpha = (pL_p-pL_m)/(pL_p+pL_m);
+								h_AP[Q2_INDEX][y_INDEX][0]->Fill(alpha, pt_p, w_mini);
+								h_AP[Q2_INDEX][y_INDEX][0]->Fill(alpha, pt_m, w_mini);
+								//end AP
+							}
 							if( k0s_candidate.M() < 0.48 || k0s_candidate.M() > 0.51 ) {
-								photon_candidate = elecp+elecm;
-								photon_candidate_loose = elecp+elecm_loose;
 								//unlike-sign pairs
 								if( chargetrack_1 != chargetrack_2 ){
 									h_PhotMass[Q2_INDEX][y_INDEX][0]->Fill( photon_candidate.M(), w_mini );
 									h_PhotMass[Q2_INDEX][y_INDEX][1]->Fill( photon_candidate_loose.M(), w_mini );
+
 									if( photon_candidate.M() < 0.2 && photon_candidate.M() > 0.  ) {
 										h_dedxElectronThetaCut[0]->Fill(elecp.Theta(), w_mini);
 										h_dedxElectronThetaCut[0]->Fill(elecm.Theta(), w_mini);
