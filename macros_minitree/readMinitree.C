@@ -535,8 +535,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					double pt_m = pim.P()*TMath::Sin(m_angle);
 					double pL_m = pim.P()*TMath::Cos(m_angle);
 					double alpha = (pL_p-pL_m)/(pL_p+pL_m);
-					h_AP[Q2_INDEX][y_INDEX][1]->Fill(alpha, pt_p, w_mini);
-					h_AP[Q2_INDEX][y_INDEX][1]->Fill(alpha, pt_m, w_mini);
+					if(Q2_INDEX>-1 && y_INDEX>-1){
+						h_AP[Q2_INDEX][y_INDEX][1]->Fill(alpha, pt_p, w_mini);
+						h_AP[Q2_INDEX][y_INDEX][1]->Fill(alpha, pt_m, w_mini);
+					}
 					//end AP
 
 					if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood){
