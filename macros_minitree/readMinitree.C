@@ -256,7 +256,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 	TH1D* h_K0sMass[4][4];
 	TH1D* h_PhotMass[4][4][4];
-	TH2D* h_AP[4][4][4];
 
 	for(int k=0;k<2;k++){
 		for(int l=0;l<2;l++){
@@ -289,10 +288,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			h_Pn_cor_HCM[i][j] = new TH2D(Form("h_Pn_cor_HCM_%d_%d",i,j),Form("h_Pn_cor_HCM_%d_%d",i,j),30,0,30,30,0,30);
 			
 			h_K0sMass[i][j] = new TH1D(Form("h_K0sMass_%d_%d",i,j),Form("h_K0sMass_%d_%d",i,j),200,0.25,0.54);
-
 			for(int m=0;m<4;m++){
 				h_PhotMass[i][j][m] = new TH1D(Form("h_PhotMass_%d_%d_%d",i,j,m),Form("h_PhotMass_%d_%d_%d",i,j,m),80,0,0.25);
-				h_AP[i][j][m] = new TH2D(Form("h_AP_%d_%d_%d",i,j,m),";#alpha;p'_{T}",100,-1,1,100,0,0.3);
 			}
 			
 		}
@@ -326,7 +323,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH2D* h_dedxElectronVsp = new TH2D("h_dedxElectronVsp",";p(GeV);dE/dx",100,0,5,300,0,100);
 	TH2D* h_dedxElectronVspCut = new TH2D("h_dedxElectronVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
 	
-	TH1D* h_TestMass = new TH1D("h_TestMass","mass",100,0,0.2);
 	TH1D* h_TestCharge = new TH1D("h_TestCharge",";charge",10,-5,5);
 	TH1D* h_dedxElectronThetaCut[4];
 	TH1D* h_dedxElectronPtCut[4];
@@ -529,6 +525,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			//like-sign pairs 1
 			for(int icand=0;icand<elecm_vect.size();icand++){
 				for(int jcand=icand+1;jcand<elecm_vect.size();jcand++){
+					if( elecm_vect[icand].DeltaR(elecm_vect[jcand])<0.01 ) continue;
 					TLorentzVector photon_candidate = elecm_vect[icand]+elecm_vect[jcand];
 					h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
 					if( photon_candidate.M() < 0.1 && photon_candidate.M() > 0. ) {
@@ -542,6 +539,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			//like-sign pairs 2
 			for(int icand=0;icand<elecp_vect.size();icand++){
 				for(int jcand=icand+1;jcand<elecp_vect.size();jcand++){
+					if( elecp_vect[icand].DeltaR(elecp_vect[jcand])<0.01 ) continue;
 					TLorentzVector photon_candidate = elecp_vect[icand]+elecp_vect[jcand];
 					h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
 					if( photon_candidate.M() < 0.1 && photon_candidate.M() > 0. ) {
