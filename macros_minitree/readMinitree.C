@@ -494,11 +494,11 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		double etamax = -99.;
 
 		TLorentzVector k0s_candidate(0,0,0,0);
-		TLorentzVector photon_candidate(-99,-99,-99,-99),photon_candidate_loose(-99,-99,-99,-99);
-		TLorentzVector photon_candidate_min(-99,-99,-99,-99),photon_candidate_loose_min(-99,-99,-99,-99);
+		TLorentzVector photon_candidate(-99,-99,-99,-99);
+		TLorentzVector photon_candidate_min(-99,-99,-99,-99);
 		TLorentzVector pip(-99,-99,-99,-99),pim(-99,-99,-99,-99);
-		TLorentzVector elecp(-99,-99,-99,-99),elecm(-99,-99,-99,-99),elecm_loose(-99,-99,-99,-99);
-		TLorentzVector elecp_min(-99,-99,-99,-99),elecm_min(-99,-99,-99,-99),elecp_loose_min(-99,-99,-99,-99),elecm_loose_min(-99,-99,-99,-99);
+		TLorentzVector elecp(-99,-99,-99,-99),elecm(-99,-99,-99,-99);
+		TLorentzVector elecp_min(-99,-99,-99,-99),elecm_min(-99,-99,-99,-99);
 
 		for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
 
@@ -577,23 +577,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						elecp_min = elecp;
 						elecm_min = elecm;
 					}
-				}
-				if( elecp.E()!=-99 ){
-					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
-						pyREC_mini[jtrk]*pyREC_mini[jtrk]+
-						pzREC_mini[jtrk]*pzREC_mini[jtrk]+
-						ELECTRON_MASS*ELECTRON_MASS);
-					elecm_loose.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
-					photon_candidate_loose = elecm_loose+elecp;
-					if( photon_candidate_loose.M() < min_loose_mass ) {
-						photon_candidate_loose_min = photon_candidate_loose;
-						min_loose_mass = photon_candidate_loose.M();
-						min_loose_track2_charge = chargetrack_2;
-						elecp_loose_min = elecp;
-						elecm_loose_min = elecm_loose;
-					}
-				}
-				
+				}			
 				if(Q2_INDEX>-1 && y_INDEX>-1){
 					if(k0s_candidate.E()!=-99) h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
 					if( elecp.E()!=-99 && elecm.E() != -99 && (chargetrack_1!=chargetrack_2) ){
@@ -619,8 +603,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				k0s_candidate.SetPxPyPzE(0,0,0,0);
 				elecm.SetPxPyPzE(-99,-99,-99,-99);
 				photon_candidate.SetPxPyPzE(-99,-99,-99,-99);
-				elecm_loose.SetPxPyPzE(-99,-99,-99,-99);
-				photon_candidate_loose.SetPxPyPzE(-99,-99,-99,-99);
 			}//end double loop
 
 			if(elecp.E()==-99) continue;
@@ -636,18 +618,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						h_dedxElectronPtCut[0]->Fill(elecm_min.Pt(), w_mini);
 					}
 				}
-				if( chargetrack_1 != min_loose_track2_charge && min_loose_track2_charge != -99 ){
-					if( photon_candidate_loose_min.E()!=-99) h_PhotMass[Q2_INDEX][y_INDEX][1]->Fill( photon_candidate_loose_min.M(), w_mini );
-					if( photon_candidate_loose_min.M() < 0.1 && photon_candidate_loose_min.M() > 0. ) {
-						h_dedxElectronThetaCut[1]->Fill(elecp_loose_min.Theta(), w_mini);
-						h_dedxElectronThetaCut[1]->Fill(elecm_loose_min.Theta(), w_mini);
-
-						h_dedxElectronPtCut[1]->Fill(elecp_loose_min.Pt(), w_mini);
-						h_dedxElectronPtCut[1]->Fill(elecm_loose_min.Pt(), w_mini);
-					}
-				}
-				//like-sign pairs
-				if( chargetrack_1 == min_track2_charge && min_track2_charge!=-99 ){
+			//like-sign pairs
+				if( chargetrack_1 == min_track2_charge ){
 					double deltaR = elecp_min.DeltaR(elecm_min);
 					if( deltaR < 0.05 ) continue;
 					if( photon_candidate_min.E()!=-99) h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate_min.M(), w_mini );
@@ -659,26 +631,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						h_dedxElectronPtCut[2]->Fill(elecm_min.Pt(), w_mini);
 					}
 				}
-				if( chargetrack_1 == min_loose_track2_charge && min_loose_track2_charge!=-99 ){
-					double deltaR = elecp_loose_min.DeltaR(elecm_loose_min);
-					if( deltaR < 0.05 ) continue;
-					if( photon_candidate_loose_min.E()!=-99) h_PhotMass[Q2_INDEX][y_INDEX][3]->Fill( photon_candidate_loose_min.M(), w_mini );
-					if( photon_candidate_loose_min.M() < 0.1 && photon_candidate_loose_min.M() > 0. ) {
-						h_dedxElectronThetaCut[3]->Fill(elecp_loose_min.Theta(), w_mini);
-						h_dedxElectronThetaCut[3]->Fill(elecm_loose_min.Theta(), w_mini);
-
-						h_dedxElectronPtCut[3]->Fill(elecp_loose_min.Pt(), w_mini);
-						h_dedxElectronPtCut[3]->Fill(elecm_loose_min.Pt(), w_mini);
-					}
-				}
+		
 			}
 			elecp.SetPxPyPzE(-99,-99,-99,-99);
 			photon_candidate_min.SetPxPyPzE(-99,-99,-99,-99);
 			elecp_min.SetPxPyPzE(-99,-99,-99,-99);
 			elecm_min.SetPxPyPzE(-99,-99,-99,-99);
-			photon_candidate_loose_min.SetPxPyPzE(-99,-99,-99,-99);
-			elecp_loose_min.SetPxPyPzE(-99,-99,-99,-99);
-			elecm_loose_min.SetPxPyPzE(-99,-99,-99,-99);
 
 			//Rstart without cut
 			int chargetrack = typeChgREC_mini[itrk];
