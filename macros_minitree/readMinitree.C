@@ -326,6 +326,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH2D* h_dedxElectronVsp = new TH2D("h_dedxElectronVsp",";p(GeV);dE/dx",100,0,5,300,0,100);
 	TH2D* h_dedxElectronVspCut = new TH2D("h_dedxElectronVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
 	
+	TH1D* h_TestMass = new TH1D("h_TestMass","mass",100,0,0.2);
 	TH1D* h_dedxElectronThetaCut[4];
 	for(int m=0;m<4;m++){
 	 h_dedxElectronThetaCut[m] = new TH1D(Form("h_dedxElectronThetaCut_%d",m),";#theta (rad)",100,0,3.14);
@@ -592,6 +593,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						}
 						h_AP[Q2_INDEX][y_INDEX][1]->Fill(alpha, pt_p, w_mini);
 						h_AP[Q2_INDEX][y_INDEX][1]->Fill(alpha, pt_m, w_mini);
+
+						if( fabs(alpha)>0.8 && ((pt_p>0.15&&pt_p<0.2)||(pt_m>0.15&&pt_m<0.2)) ) h_TestMass->Fill(photon_candidate.M(), w_mini);
 						//end AP
 					}
 				}
@@ -612,6 +615,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 				//like-sign pairs
 				if( chargetrack_1 == min_track2_charge && min_track2_charge!=-99 && elecp_min.E()!=-99 ){
+					double deltaR = elecp_min.DeltaR(elecm_min);
+					if( deltaR < 0.05 ) continue;
 					if( photon_candidate_min.E()!=99) h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate_min.M(), w_mini );
 					if( photon_candidate_min.M() < 0.2 && photon_candidate_min.M() > 0. ) {
 						h_dedxElectronThetaCut[2]->Fill(elecp_min.Theta(), w_mini);
