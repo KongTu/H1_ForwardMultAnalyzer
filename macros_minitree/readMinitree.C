@@ -518,21 +518,38 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				for(int jcand=0;jcand<elecp_vect.size();jcand++){
 					TLorentzVector photon_candidate = elecm_vect[icand]+elecp_vect[jcand];
 					h_PhotMass[Q2_INDEX][y_INDEX][0]->Fill( photon_candidate.M(), w_mini );
+					if( photon_candidate.M() < 0.1 && photon_candidate.M() > 0. ) {
+						h_dedxElectronThetaCut[0]->Fill(elecm_vect[icand].Theta(), w_mini);
+						h_dedxElectronThetaCut[0]->Fill(elecp_vect[jcand].Theta(), w_mini);
+						h_dedxElectronPtCut[0]->Fill(elecm_vect[icand].Pt(), w_mini);
+						h_dedxElectronPtCut[0]->Fill(elecp_vect[jcand].Pt(), w_mini);
+					}
 				}
 			}
-			//like-sign pairs
+			//like-sign pairs 1
 			for(int icand=0;icand<elecm_vect.size();icand++){
 				for(int jcand=icand+1;jcand<elecm_vect.size();jcand++){
-					if( elecm_vect[icand].DeltaR(elecm_vect[jcand]) < 0.01 ) continue;
 					TLorentzVector photon_candidate = elecm_vect[icand]+elecm_vect[jcand];
 					h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
+					if( photon_candidate.M() < 0.1 && photon_candidate.M() > 0. ) {
+						h_dedxElectronThetaCut[2]->Fill(elecm_vect[icand].Theta(), w_mini);
+						h_dedxElectronThetaCut[2]->Fill(elecm_vect[jcand].Theta(), w_mini);
+						h_dedxElectronPtCut[2]->Fill(elecm_vect[icand].Pt(), w_mini);
+						h_dedxElectronPtCut[2]->Fill(elecm_vect[jcand].Pt(), w_mini);
+					}
 				}
 			}
+			//like-sign pairs 2
 			for(int icand=0;icand<elecp_vect.size();icand++){
 				for(int jcand=icand+1;jcand<elecp_vect.size();jcand++){
-					if( elecp_vect[icand].DeltaR(elecp_vect[jcand]) < 0.01 ) continue;
 					TLorentzVector photon_candidate = elecp_vect[icand]+elecp_vect[jcand];
 					h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
+					if( photon_candidate.M() < 0.1 && photon_candidate.M() > 0. ) {
+						h_dedxElectronThetaCut[2]->Fill(elecp_vect[icand].Theta(), w_mini);
+						h_dedxElectronThetaCut[2]->Fill(elecp_vect[jcand].Theta(), w_mini);
+						h_dedxElectronPtCut[2]->Fill(elecp_vect[icand].Pt(), w_mini);
+						h_dedxElectronPtCut[2]->Fill(elecp_vect[jcand].Pt(), w_mini);
+					}
 				}
 			}
 		}
