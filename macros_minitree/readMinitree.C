@@ -526,24 +526,25 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					+pzREC_mini[jtrk]*pzREC_mini[jtrk]
 					+PIMASS*PIMASS );
 				pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
-
-				k0s_candidate = pip+pim;
-
-				//AP plot:
-				TVector3 k0s_candidate_3Vect = k0s_candidate.Vect();
-				double p_angle = pip.Angle(k0s_candidate_3Vect);
-				double m_angle = pim.Angle(k0s_candidate_3Vect);
-				double pt_p = pip.P()*TMath::Sin(p_angle);
-				double pL_p = pip.P()*TMath::Cos(p_angle);
-				double pt_m = pim.P()*TMath::Sin(m_angle);
-				double pL_m = pim.P()*TMath::Cos(m_angle);
-				double alpha = (pL_p-pL_m)/(pL_p+pL_m);
-				if(Q2_INDEX>-1 && y_INDEX>-1){
-					h_AP[Q2_INDEX][y_INDEX][2]->Fill(alpha, pt_p, w_mini);
-					h_AP[Q2_INDEX][y_INDEX][2]->Fill(alpha, pt_m, w_mini);
+				if( chargetrack_1 != chargetrack_2 ){
+					k0s_candidate = pip+pim;
+					//AP plot:
+					TVector3 k0s_candidate_3Vect = k0s_candidate.Vect();
+					double p_angle = pip.Angle(k0s_candidate_3Vect);
+					double m_angle = pim.Angle(k0s_candidate_3Vect);
+					double pt_p = pip.P()*TMath::Sin(p_angle);
+					double pL_p = pip.P()*TMath::Cos(p_angle);
+					double pt_m = pim.P()*TMath::Sin(m_angle);
+					double pL_m = pim.P()*TMath::Cos(m_angle);
+					double alpha = (pL_p-pL_m)/(pL_p+pL_m);
+					if(Q2_INDEX>-1 && y_INDEX>-1){
+						h_AP[Q2_INDEX][y_INDEX][2]->Fill(alpha, pt_p, w_mini);
+						h_AP[Q2_INDEX][y_INDEX][2]->Fill(alpha, pt_m, w_mini);
+					}
+					//end AP
 				}
-				//end AP
-
+				else{k0s_candidate.SetPxPyPzE(-99,-99,-99,-99);}
+				
 				if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood){
 					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
 						pyREC_mini[itrk]*pyREC_mini[itrk]+
@@ -567,13 +568,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 				
 				if(Q2_INDEX>-1 && y_INDEX>-1){
-					h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
+					if(k0s_candidate.E()!=-99) h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
 					if( elecp.E() == -99 ) continue;
 					if( elecm.E() != -99 ) photon_candidate = elecp+elecm;
 					else photon_candidate.SetPxPyPzE(-99,-99,-99,-99);
 					if( elecm_loose.E() != -99 ) photon_candidate_loose = elecp+elecm_loose;
 					else photon_candidate_loose.SetPxPyPzE(-99,-99,-99,-99);
-					if( elecm.E() != -99 ){
+					if( elecm.E() != -99 && (chargetrack_1!=chargetrack_2) ){
 						//AP plot:
 						TVector3 photon_candidate_3Vect = photon_candidate.Vect();
 						double p_angle = elecp.Angle(photon_candidate_3Vect);
