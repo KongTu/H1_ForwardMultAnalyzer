@@ -496,7 +496,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 		if(Q2_INDEX>-1 && y_INDEX>-1){
 			vector< TLorentzVector> elecp_vect,elecm_vect;
-			vector< TLorentzVector> pip_vect,pim_vect;
 			for(int itrk=0;itrk<nRECtrack_mini;itrk++){
 				if( passREC_mini[itrk] != 1 ) continue;
 				if( fabs(etaREC_mini[itrk]) > 1.6 ) continue;
@@ -506,28 +505,18 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				TLorentzVector electron_candidate;
 				double E_cand = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
 				electron_candidate.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_cand);
-				//PION candidate
-				TLorentzVector pion_candidate;
-				E_cand = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+PIMASS*PIMASS);
-				pion_candidate.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_cand);
-				//end PION candidate
 				int track_charge = typeChgREC_mini[itrk];
 				if( typeChgREC_mini[itrk] > 0 ) track_charge = 1;
 				else if( typeChgREC_mini[itrk] < 0 ) track_charge = -1;
 				else continue;
 				if( track_charge == -1 ) elecm_vect.push_back(electron_candidate);
 				if( track_charge == +1 ) elecp_vect.push_back(electron_candidate);
-				if( track_charge == -1 ) pim_vect.push_back(pion_candidate);
-				if( track_charge == +1 ) pip_vect.push_back(pion_candidate);
-
 				h_TestCharge->Fill(typeChgREC_mini[itrk], w_mini);
 			}
 			//unlike-sign pairs
 			for(int icand=0;icand<elecm_vect.size();icand++){
 				for(int jcand=0;jcand<elecp_vect.size();jcand++){
 					TLorentzVector photon_candidate = elecm_vect[icand]+elecp_vect[jcand];
-					TLorentzVector k0s_candidate = pim_vect[icand]+pip_vect[jcand];
-					if(k0s_candidate.M()>0.49&&k0s_candidate.M()<0.51) continue;
 					h_PhotMass[Q2_INDEX][y_INDEX][0]->Fill( photon_candidate.M(), w_mini );
 				}
 			}
