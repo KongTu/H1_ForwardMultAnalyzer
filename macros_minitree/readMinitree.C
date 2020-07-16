@@ -328,8 +328,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	
 	TH1D* h_TestMass = new TH1D("h_TestMass","mass",100,0,0.2);
 	TH1D* h_dedxElectronThetaCut[4];
+	TH1D* h_dedxElectronPtCut[4];
 	for(int m=0;m<4;m++){
 	 h_dedxElectronThetaCut[m] = new TH1D(Form("h_dedxElectronThetaCut_%d",m),";#theta (rad)",100,0,3.14);
+	 h_dedxElectronPtCut[m] = new TH1D(Form("h_dedxElectronPtCut_%d",m),";#p_{T} (GeV)",100,0,5);
 	}
 	
 	TH1D* h_chargedDcaPrime = new TH1D("h_chargedDcaPrime",";charge*DCA'",100,-10,10);
@@ -613,7 +615,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					}
 				}
 				k0s_candidate.SetPxPyPzE(0,0,0,0);
-				elecp.SetPxPyPzE(-99,-99,-99,-99);
 				elecm.SetPxPyPzE(-99,-99,-99,-99);
 				photon_candidate.SetPxPyPzE(-99,-99,-99,-99);
 				elecm_loose.SetPxPyPzE(-99,-99,-99,-99);
@@ -627,6 +628,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					if( photon_candidate_min.M() < 0.1 && photon_candidate_min.M() > 0. ) {
 						h_dedxElectronThetaCut[0]->Fill(elecp_min.Theta(), w_mini);
 						h_dedxElectronThetaCut[0]->Fill(elecm_min.Theta(), w_mini);
+
+						h_dedxElectronPtCut[0]->Fill(elecp_min.Pt(), w_mini);
+						h_dedxElectronPtCut[0]->Fill(elecm_min.Pt(), w_mini);
 					}
 				}
 				if( chargetrack_1 != min_loose_track2_charge && min_loose_track2_charge != -99 && elecp_loose_min.E()!=-99 ){
@@ -634,6 +638,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					if( photon_candidate_loose_min.M() < 0.1 && photon_candidate_loose_min.M() > 0. ) {
 						h_dedxElectronThetaCut[1]->Fill(elecp_loose_min.Theta(), w_mini);
 						h_dedxElectronThetaCut[1]->Fill(elecm_loose_min.Theta(), w_mini);
+
+						h_dedxElectronPtCut[1]->Fill(elecp_loose_min.Pt(), w_mini);
+						h_dedxElectronPtCut[1]->Fill(elecm_loose_min.Pt(), w_mini);
 					}
 				}
 				//like-sign pairs
@@ -644,6 +651,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					if( photon_candidate_min.M() < 0.1 && photon_candidate_min.M() > 0. ) {
 						h_dedxElectronThetaCut[2]->Fill(elecp_min.Theta(), w_mini);
 						h_dedxElectronThetaCut[2]->Fill(elecm_min.Theta(), w_mini);
+
+						h_dedxElectronPtCut[2]->Fill(elecp_min.Pt(), w_mini);
+						h_dedxElectronPtCut[2]->Fill(elecm_min.Pt(), w_mini);
 					}
 				}
 				if( chargetrack_1 == min_loose_track2_charge && min_loose_track2_charge!=-99 && elecp_loose_min.E()!=-99 ){
@@ -653,9 +663,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					if( photon_candidate_loose_min.M() < 0.1 && photon_candidate_loose_min.M() > 0. ) {
 						h_dedxElectronThetaCut[3]->Fill(elecp_loose_min.Theta(), w_mini);
 						h_dedxElectronThetaCut[3]->Fill(elecm_loose_min.Theta(), w_mini);
+
+						h_dedxElectronPtCut[3]->Fill(elecp_loose_min.Pt(), w_mini);
+						h_dedxElectronPtCut[3]->Fill(elecm_loose_min.Pt(), w_mini);
 					}
 				}
 			}
+			elecp.SetPxPyPzE(-99,-99,-99,-99);
 			photon_candidate_min.SetPxPyPzE(-99,-99,-99,-99);
 			elecp_min.SetPxPyPzE(-99,-99,-99,-99);
 			elecm_min.SetPxPyPzE(-99,-99,-99,-99);
