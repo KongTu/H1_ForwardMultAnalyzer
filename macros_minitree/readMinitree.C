@@ -524,7 +524,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			int min_track2_charge = -99;
 			int min_loose_track2_charge = -99;
 			//double nested loops
-			for(int jtrk = 0; jtrk < nRECtrack_mini; jtrk++){
+			for(int jtrk = itrk+1; jtrk < nRECtrack_mini; jtrk++){
 				
 				if( itrk==jtrk ) continue;
 				if( passREC_mini[jtrk] != 1 ) continue;
@@ -578,20 +578,22 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						elecm_min = elecm;
 					}
 				}
-				double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
+				if( elecp.E()!=-99 ){
+					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
 						pyREC_mini[jtrk]*pyREC_mini[jtrk]+
 						pzREC_mini[jtrk]*pzREC_mini[jtrk]+
 						ELECTRON_MASS*ELECTRON_MASS);
-				elecm_loose.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
-				photon_candidate_loose = elecm_loose+elecp;
-				if( photon_candidate_loose.M() < min_loose_mass ) {
-					photon_candidate_loose_min = photon_candidate_loose;
-					min_loose_mass = photon_candidate_loose.M();
-					min_loose_track2_charge = chargetrack_2;
-					elecp_loose_min = elecp;
-					elecm_loose_min = elecm_loose;
+					elecm_loose.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
+					photon_candidate_loose = elecm_loose+elecp;
+					if( photon_candidate_loose.M() < min_loose_mass ) {
+						photon_candidate_loose_min = photon_candidate_loose;
+						min_loose_mass = photon_candidate_loose.M();
+						min_loose_track2_charge = chargetrack_2;
+						elecp_loose_min = elecp;
+						elecm_loose_min = elecm_loose;
+					}
 				}
-			 		
+				
 				if(Q2_INDEX>-1 && y_INDEX>-1){
 					if(k0s_candidate.E()!=-99) h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
 					if( elecp.E()!=-99 && elecm.E() != -99 && (chargetrack_1!=chargetrack_2) ){
