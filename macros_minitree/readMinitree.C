@@ -503,6 +503,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			TLorentzVector electron_candidate;
 			double E_cand = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
 			electron_candidate.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_cand);
+			if( electron_candidate.Pt() < 0.3 ) continue;
 			int track_charge = typeChgREC_mini[itrk];
 			if( typeChgREC_mini[itrk] > 0 ) track_charge = 1;
 			else if( typeChgREC_mini[itrk] < 0 ) track_charge = -1;
@@ -521,14 +522,14 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			//like-sign pairs
 			for(int icand=0;icand<elecm_vect.size();icand++){
 				for(int jcand=icand+1;jcand<elecm_vect.size();jcand++){
-					if( elecm_vect[icand].DeltaR(elecm_vect[jcand]) < 0.02 ) continue;
+					if( elecm_vect[icand].DeltaR(elecm_vect[jcand]) < 0.05 ) continue;
 					TLorentzVector photon_candidate = elecm_vect[icand]+elecm_vect[jcand];
 					h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
 				}
 			}
 			for(int icand=0;icand<elecp_vect.size();icand++){
 				for(int jcand=icand+1;jcand<elecp_vect.size();jcand++){
-					if( elecp_vect[icand].DeltaR(elecp_vect[jcand]) < 0.02 ) continue;
+					if( elecp_vect[icand].DeltaR(elecp_vect[jcand]) < 0.05 ) continue;
 					TLorentzVector photon_candidate = elecp_vect[icand]+elecp_vect[jcand];
 					h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
 				}
