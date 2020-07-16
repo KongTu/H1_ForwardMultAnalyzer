@@ -546,7 +546,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 				else{k0s_candidate.SetPxPyPzE(-99,-99,-99,-99);}
 				h_dedxElectronLikehood->Fill( dedxLikelihoodElectronREC_mini[itrk], w_mini );
-				// if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood){
+				if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood){
 					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
 						pyREC_mini[itrk]*pyREC_mini[itrk]+
 						pzREC_mini[itrk]*pzREC_mini[itrk]+
@@ -566,7 +566,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						ELECTRON_MASS*ELECTRON_MASS);
 					elecm_loose.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 					
-				// }
+				}
 				
 				if(Q2_INDEX>-1 && y_INDEX>-1){
 					if(k0s_candidate.E()!=-99) h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
@@ -623,7 +623,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						}
 					}
 				}
-				
+				elecp.SetPxPyPzE(-99,-99,-99,-99);
+				elecm.SetPxPyPzE(-99,-99,-99,-99);
+				elecm_loose.SetPxPyPzE(-99,-99,-99,-99);
+				photon_candidate.SetPxPyPzE(-99,-99,-99,-99);
+				photon_candidate_loose.SetPxPyPzE(-99,-99,-99,-99);
+
 			}//end double loop
 
 			//Rstart without cut
