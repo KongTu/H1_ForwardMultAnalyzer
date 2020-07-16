@@ -497,126 +497,131 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		for(int itrk = 0; itrk < nRECtrack_mini; itrk++){
 
 			//filling eta_lab
-			if( passREC_mini[itrk] == 1 ) h_eta->Fill(etaREC_mini[itrk], w_mini);
+			if( passREC_mini[itrk] != 1 ) continue; 
+				h_eta->Fill(etaREC_mini[itrk], w_mini);
+			if( fabs(etaREC_mini[itrk]) > 1.6 ) continue;
 
 			int chargetrack_1 = typeChgREC_mini[itrk];
 			if( typeChgREC_mini[itrk] > 0 ) chargetrack_1 = 1;
 			if( typeChgREC_mini[itrk] < 0 ) chargetrack_1 = -1;
 	
 	//double nested loops
-			for(int jtrk = itrk+1; jtrk < nRECtrack_mini; jtrk++){
+			for(int jtrk = 0; jtrk < nRECtrack_mini; jtrk++){
+				
 				if( itrk==jtrk ) continue;
-				if( fabs(etaREC_mini[itrk]) > 1.6 || fabs(etaREC_mini[jtrk]) > 1.6 ) continue;
+				if( passREC_mini[jtrk] != 1 ) continue;
+				if( abs(etaREC_mini[jtrk]) > 1.6 ) continue;
+				
 				int chargetrack_2 = typeChgREC_mini[jtrk];
 				if( typeChgREC_mini[jtrk] > 0 ) chargetrack_2 = 1;
 				if( typeChgREC_mini[jtrk] < 0 ) chargetrack_2 = -1;
 
-				if( passREC_mini[itrk] == 1 && passREC_mini[jtrk] == 1 ){
+				double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]
+					+pyREC_mini[itrk]*pyREC_mini[itrk]
+					+pzREC_mini[itrk]*pzREC_mini[itrk]
+					+PIMASS*PIMASS);
+				pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
+				double E_pim = sqrt( pxREC_mini[jtrk]*pxREC_mini[jtrk]
+					+pyREC_mini[jtrk]*pyREC_mini[jtrk]
+					+pzREC_mini[jtrk]*pzREC_mini[jtrk]
+					+PIMASS*PIMASS );
+				pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
 
-					double E_pip = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]
-						+pyREC_mini[itrk]*pyREC_mini[itrk]
-						+pzREC_mini[itrk]*pzREC_mini[itrk]
-						+PIMASS*PIMASS);
-					pip.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_pip);
-					double E_pim = sqrt( pxREC_mini[jtrk]*pxREC_mini[jtrk]
-						+pyREC_mini[jtrk]*pyREC_mini[jtrk]
-						+pzREC_mini[jtrk]*pzREC_mini[jtrk]
-						+PIMASS*PIMASS );
-					pim.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_pim);
+				k0s_candidate = pip+pim;
 
-					k0s_candidate = pip+pim;
+				//AP plot:
+				TVector3 k0s_candidate_3Vect = k0s_candidate.Vect();
+				double p_angle = pip.Angle(k0s_candidate_3Vect);
+				double m_angle = pim.Angle(k0s_candidate_3Vect);
+				double pt_p = pip.P()*TMath::Sin(p_angle);
+				double pL_p = pip.P()*TMath::Cos(p_angle);
+				double pt_m = pim.P()*TMath::Sin(m_angle);
+				double pL_m = pim.P()*TMath::Cos(m_angle);
+				double alpha = (pL_p-pL_m)/(pL_p+pL_m);
+				if(Q2_INDEX>-1 && y_INDEX>-1){
+					h_AP[Q2_INDEX][y_INDEX][2]->Fill(alpha, pt_p, w_mini);
+					h_AP[Q2_INDEX][y_INDEX][2]->Fill(alpha, pt_m, w_mini);
+				}
+				//end AP
 
-					//AP plot:
-					TVector3 k0s_candidate_3Vect = k0s_candidate.Vect();
-					double p_angle = pip.Angle(k0s_candidate_3Vect);
-					double m_angle = pim.Angle(k0s_candidate_3Vect);
-					double pt_p = pip.P()*TMath::Sin(p_angle);
-					double pL_p = pip.P()*TMath::Cos(p_angle);
-					double pt_m = pim.P()*TMath::Sin(m_angle);
-					double pL_m = pim.P()*TMath::Cos(m_angle);
-					double alpha = (pL_p-pL_m)/(pL_p+pL_m);
-					if(Q2_INDEX>-1 && y_INDEX>-1){
-						h_AP[Q2_INDEX][y_INDEX][1]->Fill(alpha, pt_p, w_mini);
-						h_AP[Q2_INDEX][y_INDEX][1]->Fill(alpha, pt_m, w_mini);
-					}
-					//end AP
+				if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood){
+					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
+						pyREC_mini[itrk]*pyREC_mini[itrk]+
+						pzREC_mini[itrk]*pzREC_mini[itrk]+
+						ELECTRON_MASS*ELECTRON_MASS);
+					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
 
-					if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood){
-						double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
-							pyREC_mini[itrk]*pyREC_mini[itrk]+
-							pzREC_mini[itrk]*pzREC_mini[itrk]+
-							ELECTRON_MASS*ELECTRON_MASS);
-						elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
-
-						if(dedxLikelihoodElectronREC_mini[jtrk] > electron_likelihood){
-							double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
-								pyREC_mini[jtrk]*pyREC_mini[jtrk]+
-								pzREC_mini[jtrk]*pzREC_mini[jtrk]+
-								ELECTRON_MASS*ELECTRON_MASS);
-							elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
-						}
+					if(dedxLikelihoodElectronREC_mini[jtrk] > electron_likelihood){
 						double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
 							pyREC_mini[jtrk]*pyREC_mini[jtrk]+
 							pzREC_mini[jtrk]*pzREC_mini[jtrk]+
 							ELECTRON_MASS*ELECTRON_MASS);
-						elecm_loose.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
-						
+						elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 					}
+					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
+						pyREC_mini[jtrk]*pyREC_mini[jtrk]+
+						pzREC_mini[jtrk]*pzREC_mini[jtrk]+
+						ELECTRON_MASS*ELECTRON_MASS);
+					elecm_loose.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 					
-					if(Q2_INDEX>-1 && y_INDEX>-1){
-						h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
-						if( elecp.E() == -99 ) continue;
-						if( elecm.E() != -99 ) photon_candidate = elecp+elecm;
-						else photon_candidate.SetPxPyPzE(-99,-99,-99,-99);
-						if( elecm_loose.E() != -99 ) photon_candidate_loose = elecp+elecm_loose;
-						else photon_candidate_loose.SetPxPyPzE(-99,-99,-99,-99);
-						if( elecm.E() != -99 ){
-							//AP plot:
-							TVector3 photon_candidate_3Vect = photon_candidate.Vect();
-							double p_angle = elecp.Angle(photon_candidate_3Vect);
-							double m_angle = elecm.Angle(photon_candidate_3Vect);
-							double pt_p = elecp.P()*TMath::Sin(p_angle);
-							double pL_p = elecp.P()*TMath::Cos(p_angle);
-							double pt_m = elecm.P()*TMath::Sin(m_angle);
-							double pL_m = elecm.P()*TMath::Cos(m_angle);
-							double alpha = (pL_p-pL_m)/(pL_p+pL_m);
-							if( photon_candidate.M() < 0.1 ){
-								h_AP[Q2_INDEX][y_INDEX][0]->Fill(alpha, pt_p, w_mini);
-								h_AP[Q2_INDEX][y_INDEX][0]->Fill(alpha, pt_m, w_mini);
-							}
-							//end AP
+				}
+				
+				if(Q2_INDEX>-1 && y_INDEX>-1){
+					h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
+					if( elecp.E() == -99 ) continue;
+					if( elecm.E() != -99 ) photon_candidate = elecp+elecm;
+					else photon_candidate.SetPxPyPzE(-99,-99,-99,-99);
+					if( elecm_loose.E() != -99 ) photon_candidate_loose = elecp+elecm_loose;
+					else photon_candidate_loose.SetPxPyPzE(-99,-99,-99,-99);
+					if( elecm.E() != -99 ){
+						//AP plot:
+						TVector3 photon_candidate_3Vect = photon_candidate.Vect();
+						double p_angle = elecp.Angle(photon_candidate_3Vect);
+						double m_angle = elecm.Angle(photon_candidate_3Vect);
+						double pt_p = elecp.P()*TMath::Sin(p_angle);
+						double pL_p = elecp.P()*TMath::Cos(p_angle);
+						double pt_m = elecm.P()*TMath::Sin(m_angle);
+						double pL_m = elecm.P()*TMath::Cos(m_angle);
+						double alpha = (pL_p-pL_m)/(pL_p+pL_m);
+						if( photon_candidate.M() < 0.1 ){
+							h_AP[Q2_INDEX][y_INDEX][0]->Fill(alpha, pt_p, w_mini);
+							h_AP[Q2_INDEX][y_INDEX][0]->Fill(alpha, pt_m, w_mini);
 						}
-						if( k0s_candidate.M() < 0.48 || k0s_candidate.M() > 0.51 ) {
-							//unlike-sign pairs
-							if( chargetrack_1 != chargetrack_2 ){
-								h_PhotMass[Q2_INDEX][y_INDEX][0]->Fill( photon_candidate.M(), w_mini );
-								h_PhotMass[Q2_INDEX][y_INDEX][1]->Fill( photon_candidate_loose.M(), w_mini );
-								if( photon_candidate.M() < 0.2 && photon_candidate.M() > 0. ) {
-									h_dedxElectronThetaCut[0]->Fill(elecp.Theta(), w_mini);
-									h_dedxElectronThetaCut[0]->Fill(elecm.Theta(), w_mini);
-								}
-								if( photon_candidate_loose.M() < 0.2 && photon_candidate_loose.M() > 0. ){
-									h_dedxElectronThetaCut[1]->Fill(elecp.Theta(), w_mini);
-									h_dedxElectronThetaCut[1]->Fill(elecm_loose.Theta(), w_mini);
-								}
-
+						h_AP[Q2_INDEX][y_INDEX][1]->Fill(alpha, pt_p, w_mini);
+						h_AP[Q2_INDEX][y_INDEX][1]->Fill(alpha, pt_m, w_mini);
+						//end AP
+					}
+					if( k0s_candidate.M() < 0.48 || k0s_candidate.M() > 0.51 ) {
+						//unlike-sign pairs
+						if( chargetrack_1 != chargetrack_2 ){
+							h_PhotMass[Q2_INDEX][y_INDEX][0]->Fill( photon_candidate.M(), w_mini );
+							h_PhotMass[Q2_INDEX][y_INDEX][1]->Fill( photon_candidate_loose.M(), w_mini );
+							if( photon_candidate.M() < 0.2 && photon_candidate.M() > 0. ) {
+								h_dedxElectronThetaCut[0]->Fill(elecp.Theta(), w_mini);
+								h_dedxElectronThetaCut[0]->Fill(elecm.Theta(), w_mini);
 							}
-							//like-sign pairs
-							if( chargetrack_1 == chargetrack_2 ){
-								h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
-								h_PhotMass[Q2_INDEX][y_INDEX][3]->Fill( photon_candidate_loose.M(), w_mini );
-								if( photon_candidate.M() < 0.2 && photon_candidate.M() > 0. ) {
-									h_dedxElectronThetaCut[2]->Fill(elecp.Theta(), w_mini);
-									h_dedxElectronThetaCut[2]->Fill(elecm.Theta(), w_mini);
-								}
-								if( photon_candidate_loose.M() < 0.2 && photon_candidate_loose.M() > 0. ){
-									h_dedxElectronThetaCut[3]->Fill(elecp.Theta(), w_mini);
-									h_dedxElectronThetaCut[3]->Fill(elecm_loose.Theta(), w_mini);
-								}
+							if( photon_candidate_loose.M() < 0.2 && photon_candidate_loose.M() > 0. ){
+								h_dedxElectronThetaCut[1]->Fill(elecp.Theta(), w_mini);
+								h_dedxElectronThetaCut[1]->Fill(elecm_loose.Theta(), w_mini);
+							}
+
+						}
+						//like-sign pairs
+						if( chargetrack_1 == chargetrack_2 ){
+							h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
+							h_PhotMass[Q2_INDEX][y_INDEX][3]->Fill( photon_candidate_loose.M(), w_mini );
+							if( photon_candidate.M() < 0.2 && photon_candidate.M() > 0. ) {
+								h_dedxElectronThetaCut[2]->Fill(elecp.Theta(), w_mini);
+								h_dedxElectronThetaCut[2]->Fill(elecm.Theta(), w_mini);
+							}
+							if( photon_candidate_loose.M() < 0.2 && photon_candidate_loose.M() > 0. ){
+								h_dedxElectronThetaCut[3]->Fill(elecp.Theta(), w_mini);
+								h_dedxElectronThetaCut[3]->Fill(elecm_loose.Theta(), w_mini);
 							}
 						}
 					}
 				}
+				
 			}//end double loop
 
 			//Rstart without cut
