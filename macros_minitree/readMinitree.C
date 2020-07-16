@@ -59,7 +59,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	double ybins[] = {0.0375,0.075,0.15,0.3,0.6};
 	double eta_bins[] = {-1.2,0.2,-0.5,0.9,0.2,1.6};
 	double Q2_bins[] = {5,10,20,40,100};
-	double electron_likelihood = 0.01;
+	double electron_likelihood = 0.05;
 
 	TString seta_bins[6]={"-1.2","0.2","-0.5","0.9","0.2","1.6"};
 	TString sQ2_bins[5]={"5","10","20","40","100"};
@@ -327,6 +327,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH2D* h_dedxElectronVspCut = new TH2D("h_dedxElectronVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
 	
 	TH1D* h_TestMass = new TH1D("h_TestMass","mass",100,0,0.2);
+	TH1D* h_TestCharge = new TH1D("h_TestCharge",";charge",10,-5,5);
 	TH1D* h_dedxElectronThetaCut[4];
 	TH1D* h_dedxElectronPtCut[4];
 	for(int m=0;m<4;m++){
@@ -518,6 +519,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				if( track_charge == +1 ) elecp_vect.push_back(electron_candidate);
 				if( track_charge == -1 ) pim_vect.push_back(pion_candidate);
 				if( track_charge == +1 ) pip_vect.push_back(pion_candidate);
+
+				h_TestCharge->Fill(typeChgREC_mini[itrk], w_mini);
 			}
 			//unlike-sign pairs
 			for(int icand=0;icand<elecm_vect.size();icand++){
