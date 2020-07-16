@@ -623,9 +623,10 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				photon_candidate_loose.SetPxPyPzE(-99,-99,-99,-99);
 			}//end double loop
 
+			if(elecp.E()==-99) continue;
 			if(Q2_INDEX>-1 && y_INDEX>-1){
 			//unlike-sign pairs
-				if( chargetrack_1 != min_track2_charge && min_track2_charge != -99 && elecp_min.E()!=-99 ){
+				if( chargetrack_1 != min_track2_charge && min_track2_charge != -99  ){
 					if( photon_candidate_min.E()!=-99) h_PhotMass[Q2_INDEX][y_INDEX][0]->Fill( photon_candidate_min.M(), w_mini );
 					if( photon_candidate_min.M() < 0.1 && photon_candidate_min.M() > 0. ) {
 						h_dedxElectronThetaCut[0]->Fill(elecp_min.Theta(), w_mini);
@@ -635,7 +636,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						h_dedxElectronPtCut[0]->Fill(elecm_min.Pt(), w_mini);
 					}
 				}
-				if( chargetrack_1 != min_loose_track2_charge && min_loose_track2_charge != -99 && elecp_loose_min.E()!=-99 ){
+				if( chargetrack_1 != min_loose_track2_charge && min_loose_track2_charge != -99 ){
 					if( photon_candidate_loose_min.E()!=-99) h_PhotMass[Q2_INDEX][y_INDEX][1]->Fill( photon_candidate_loose_min.M(), w_mini );
 					if( photon_candidate_loose_min.M() < 0.1 && photon_candidate_loose_min.M() > 0. ) {
 						h_dedxElectronThetaCut[1]->Fill(elecp_loose_min.Theta(), w_mini);
@@ -646,7 +647,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					}
 				}
 				//like-sign pairs
-				if( chargetrack_1 == min_track2_charge && min_track2_charge!=-99 && elecp_min.E()!=-99 ){
+				if( chargetrack_1 == min_track2_charge && min_track2_charge!=-99 ){
 					double deltaR = elecp_min.DeltaR(elecm_min);
 					if( deltaR < 0.05 ) continue;
 					if( photon_candidate_min.E()!=-99) h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate_min.M(), w_mini );
@@ -658,7 +659,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						h_dedxElectronPtCut[2]->Fill(elecm_min.Pt(), w_mini);
 					}
 				}
-				if( chargetrack_1 == min_loose_track2_charge && min_loose_track2_charge!=-99 && elecp_loose_min.E()!=-99 ){
+				if( chargetrack_1 == min_loose_track2_charge && min_loose_track2_charge!=-99 ){
 					double deltaR = elecp_loose_min.DeltaR(elecm_loose_min);
 					if( deltaR < 0.05 ) continue;
 					if( photon_candidate_loose_min.E()!=-99) h_PhotMass[Q2_INDEX][y_INDEX][3]->Fill( photon_candidate_loose_min.M(), w_mini );
