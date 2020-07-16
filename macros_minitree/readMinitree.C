@@ -291,7 +291,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			h_K0sMass[i][j] = new TH1D(Form("h_K0sMass_%d_%d",i,j),Form("h_K0sMass_%d_%d",i,j),200,0.25,0.54);
 
 			for(int m=0;m<4;m++){
-				h_PhotMass[i][j][m] = new TH1D(Form("h_PhotMass_%d_%d_%d",i,j,m),Form("h_PhotMass_%d_%d_%d",i,j,m),80,0,0.25);
+				h_PhotMass[i][j][m] = new TH1D(Form("h_PhotMass_%d_%d_%d",i,j,m),Form("h_PhotMass_%d_%d_%d",i,j,m),150,0,1.0);
 				h_AP[i][j][m] = new TH2D(Form("h_AP_%d_%d_%d",i,j,m),";#alpha;p'_{T}",100,-1,1,100,0,0.3);
 			}
 			
@@ -493,25 +493,24 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		double trk_pz = 0.;
 		double etamax = -99.;
 
-		vector< TLorentzVector> elecp_vect,elecm_vect;
-		for(int itrk=0;itrk<nRECtrack_mini;itrk++){
-			if( passREC_mini[itrk] != 1 ) continue;
-			if( fabs(etaREC_mini[itrk]) > 1.6 ) continue;
-			h_dedxElectronLikehood->Fill( 
-				dedxLikelihoodElectronREC_mini[itrk], w_mini );
-			if(dedxLikelihoodElectronREC_mini[itrk] < electron_likelihood) continue;
-			TLorentzVector electron_candidate;
-			double E_cand = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
-			electron_candidate.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_cand);
-			if( electron_candidate.Pt() < 0.3 ) continue;
-			int track_charge = typeChgREC_mini[itrk];
-			if( typeChgREC_mini[itrk] > 0 ) track_charge = 1;
-			else if( typeChgREC_mini[itrk] < 0 ) track_charge = -1;
-			else continue;
-			if( track_charge == -1 ) elecm_vect.push_back(electron_candidate);
-			if( track_charge == +1 ) elecp_vect.push_back(electron_candidate);
-		}
 		if(Q2_INDEX>-1 && y_INDEX>-1){
+			vector< TLorentzVector> elecp_vect,elecm_vect;
+			for(int itrk=0;itrk<nRECtrack_mini;itrk++){
+				if( passREC_mini[itrk] != 1 ) continue;
+				if( fabs(etaREC_mini[itrk]) > 1.6 ) continue;
+				h_dedxElectronLikehood->Fill( 
+					dedxLikelihoodElectronREC_mini[itrk], w_mini );
+				if(dedxLikelihoodElectronREC_mini[itrk] < electron_likelihood) continue;
+				TLorentzVector electron_candidate;
+				double E_cand = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+pyREC_mini[itrk]*pyREC_mini[itrk]+pzREC_mini[itrk]*pzREC_mini[itrk]+ELECTRON_MASS*ELECTRON_MASS);
+				electron_candidate.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_cand);
+				int track_charge = typeChgREC_mini[itrk];
+				if( typeChgREC_mini[itrk] > 0 ) track_charge = 1;
+				else if( typeChgREC_mini[itrk] < 0 ) track_charge = -1;
+				else continue;
+				if( track_charge == -1 ) elecm_vect.push_back(electron_candidate);
+				if( track_charge == +1 ) elecp_vect.push_back(electron_candidate);
+			}
 			//unlike-sign pairs
 			for(int icand=0;icand<elecm_vect.size();icand++){
 				for(int jcand=0;jcand<elecp_vect.size();jcand++){
