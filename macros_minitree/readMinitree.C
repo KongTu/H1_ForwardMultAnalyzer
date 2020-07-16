@@ -520,17 +520,15 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			}
 			//like-sign pairs
 			for(int icand=0;icand<elecm_vect.size();icand++){
-				for(int jcand=0;jcand<elecm_vect.size();jcand++){
-					if( icand==jcand ) continue;
-					if( elecm_vect[icand].DeltaR(elecm_vect[jcand]) < 0.05 ) continue;
+				for(int jcand=icand+1;jcand<elecm_vect.size();jcand++){
+					if( elecm_vect[icand].DeltaR(elecm_vect[jcand]) < 0.02 ) continue;
 					TLorentzVector photon_candidate = elecm_vect[icand]+elecm_vect[jcand];
 					h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
 				}
 			}
 			for(int icand=0;icand<elecp_vect.size();icand++){
-				for(int jcand=0;jcand<elecp_vect.size();jcand++){
-					if( icand==jcand ) continue;
-					if( elecp_vect[icand].DeltaR(elecp_vect[jcand]) < 0.05 ) continue;
+				for(int jcand=icand+1;jcand<elecp_vect.size();jcand++){
+					if( elecp_vect[icand].DeltaR(elecp_vect[jcand]) < 0.02 ) continue;
 					TLorentzVector photon_candidate = elecp_vect[icand]+elecp_vect[jcand];
 					h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
 				}
