@@ -524,7 +524,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			int min_track2_charge = -99;
 			int min_loose_track2_charge = -99;
 			//double nested loops
-			for(int jtrk = itrk+1; jtrk < nRECtrack_mini; jtrk++){
+			for(int jtrk = 0; jtrk < nRECtrack_mini; jtrk++){
 				
 				if( itrk==jtrk ) continue;
 				if( passREC_mini[jtrk] != 1 ) continue;
