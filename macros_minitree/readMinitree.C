@@ -593,8 +593,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						}
 						h_AP[Q2_INDEX][y_INDEX][1]->Fill(alpha, pt_p, w_mini);
 						h_AP[Q2_INDEX][y_INDEX][1]->Fill(alpha, pt_m, w_mini);
-
-						if( fabs(alpha)>0.8 && ((pt_p>0.15&&pt_p<0.2)||(pt_m>0.15&&pt_m<0.2)) ) h_TestMass->Fill(photon_candidate.M(), w_mini);
+						if(fabs(alpha)>0.8) h_TestMass->Fill(photon_candidate.M(), w_mini);
 						//end AP
 					}
 				}
