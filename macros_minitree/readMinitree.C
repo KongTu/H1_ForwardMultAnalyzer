@@ -646,7 +646,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				//like-sign pairs
 				if( chargetrack_1 == min_track2_charge && min_track2_charge!=-99 && elecp_min.E()!=-99 ){
 					double deltaR = elecp_min.DeltaR(elecm_min);
-					if( deltaR < 0.05 ) continue;
+					// if( deltaR < 0.05 ) continue;
 					if( photon_candidate_min.E()!=99) h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate_min.M(), w_mini );
 					if( photon_candidate_min.M() < 0.1 && photon_candidate_min.M() > 0. ) {
 						h_dedxElectronThetaCut[2]->Fill(elecp_min.Theta(), w_mini);
@@ -658,7 +658,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 				if( chargetrack_1 == min_loose_track2_charge && min_loose_track2_charge!=-99 && elecp_loose_min.E()!=-99 ){
 					double deltaR = elecp_loose_min.DeltaR(elecm_loose_min);
-					if( deltaR < 0.05 ) continue;
+					// if( deltaR < 0.05 ) continue;
 					if( photon_candidate_loose_min.E()!=99) h_PhotMass[Q2_INDEX][y_INDEX][3]->Fill( photon_candidate_loose_min.M(), w_mini );
 					if( photon_candidate_loose_min.M() < 0.1 && photon_candidate_loose_min.M() > 0. ) {
 						h_dedxElectronThetaCut[3]->Fill(elecp_loose_min.Theta(), w_mini);
