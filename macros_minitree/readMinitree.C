@@ -506,7 +506,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			if( typeChgREC_mini[itrk] < 0 ) chargetrack_1 = -1;
 	
 	//double nested loops
-			for(int jtrk = 0; jtrk < nRECtrack_mini; jtrk++){
+			for(int jtrk = itrk+1; jtrk < nRECtrack_mini; jtrk++){
 				
 				if( itrk==jtrk ) continue;
 				if( passREC_mini[jtrk] != 1 ) continue;
@@ -545,27 +545,27 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				}
 				else{k0s_candidate.SetPxPyPzE(-99,-99,-99,-99);}
 				
-				if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood){
+				// if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood){
 					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
 						pyREC_mini[itrk]*pyREC_mini[itrk]+
 						pzREC_mini[itrk]*pzREC_mini[itrk]+
 						ELECTRON_MASS*ELECTRON_MASS);
 					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
 
-					if(dedxLikelihoodElectronREC_mini[jtrk] > electron_likelihood){
+					// if(dedxLikelihoodElectronREC_mini[jtrk] > electron_likelihood){
 						double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
 							pyREC_mini[jtrk]*pyREC_mini[jtrk]+
 							pzREC_mini[jtrk]*pzREC_mini[jtrk]+
 							ELECTRON_MASS*ELECTRON_MASS);
 						elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
-					}
-					double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
+					// }
+					 	E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
 						pyREC_mini[jtrk]*pyREC_mini[jtrk]+
 						pzREC_mini[jtrk]*pzREC_mini[jtrk]+
 						ELECTRON_MASS*ELECTRON_MASS);
 					elecm_loose.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
 					
-				}
+				// }
 				
 				if(Q2_INDEX>-1 && y_INDEX>-1){
 					if(k0s_candidate.E()!=-99) h_K0sMass[Q2_INDEX][y_INDEX]->Fill( k0s_candidate.M(), w_mini );
