@@ -59,7 +59,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	double ybins[] = {0.0375,0.075,0.15,0.3,0.6};
 	double eta_bins[] = {-1.2,0.2,-0.5,0.9,0.2,1.6};
 	double Q2_bins[] = {5,10,20,40,100};
-	double electron_likelihood = 0.1;
+	double electron_likelihood = 0.05;
 
 	TString seta_bins[6]={"-1.2","0.2","-0.5","0.9","0.2","1.6"};
 	TString sQ2_bins[5]={"5","10","20","40","100"};
@@ -292,7 +292,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 			for(int m=0;m<4;m++){
 				h_PhotMass[i][j][m] = new TH1D(Form("h_PhotMass_%d_%d_%d",i,j,m),Form("h_PhotMass_%d_%d_%d",i,j,m),200,0,0.25);
-				h_AP[i][j][m] = new TH2D(Form("h_AP_%d_%d_%d",i,j,m),Form("h_AP_%d_%d_%d",i,j,m),100,-1,1,100,0,0.3);
+				h_AP[i][j][m] = new TH2D(Form("h_AP_%d_%d_%d",i,j,m),";#alpha;p'_{T}",100,-1,1,100,0,0.3);
 			}
 			
 		}
@@ -623,6 +623,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						}
 					}
 				}
+				k0s_candidate.SetPxPyPzE(0,0,0,0);
 				elecp.SetPxPyPzE(-99,-99,-99,-99);
 				elecm.SetPxPyPzE(-99,-99,-99,-99);
 				elecm_loose.SetPxPyPzE(-99,-99,-99,-99);
