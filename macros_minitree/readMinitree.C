@@ -519,7 +519,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 			int min_track2_charge = -99;
 			int min_loose_track2_charge = -99;
 			//double nested loops
-			for(int jtrk = itrk+1; jtrk < nRECtrack_mini; jtrk++){
+			for(int jtrk = 0; jtrk < nRECtrack_mini; jtrk++){
 				
 				if( itrk==jtrk ) continue;
 				if( passREC_mini[jtrk] != 1 ) continue;
@@ -579,7 +579,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 				// 	elecm_min = elecm;
 				// }
 				double deltaR = elecp.DeltaR(elecm);
-				if( deltaR < 0.05 ) continue;
+				if( deltaR < 0.01 ) continue;
 				if(Q2_INDEX>-1 && y_INDEX>-1){
 					//unlike-sign pairs
 					if( chargetrack_1 != chargetrack_2  ){
