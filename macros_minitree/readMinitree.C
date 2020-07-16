@@ -320,6 +320,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH1D* h_noSel_pt = new TH1D("h_noSel_pt","pt",100,0,10);
 	TH1D* h_noSel_eta = new TH1D("h_noSel_eta","eta",100,-1.7,1.7);
 
+	TH1D* h_dedxElectronLikehood = new TH1D("h_dedxElectronLikehood","h_dedxElectronLikehood",100,-3,3);
 	TH2D* h_dedxProtonVsp = new TH2D("h_dedxProtonVsp",";p(GeV);dE/dx",100,0,5,300,0,100);
 	TH2D* h_dedxProtonVspCut = new TH2D("h_dedxProtonVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
 	TH2D* h_dedxElectronVsp = new TH2D("h_dedxElectronVsp",";p(GeV);dE/dx",100,0,5,300,0,100);
@@ -544,7 +545,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					//end AP
 				}
 				else{k0s_candidate.SetPxPyPzE(-99,-99,-99,-99);}
-				
+				h_dedxElectronLikehood->Fill( dedxLikelihoodElectronREC_mini[itrk], w_mini );
 				// if(dedxLikelihoodElectronREC_mini[itrk] > electron_likelihood){
 					double E_elecp = sqrt(pxREC_mini[itrk]*pxREC_mini[itrk]+
 						pyREC_mini[itrk]*pyREC_mini[itrk]+
