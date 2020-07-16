@@ -553,14 +553,14 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 						ELECTRON_MASS*ELECTRON_MASS);
 					elecp.SetPxPyPzE(pxREC_mini[itrk],pyREC_mini[itrk],pzREC_mini[itrk],E_elecp);
 
-					// if(dedxLikelihoodElectronREC_mini[jtrk] > electron_likelihood){
+					if(dedxLikelihoodElectronREC_mini[jtrk] > electron_likelihood){
 						double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
 							pyREC_mini[jtrk]*pyREC_mini[jtrk]+
 							pzREC_mini[jtrk]*pzREC_mini[jtrk]+
 							ELECTRON_MASS*ELECTRON_MASS);
 						elecm.SetPxPyPzE(pxREC_mini[jtrk],pyREC_mini[jtrk],pzREC_mini[jtrk],E_elecm);
-					// }
-					 	E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
+					}
+					 	double E_elecm = sqrt(pxREC_mini[jtrk]*pxREC_mini[jtrk]+
 						pyREC_mini[jtrk]*pyREC_mini[jtrk]+
 						pzREC_mini[jtrk]*pzREC_mini[jtrk]+
 						ELECTRON_MASS*ELECTRON_MASS);
