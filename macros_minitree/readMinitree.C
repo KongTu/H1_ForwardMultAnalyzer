@@ -38,7 +38,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	//output files
 	TString outname;
 	if( ifile_ == 0 ){
-		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine_June16.root";
+		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine_forPhotonicElectron.root";
 	}else if( ifile_ == 1 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_django_extendEtalabLooseTrack.root";
 		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_forPhotonicElectron.root";
@@ -169,7 +169,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	
 	tree->SetBranchAddress("eventpass_mini",&eventpass_mini);
 	tree->SetBranchAddress("nRECtrack_mini",&nRECtrack_mini);
-	tree->SetBranchAddress("w_pdg_mini",&w_mini);
+	tree->SetBranchAddress("w_mini",&w_mini);//pdg only is w_pdg_mini
 	tree->SetBranchAddress("EpzREC_mini",&EpzREC_mini);
 	tree->SetBranchAddress("totalMultREC_mini",&totalMultREC_mini);
 	tree->SetBranchAddress("vertex_mini",&vertex_mini);
