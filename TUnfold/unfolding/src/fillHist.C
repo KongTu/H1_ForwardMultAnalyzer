@@ -291,7 +291,7 @@ int main(int argc, char * const argv[]) {
   ClassifierBinning genClassifier(genBinning,genVariables);
   
   cout<<"\nDefine variables\n";
-  recVariables.AddVar("w_pdg_mini");
+  recVariables.AddVar("w_mini");
   recVariables.AddVar("eventpass_mini");
   recVariables.AddVar("nRECtrack_mini");
   recVariables.AddVar("etaREC_mini");
@@ -457,7 +457,7 @@ int main(int argc, char * const argv[]) {
            }
 
            // fast access inside event loop
-           VarData const *weight=recVariables.FindVar("w_pdg_mini");
+           VarData const *weight=recVariables.FindVar("w_mini");
            VarData const *eventpass_mini=recVariables.FindVar("eventpass_mini");
            VarData const *nRECtrack_mini=recVariables.FindVar("nRECtrack_mini");
            VarData const *etaREC_mini=recVariables.FindVar("etaREC_mini");
@@ -579,6 +579,7 @@ int main(int argc, char * const argv[]) {
                        double etaRec=etaREC_mini->Double(t);
                        if(fabs(etaRec)>1.6) continue;
                        double trackEff=nucliaREC_mini->Double(t);
+                       trackEff = 0.995*trackEff;//test for photonic electrons
                        // locate eta bin
                        for(size_t k=0;k<covClasses.size();k++) {
                           if(covClassifier.IsInside(etaRec,k)) {
