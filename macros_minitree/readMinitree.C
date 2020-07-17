@@ -38,13 +38,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	//output files
 	TString outname;
 	if( ifile_ == 0 ){
-		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine_forPhotonicElectron_2.root";
+		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine_forPhotonicElectron_3.root";
 	}else if( ifile_ == 1 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_django_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_forPhotonicElectron_2.root";
+		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_forPhotonicElectron_3.root";
 	}else if( ifile_ == 2 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_forPhotonicElectron_2.root";
+		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_forPhotonicElectron_3.root";
 	}
 	else if( ifile_ == 3 ){
 		outname = "../minitree_output/Pn_hist_pythia_hadCaliNewKine_photoproduction.root";
@@ -59,7 +59,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	double ybins[] = {0.0375,0.075,0.15,0.3,0.6};
 	double eta_bins[] = {-1.2,0.2,-0.5,0.9,0.2,1.6};
 	double Q2_bins[] = {5,10,20,40,100};
-	double electron_likelihood = 0.01;
+	double electron_likelihood = 0.00;
 
 	TString seta_bins[6]={"-1.2","0.2","-0.5","0.9","0.2","1.6"};
 	TString sQ2_bins[5]={"5","10","20","40","100"};
