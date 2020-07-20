@@ -38,13 +38,13 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	//output files
 	TString outname;
 	if( ifile_ == 0 ){
-		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine_forPhotonicElectron_3.root";
+		outname = "../minitree_output/Pn_hist_data_hadCaliNewKine_forPhotonicElectron_4.root";
 	}else if( ifile_ == 1 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_django_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_forPhotonicElectron_3.root";
+		else outname = "../minitree_output/Pn_hist_django_hadCaliNewKine_reweigh_forPhotonicElectron_4.root";
 	}else if( ifile_ == 2 ){
 		if(!isReweigh) outname = "../minitree_output/Pn_hist_rapgap_extendEtalabLooseTrack.root";
-		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_forPhotonicElectron_3.root";
+		else outname = "../minitree_output/Pn_hist_rapgap_hadCaliNewKine_reweigh_forPhotonicElectron_4.root";
 	}
 	else if( ifile_ == 3 ){
 		outname = "../minitree_output/Pn_hist_pythia_hadCaliNewKine_photoproduction.root";
@@ -324,12 +324,19 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 	TH2D* h_dedxElectronVspCut = new TH2D("h_dedxElectronVspCut",";p(GeV);dE/dx",100,0,5,300,0,100);
 	
 	TH1D* h_TestCharge = new TH1D("h_TestCharge",";charge",10,-5,5);
-	TH1D* h_dedxElectronThetaCut[4];
-	TH1D* h_dedxElectronPtCut[4];
-	for(int m=0;m<4;m++){
-	 h_dedxElectronThetaCut[m] = new TH1D(Form("h_dedxElectronThetaCut_%d",m),";#theta (rad)",100,0,3.14);
-	 h_dedxElectronPtCut[m] = new TH1D(Form("h_dedxElectronPtCut_%d",m),";#p_{T} (GeV)",100,0,5);
+	TH1D* h_dedxElectronThetaCut[4][4][4];
+	TH1D* h_dedxElectronSinThetaCut[4][4][4];
+	TH1D* h_dedxElectronPtCut[4][4][4];
+	for(int iQ2=0;iQ2<4;iQ2++){
+		for(int iy=0;iy<4;iy++){
+			for(int m=0;m<4;m++){
+				 h_dedxElectronThetaCut[iQ2][iy][m] = new TH1D(Form("h_dedxElectronThetaCut_%d_%d_%d",iQ2,iy,m),";#theta (rad)",100,0,3.14);
+				 h_dedxElectronSinThetaCut[iQ2][iy][m] = new TH1D(Form("h_dedxElectronThetaCut_%d_%d_%d",iQ2,iy,m),";#theta (rad)",100,-10,10);
+				 h_dedxElectronPtCut[iQ2][iy][m] = new TH1D(Form("h_dedxElectronPtCut_%d_%d_%d",iQ2,iy,m),";#p_{T} (GeV)",100,0,5);
+			}
+		}
 	}
+	
 	
 	TH1D* h_chargedDcaPrime = new TH1D("h_chargedDcaPrime",";charge*DCA'",100,-10,10);
 	TH1D* h_chargedDcaPrimeProton = new TH1D("h_chargedDcaPrimeProton",";charge*DCA'",100,-10,10);
@@ -515,10 +522,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					TLorentzVector photon_candidate = elecm_vect[icand]+elecp_vect[jcand];
 					h_PhotMass[Q2_INDEX][y_INDEX][0]->Fill( photon_candidate.M(), w_mini );
 					if( photon_candidate.M() < 0.1 && photon_candidate.M() > 0. ) {
-						h_dedxElectronThetaCut[0]->Fill(elecm_vect[icand].Theta(), w_mini);
-						h_dedxElectronThetaCut[0]->Fill(elecp_vect[jcand].Theta(), w_mini);
-						h_dedxElectronPtCut[0]->Fill(elecm_vect[icand].Pt(), w_mini);
-						h_dedxElectronPtCut[0]->Fill(elecp_vect[jcand].Pt(), w_mini);
+						h_dedxElectronThetaCut[Q2_INDEX][y_INDEX][0]->Fill(elecm_vect[icand].Theta(), w_mini);
+						h_dedxElectronThetaCut[Q2_INDEX][y_INDEX][0]->Fill(elecp_vect[jcand].Theta(), w_mini);
+						h_dedxElectronSinThetaCut[Q2_INDEX][y_INDEX][0]->Fill(1./TMath::Sin(elecm_vect[icand].Theta()), w_mini);
+						h_dedxElectronSinThetaCut[Q2_INDEX][y_INDEX][0]->Fill(1./TMath::Sin(elecp_vect[jcand].Theta()), w_mini);
+						h_dedxElectronPtCut[Q2_INDEX][y_INDEX][0]->Fill(elecm_vect[icand].Pt(), w_mini);
+						h_dedxElectronPtCut[Q2_INDEX][y_INDEX][0]->Fill(elecp_vect[jcand].Pt(), w_mini);
 					}
 				}
 			}
@@ -529,10 +538,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					TLorentzVector photon_candidate = elecm_vect[icand]+elecm_vect[jcand];
 					h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
 					if( photon_candidate.M() < 0.1 && photon_candidate.M() > 0. ) {
-						h_dedxElectronThetaCut[2]->Fill(elecm_vect[icand].Theta(), w_mini);
-						h_dedxElectronThetaCut[2]->Fill(elecm_vect[jcand].Theta(), w_mini);
-						h_dedxElectronPtCut[2]->Fill(elecm_vect[icand].Pt(), w_mini);
-						h_dedxElectronPtCut[2]->Fill(elecm_vect[jcand].Pt(), w_mini);
+						h_dedxElectronThetaCut[Q2_INDEX][y_INDEX][2]->Fill(elecm_vect[icand].Theta(), w_mini);
+						h_dedxElectronThetaCut[Q2_INDEX][y_INDEX][2]->Fill(elecm_vect[jcand].Theta(), w_mini);
+						h_dedxElectronSinThetaCut[Q2_INDEX][y_INDEX][2]->Fill(1./TMath::Sin(elecm_vect[icand].Theta()), w_mini);
+						h_dedxElectronSinThetaCut[Q2_INDEX][y_INDEX][2]->Fill(1./TMath::Sin(elecm_vect[jcand].Theta()), w_mini);
+						h_dedxElectronPtCut[Q2_INDEX][y_INDEX][2]->Fill(elecm_vect[icand].Pt(), w_mini);
+						h_dedxElectronPtCut[Q2_INDEX][y_INDEX][2]->Fill(elecm_vect[jcand].Pt(), w_mini);
 					}
 				}
 			}
@@ -543,10 +554,12 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 					TLorentzVector photon_candidate = elecp_vect[icand]+elecp_vect[jcand];
 					h_PhotMass[Q2_INDEX][y_INDEX][2]->Fill( photon_candidate.M(), w_mini );
 					if( photon_candidate.M() < 0.1 && photon_candidate.M() > 0. ) {
-						h_dedxElectronThetaCut[2]->Fill(elecp_vect[icand].Theta(), w_mini);
-						h_dedxElectronThetaCut[2]->Fill(elecp_vect[jcand].Theta(), w_mini);
-						h_dedxElectronPtCut[2]->Fill(elecp_vect[icand].Pt(), w_mini);
-						h_dedxElectronPtCut[2]->Fill(elecp_vect[jcand].Pt(), w_mini);
+						h_dedxElectronThetaCut[Q2_INDEX][y_INDEX][2]->Fill(elecp_vect[icand].Theta(), w_mini);
+						h_dedxElectronThetaCut[Q2_INDEX][y_INDEX][2]->Fill(elecp_vect[jcand].Theta(), w_mini);
+						h_dedxElectronSinThetaCut[Q2_INDEX][y_INDEX][2]->Fill(1./TMath::Sin(elecp_vect[icand].Theta()), w_mini);
+						h_dedxElectronSinThetaCut[Q2_INDEX][y_INDEX][2]->Fill(1./TMath::Sin(elecp_vect[jcand].Theta()), w_mini);
+						h_dedxElectronPtCut[Q2_INDEX][y_INDEX][2]->Fill(elecp_vect[icand].Pt(), w_mini);
+						h_dedxElectronPtCut[Q2_INDEX][y_INDEX][2]->Fill(elecp_vect[jcand].Pt(), w_mini);
 					}
 				}
 			}
