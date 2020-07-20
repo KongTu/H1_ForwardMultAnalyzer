@@ -331,7 +331,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		for(int iy=0;iy<4;iy++){
 			for(int m=0;m<4;m++){
 				 h_dedxElectronThetaCut[iQ2][iy][m] = new TH1D(Form("h_dedxElectronThetaCut_%d_%d_%d",iQ2,iy,m),";#theta (rad)",100,0,3.14);
-				 h_dedxElectronSinThetaCut[iQ2][iy][m] = new TH1D(Form("h_dedxElectronThetaCut_%d_%d_%d",iQ2,iy,m),";#theta (rad)",100,-10,10);
+				 h_dedxElectronSinThetaCut[iQ2][iy][m] = new TH1D(Form("h_dedxElectronSinThetaCut_%d_%d_%d",iQ2,iy,m),";1/sin(#theta)",100,-10,10);
 				 h_dedxElectronPtCut[iQ2][iy][m] = new TH1D(Form("h_dedxElectronPtCut_%d_%d_%d",iQ2,iy,m),";#p_{T} (GeV)",100,0,5);
 			}
 		}
