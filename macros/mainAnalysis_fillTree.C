@@ -672,7 +672,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          int event_pass = 1;
          /**RECO level starts here both MC and DATA**/
          if( (doGen_ && trigWeightRW <= 0) || (!doGen_ && trigWeightAC <= 0) ) event_pass = 0; //require trigger fired
-         if( vertexType != 1 ) event_pass = 0;
+         // if( vertexType != 1 ) event_pass = 0;
 
          double Epz = hfsEREC+elecEREC - (hfsPzREC+elecPzREC);
          myEvent.EpzREC_mini = Epz;
