@@ -180,22 +180,22 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    int dis_events = 0;
    int diffractive_events = 0;
    if( doRapgap_ && doGen_ ){
-      tree->Add("../batch/output/mc_9299_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9300_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9301_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9302_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9303_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9304_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9305_hadCaliNewKine_V0sWeight/*.root");
-      tree->Add("../batch/output/mc_9306_hadCaliNewKine_V0sWeight/*.root");
-      dis_events = tree->GetEntries();
-      // save the number of events that separate inclusive DIS to diffractive DIS
+      // tree->Add("../batch/output/mc_9299_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9300_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9301_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9302_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9303_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9304_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9305_hadCaliNewKine_V0sWeight/*.root");
+      // tree->Add("../batch/output/mc_9306_hadCaliNewKine_V0sWeight/*.root");
+      // dis_events = tree->GetEntries();
+      // // save the number of events that separate inclusive DIS to diffractive DIS
       
-      tree->Add("../batch/output/mc_9015_hadCaliNewKine_V0sWeight/*.root");
-      diffractive_events = tree->GetEntries();
+      // tree->Add("../batch/output/mc_9015_hadCaliNewKine_V0sWeight/*.root");
+      // diffractive_events = tree->GetEntries();
       
       //pythia
-      // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
+      tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
 
       //nonradiative RAPGAP
       // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
@@ -523,27 +523,27 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             double vtxZ_weight = DATA_vtxZ->GetBinContent( DATA_vtxZ->FindBin( simvertex[2]) );
             if( vtxZ_weight == 0. ) vtxZ_weight = 1.0;
             if( doRapgap_ ){//rapgap has diffractive MCs
-               if( i < dis_events ){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./68);//68,RAD,204 for NRAD //data/mc Lumi
-                  //check maxPDG
-                  if( maxPDGmc==4 ) {evt_weight_pdg = evt_weight*1.2;}
-                  else if( maxPDGmc==5 ) {evt_weight_pdg = evt_weight*2.;}
-                  else {evt_weight_pdg = evt_weight;}
+               // if( i < dis_events ){
+               //    evt_weight = w*y_weight*vtxZ_weight*(136./68);//68,RAD,204 for NRAD //data/mc Lumi
+               //    //check maxPDG
+               //    if( maxPDGmc==4 ) {evt_weight_pdg = evt_weight*1.2;}
+               //    else if( maxPDGmc==5 ) {evt_weight_pdg = evt_weight*2.;}
+               //    else {evt_weight_pdg = evt_weight;}
                   
-               }
-               else if( i >= dis_events && i < diffractive_events ){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./219.35)*0.1;//diffractive weights for 10% of DIS cross section
-                  //check moreDIFF
-                  evt_weight_moreDIFF = w*y_weight*vtxZ_weight*(136./219.35)*0.2;
-                  //check maxPDG
-                  if( maxPDGmc==4 ) {evt_weight_pdg = evt_weight*1.2;}
-                  else if( maxPDGmc==5 ) {evt_weight_pdg = evt_weight*2.;}
-                  else {evt_weight_pdg = evt_weight;}
-               }
-               else if( i >= diffractive_events && i < tree->GetEntries()){
-                  evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
-               }
-               // evt_weight = w*(136./449);//449. q2<2 for PYTHIA64
+               // }
+               // else if( i >= dis_events && i < diffractive_events ){
+               //    evt_weight = w*y_weight*vtxZ_weight*(136./219.35)*0.1;//diffractive weights for 10% of DIS cross section
+               //    //check moreDIFF
+               //    evt_weight_moreDIFF = w*y_weight*vtxZ_weight*(136./219.35)*0.2;
+               //    //check maxPDG
+               //    if( maxPDGmc==4 ) {evt_weight_pdg = evt_weight*1.2;}
+               //    else if( maxPDGmc==5 ) {evt_weight_pdg = evt_weight*2.;}
+               //    else {evt_weight_pdg = evt_weight;}
+               // }
+               // else if( i >= diffractive_events && i < tree->GetEntries()){
+               //    evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
+               // }
+               evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
 
             }
             else{
