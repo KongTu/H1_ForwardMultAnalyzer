@@ -33,7 +33,7 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		else file = new TFile("../new_output/mc_highE_RAPGAP_fullReweight_Tree_hadCaliNewKine_forPhotonicElectron.root");
 	}
 	else if(ifile_ == 3){
-		file = new TFile("../new_output/mc_highE_PYTHIA6_noReweight_Tree_hadCaliNewKine_photoproduction.root");
+		file = new TFile("../new_output/mc_highE_PYTHIA6_fullReweight_Tree_hadCaliNewKine_photoproduction.root");
 	}
 	//output files
 	TString outname;
