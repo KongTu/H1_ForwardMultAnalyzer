@@ -353,9 +353,6 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 
 		tree->GetEntry(ievent);
 		if( ievent%100000 == 0 )cout << "Events ~ " << ievent << endl;
-		
-		cout << "Q2 " << Q2REC_es_mini << endl;
-
 
 		double n_particle_eta[4] = {0.,0.,0.,0.};
 		double n_particle_HCM = 0.;
@@ -476,6 +473,8 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		if( yREC_es_mini > ymax || yREC_es_mini < ymin ) continue;
 		if( eventpass_mini != 1 ) continue;
 		
+				cout << "Q2 " << Q2REC_es_mini << endl;
+
 		h_Q2vsX->Fill( xREC_es_mini, Q2REC_es_mini, w_mini);
 		h_y->Fill( yREC_es_mini, w_mini);
 		if( ifile_!=0 && isQEDcMC_mini==1 ) h_y_QEDc->Fill(yREC_es_mini, w_mini);
