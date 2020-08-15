@@ -677,13 +677,13 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          double Epz = hfsEREC+elecEREC - (hfsPzREC+elecPzREC);
          myEvent.EpzREC_mini = Epz;
          //bkg finder bit cuts:
-         if( (ibgREC & 1) != 0 ) event_pass = 0;
-         if( (ibgREC & 2) != 0 ) event_pass = 0;
-         if( (ibgREC & 4) != 0 ) event_pass = 0;
-         if( (ibgREC & 8) != 0 ) event_pass = 0;
-         if( (ibgREC & 16) != 0 ) event_pass = 0;
-         if( (ibgREC & 32) != 0 ) event_pass = 0;
-         if( (ibgREC & 64) != 0 ) event_pass = 0;  
+         // if( (ibgREC & 1) != 0 ) event_pass = 0;
+         // if( (ibgREC & 2) != 0 ) event_pass = 0;
+         // if( (ibgREC & 4) != 0 ) event_pass = 0;
+         // if( (ibgREC & 8) != 0 ) event_pass = 0;
+         // if( (ibgREC & 16) != 0 ) event_pass = 0;
+         // if( (ibgREC & 32) != 0 ) event_pass = 0;
+         // if( (ibgREC & 64) != 0 ) event_pass = 0;  
          //kinematic cuts are not included   
          //Cut electron spatial 
          // if( TMath::Hypot(elecXclusREC,elecYclusREC) > 70. || TMath::Hypot(elecXclusREC,elecYclusREC) < 15. ) event_pass = 0;
@@ -694,7 +694,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          if(TMath::Abs(vertex[2]+zvtxOffset)>35.) event_pass = 0;
          //additional cluster energy sum cut to suppress diffractions
          // if( clusDepositREC<0.5 ) event_pass = 0;
-
+         
          //rec level QED Compton
          // we don't do anything at rec level
          //end QED Compton
