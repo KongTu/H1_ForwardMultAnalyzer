@@ -354,6 +354,9 @@ void readMinitree(const int ifile_ = 0, const bool isReweigh = false){
 		tree->GetEntry(ievent);
 		if( ievent%100000 == 0 )cout << "Events ~ " << ievent << endl;
 		
+		cout << "Q2 " << Q2REC_es_mini << endl;
+
+
 		double n_particle_eta[4] = {0.,0.,0.,0.};
 		double n_particle_HCM = 0.;
 		double n_particle_HCM_noSel = 0.;
