@@ -611,9 +611,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          }
          
          if( doGen_ ){
-            myEvent.isPHPbkg_mini = 0;
+            myEvent.isPHPbkg_mini = 1;
             //this is to remove overlap for pythia64 and assign PHPbkg flag
-            // if(Q2MC_es>2.0) continue;
+            if(Q2MC_es>2.0) continue;
             myEvent.isDIFFbkg_mini = 0;
         
             //generator level event selections:
@@ -694,7 +694,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          if(TMath::Abs(vertex[2]+zvtxOffset)>35.) event_pass = 0;
          //additional cluster energy sum cut to suppress diffractions
          // if( clusDepositREC<0.5 ) event_pass = 0;
-         
+
          //rec level QED Compton
          // we don't do anything at rec level
          //end QED Compton
