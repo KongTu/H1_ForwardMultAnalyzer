@@ -180,22 +180,22 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    int dis_events = 0;
    int diffractive_events = 0;
    if( doRapgap_ && doGen_ ){
-      // tree->Add("../batch/output/mc_9299_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9300_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9301_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9302_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9303_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9304_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9305_hadCaliNewKine_V0sWeight/*.root");
-      // tree->Add("../batch/output/mc_9306_hadCaliNewKine_V0sWeight/*.root");
-      // dis_events = tree->GetEntries();
-      // // save the number of events that separate inclusive DIS to diffractive DIS
+      tree->Add("../batch/output/mc_9299_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9300_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9301_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9302_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9303_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9304_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9305_hadCaliNewKine_V0sWeight/*.root");
+      tree->Add("../batch/output/mc_9306_hadCaliNewKine_V0sWeight/*.root");
+      dis_events = tree->GetEntries();
+      // save the number of events that separate inclusive DIS to diffractive DIS
       
-      // tree->Add("../batch/output/mc_9015_hadCaliNewKine_V0sWeight/*.root");
-      // diffractive_events = tree->GetEntries();
+      tree->Add("../batch/output/mc_9015_hadCaliNewKine_V0sWeight/*.root");
+      diffractive_events = tree->GetEntries();
       
       //pythia
-      tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
+      // tree->Add("../batch/output/mc_6921_hadCaliNewKine/*.root");
 
       //nonradiative RAPGAP
       // tree->Add("../batch/output/mc_5878_NRAD_rapgap31_NewKine/*.root");
@@ -230,7 +230,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
 
    outtree->Branch("w_mini",&myEvent.w_mini,"w_mini/F");
    outtree->Branch("w_pdg_mini",&myEvent.w_pdg_mini,"w_pdg_mini/F");
-   outtree->Branch("w_moreDIFF_mini",&myEvent.w_moreDIFF_mini,"w_moreDIFF_mini/F");
+   // outtree->Branch("w_moreDIFF_mini",&myEvent.w_moreDIFF_mini,"w_moreDIFF_mini/F");
    outtree->Branch("vertex_mini",myEvent.vertex_mini,"vertex_mini[3]/F");
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
@@ -256,7 +256,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("isDaughtersMC_mini",myEvent.isDaughtersMC_mini,"isDaughtersMC_mini[nMCtrack_mini]/I");
    outtree->Branch("ptStarMC_mini",myEvent.ptStarMC_mini,"ptStarMC_mini[nMCtrack_mini]/F");
    outtree->Branch("etaStarMC_mini",myEvent.etaStarMC_mini,"etaStarMC_mini[nMCtrack_mini]/F");
-   // outtree->Branch("phiStarMC_mini",myEvent.phiStarMC_mini,"phiStarMC_mini[nMCtrack_mini]/F");
+   outtree->Branch("phiStarMC_mini",myEvent.phiStarMC_mini,"phiStarMC_mini[nMCtrack_mini]/F");
    outtree->Branch("totalMultMC_mini",&myEvent.totalMultMC_mini,"totalMultMC_mini/I");
    /*
    comment out for simple scatElec miniTree
@@ -288,7 +288,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("phiREC_mini",myEvent.phiREC_mini,"phiREC_mini[nRECtrack_mini]/F");
    outtree->Branch("ptStarREC_mini",myEvent.ptStarREC_mini,"ptStarREC_mini[nRECtrack_mini]/F");
    outtree->Branch("etaStarREC_mini",myEvent.etaStarREC_mini,"etaStarREC_mini[nRECtrack_mini]/F");
-   // outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
+   outtree->Branch("phiStarREC_mini",myEvent.phiStarREC_mini,"phiStarREC_mini[nRECtrack_mini]/F");
    outtree->Branch("typeChgREC_mini",&myEvent.typeChgREC_mini,"typeChgREC_mini[nRECtrack_mini]/I");
    outtree->Branch("nucliaREC_mini",myEvent.nucliaREC_mini,"nucliaREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("nucliaV0sREC_mini",myEvent.nucliaV0sREC_mini,"nucliaV0sREC_mini[nRECtrack_mini]/F");
@@ -298,8 +298,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    // outtree->Branch("startHitsRadiusREC_mini",myEvent.startHitsRadiusREC_mini,"startHitsRadiusREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("dedxProtonREC_mini",myEvent.dedxProtonREC_mini,"dedxProtonREC_mini[nRECtrack_mini]/F");
    // outtree->Branch("dedxLikelihoodProtonREC_mini",myEvent.dedxLikelihoodProtonREC_mini,"dedxLikelihoodProtonREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("dedxElectronREC_mini",myEvent.dedxElectronREC_mini,"dedxElectronREC_mini[nRECtrack_mini]/F");
-   outtree->Branch("dedxLikelihoodElectronREC_mini",myEvent.dedxLikelihoodElectronREC_mini,"dedxLikelihoodElectronREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("dedxElectronREC_mini",myEvent.dedxElectronREC_mini,"dedxElectronREC_mini[nRECtrack_mini]/F");
+   // outtree->Branch("dedxLikelihoodElectronREC_mini",myEvent.dedxLikelihoodElectronREC_mini,"dedxLikelihoodElectronREC_mini[nRECtrack_mini]/F");
 
    double zvtxOffset=0.;
 
@@ -523,27 +523,27 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             double vtxZ_weight = DATA_vtxZ->GetBinContent( DATA_vtxZ->FindBin( simvertex[2]) );
             if( vtxZ_weight == 0. ) vtxZ_weight = 1.0;
             if( doRapgap_ ){//rapgap has diffractive MCs
-               // if( i < dis_events ){
-               //    evt_weight = w*y_weight*vtxZ_weight*(136./68);//68,RAD,204 for NRAD //data/mc Lumi
-               //    //check maxPDG
-               //    if( maxPDGmc==4 ) {evt_weight_pdg = evt_weight*1.2;}
-               //    else if( maxPDGmc==5 ) {evt_weight_pdg = evt_weight*2.;}
-               //    else {evt_weight_pdg = evt_weight;}
+               if( i < dis_events ){
+                  evt_weight = w*y_weight*vtxZ_weight*(136./68);//68,RAD,204 for NRAD //data/mc Lumi
+                  //check maxPDG
+                  if( maxPDGmc==4 ) {evt_weight_pdg = evt_weight*1.2;}
+                  else if( maxPDGmc==5 ) {evt_weight_pdg = evt_weight*2.;}
+                  else {evt_weight_pdg = evt_weight;}
                   
-               // }
-               // else if( i >= dis_events && i < diffractive_events ){
-               //    evt_weight = w*y_weight*vtxZ_weight*(136./219.35)*0.1;//diffractive weights for 10% of DIS cross section
-               //    //check moreDIFF
-               //    evt_weight_moreDIFF = w*y_weight*vtxZ_weight*(136./219.35)*0.2;
-               //    //check maxPDG
-               //    if( maxPDGmc==4 ) {evt_weight_pdg = evt_weight*1.2;}
-               //    else if( maxPDGmc==5 ) {evt_weight_pdg = evt_weight*2.;}
-               //    else {evt_weight_pdg = evt_weight;}
-               // }
-               // else if( i >= diffractive_events && i < tree->GetEntries()){
-               //    evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
-               // }
-               evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
+               }
+               else if( i >= dis_events && i < diffractive_events ){
+                  evt_weight = w*y_weight*vtxZ_weight*(136./219.35)*0.1;//diffractive weights for 10% of DIS cross section
+                  //check moreDIFF
+                  evt_weight_moreDIFF = w*y_weight*vtxZ_weight*(136./219.35)*0.2;
+                  //check maxPDG
+                  if( maxPDGmc==4 ) {evt_weight_pdg = evt_weight*1.2;}
+                  else if( maxPDGmc==5 ) {evt_weight_pdg = evt_weight*2.;}
+                  else {evt_weight_pdg = evt_weight;}
+               }
+               else if( i >= diffractive_events && i < tree->GetEntries()){
+                  evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
+               }
+               // evt_weight = w*y_weight*vtxZ_weight*(136./449);//449. q2<2 for PYTHIA64
 
             }
             else{
@@ -765,7 +765,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.phiREC_mini[j] = phi;
             myEvent.etaStarREC_mini[j] = etaStarREC[j];
             myEvent.ptStarREC_mini[j] = ptStarREC[j];
-            // myEvent.phiStarREC_mini[j] = phiStarREC[j];
+            myEvent.phiStarREC_mini[j] = phiStarREC[j];
             // double eff_error = 0.995;
             // if( type == 2 ) eff_error = 0.9;
             // myEvent.nucliaREC_mini[j] = nucliaREC[j]*eff_error;
@@ -783,8 +783,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             // myEvent.startHitsRadiusREC_mini[j] = startHitsRadiusREC[j];
             // myEvent.dedxProtonREC_mini[j] = dedxProtonREC[j];
             // myEvent.dedxLikelihoodProtonREC_mini[j] = dedxLikelihoodProtonREC[j];
-            myEvent.dedxElectronREC_mini[j] = dedxElectronREC[j];
-            myEvent.dedxLikelihoodElectronREC_mini[j] = dedxLikelihoodElectronREC[j];
+            // myEvent.dedxElectronREC_mini[j] = dedxElectronREC[j];
+            // myEvent.dedxLikelihoodElectronREC_mini[j] = dedxLikelihoodElectronREC[j];
       
          }
          myEvent.totalMultREC_mini = (int) (Ntracks_eta_p + Ntracks_eta_m);
