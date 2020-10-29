@@ -232,6 +232,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("w_pdg_mini",&myEvent.w_pdg_mini,"w_pdg_mini/F");
    // outtree->Branch("w_moreDIFF_mini",&myEvent.w_moreDIFF_mini,"w_moreDIFF_mini/F");
    outtree->Branch("vertex_mini",myEvent.vertex_mini,"vertex_mini[3]/F");
+   outtree->Branch("xMC_es_mini",&myEvent.xMC_es_mini,"xMC_es_mini/F");
    outtree->Branch("yMC_es_mini",&myEvent.yMC_es_mini,"yMC_es_mini/F");
    outtree->Branch("Q2MC_es_mini",&myEvent.Q2MC_es_mini,"Q2MC_es_mini/F");
 
