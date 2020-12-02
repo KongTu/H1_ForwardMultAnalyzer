@@ -781,7 +781,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             TLorentzVector part4vectREC;
             part4vectREC.SetPtEtaPhiM(part3.Pt(),part3.Eta(),part3.Phi(), 0.13957 );
             myEvent.zhadREC_mini[j] = pbeam.Dot(part4vectREC) / pbeam.Dot(qbeamREC);
-            cout << "pbeam.Dot(part4vectREC) / pbeam.Dot(qbeamREC) = " <<pbeam.Dot(part4vectREC) / pbeam.Dot(qbeamREC) << endl;
             
             //assign values to each branch on track levels:
             myEvent.typeChgREC_mini[j] = typeChgREC[j];
