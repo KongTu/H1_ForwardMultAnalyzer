@@ -614,11 +614,13 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                myEvent.pzMC_mini[j] = -999.;
                myEvent.etaMC_mini[j] = -999.;
                myEvent.chargeMC_mini[j] = -999.;
+               myEvent.zhadMC_mini[j] = -999.;
                myEvent.ptStarMC_mini[j] = -999.;
                myEvent.etaStarMC_mini[j] = -999.;
                myEvent.phiStarMC_mini[j] = -999.;
                myEvent.imatchMC_mini[j] = -999;
                myEvent.isDaughtersMC_mini[j] = -999;
+
          }
          
          if( doGen_ ){
@@ -659,6 +661,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                TLorentzVector part4vect;
                part4vect.SetPtEtaPhiM(genPart.Pt(),genPart.Eta(),genPart.Phi(), 0.13957 );
                myEvent.zhadMC_mini[j] = pbeam.Dot(part4vect) / pbeam.Dot(qbeamMC);
+               cout << "pbeam.Dot(part4vect) / pbeam.Dot(qbeamMC) = " <<pbeam.Dot(part4vect) / pbeam.Dot(qbeamMC) << endl;
 
                if( TMath::Hypot(pxMC[j],pyMC[j]) < 0.15 ) continue;
                if(etaMC[j] > 0.2 && etaMC[j] < 1.6 ) Ntracks_eta_p_MC++;
