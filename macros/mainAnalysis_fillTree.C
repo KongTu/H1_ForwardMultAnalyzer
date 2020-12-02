@@ -82,6 +82,7 @@ struct MyEvent {
    Float_t pyMC_mini[nMCtrack_MAX];
    Float_t pzMC_mini[nMCtrack_MAX];
    Float_t etaMC_mini[nMCtrack_MAX];
+   Float_t zhadMC_mini[nMCtrack_MAX];
    Int_t   isDaughtersMC_mini[nMCtrack_MAX];
    Float_t chargeMC_mini[nMCtrack_MAX];
 
@@ -127,6 +128,7 @@ struct MyEvent {
    Float_t pxREC_mini[nRECtrack_MAX];
    Float_t pyREC_mini[nRECtrack_MAX];
    Float_t pzREC_mini[nRECtrack_MAX];
+   Float_t zhadREC_mini[nRECtrack_MAX];
    
    Float_t pREC_mini[nRECtrack_MAX];
    Float_t etaREC_mini[nRECtrack_MAX];
@@ -254,6 +256,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("pyMC_mini",myEvent.pyMC_mini,"pyMC_mini[nMCtrack_mini]/F");
    outtree->Branch("pzMC_mini",myEvent.pzMC_mini,"pzMC_mini[nMCtrack_mini]/F");
    outtree->Branch("etaMC_mini",myEvent.etaMC_mini,"etaMC_mini[nMCtrack_mini]/F");
+   outtree->Branch("zhadMC_mini",myEvent.zhadMC_mini,"zhadMC_mini[nMCtrack_mini]/F");
+
    outtree->Branch("isDaughtersMC_mini",myEvent.isDaughtersMC_mini,"isDaughtersMC_mini[nMCtrack_mini]/I");
    outtree->Branch("ptStarMC_mini",myEvent.ptStarMC_mini,"ptStarMC_mini[nMCtrack_mini]/F");
    outtree->Branch("etaStarMC_mini",myEvent.etaStarMC_mini,"etaStarMC_mini[nMCtrack_mini]/F");
@@ -284,6 +288,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
    outtree->Branch("pxREC_mini",myEvent.pxREC_mini,"pxREC_mini[nRECtrack_mini]/F");
    outtree->Branch("pyREC_mini",myEvent.pyREC_mini,"pyREC_mini[nRECtrack_mini]/F");
    outtree->Branch("pzREC_mini",myEvent.pzREC_mini,"pzREC_mini[nRECtrack_mini]/F");
+   outtree->Branch("zhadREC_mini",myEvent.zhadREC_mini,"zhadREC_mini[nRECtrack_mini]/F");
 
    outtree->Branch("etaREC_mini",myEvent.etaREC_mini,"etaREC_mini[nRECtrack_mini]/F");
    outtree->Branch("phiREC_mini",myEvent.phiREC_mini,"phiREC_mini[nRECtrack_mini]/F");
@@ -343,7 +348,7 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       Int_t   isDaughtersMC[400];
 
       Float_t chargeMC[400];
-      // Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC;
+      Float_t elecPxMC,elecPyMC,elecPzMC,elecEMC;
       // Float_t radPhoPxMC[3],radPhoPyMC[3],radPhoPzMC[3],radPhoEMC[3];
  
       Int_t nRECtrack;
@@ -419,10 +424,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("Q2MC_es",&Q2MC_es);
       tree->SetBranchAddress("elecEradMC",&elecEradMC);
       tree->SetBranchAddress("imatchMC",&imatchMC);
-      // tree->SetBranchAddress("elecPxMC",&elecPxMC);
-      // tree->SetBranchAddress("elecPyMC",&elecPyMC);
-      // tree->SetBranchAddress("elecPzMC",&elecPzMC);
-      // tree->SetBranchAddress("elecEMC",&elecEMC);
+      tree->SetBranchAddress("elecPxMC",&elecPxMC);
+      tree->SetBranchAddress("elecPyMC",&elecPyMC);
+      tree->SetBranchAddress("elecPzMC",&elecPzMC);
+      tree->SetBranchAddress("elecEMC",&elecEMC);
       // tree->SetBranchAddress("radPhoPxMC",&radPhoPxMC);
       // tree->SetBranchAddress("radPhoPyMC",&radPhoPyMC);
       // tree->SetBranchAddress("radPhoPzMC",&radPhoPzMC);
@@ -499,6 +504,11 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
       tree->SetBranchAddress("ndfLinkREC",ndfLinkREC);
       tree->SetBranchAddress("rZeroREC",rZeroREC);
 //end tree branch
+
+      TLorentzVector scatEvectMC, scatEvectREC;
+      TLorentzVector ebeam(0,0,-27.5,27.5);
+      TLorentzVector qbeamMC, qbeamREC;
+      TLorentzVector pbeam(0,0,920,920);
 
       cout << "total. number of events = " << tree->GetEntries() << endl;
       if(end == -1 || end >= tree->GetEntries()) {end = tree->GetEntries();}
@@ -623,6 +633,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             myEvent.Q2MC_es_mini = Q2MC_es;
             myEvent.nMCtrack_mini = nMCtrack;
 
+            scatEvectMC.SetPxPyPzE(elecPxMC, elecPyMC, elecPzMC, elecEMC);
+            qbeamMC = ebeam - scatEvectMC;
+
             double Ntracks_eta_p_MC=0.;
             double Ntracks_eta_m_MC=0.;
             double etaAsymMC=0.;
@@ -642,6 +655,10 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                myEvent.phiStarMC_mini[j] = phiStarMC[j];
                myEvent.imatchMC_mini[j] = imatchMC[j];
                myEvent.isDaughtersMC_mini[j] = isDaughtersMC[j];
+
+               TLorentzVector part4vect;
+               part4vect.SetPtEtaPhiM(genPart.Pt(),genPart.Eta(),genPart.Phi(), 0.13957 );
+               myEvent.zhadMC_mini[j] = pbeam.Dot(part4vect) / pbeam.Dot(qbeamMC);
 
                if( TMath::Hypot(pxMC[j],pyMC[j]) < 0.15 ) continue;
                if(etaMC[j] > 0.2 && etaMC[j] < 1.6 ) Ntracks_eta_p_MC++;
@@ -713,6 +730,9 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
          myEvent.nRECtrack_mini = nRECtrack;
          myEvent.clusDepositREC_mini = clusDepositREC;
 
+         scatEvectREC.SetPxPyPzE(elecPxREC, elecPyREC, elecPzREC, elecEREC);
+         qbeamREC = ebeam - scatEvectREC;
+
          double Ntracks_eta_m = 0;
          double Ntracks_eta_p = 0;
          vector<double> cutVar;
@@ -754,6 +774,11 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                if(etaREC[j] > 0.2 && etaREC[j] < 1.6 ) Ntracks_eta_p++;
                if(etaREC[j] < 0.2 && etaREC[j] > -1.6) Ntracks_eta_m++;
             }
+
+            TVector3 part3(pxREC[j],pyREC[j],pzREC[j]);
+            TLorentzVector part4vectREC;
+            part4vectREC.SetPtEtaPhiM(part3.Pt(),part3.Eta(),part3.Phi(), 0.13957 );
+            myEvent.zhadREC_mini[j] = pbeam.Dot(part4vectREC) / pbeam.Dot(qbeamREC);
 
             //assign values to each branch on track levels:
             myEvent.typeChgREC_mini[j] = typeChgREC[j];
