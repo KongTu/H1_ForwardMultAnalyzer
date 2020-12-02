@@ -661,7 +661,6 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
                TLorentzVector part4vect;
                part4vect.SetPtEtaPhiM(genPart.Pt(),genPart.Eta(),genPart.Phi(), 0.13957 );
                myEvent.zhadMC_mini[j] = pbeam.Dot(part4vect) / pbeam.Dot(qbeamMC);
-               cout << "pbeam.Dot(part4vect) / pbeam.Dot(qbeamMC) = " <<pbeam.Dot(part4vect) / pbeam.Dot(qbeamMC) << endl;
 
                if( TMath::Hypot(pxMC[j],pyMC[j]) < 0.15 ) continue;
                if(etaMC[j] > 0.2 && etaMC[j] < 1.6 ) Ntracks_eta_p_MC++;
@@ -782,7 +781,8 @@ void mainAnalysis_fillTree(const int start = 0, int end = -1, const bool doGen_ 
             TLorentzVector part4vectREC;
             part4vectREC.SetPtEtaPhiM(part3.Pt(),part3.Eta(),part3.Phi(), 0.13957 );
             myEvent.zhadREC_mini[j] = pbeam.Dot(part4vectREC) / pbeam.Dot(qbeamREC);
-
+            cout << "pbeam.Dot(part4vectREC) / pbeam.Dot(qbeamREC) = " <<pbeam.Dot(part4vectREC) / pbeam.Dot(qbeamREC) << endl;
+            
             //assign values to each branch on track levels:
             myEvent.typeChgREC_mini[j] = typeChgREC[j];
             myEvent.pxREC_mini[j] = pxREC[j];
